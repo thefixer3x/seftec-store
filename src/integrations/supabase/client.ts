@@ -3,8 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "demo-key-for-development";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "https://mxtsdgkwzjzlttpotole.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14dHNkZ2t3emp6bHR0cG90b2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDUyNTksImV4cCI6MjA2MjY4MTI1OX0.2KM8JxBEsqQidSvjhuLs8HCX-7g-q6YNswedQ5ZYq3g";
 
 // Define the API endpoint that will be used for all backend services
 // This will be used in a phased approach where api.seftec.store handles all backend services
@@ -18,60 +18,60 @@ let supabaseClient: any = null;
 
 try {
   supabaseClient = createClient<Database>(
-    SUPABASE_URL, 
+    SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-      flowType: "pkce",
-      // Configure authentication callbacks
-      // Note: Using object notation that's compatible with the Supabase types
-      storage: {
-        getItem: (key) => {
-          try {
-            const storedSession = localStorage.getItem(key);
-            return storedSession;
-          } catch (error) {
-            console.error('Error getting session from storage:', error);
-            return null;
-          }
-        },
-        setItem: (key, value) => {
-          try {
-            localStorage.setItem(key, value);
-          } catch (error) {
-            console.error('Error storing session:', error);
-          }
-        },
-        removeItem: (key) => {
-          try {
-            localStorage.removeItem(key);
-          } catch (error) {
-            console.error('Error removing session:', error);
+    {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: "pkce",
+        // Configure authentication callbacks
+        // Note: Using object notation that's compatible with the Supabase types
+        storage: {
+          getItem: (key) => {
+            try {
+              const storedSession = localStorage.getItem(key);
+              return storedSession;
+            } catch (error) {
+              console.error('Error getting session from storage:', error);
+              return null;
+            }
+          },
+          setItem: (key, value) => {
+            try {
+              localStorage.setItem(key, value);
+            } catch (error) {
+              console.error('Error storing session:', error);
+            }
+          },
+          removeItem: (key) => {
+            try {
+              localStorage.removeItem(key);
+            } catch (error) {
+              console.error('Error removing session:', error);
+            }
           }
         }
-      }
-    },
-    global: {
-      // Configure custom fetch function to use the API endpoint for functions
-      fetch: (...args) => {
-        const [url, options] = args;
-        
-        // Check if this is a function invocation request (matches /functions/invoke)
-        if (typeof url === 'string' && url.includes('/functions/invoke')) {
-          // Replace the URL with the new API endpoint
-          // This is temporary until the proper DNS configuration is in place
-          const newUrl = url.replace(SUPABASE_URL, API_ENDPOINT);
-          return fetch(newUrl, options);
+      },
+      global: {
+        // Configure custom fetch function to use the API endpoint for functions
+        fetch: (...args) => {
+          const [url, options] = args;
+
+          // Check if this is a function invocation request (matches /functions/invoke)
+          if (typeof url === 'string' && url.includes('/functions/invoke')) {
+            // Replace the URL with the new API endpoint
+            // This is temporary until the proper DNS configuration is in place
+            const newUrl = url.replace(SUPABASE_URL, API_ENDPOINT);
+            return fetch(newUrl, options);
+          }
+
+          // For all other requests, use the default fetch behavior
+          return fetch(url, options);
         }
-        
-        // For all other requests, use the default fetch behavior
-        return fetch(url, options);
       }
     }
-  }
   );
 } catch (error) {
   console.warn('Supabase client initialization failed:', error);
@@ -96,14 +96,14 @@ export const supabase = supabaseClient;
 // Helper functions for authentication
 export const getCurrentUser = async () => {
   if (!supabase?.auth?.getSession) return null;
-  
+
   const { data: { session }, error } = await supabase.auth.getSession();
-  
+
   if (error) {
     console.error('Error getting session:', error);
     return null;
   }
-  
+
   return session?.user || null;
 };
 
@@ -114,21 +114,21 @@ export const getCurrentUserId = async () => {
 
 export const getUserProfile = async () => {
   const userId = await getCurrentUserId();
-  
+
   if (!userId || !supabase?.from) return null;
-  
+
   try {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId as string)
       .single();
-    
+
     if (error) {
       console.error('Error fetching profile:', error);
       return null;
     }
-    
+
     return data;
   } catch (error) {
     console.error('Error in getUserProfile:', error);
