@@ -10,6 +10,11 @@ export default {
 		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
+	safelist: [
+		{
+			pattern: /^(animate|delay|duration|ease)-/,
+		},
+	],
 	theme: {
 		container: {
 			center: true,

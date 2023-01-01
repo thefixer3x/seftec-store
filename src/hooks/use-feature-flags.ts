@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 // Define available feature flags
-export type FeatureFlag = 
-  | "enhanced_ai_responses" 
-  | "social_auth" 
+export type FeatureFlag =
+  | "enhanced_ai_responses"
+  | "social_auth"
   | "interactive_demo"
   | "advanced_analytics"
   | "trade_finance_enhancements"
@@ -33,37 +33,46 @@ export function useFeatureFlags() {
     async function fetchFeatureFlags() {
       try {
         setLoading(true);
-        
-        // Attempt to fetch feature flags from Supabase
-        // In a real implementation, this would connect to a feature_flags table
-        // For now, we'll simulate this with user preferences or a mock response
-        
-        const { data, error } = await supabase
-          .from('user_preferences')
-          .select('*')
-          .single();
-          
-        if (error) {
-          throw error;
+
+        // Check if supabase client is available
+        if (!supabase || !supabase.from) {
+          console.warn('Supabase client not available, using default feature flags');
+          setFlags(defaultFlags);
+          setLoading(false);
+          return;
         }
-        
-        // In production, this would be replaced with actual feature flag data
-        // For demonstration, we'll set some flags based on environment or other factors
-        const isDevelopment = process.env.NODE_ENV === 'development';
-        const isTestAccount = data?.trade_frequency === 'test';
-        
-        setFlags({
-          ...defaultFlags,
-          // Enable some features based on environment or user data
-          enhanced_ai_responses: isDevelopment || isTestAccount,
-          interactive_demo: isDevelopment,
-          // Others remain disabled by default
-        });
-        
+
+        // Attempt to fetch feature flags from Supabase
+        // Try feature_flags table first, fall back to defaults if it doesn't exist
+        const { data, error } = await supabase
+          .from('feature_flags')
+          .select('name, enabled')
+          .limit(100);
+
+        if (error) {
+          console.warn('Feature flags table not available, using defaults:', error.message);
+          // Fall back to default flags - this is not an error condition
+          setFlags(defaultFlags);
+          setLoading(false);
+          return;
+        }
+
+        // Parse feature flags from database
+        if (data && Array.isArray(data)) {
+          const fetchedFlags = { ...defaultFlags };
+          data.forEach((flag: any) => {
+            if (flag.name in defaultFlags) {
+              fetchedFlags[flag.name as FeatureFlag] = flag.enabled === true;
+            }
+          });
+          setFlags(fetchedFlags);
+        } else {
+          setFlags(defaultFlags);
+        }
+
       } catch (err) {
-        console.error("Error fetching feature flags:", err);
-        setError(err instanceof Error ? err : new Error('Unknown error fetching feature flags'));
-        // Fall back to default flags
+        console.warn("Error fetching feature flags, using defaults:", err);
+        // Don't set error state - just use defaults
         setFlags(defaultFlags);
       } finally {
         setLoading(false);
