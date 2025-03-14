@@ -1,22 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
+import { Menu, X, Shield, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import DarkModeToggle from '@/components/ui/dark-mode-toggle';
 
-interface NavbarProps {
-  className?: string;
-}
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
-const Navbar: React.FC<NavbarProps> = ({ className }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
   useEffect(() => {
+    // This would normally be from authentication
+    // For demo purposes, we'll just set a name
+    setUserName("Guest");
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 10);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -24,98 +27,120 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
   return (
     <header
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-apple py-4 px-6 lg:px-10',
-        isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-transparent',
-        className
+        'fixed top-0 left-0 w-full z-50 transition-all duration-300',
+        scrolled ? 'py-3 bg-white/90 backdrop-blur-md shadow-sm dark:bg-seftec-darkNavy/90' : 'py-5'
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center">
-          <a 
-            href="/" 
-            className="text-2xl font-bold text-seftec-navy flex items-center"
-          >
-            <span className="mr-1 animate-fade-in">Seftec</span>
-            <span className="text-seftec-gold animate-fade-in animate-delay-200">.Store</span>
-          </a>
-        </div>
-        
-        {/* Desktop navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <NavLinks />
-          <NavCta />
-        </nav>
-        
-        {/* Mobile menu button */}
-        <button 
-          className="md:hidden text-seftec-navy p-2 focus:outline-none"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+      <div className="container mx-auto px-6 flex items-center justify-between">
+        <Link
+          to="/"
+          className="text-2xl font-bold flex items-center text-seftec-navy dark:text-white"
         >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          <Shield className="h-6 w-6 mr-2 text-seftec-gold" />
+          Seftec<span className="text-seftec-gold">.Store</span>
+        </Link>
+
+        <div className="hidden md:flex items-center gap-8">
+          <nav className="flex items-center gap-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="text-seftec-navy/80 hover:text-seftec-navy transition-colors duration-300 dark:text-white/80 dark:hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-4">
+            {userName && (
+              <div className="text-sm text-seftec-navy/80 dark:text-white/80 animate-fade-in">
+                <span className="font-normal">Welcome,</span> <span className="font-medium">{userName}</span>
+              </div>
+            )}
+            
+            <div className="security-badge">
+              <Shield size={16} className="animate-pulse" />
+              <span className="text-white">Secured by AI</span>
+            </div>
+
+            <DarkModeToggle />
+
+            <Button
+              variant="outline"
+              className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+            >
+              Log In
+            </Button>
+            
+            <Button
+              className="bg-gradient-teal-purple hover:opacity-90 text-white custom-btn relative overflow-hidden group"
+            >
+              <span className="relative z-10">Get Started</span>
+              <span className="absolute inset-0 overflow-hidden">
+                <span className="absolute inset-0 rounded-md opacity-0 group-hover:opacity-20 group-hover:animate-sparkle bg-white"></span>
+              </span>
+            </Button>
+          </div>
+        </div>
+
+        <div className="md:hidden flex items-center gap-4">
+          <DarkModeToggle />
+          
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X /> : <Menu />}
+          </Button>
+        </div>
       </div>
-      
+
       {/* Mobile menu */}
-      <div 
-        className={cn(
-          "fixed inset-0 bg-white z-40 pt-20 px-6 transition-all duration-300 ease-apple",
-          isMobileMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full pointer-events-none"
-        )}
-      >
-        <nav className="flex flex-col space-y-8">
-          <NavLinks onClick={() => setIsMobileMenuOpen(false)} />
-          <NavCta />
-        </nav>
-      </div>
+      {isMenuOpen && (
+        <div className="md:hidden py-4 bg-white shadow-md dark:bg-seftec-darkNavy animate-fade-in">
+          <div className="container mx-auto px-6">
+            <nav className="flex flex-col gap-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-seftec-navy/80 hover:text-seftec-navy py-2 transition-colors duration-300 dark:text-white/80 dark:hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="pt-4 flex flex-col gap-3">
+                <Button
+                  variant="outline"
+                  className="w-full border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+                >
+                  Log In
+                </Button>
+                <Button
+                  className="w-full bg-gradient-teal-purple hover:opacity-90 text-white"
+                >
+                  Get Started
+                </Button>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
 
-const NavLinks: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
-  return (
-    <>
-      <a
-        href="#features"
-        className="text-seftec-navy/90 hover:text-seftec-navy font-medium transition-all duration-300"
-        onClick={onClick}
-      >
-        Features
-      </a>
-      <a
-        href="#solutions"
-        className="text-seftec-navy/90 hover:text-seftec-navy font-medium transition-all duration-300"
-        onClick={onClick}
-      >
-        Solutions
-      </a>
-      <a
-        href="#about"
-        className="text-seftec-navy/90 hover:text-seftec-navy font-medium transition-all duration-300"
-        onClick={onClick}
-      >
-        About
-      </a>
-    </>
-  );
-};
-
-const NavCta: React.FC = () => {
-  return (
-    <div className="flex items-center space-x-4">
-      <Button
-        variant="outline"
-        className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white transition-all duration-300 custom-btn"
-      >
-        Sign In
-      </Button>
-      <Button
-        className="bg-seftec-navy text-white hover:bg-seftec-navy/90 transition-all duration-300 custom-btn"
-      >
-        Book a Demo
-      </Button>
-    </div>
-  );
-};
+const navLinks = [
+  { label: 'Features', href: '#features' },
+  { label: 'Solutions', href: '#solutions' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
 
 export default Navbar;

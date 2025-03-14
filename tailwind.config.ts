@@ -68,6 +68,12 @@ export default {
 					gold: '#E6B94D',
 					slate: '#F6F9FC',
 					lightgray: '#E8E8E8',
+					// Dark mode colors
+					darkNavy: '#0A1A2F',
+					charcoal: '#1E293B',
+					teal: '#4FD1C5',
+					purple: '#9F7AEA',
+					highlight: '#6EE7B7',
 				}
 			},
 			borderRadius: {
@@ -111,6 +117,18 @@ export default {
 				pulse: {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.8' }
+				},
+				shimmer: {
+					'0%': { backgroundPosition: '-500px 0' },
+					'100%': { backgroundPosition: '500px 0' }
+				},
+				sparkle: {
+					'0%, 100%': { opacity: '0.2', transform: 'scale(0.8)' },
+					'50%': { opacity: '1', transform: 'scale(1.2)' }
+				},
+				bounce: {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
@@ -122,7 +140,10 @@ export default {
 				'slide-in-right': 'slide-in-right 0.6s ease-out',
 				'slide-in-left': 'slide-in-left 0.6s ease-out',
 				'float': 'float 6s ease-in-out infinite',
-				'pulse': 'pulse 3s ease-in-out infinite'
+				'pulse': 'pulse 3s ease-in-out infinite',
+				'shimmer': 'shimmer 2s infinite linear',
+				'sparkle': 'sparkle 1.5s ease-in-out infinite',
+				'bounce': 'bounce 1s ease-in-out infinite'
 			},
 			transitionTimingFunction: {
 				'in-expo': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
@@ -132,15 +153,22 @@ export default {
 			fontFamily: {
 				sans: ['"SF Pro Display"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
 				serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+				handwritten: ['"Caveat"', 'cursive'],
 			},
 			boxShadow: {
 				'apple': '0 4px 20px rgba(0, 0, 0, 0.08)',
 				'apple-hover': '0 10px 30px rgba(0, 0, 0, 0.12)',
 				'apple-active': '0 2px 10px rgba(0, 0, 0, 0.06)',
 				'glass': '0 8px 32px rgba(0, 0, 0, 0.06)',
+				'neo': '0 4px 24px rgba(0, 0, 0, 0.25)',
 			},
 			backdropBlur: {
 				'apple': 'blur(20px)',
+			},
+			backgroundImage: {
+				'gradient-teal-purple': 'linear-gradient(90deg, #4FD1C5 0%, #9F7AEA 100%)',
+				'gradient-navy': 'linear-gradient(135deg, #0A1A2F 0%, #1E293B 100%)',
+				'gradient-success': 'linear-gradient(90deg, #48BB78 0%, #38B2AC 100%)',
 			},
 		}
 	},

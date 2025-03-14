@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -48,7 +49,7 @@
   }
 
   .dark {
-    --background: 222 47% 11%;
+    --background: 215 32% 17%;
     --foreground: 210 40% 98%;
 
     --card: 222 47% 11%;
@@ -76,13 +77,13 @@
     --input: 217 33% 18%;
     --ring: 213 27% 84%;
 
-    --sidebar-background: 240 6% 10%;
-    --sidebar-foreground: 240 5% 96%;
+    --sidebar-background: 215 32% 17%;
+    --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 224 76% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 16%;
-    --sidebar-accent-foreground: 240 5% 96%;
-    --sidebar-border: 240 4% 16%;
+    --sidebar-accent: 215 32% 22%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 32% 22%;
     --sidebar-ring: 217 91% 60%;
   }
 }
@@ -116,7 +117,7 @@
 
 @layer utilities {
   .glass-effect {
-    @apply bg-white/80 backdrop-blur-md border border-white/20;
+    @apply bg-white/80 backdrop-blur-md border border-white/20 dark:bg-seftec-darkNavy/50 dark:border-white/10;
   }
   
   .text-balance {
@@ -124,7 +125,11 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-seftec-navy to-seftec-navy/70;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-seftec-navy to-seftec-navy/70 dark:from-white dark:to-white/80;
+  }
+
+  .text-gradient-teal-purple {
+    @apply bg-clip-text text-transparent bg-gradient-teal-purple;
   }
 
   .animate-delay-100 {
@@ -146,11 +151,19 @@
   .animate-delay-500 {
     animation-delay: 500ms;
   }
+
+  .shimmer {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent;
+  }
+
+  .security-badge {
+    @apply flex items-center gap-2 bg-gradient-teal-purple bg-opacity-10 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300;
+  }
 }
 
 /* Component-specific styles */
 .hero-gradient {
-  background: linear-gradient(180deg, rgba(246, 249, 252, 0) 0%, rgba(246, 249, 252, 1) 100%);
+  background: linear-gradient(180deg, rgba(26, 32, 44, 0) 0%, rgba(26, 32, 44, 1) 100%);
 }
 
 .feature-card {
@@ -177,6 +190,10 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
+.dark .soft-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
 /* Page transition animations */
 .page-transition-enter {
   opacity: 0;
@@ -198,4 +215,49 @@
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 400ms, transform 400ms;
+}
+
+/* Dark mode button styles */
+.dark-mode-toggle {
+  @apply relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none;
+}
+
+.dark-mode-toggle::after {
+  content: '';
+  @apply absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform duration-300;
+}
+
+.dark-mode-toggle.dark {
+  @apply bg-seftec-navy;
+}
+
+.dark-mode-toggle.dark::after {
+  @apply transform translate-x-6;
+}
+
+.cta-sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-sparkle::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: radial-gradient(circle, white 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: sparkleEffect 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sparkleEffect {
+  0% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  25% { opacity: 0.5; }
+  50% { opacity: 0; transform: scale(1.2) rotate(180deg); }
+  100% { opacity: 0; transform: scale(0.5) rotate(360deg); }
 }
