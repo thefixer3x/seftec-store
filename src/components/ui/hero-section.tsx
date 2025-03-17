@@ -70,7 +70,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
             </span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 animate-fade-up text-balance leading-tight text-gradient dark:text-white">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 animate-fade-up text-balance leading-tight text-seftec-navy dark:text-white">
             <span className="font-handwritten text-seftec-gold dark:text-seftec-teal">Grow Smarter, Together</span>
             <br />
             Revolutionizing Global Trade with a Trusted AI-Powered Marketplace

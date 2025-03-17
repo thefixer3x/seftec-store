@@ -38,7 +38,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
       {label && (
         <span 
           className={cn(
-            'inline-block px-3 py-1 text-xs font-medium uppercase tracking-wider bg-seftec-navy/10 text-seftec-navy rounded-full animate-fade-in',
+            'inline-block px-3 py-1 text-xs font-medium uppercase tracking-wider bg-seftec-navy/10 text-seftec-navy rounded-full animate-fade-in dark:bg-white/10 dark:text-white',
             labelClassName
           )}
         >
@@ -47,7 +47,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
       )}
       <h2 
         className={cn(
-          'text-3xl md:text-4xl lg:text-5xl font-bold text-seftec-navy leading-tight animate-fade-up',
+          'text-3xl md:text-4xl lg:text-5xl font-bold text-seftec-navy leading-tight animate-fade-up dark:text-white',
           titleClassName
         )}
       >
@@ -56,7 +56,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
       {subtitle && (
         <p 
           className={cn(
-            'text-lg text-seftec-navy/70 max-w-3xl mx-auto animate-fade-up animate-delay-200',
+            'text-lg text-seftec-navy/70 max-w-3xl mx-auto animate-fade-up animate-delay-200 dark:text-white/70',
             align === 'left' ? 'mr-auto' : '',
             align === 'right' ? 'ml-auto' : '',
             subtitleClassName
