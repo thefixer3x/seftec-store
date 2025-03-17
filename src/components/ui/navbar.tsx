@@ -138,6 +138,7 @@ const Navbar = () => {
 const navLinks = [
   { label: 'Features', href: '#features' },
   { label: 'Solutions', href: '#solutions' },
+  { label: 'Value Props', href: '/value-propositions' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
