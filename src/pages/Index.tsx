@@ -5,7 +5,7 @@ import HeroSection from "@/components/ui/hero-section";
 import Footer from "@/components/ui/footer";
 import ProblemsSection from "@/components/sections/ProblemsSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
-import SolutionsSection from "@/components/sections/SolutionsSection";
+import ValuePropositionsSection from "@/components/sections/ValuePropositionsSection";
 import AdvantagesSection from "@/components/sections/AdvantagesSection";
 import CTASection from "@/components/sections/CTASection";
 
@@ -37,7 +37,9 @@ const Index = () => {
       <HeroSection />
       <ProblemsSection />
       <FeaturesSection />
-      <SolutionsSection />
+      <div id="value-props">
+        <ValuePropositionsSection />
+      </div>
       <AdvantagesSection />
       <CTASection />
       <Footer />

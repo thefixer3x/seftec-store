@@ -136,10 +136,8 @@ const Navbar = () => {
 };
 
 const navLinks = [
-  { label: 'Features', href: '#features' },
-  { label: 'Solutions', href: '#solutions' },
-  { label: 'Value Props', href: '/value-propositions' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Solutions', href: '/value-propositions' },
+  { label: 'Value Props', href: '/#value-props' },
   { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ];
