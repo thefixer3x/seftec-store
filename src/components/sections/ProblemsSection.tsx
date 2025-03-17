@@ -1,8 +1,10 @@
 
 import React from "react";
 import SectionHeading from "@/components/ui/section-heading";
-import { ShieldCheck, Wallet, Building, Globe, Handshake } from "lucide-react";
+import { ShieldCheck, Wallet, Building, Globe, Handshake, ChevronDown } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Data for the problems section
 const problemsData = [
@@ -39,6 +41,8 @@ const problemsData = [
 ];
 
 const ProblemsSection: React.FC = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <section id="problems" className="py-20 bg-seftec-slate dark:bg-seftec-darkNavy/50">
       <div className="container mx-auto px-6">
@@ -50,17 +54,40 @@ const ProblemsSection: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal">
           {problemsData.map((problem, index) => (
-            <Card key={index} className="p-8 bg-white dark:bg-seftec-darkNavy/80 border border-seftec-slate dark:border-white/10 hover:shadow-apple transition-all duration-500 animate-fade-up" style={{ animationDelay: `${index * 100}ms` }}>
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-lg bg-seftec-navy/10 dark:bg-white/10">
-                  {problem.icon}
+            isMobile ? (
+              <Collapsible key={index} className="w-full">
+                <Card className="p-4 bg-white dark:bg-seftec-darkNavy/80 border border-seftec-slate dark:border-white/10 hover:shadow-apple transition-all duration-300 animate-fade-up" style={{ animationDelay: `${index * 100}ms` }}>
+                  <CollapsibleTrigger className="w-full">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-seftec-navy/10 dark:bg-white/10">
+                          {problem.icon}
+                        </div>
+                        <h3 className="text-xl font-semibold text-seftec-navy dark:text-white">{problem.title}</h3>
+                      </div>
+                      <ChevronDown className="h-5 w-5 text-seftec-navy dark:text-white transition-transform duration-200" />
+                    </div>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="pt-4 pl-12">
+                      <p className="text-seftec-navy/70 dark:text-white/70">{problem.description}</p>
+                    </div>
+                  </CollapsibleContent>
+                </Card>
+              </Collapsible>
+            ) : (
+              <Card key={index} className="p-8 bg-white dark:bg-seftec-darkNavy/80 border border-seftec-slate dark:border-white/10 hover:shadow-apple transition-all duration-500 animate-fade-up" style={{ animationDelay: `${index * 100}ms` }}>
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-lg bg-seftec-navy/10 dark:bg-white/10">
+                    {problem.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">{problem.title}</h3>
+                    <p className="text-seftec-navy/70 dark:text-white/70">{problem.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">{problem.title}</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70">{problem.description}</p>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            )
           ))}
         </div>
       </div>
