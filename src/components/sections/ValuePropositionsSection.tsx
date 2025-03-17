@@ -1,7 +1,7 @@
 
 import React from 'react';
 import SectionHeading from '@/components/ui/section-heading';
-import { Brain, Globe, CreditCard, UserPlus, Store, Robot } from 'lucide-react';
+import { Brain, Globe, CreditCard, UserPlus, Store, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const valuePropositions = [
@@ -31,7 +31,7 @@ const valuePropositions = [
     description: 'Access international brands and export locally produced goods, expanding your business reach globally.'
   },
   {
-    icon: <Robot className="h-10 w-10 text-seftec-gold" />,
+    icon: <Bot className="h-10 w-10 text-seftec-gold" />,
     title: 'AI Business Advisor',
     description: 'Our intelligent assistant analyzes financial data, market trends, and operations to provide strategic recommendations that optimize performance and enhance profitability.'
   },
