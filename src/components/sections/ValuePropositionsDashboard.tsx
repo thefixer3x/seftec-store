@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { LayoutDashboard, LineChart, FileText, MousePointer } from 'lucide-react';
+import { LayoutDashboard, LineChart, FileText, MousePointer, Robot } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -30,6 +30,12 @@ const dashboardFeatures = [
     title: 'User-Friendly Interface',
     description: 'Navigate with ease and access the information you need quickly with our intuitive design.',
     detail: 'Enjoy a clean, responsive interface with thoughtful touches like keyboard shortcuts, personalized workspaces, and accessible design that makes managing your business a pleasure rather than a chore.'
+  },
+  {
+    icon: <Robot className="h-8 w-8 text-seftec-purple" />,
+    title: 'AI Business Advisor',
+    description: 'Get strategic business and financial advisory powered by advanced AI algorithms.',
+    detail: 'Our intelligent assistant analyzes your financial data, market trends, and business operations to offer insightful recommendations. It helps you anticipate market changes, manage risks, and enhance profitability through data-driven strategies tailored to your specific business needs.'
   }
 ];
 
@@ -48,11 +54,12 @@ const ValuePropositionsDashboard = () => {
         
         <div className="max-w-6xl mx-auto">
           <Tabs defaultValue="dashboard" className="w-full">
-            <TabsList className="grid grid-cols-4 mb-12">
+            <TabsList className="grid grid-cols-5 mb-12">
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="reports">Reports</TabsTrigger>
               <TabsTrigger value="interface">Interface</TabsTrigger>
+              <TabsTrigger value="advisor">AI Advisor</TabsTrigger>
             </TabsList>
             
             {dashboardFeatures.map((feature, index) => (

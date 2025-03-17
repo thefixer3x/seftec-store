@@ -24,6 +24,10 @@ const advantagesData = [
   {
     title: 'Built-in Financing Solutions',
     description: 'Trade now, pay later with flexible financing options for growing businesses.'
+  },
+  {
+    title: 'AI Business Advisor',
+    description: 'Strategic business and financial advisory powered by AI that analyzes data, predicts market trends, and helps manage risks to enhance profitability.'
   }
 ];
 
