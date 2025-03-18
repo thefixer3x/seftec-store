@@ -11,6 +11,7 @@ import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
+import { Toaster } from "@/components/ui/toaster";
 
 const Index = () => {
   // Add scroll reveal effect
@@ -49,6 +50,7 @@ const Index = () => {
       <AdvantagesSection />
       <CTASection />
       <Footer />
+      <Toaster />
     </div>
   );
 };
