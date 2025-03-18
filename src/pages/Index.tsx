@@ -11,6 +11,7 @@ import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
+import PaymentButton from "@/components/ui/payment-button";
 import { Toaster } from "@/components/ui/toaster";
 
 const Index = () => {
@@ -45,6 +46,24 @@ const Index = () => {
         <ValuePropositionsSection />
       </div>
       <AIAdvisorSection />
+      
+      {/* Payment Integration Demo Section */}
+      <section className="py-12 bg-gray-50 dark:bg-seftec-navy/30">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-2xl font-bold mb-8 text-seftec-navy dark:text-white">
+            Integrated Payment Solutions
+          </h2>
+          <p className="mb-8 text-seftec-navy/70 dark:text-white/70 max-w-2xl mx-auto">
+            Our marketplace supports multiple payment gateways including Stripe, Flutterwave, 
+            Paystack, Wise, and Payoneer, along with Apple Pay and Google Pay for seamless B2B transactions.
+          </p>
+          <PaymentButton 
+            label="Try Payment Integration" 
+            className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white"
+          />
+        </div>
+      </section>
+      
       <TestimonialsSection />
       <RegionsCoveredSection />
       <AdvantagesSection />
