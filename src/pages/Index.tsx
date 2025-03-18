@@ -8,6 +8,8 @@ import FeaturesSection from "@/components/sections/FeaturesSection";
 import ValuePropositionsSection from "@/components/sections/ValuePropositionsSection";
 import AdvantagesSection from "@/components/sections/AdvantagesSection";
 import CTASection from "@/components/sections/CTASection";
+import TestimonialsSection from "@/components/sections/TestimonialsSection";
+import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 
 const Index = () => {
   // Add scroll reveal effect
@@ -40,6 +42,8 @@ const Index = () => {
       <div id="value-props">
         <ValuePropositionsSection />
       </div>
+      <TestimonialsSection />
+      <RegionsCoveredSection />
       <AdvantagesSection />
       <CTASection />
       <Footer />
