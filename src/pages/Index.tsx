@@ -10,6 +10,7 @@ import AdvantagesSection from "@/components/sections/AdvantagesSection";
 import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
+import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
 
 const Index = () => {
   // Add scroll reveal effect
@@ -42,6 +43,7 @@ const Index = () => {
       <div id="value-props">
         <ValuePropositionsSection />
       </div>
+      <AIAdvisorSection />
       <TestimonialsSection />
       <RegionsCoveredSection />
       <AdvantagesSection />

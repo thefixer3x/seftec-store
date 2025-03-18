@@ -27,7 +27,7 @@ const advantagesData = [
   },
   {
     title: 'AI Business Advisor',
-    description: 'Strategic business and financial advisory powered by AI that analyzes data, predicts market trends, and helps manage risks to enhance profitability.'
+    description: 'Strategic business and financial advisory powered by advanced algorithms that analyze your financial data, predict market trends, and help manage risks to enhance profitability.'
   }
 ];
 
