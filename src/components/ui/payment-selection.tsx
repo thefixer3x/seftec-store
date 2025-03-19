@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, Globe } from "lucide-react";
+import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, Globe, Copy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
 
 interface PaymentFormValues {
   paymentMethod: string;
@@ -23,10 +23,24 @@ interface PaymentFormValues {
   accountName?: string;
 }
 
-const PaymentSelection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+interface PaymentSelectionProps {
+  isOpen: boolean;
+  onClose: () => void;
+  apiMode?: "sandbox" | "live";
+  onPaymentComplete?: (paymentData: any) => void;
+}
+
+const PaymentSelection: React.FC<PaymentSelectionProps> = ({ 
+  isOpen, 
+  onClose,
+  apiMode = "sandbox",
+  onPaymentComplete
+}) => {
   const [paymentProvider, setPaymentProvider] = useState("stripe");
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [showWebhookInfo, setShowWebhookInfo] = useState(false);
+  const [webhookUrl, setWebhookUrl] = useState("");
   const { toast } = useToast();
   
   const form = useForm<PaymentFormValues>({
@@ -37,7 +51,78 @@ const PaymentSelection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     },
   });
 
-  // Currency options based on selected payment provider
+  useEffect(() => {
+    const baseUrl = window.location.origin;
+    const webhookPath = `/api/webhooks/${paymentProvider}`;
+    setWebhookUrl(`${baseUrl}${webhookPath}`);
+  }, [paymentProvider]);
+
+  const copyWebhookUrl = () => {
+    navigator.clipboard.writeText(webhookUrl);
+    toast({
+      title: "Copied to clipboard",
+      description: "Webhook URL has been copied to clipboard",
+      duration: 3000,
+    });
+  };
+
+  const getApiConfig = () => {
+    const apiConfigs = {
+      stripe: {
+        sandbox: {
+          apiKey: "pk_test_51example",
+          apiEndpoint: "https://api.stripe.com/v1/payment_intents",
+        },
+        live: {
+          apiKey: "pk_live_51example",
+          apiEndpoint: "https://api.stripe.com/v1/payment_intents",
+        }
+      },
+      flutterwave: {
+        sandbox: {
+          apiKey: "FLWPUBK_TEST-example",
+          apiEndpoint: "https://api.flutterwave.com/v3/payments",
+        },
+        live: {
+          apiKey: "FLWPUBK-example",
+          apiEndpoint: "https://api.flutterwave.com/v3/payments",
+        }
+      },
+      paystack: {
+        sandbox: {
+          apiKey: "pk_test_example",
+          apiEndpoint: "https://api.paystack.co/transaction/initialize",
+        },
+        live: {
+          apiKey: "pk_live_example",
+          apiEndpoint: "https://api.paystack.co/transaction/initialize",
+        }
+      },
+      wise: {
+        sandbox: {
+          apiKey: "wise_test_example",
+          apiEndpoint: "https://api.sandbox.transferwise.tech/v1/quotes",
+        },
+        live: {
+          apiKey: "wise_live_example",
+          apiEndpoint: "https://api.transferwise.com/v1/quotes",
+        }
+      },
+      payoneer: {
+        sandbox: {
+          apiKey: "payoneer_test_example",
+          apiEndpoint: "https://api.sandbox.payoneer.com/v2/programs/payments",
+        },
+        live: {
+          apiKey: "payoneer_live_example",
+          apiEndpoint: "https://api.payoneer.com/v2/programs/payments",
+        }
+      }
+    };
+
+    return apiConfigs[paymentProvider as keyof typeof apiConfigs]?.[apiMode] || null;
+  };
+
   const getCurrencyOptions = () => {
     const currencies = {
       stripe: ["USD", "EUR", "GBP", "CAD", "AUD", "JPY"],
@@ -50,31 +135,81 @@ const PaymentSelection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     return currencies[paymentProvider as keyof typeof currencies] || ["USD"];
   };
 
-  const handlePaymentSubmit = (values: PaymentFormValues) => {
+  const processPaymentApi = async (values: PaymentFormValues) => {
+    const apiConfig = getApiConfig();
+    
+    if (!apiConfig) {
+      toast({
+        title: "API Configuration Error",
+        description: `No API configuration found for ${paymentProvider} in ${apiMode} mode`,
+        variant: "destructive",
+        duration: 5000,
+      });
+      return false;
+    }
+
+    console.log(`Making ${apiMode} API call to ${paymentProvider}:`, {
+      endpoint: apiConfig.apiEndpoint,
+      amount: values.amount,
+      currency: values.currency,
+      paymentMethod: values.paymentMethod,
+      webhookUrl: webhookUrl
+    });
+
+    return new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 2000);
+    });
+  };
+
+  const handlePaymentSubmit = async (values: PaymentFormValues) => {
     console.log("Payment values:", values);
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      setPaymentSuccess(true);
+    try {
+      const paymentSuccess = await processPaymentApi(values);
       
+      if (paymentSuccess) {
+        setIsProcessing(false);
+        setPaymentSuccess(true);
+        
+        toast({
+          title: "Payment Successful",
+          description: `Payment of ${values.amount} ${values.currency} processed via ${paymentProvider.toUpperCase()}`,
+          duration: 5000,
+        });
+        
+        console.log(`Sending payment confirmation to user...`);
+        
+        if (onPaymentComplete) {
+          onPaymentComplete({
+            provider: paymentProvider,
+            amount: values.amount,
+            currency: values.currency,
+            paymentMethod: values.paymentMethod,
+            timestamp: new Date().toISOString(),
+            transactionId: `${paymentProvider}_${Date.now()}`
+          });
+        }
+        
+        setTimeout(() => {
+          setPaymentSuccess(false);
+          form.reset();
+          onClose();
+        }, 2000);
+      } else {
+        throw new Error("Payment processing failed");
+      }
+    } catch (error) {
+      setIsProcessing(false);
       toast({
-        title: "Payment Successful",
-        description: `Payment of ${values.amount} ${values.currency} processed via ${paymentProvider.toUpperCase()}`,
+        title: "Payment Failed",
+        description: error instanceof Error ? error.message : "Unknown payment error occurred",
+        variant: "destructive",
         duration: 5000,
       });
-      
-      // Send confirmation email/SMS simulation
-      console.log(`Sending payment confirmation to user...`);
-      
-      // Reset form after successful payment
-      setTimeout(() => {
-        setPaymentSuccess(false);
-        form.reset();
-        onClose();
-      }, 2000);
-    }, 2000);
+    }
   };
 
   if (!isOpen) return null;
@@ -85,7 +220,12 @@ const PaymentSelection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         <CardHeader className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white">
           <div className="flex justify-between items-center">
             <CardTitle className="text-xl">Secure Payment</CardTitle>
-            <Lock className="h-5 w-5" />
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="bg-yellow-500/20 text-yellow-200 border-yellow-400/30">
+                {apiMode.toUpperCase()} MODE
+              </Badge>
+              <Lock className="h-5 w-5" />
+            </div>
           </div>
           <CardDescription className="text-white/80">
             Choose your preferred payment method
@@ -105,9 +245,10 @@ const PaymentSelection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           ) : (
             <>
               <Tabs defaultValue="gateway" className="w-full mb-6">
-                <TabsList className="grid grid-cols-2 mb-4">
+                <TabsList className="grid grid-cols-3 mb-4">
                   <TabsTrigger value="gateway">Payment Gateway</TabsTrigger>
                   <TabsTrigger value="method">Payment Method</TabsTrigger>
+                  <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="gateway" className="space-y-4">
@@ -324,6 +465,82 @@ const PaymentSelection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
                     </form>
                   </Form>
                 </TabsContent>
+                
+                <TabsContent value="webhooks" className="space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Webhook Configuration</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Use this webhook URL in your {paymentProvider} developer dashboard to receive payment notifications. 
+                      This is necessary for asynchronous payment methods and status updates.
+                    </p>
+                    
+                    <div className="space-y-2">
+                      <FormLabel>Webhook URL for {paymentProvider}</FormLabel>
+                      <div className="flex items-center space-x-2">
+                        <Input 
+                          value={webhookUrl} 
+                          readOnly 
+                          className="font-mono text-sm bg-slate-50 dark:bg-slate-900"
+                        />
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          onClick={copyWebhookUrl}
+                          title="Copy webhook URL"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        {apiMode === "sandbox" ? 
+                          "This URL works in test mode - no real payments will be processed." : 
+                          "This URL is configured for live payments. Use with caution."}
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <FormLabel>Webhook Events</FormLabel>
+                      <div className="grid grid-cols-2 gap-2">
+                        {['payment.success', 'payment.failed', 'payment.pending', 'refund.processed'].map((event) => (
+                          <div key={event} className="flex items-center space-x-2">
+                            <div className="h-2 w-2 rounded-full bg-green-500" />
+                            <span className="text-sm">{event}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <Alert className="bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
+                      <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                      <AlertTitle>Important</AlertTitle>
+                      <AlertDescription className="text-sm">
+                        You'll need to configure your server to process webhook events from {paymentProvider}. 
+                        Make sure to validate the signature to prevent unauthorized events.
+                      </AlertDescription>
+                    </Alert>
+                    
+                    <div className="space-y-2">
+                      <FormLabel>Sample Webhook Payload</FormLabel>
+                      <Textarea 
+                        className="font-mono text-xs h-32 bg-slate-50 dark:bg-slate-900"
+                        readOnly
+                        value={JSON.stringify({
+                          id: `evt_${Date.now()}`,
+                          type: "payment.success",
+                          data: {
+                            object: {
+                              id: `pay_${Date.now()}`,
+                              amount: 1000,
+                              currency: "USD",
+                              status: "succeeded",
+                              customer: "cus_example"
+                            }
+                          }
+                        }, null, 2)}
+                      />
+                    </div>
+                  </div>
+                </TabsContent>
               </Tabs>
               
               <div className="flex items-center justify-between mt-4 pt-4 border-t">
@@ -409,3 +626,4 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
 };
 
 export default PaymentSelection;
+

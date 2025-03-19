@@ -9,6 +9,8 @@ interface PaymentButtonProps {
   variant?: "default" | "outline" | "secondary" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
+  apiMode?: "sandbox" | "live";
+  onPaymentComplete?: (paymentData: any) => void;
 }
 
 const PaymentButton: React.FC<PaymentButtonProps> = ({
@@ -16,6 +18,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   variant = "default",
   size = "default",
   className,
+  apiMode = "sandbox",
+  onPaymentComplete,
 }) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
@@ -25,6 +29,13 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   const closePaymentModal = () => {
     setIsPaymentModalOpen(false);
+  };
+
+  const handlePaymentComplete = (paymentData: any) => {
+    if (onPaymentComplete) {
+      onPaymentComplete(paymentData);
+    }
+    closePaymentModal();
   };
 
   return (
@@ -41,7 +52,9 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
       <PaymentSelection 
         isOpen={isPaymentModalOpen} 
-        onClose={closePaymentModal} 
+        onClose={closePaymentModal}
+        apiMode={apiMode}
+        onPaymentComplete={handlePaymentComplete}
       />
     </>
   );

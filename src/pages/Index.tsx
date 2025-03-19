@@ -13,8 +13,21 @@ import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
 import PaymentButton from "@/components/ui/payment-button";
 import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
+
+  // Handle successful payment completion
+  const handlePaymentComplete = (paymentData: any) => {
+    toast({
+      title: "Payment Processed",
+      description: `${paymentData.amount} ${paymentData.currency} payment via ${paymentData.provider} completed`,
+      duration: 5000,
+    });
+    console.log("Payment complete:", paymentData);
+  };
+
   // Add scroll reveal effect
   useEffect(() => {
     const revealElements = document.querySelectorAll('.reveal');
@@ -60,6 +73,8 @@ const Index = () => {
           <PaymentButton 
             label="Try Payment Integration" 
             className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white"
+            apiMode="sandbox"
+            onPaymentComplete={handlePaymentComplete}
           />
         </div>
       </section>
