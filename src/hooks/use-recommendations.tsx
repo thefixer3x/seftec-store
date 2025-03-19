@@ -13,6 +13,8 @@ export type Recommendation = {
   product_name?: string;
   product_price?: number;
   product_category?: string;
+  viewed?: boolean;
+  clicked?: boolean;
 };
 
 export function useRecommendations() {
@@ -28,6 +30,15 @@ export function useRecommendations() {
     };
     
     checkUser();
+    
+    // Subscribe to auth changes
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUserId(session?.user?.id || null);
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   // Fetch recommendations
@@ -46,6 +57,8 @@ export function useRecommendations() {
           relevance_score,
           recommendation_type,
           reason,
+          viewed,
+          clicked,
           products:product_id (
             name,
             price,
@@ -69,6 +82,8 @@ export function useRecommendations() {
         relevance_score: rec.relevance_score,
         recommendation_type: rec.recommendation_type,
         reason: rec.reason,
+        viewed: rec.viewed,
+        clicked: rec.clicked,
         product_name: rec.products?.name,
         product_price: rec.products?.price,
         product_category: rec.products?.category
@@ -82,6 +97,10 @@ export function useRecommendations() {
   const markAsViewed = async (recommendationId: string) => {
     if (!userId) return;
     
+    // Only update if not already viewed
+    const recommendation = recommendations?.find(r => r.id === recommendationId);
+    if (recommendation?.viewed) return;
+    
     const { error } = await supabase
       .from('recommendations')
       .update({ viewed: true })
@@ -90,6 +109,9 @@ export function useRecommendations() {
       
     if (error) {
       console.error("Error marking recommendation as viewed:", error);
+    } else {
+      // Update local state to avoid unnecessary refetch
+      refetch();
     }
   };
 
@@ -105,6 +127,9 @@ export function useRecommendations() {
       
     if (error) {
       console.error("Error marking recommendation as clicked:", error);
+    } else {
+      // Update local state to avoid unnecessary refetch
+      refetch();
     }
   };
 
