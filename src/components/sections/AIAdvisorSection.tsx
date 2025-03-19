@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import SectionHeading from "@/components/ui/section-heading";
 import { Bot, Brain, TrendingUp, DollarSign, BarChart, Shield, Bell, Lock, ShoppingCart, AlertTriangle } from "lucide-react";
@@ -8,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useRecommendations } from "@/hooks/use-recommendations";
 import { supabase } from "@/integrations/supabase/client";
@@ -30,8 +30,19 @@ const AIAdvisorSection: React.FC = () => {
     isLoading: isLoadingRecommendations, 
     error: recommendationsError,
     markAsClicked,
+    markAsViewed,
     isAuthenticated
   } = useRecommendations();
+
+  // Mark recommendations as viewed when they are displayed
+  useEffect(() => {
+    if (recommendations && recommendations.length > 0) {
+      // Mark all recommendations as viewed when they're displayed
+      recommendations.forEach(rec => {
+        markAsViewed(rec.id);
+      });
+    }
+  }, [recommendations, markAsViewed]);
 
   // Check for current user
   useEffect(() => {
@@ -200,7 +211,6 @@ const AIAdvisorSection: React.FC = () => {
           {/* AI Features */}
           <div className="lg:col-span-5 space-y-6 animate-fade-up">
             <div className="flex flex-col space-y-4">
-              {/* Feature cards */}
               <FeatureCard 
                 icon={<Brain className="h-6 w-6" />} 
                 title="Advanced Data Analysis" 
@@ -245,9 +255,16 @@ const AIAdvisorSection: React.FC = () => {
             <Card className="bg-white dark:bg-seftec-darkNavy/80 border border-seftec-slate dark:border-white/10 overflow-hidden">
               <CardContent className="p-0">
                 <div className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple p-4 text-white">
-                  <div className="flex items-center gap-2">
-                    <ShoppingCart className="h-5 w-5" />
-                    <h3 className="font-medium">AI Product Recommendations</h3>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ShoppingCart className="h-5 w-5" />
+                      <h3 className="font-medium">AI Product Recommendations</h3>
+                    </div>
+                    {isAuthenticated && recommendations && recommendations.length > 0 && (
+                      <Badge variant="outline" className="bg-white/10 border-white/30 text-xs">
+                        {recommendations.length} items
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 
@@ -261,7 +278,7 @@ const AIAdvisorSection: React.FC = () => {
                       <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
                         Create an account or sign in to receive personalized AI product recommendations.
                       </p>
-                      <Button className="bg-gradient-teal-purple text-white hover:opacity-90">
+                      <Button className="bg-gradient-to-r from-seftec-teal to-seftec-purple text-white hover:opacity-90">
                         Sign In / Register
                       </Button>
                     </div>
