@@ -17,6 +17,8 @@ export type Recommendation = {
   clicked?: boolean;
 };
 
+export type RecommendationType = 'similar_products' | 'frequently_bought_together' | 'trending' | 'based_on_history' | 'price_drop';
+
 export function useRecommendations() {
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -93,6 +95,52 @@ export function useRecommendations() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  // Fetch recommendations by type
+  const getRecommendationsByType = async (type: RecommendationType, limit: number = 3): Promise<Recommendation[]> => {
+    if (!userId) return [];
+    
+    const { data, error } = await supabase
+      .from('recommendations')
+      .select(`
+        id,
+        product_id,
+        supplier_id,
+        relevance_score,
+        recommendation_type,
+        reason,
+        viewed,
+        clicked,
+        products:product_id (
+          name,
+          price,
+          category
+        )
+      `)
+      .eq('user_id', userId)
+      .eq('recommendation_type', type)
+      .order('relevance_score', { ascending: false })
+      .limit(limit);
+    
+    if (error) {
+      console.error(`Error fetching ${type} recommendations:`, error);
+      return [];
+    }
+    
+    return (data || []).map(rec => ({
+      id: rec.id,
+      product_id: rec.product_id,
+      supplier_id: rec.supplier_id,
+      relevance_score: rec.relevance_score,
+      recommendation_type: rec.recommendation_type,
+      reason: rec.reason,
+      viewed: rec.viewed,
+      clicked: rec.clicked,
+      product_name: rec.products?.name,
+      product_price: rec.products?.price,
+      product_category: rec.products?.category
+    }));
+  };
+
   // Mark recommendation as viewed
   const markAsViewed = async (recommendationId: string) => {
     if (!userId) return;
@@ -140,6 +188,7 @@ export function useRecommendations() {
     refetch, 
     markAsViewed, 
     markAsClicked,
+    getRecommendationsByType,
     isAuthenticated: !!userId 
   };
 }
