@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import SectionHeading from "@/components/ui/section-heading";
-import { Bot, Brain, TrendingUp, DollarSign, BarChart, Shield, Bell, Lock, ShoppingCart, AlertTriangle } from "lucide-react";
+import { 
+  Bot, Brain, TrendingUp, DollarSign, BarChart, 
+  Shield, Bell, Lock, AlertTriangle 
+} from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useRecommendations } from "@/hooks/use-recommendations";
 import { supabase } from "@/integrations/supabase/client";
+import RecommendationsSection from "@/components/ai/RecommendationsSection";
 
 const AIAdvisorSection: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
@@ -23,26 +25,6 @@ const AIAdvisorSection: React.FC = () => {
   const [isPremium, setIsPremium] = useState(false);
   const [user, setUser] = useState<any>(null);
   const { toast } = useToast();
-  
-  // Fetch recommendations using our custom hook
-  const { 
-    recommendations, 
-    isLoading: isLoadingRecommendations, 
-    error: recommendationsError,
-    markAsClicked,
-    markAsViewed,
-    isAuthenticated
-  } = useRecommendations();
-
-  // Mark recommendations as viewed when they are displayed
-  useEffect(() => {
-    if (recommendations && recommendations.length > 0) {
-      // Mark all recommendations as viewed when they're displayed
-      recommendations.forEach(rec => {
-        markAsViewed(rec.id);
-      });
-    }
-  }, [recommendations, markAsViewed]);
 
   // Check for current user
   useEffect(() => {
@@ -188,16 +170,6 @@ const AIAdvisorSection: React.FC = () => {
     setHasNotification(false);
   };
 
-  // Handle product recommendation click
-  const handleRecommendationClick = (recommendationId: string) => {
-    markAsClicked(recommendationId);
-    toast({
-      title: "Product Added to Watchlist",
-      description: "This product has been added to your watchlist for future reference.",
-      duration: 3000,
-    });
-  };
-
   return (
     <section id="ai-advisor" className="py-20 dark:bg-seftec-darkNavy">
       <div className="container mx-auto px-6">
@@ -251,90 +223,8 @@ const AIAdvisorSection: React.FC = () => {
               />
             </div>
             
-            {/* Product Recommendations Card */}
-            <Card className="bg-white dark:bg-seftec-darkNavy/80 border border-seftec-slate dark:border-white/10 overflow-hidden">
-              <CardContent className="p-0">
-                <div className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple p-4 text-white">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ShoppingCart className="h-5 w-5" />
-                      <h3 className="font-medium">AI Product Recommendations</h3>
-                    </div>
-                    {isAuthenticated && recommendations && recommendations.length > 0 && (
-                      <Badge variant="outline" className="bg-white/10 border-white/30 text-xs">
-                        {recommendations.length} items
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="p-4 space-y-4">
-                  {!isAuthenticated ? (
-                    <div className="text-center py-6">
-                      <AlertTriangle className="h-12 w-12 mx-auto text-amber-500 mb-3" />
-                      <h4 className="text-lg font-medium text-seftec-navy dark:text-white mb-2">
-                        Sign In to View Recommendations
-                      </h4>
-                      <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
-                        Create an account or sign in to receive personalized AI product recommendations.
-                      </p>
-                      <Button className="bg-gradient-to-r from-seftec-teal to-seftec-purple text-white hover:opacity-90">
-                        Sign In / Register
-                      </Button>
-                    </div>
-                  ) : isLoadingRecommendations ? (
-                    <div className="p-4 text-center">
-                      <div className="animate-spin h-8 w-8 border-4 border-seftec-teal/50 border-t-seftec-teal rounded-full mx-auto mb-2"></div>
-                      <p className="text-seftec-navy/70 dark:text-white/70">Loading recommendations...</p>
-                    </div>
-                  ) : recommendationsError ? (
-                    <Alert className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/30">
-                      <AlertTriangle className="h-4 w-4 text-red-500" />
-                      <AlertTitle className="text-red-700 dark:text-red-300">Error</AlertTitle>
-                      <AlertDescription className="text-red-600 dark:text-red-400">
-                        There was an error fetching your recommendations. Please try again later.
-                      </AlertDescription>
-                    </Alert>
-                  ) : recommendations && recommendations.length > 0 ? (
-                    <div className="space-y-3">
-                      {recommendations.map((rec) => (
-                        <div 
-                          key={rec.id} 
-                          className="p-3 rounded-lg border border-seftec-slate/30 dark:border-white/10 hover:bg-seftec-slate/10 dark:hover:bg-white/5 transition-colors"
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-medium text-seftec-navy dark:text-white">
-                                {rec.product_name || "Product Recommendation"}
-                              </h4>
-                              <p className="text-sm text-seftec-navy/60 dark:text-white/60">
-                                {rec.product_category || "Category"} • ${rec.product_price?.toFixed(2) || "0.00"}
-                              </p>
-                              <p className="text-sm text-seftec-navy/70 dark:text-white/70 mt-1">
-                                {rec.reason || `Recommended based on your business profile and purchase history. Relevance: ${(rec.relevance_score * 100).toFixed(0)}%`}
-                              </p>
-                            </div>
-                            <Button 
-                              size="sm" 
-                              className="bg-seftec-teal hover:bg-seftec-teal/90 text-white text-xs"
-                              onClick={() => handleRecommendationClick(rec.id)}
-                            >
-                              View
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-4">
-                      <p className="text-seftec-navy/70 dark:text-white/70">
-                        No recommendations available yet. Continue using the platform to receive personalized suggestions.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Product Recommendations */}
+            <RecommendationsSection />
           </div>
           
           {/* AI Chat Demo */}
