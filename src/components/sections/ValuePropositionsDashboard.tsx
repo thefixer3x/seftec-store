@@ -33,8 +33,8 @@ const dashboardFeatures = [
   },
   {
     icon: <Bot className="h-8 w-8 text-seftec-purple" />,
-    title: 'AI Business Advisor',
-    description: 'Get strategic business and financial advisory powered by advanced AI algorithms.',
+    title: 'BizGenie AI Advisor',
+    description: 'Get strategic business and financial advisory powered by BizGenie, your personalised AI assistant.',
     detail: 'Our intelligent assistant analyzes your financial data, market trends, and business operations to offer insightful recommendations. It helps you anticipate market changes, manage risks, and enhance profitability through data-driven strategies tailored to your specific business needs.'
   }
 ];

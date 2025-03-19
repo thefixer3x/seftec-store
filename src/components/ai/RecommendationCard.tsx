@@ -21,7 +21,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
     onClick(recommendation.id);
     toast({
       title: "Product Added to Watchlist",
-      description: "This product has been added to your watchlist for future reference.",
+      description: "BizGenie has added this product to your watchlist for future reference.",
       duration: 3000,
     });
   };
@@ -47,13 +47,13 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
       <div className="flex justify-between items-start">
         <div>
           <h4 className="font-medium text-seftec-navy dark:text-white">
-            {recommendation.product_name || "Product Recommendation"}
+            {recommendation.product_name || "BizGenie Recommendation"}
           </h4>
           <p className="text-sm text-seftec-navy/60 dark:text-white/60">
             {recommendation.product_category || "Category"} • ${recommendation.product_price?.toFixed(2) || "0.00"}
           </p>
           <p className="text-sm text-seftec-navy/70 dark:text-white/70 mt-1">
-            {recommendation.reason || `Recommended based on your business profile and purchase history. Relevance: ${(recommendation.relevance_score * 100).toFixed(0)}%`}
+            {recommendation.reason || `Recommended by BizGenie based on your business profile and purchase history. Relevance: ${(recommendation.relevance_score * 100).toFixed(0)}%`}
           </p>
           {recommendation.recommendation_type && (
             <div className="mt-2">
