@@ -1,23 +1,62 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, AlertTriangle } from 'lucide-react';
+import { ShoppingCart, AlertTriangle, FilterIcon } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { useRecommendations } from '@/hooks/use-recommendations';
+import { useRecommendations, RecommendationType } from '@/hooks/use-recommendations';
 import RecommendationCard from './RecommendationCard';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const RecommendationsSection: React.FC = () => {
+  const [selectedType, setSelectedType] = useState<RecommendationType | 'all'>('all');
+  const [filteredRecommendations, setFilteredRecommendations] = useState<any[]>([]);
+  const [isFiltering, setIsFiltering] = useState(false);
+  
   const { 
     recommendations, 
     isLoading, 
     error, 
     markAsViewed, 
     markAsClicked,
+    getRecommendationsByType,
     isAuthenticated 
   } = useRecommendations();
 
+  // Update filtered recommendations when selection changes
+  useEffect(() => {
+    const fetchFilteredRecommendations = async () => {
+      if (selectedType === 'all') {
+        setFilteredRecommendations(recommendations || []);
+        return;
+      }
+      
+      setIsFiltering(true);
+      try {
+        const filtered = await getRecommendationsByType(selectedType, 10);
+        setFilteredRecommendations(filtered);
+      } catch (err) {
+        console.error('Error filtering recommendations:', err);
+      } finally {
+        setIsFiltering(false);
+      }
+    };
+
+    fetchFilteredRecommendations();
+  }, [selectedType, recommendations, getRecommendationsByType]);
+
+  // Format recommendation type for display
+  const formatType = (type: string) => {
+    return type.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
+  // Helper to determine which recommendations to display
+  const displayRecommendations = isFiltering ? [] : filteredRecommendations;
+  
   return (
     <Card className="bg-white dark:bg-seftec-darkNavy/80 border border-seftec-slate dark:border-white/10 overflow-hidden">
       <CardContent className="p-0">
@@ -35,6 +74,30 @@ const RecommendationsSection: React.FC = () => {
           </div>
         </div>
         
+        {isAuthenticated && recommendations && recommendations.length > 0 && (
+          <div className="p-3 border-b border-seftec-slate/20 dark:border-white/10 bg-gray-50 dark:bg-seftec-darkNavy/50">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-between">
+              <p className="text-sm text-seftec-navy/70 dark:text-white/70">Filter by type:</p>
+              <Select
+                value={selectedType}
+                onValueChange={(value) => setSelectedType(value as RecommendationType | 'all')}
+              >
+                <SelectTrigger className="w-full sm:w-[200px] h-8 text-xs">
+                  <SelectValue placeholder="All Types" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="similar_products">Similar Products</SelectItem>
+                  <SelectItem value="frequently_bought_together">Frequently Bought Together</SelectItem>
+                  <SelectItem value="trending">Trending</SelectItem>
+                  <SelectItem value="based_on_history">Based on History</SelectItem>
+                  <SelectItem value="price_drop">Price Drop</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
+        
         <div className="p-4 space-y-4">
           {!isAuthenticated ? (
             <div className="text-center py-6">
@@ -49,10 +112,12 @@ const RecommendationsSection: React.FC = () => {
                 Sign In / Register
               </Button>
             </div>
-          ) : isLoading ? (
+          ) : isLoading || isFiltering ? (
             <div className="p-4 text-center">
               <div className="animate-spin h-8 w-8 border-4 border-seftec-teal/50 border-t-seftec-teal rounded-full mx-auto mb-2"></div>
-              <p className="text-seftec-navy/70 dark:text-white/70">Loading recommendations...</p>
+              <p className="text-seftec-navy/70 dark:text-white/70">
+                {isFiltering ? "Filtering recommendations..." : "Loading recommendations..."}
+              </p>
             </div>
           ) : error ? (
             <Alert className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/30">
@@ -62,9 +127,9 @@ const RecommendationsSection: React.FC = () => {
                 There was an error fetching your recommendations. Please try again later.
               </AlertDescription>
             </Alert>
-          ) : recommendations && recommendations.length > 0 ? (
+          ) : displayRecommendations && displayRecommendations.length > 0 ? (
             <div className="space-y-3">
-              {recommendations.map((rec) => (
+              {displayRecommendations.map((rec) => (
                 <RecommendationCard
                   key={rec.id}
                   recommendation={rec}
@@ -76,7 +141,10 @@ const RecommendationsSection: React.FC = () => {
           ) : (
             <div className="text-center py-4">
               <p className="text-seftec-navy/70 dark:text-white/70">
-                No recommendations available yet. Continue using the platform to receive personalized suggestions.
+                {selectedType === 'all' 
+                  ? "No recommendations available yet. Continue using the platform to receive personalized suggestions."
+                  : `No ${formatType(selectedType)} recommendations available.`
+                }
               </p>
             </div>
           )}

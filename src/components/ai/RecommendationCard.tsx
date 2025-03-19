@@ -33,6 +33,13 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
     }
   }, [recommendation.id, recommendation.viewed, onView]);
 
+  // Format recommendation type for display
+  const formatType = (type: string) => {
+    return type.split('_').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+  };
+
   return (
     <div 
       className="p-3 rounded-lg border border-seftec-slate/30 dark:border-white/10 hover:bg-seftec-slate/10 dark:hover:bg-white/5 transition-colors"
@@ -51,7 +58,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
           {recommendation.recommendation_type && (
             <div className="mt-2">
               <span className="text-xs px-2 py-1 rounded-full bg-seftec-teal/10 text-seftec-teal dark:bg-seftec-teal/20">
-                {recommendation.recommendation_type.replace(/_/g, ' ')}
+                {formatType(recommendation.recommendation_type)}
               </span>
             </div>
           )}
