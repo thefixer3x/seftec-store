@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import SectionHeading from "@/components/ui/section-heading";
 import { 
@@ -175,7 +176,7 @@ const AIAdvisorSection: React.FC = () => {
       <div className="container mx-auto px-6">
         <SectionHeading
           label="AI-Powered Insights"
-          title="Your Strategic Business Advisor"
+          title="BizGenie AI: Your Personalised Business Advisor"
           subtitle="Our AI assistant analyzes your financial data and business operations to deliver actionable insights, alerts, and strategic recommendations."
         />
         
@@ -234,7 +235,7 @@ const AIAdvisorSection: React.FC = () => {
                 <div className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple p-4 text-white flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bot className="h-5 w-5" />
-                    <h3 className="font-medium">AI Business Advisor</h3>
+                    <h3 className="font-medium">BizGenie AI Assistant</h3>
                     {hasNotification && (
                       <span 
                         className="relative flex h-3 w-3 cursor-pointer" 
@@ -279,7 +280,7 @@ const AIAdvisorSection: React.FC = () => {
                   <div className="bg-seftec-slate/30 dark:bg-white/5 p-4 rounded-lg min-h-[100px] max-h-[250px] overflow-y-auto">
                     {response ? (
                       <>
-                        <p className="text-xs text-seftec-navy/60 dark:text-white/60 mb-2">AI Advisor:</p>
+                        <p className="text-xs text-seftec-navy/60 dark:text-white/60 mb-2">BizGenie:</p>
                         <p className="text-seftec-navy dark:text-white/90">{response}</p>
                         {isTyping && <span className="inline-block animate-pulse">▋</span>}
                       </>
@@ -299,7 +300,7 @@ const AIAdvisorSection: React.FC = () => {
                           className="data-[state=checked]:bg-seftec-navy dark:data-[state=checked]:bg-seftec-teal"
                         />
                         <span className="text-xs text-seftec-navy/70 dark:text-white/70">
-                          Allow AI to learn from my queries to improve future responses
+                          Allow BizGenie to learn from my queries to improve future responses
                         </span>
                       </div>
                     </div>
@@ -321,7 +322,7 @@ const AIAdvisorSection: React.FC = () => {
                       onClick={handleAskAI}
                       disabled={isTyping || !query.trim()}
                     >
-                      {isTyping ? "Processing..." : `Ask AI Advisor ${isPremium ? "(Premium)" : ""}`}
+                      {isTyping ? "Processing..." : `Ask BizGenie ${isPremium ? "(Premium)" : ""}`}
                     </Button>
                     
                     <p className="text-xs text-seftec-navy/60 dark:text-white/60 text-center">
