@@ -9,11 +9,15 @@ import { useRecommendations, RecommendationType } from '@/hooks/use-recommendati
 import RecommendationCard from './RecommendationCard';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useAuth } from '@/context/AuthContext';
+import { AuthModal } from '@/components/auth/AuthModal';
 
 const RecommendationsSection: React.FC = () => {
   const [selectedType, setSelectedType] = useState<RecommendationType | 'all'>('all');
   const [filteredRecommendations, setFilteredRecommendations] = useState<any[]>([]);
   const [isFiltering, setIsFiltering] = useState(false);
+  
+  const { user } = useAuth();
   
   const { 
     recommendations, 
@@ -108,9 +112,11 @@ const RecommendationsSection: React.FC = () => {
               <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
                 Create an account or sign in to receive personalized AI product recommendations.
               </p>
-              <Button className="bg-gradient-to-r from-seftec-teal to-seftec-purple text-white hover:opacity-90">
-                Sign In / Register
-              </Button>
+              <AuthModal>
+                <Button className="bg-gradient-to-r from-seftec-teal to-seftec-purple text-white hover:opacity-90">
+                  Sign In / Register
+                </Button>
+              </AuthModal>
             </div>
           ) : isLoading || isFiltering ? (
             <div className="p-4 text-center">

@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export type Recommendation = {
   id: string;
@@ -20,28 +21,8 @@ export type Recommendation = {
 export type RecommendationType = 'similar_products' | 'frequently_bought_together' | 'trending' | 'based_on_history' | 'price_drop';
 
 export function useRecommendations() {
-  const [userId, setUserId] = useState<string | null>(null);
-
-  // Check for current user
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session?.user) {
-        setUserId(data.session.user.id);
-      }
-    };
-    
-    checkUser();
-    
-    // Subscribe to auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUserId(session?.user?.id || null);
-    });
-    
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  const { user } = useAuth();
+  const userId = user?.id || null;
 
   // Fetch recommendations
   const { data: recommendations, isLoading, error, refetch } = useQuery({
