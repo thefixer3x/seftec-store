@@ -22,10 +22,7 @@ export const fetchUserProfile = async (userId: string): Promise<Profile | null> 
 };
 
 export const handleSignIn = async (email: string, password: string) => {
-  const { error } = await supabase.auth.signInWithPassword({ 
-    email, 
-    password,
-  });
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
   
   if (error) {
     throw error;
@@ -33,7 +30,6 @@ export const handleSignIn = async (email: string, password: string) => {
 };
 
 export const handleSignUp = async (email: string, password: string, userData: Partial<Profile>) => {
-  // Setting captchaToken directly to true forces Supabase to skip the captcha verification
   const { error } = await supabase.auth.signUp({ 
     email, 
     password,
@@ -41,14 +37,11 @@ export const handleSignUp = async (email: string, password: string, userData: Pa
       data: {
         first_name: userData.first_name,
         last_name: userData.last_name,
-      },
-      // This tells Supabase to bypass captcha completely
-      captchaToken: "true" 
+      }
     }
   });
   
   if (error) {
-    console.error('Signup error:', error);
     throw error;
   }
 };
