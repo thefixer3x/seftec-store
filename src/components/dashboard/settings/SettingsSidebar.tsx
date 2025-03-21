@@ -1,9 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TabsTrigger } from '@/components/ui/tabs';
 import { Building, User, Lock, Key, Mail, Shield, Bell, ChevronRight, ChevronDown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 
 interface SettingsSidebarProps {
   activeTab: string;
@@ -16,7 +16,7 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
   const [isOpen, setIsOpen] = useState(true);
 
   // On mobile, default to closed unless active
-  React.useEffect(() => {
+  useEffect(() => {
     if (isMobile) {
       setIsOpen(activeTab === 'business');
     } else {
@@ -39,7 +39,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
             Business Profile
           </div>
           {isMobile && activeTab === 'business' && (
-            <CollapsibleTrigger 
+            <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsOpen(!isOpen);
@@ -47,7 +48,7 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
               className="ml-2"
             >
               {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-            </CollapsibleTrigger>
+            </button>
           )}
         </div>
       </TabsTrigger>
