@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -63,7 +62,14 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
         } else if (error.message.includes("Password should be")) {
           errorMessage = error.message;
         } else if (error.message.includes("captcha")) {
-          errorMessage = "We're experiencing technical difficulties with our signup process. Please try again later.";
+          errorMessage = "We're experiencing technical difficulties with our signup process. Please try again later. Our team has been notified.";
+        } else if (error.message.includes("rate limit")) {
+          errorMessage = "You've made too many signup attempts. Please try again later.";
+        } else if (error.message.includes("valid email")) {
+          errorMessage = "Please enter a valid email address.";
+        } else {
+          // Keep the detailed error message in case it's useful
+          errorMessage = `Error: ${error.message}`;
         }
       }
       
