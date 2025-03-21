@@ -38,7 +38,7 @@ const TransactionsCard = ({ activeTab, setActiveTab }: TransactionsCardProps) =>
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          <TabsList>
+          <TabsList className="grid grid-cols-2">
             <TabsTrigger value="payment">Payment Transactions</TabsTrigger>
             <TabsTrigger value="loan">Loan Transactions</TabsTrigger>
           </TabsList>
@@ -51,7 +51,7 @@ const TransactionsCard = ({ activeTab, setActiveTab }: TransactionsCardProps) =>
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <Calendar className="w-5 h-5 mr-2 text-blue-600" />
-                Total Transaction Value
+                <span>Total Transaction Value</span>
               </div>
               <div className="text-2xl font-bold">₦935,670.00</div>
             </div>

@@ -14,9 +14,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       <DashboardSidebar />
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <DashboardHeader />
-        {children}
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
       </div>
     </div>
   );
