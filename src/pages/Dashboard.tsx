@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { 
   Home, 
@@ -96,7 +96,7 @@ const Dashboard = () => {
                   href={item.path} 
                   className={cn(
                     "flex items-center px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700",
-                    index === 5 && "border-l-4 border-yellow-500 bg-gray-100 dark:bg-gray-700" // Highlight settings as active
+                    index === 0 && "border-l-4 border-yellow-500 bg-gray-100 dark:bg-gray-700" // Highlight home as active
                   )}
                 >
                   <item.icon className="w-5 h-5 mr-3" />
