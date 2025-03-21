@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,11 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, Globe, Copy } from "lucide-react";
+import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, CreditCard as CardIcon, Banknote, Globe } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
-import { Textarea } from "@/components/ui/textarea";
 
 interface PaymentFormValues {
   paymentMethod: string;
@@ -39,8 +39,6 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
   const [paymentProvider, setPaymentProvider] = useState("stripe");
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [showWebhookInfo, setShowWebhookInfo] = useState(false);
-  const [webhookUrl, setWebhookUrl] = useState("");
   const { toast } = useToast();
   
   const form = useForm<PaymentFormValues>({
@@ -50,21 +48,6 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
       amount: "",
     },
   });
-
-  useEffect(() => {
-    const baseUrl = window.location.origin;
-    const webhookPath = `/api/webhooks/${paymentProvider}`;
-    setWebhookUrl(`${baseUrl}${webhookPath}`);
-  }, [paymentProvider]);
-
-  const copyWebhookUrl = () => {
-    navigator.clipboard.writeText(webhookUrl);
-    toast({
-      title: "Copied to clipboard",
-      description: "Webhook URL has been copied to clipboard",
-      duration: 3000,
-    });
-  };
 
   const getApiConfig = () => {
     const apiConfigs = {
@@ -152,8 +135,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
       endpoint: apiConfig.apiEndpoint,
       amount: values.amount,
       currency: values.currency,
-      paymentMethod: values.paymentMethod,
-      webhookUrl: webhookUrl
+      paymentMethod: values.paymentMethod
     });
 
     return new Promise<boolean>((resolve) => {
@@ -245,10 +227,9 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
           ) : (
             <>
               <Tabs defaultValue="gateway" className="w-full mb-6">
-                <TabsList className="grid grid-cols-3 mb-4">
+                <TabsList className="grid grid-cols-2 mb-4">
                   <TabsTrigger value="gateway">Payment Gateway</TabsTrigger>
                   <TabsTrigger value="method">Payment Method</TabsTrigger>
-                  <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="gateway" className="space-y-4">
@@ -257,7 +238,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                       id="stripe" 
                       name="Stripe" 
                       description="Global payments"
-                      icon={<Globe className="h-8 w-8 text-[#6772E5]" />} 
+                      icon={<CreditCard className="h-8 w-8 text-[#635BFF]" />} 
                       selected={paymentProvider === "stripe"} 
                       onClick={() => setPaymentProvider("stripe")} 
                     />
@@ -265,7 +246,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                       id="flutterwave" 
                       name="Flutterwave" 
                       description="Africa focused"
-                      icon={<DollarSign className="h-8 w-8 text-[#FB4E20]" />} 
+                      icon={<Banknote className="h-8 w-8 text-[#FB4E20]" />} 
                       selected={paymentProvider === "flutterwave"} 
                       onClick={() => setPaymentProvider("flutterwave")} 
                     />
@@ -273,7 +254,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                       id="paystack" 
                       name="Paystack" 
                       description="African businesses"
-                      icon={<DollarSign className="h-8 w-8 text-[#00C3F7]" />} 
+                      icon={<CardIcon className="h-8 w-8 text-[#00C3F7]" />} 
                       selected={paymentProvider === "paystack"} 
                       onClick={() => setPaymentProvider("paystack")} 
                     />
@@ -289,7 +270,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                       id="payoneer" 
                       name="Payoneer" 
                       description="Global B2B payments"
-                      icon={<Globe className="h-8 w-8 text-[#FF4800]" />} 
+                      icon={<DollarSign className="h-8 w-8 text-[#FF4800]" />} 
                       selected={paymentProvider === "payoneer"} 
                       onClick={() => setPaymentProvider("payoneer")} 
                     />
@@ -465,82 +446,6 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                     </form>
                   </Form>
                 </TabsContent>
-                
-                <TabsContent value="webhooks" className="space-y-6">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Webhook Configuration</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Use this webhook URL in your {paymentProvider} developer dashboard to receive payment notifications. 
-                      This is necessary for asynchronous payment methods and status updates.
-                    </p>
-                    
-                    <div className="space-y-2">
-                      <FormLabel>Webhook URL for {paymentProvider}</FormLabel>
-                      <div className="flex items-center space-x-2">
-                        <Input 
-                          value={webhookUrl} 
-                          readOnly 
-                          className="font-mono text-sm bg-slate-50 dark:bg-slate-900"
-                        />
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          onClick={copyWebhookUrl}
-                          title="Copy webhook URL"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {apiMode === "sandbox" ? 
-                          "This URL works in test mode - no real payments will be processed." : 
-                          "This URL is configured for live payments. Use with caution."}
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <FormLabel>Webhook Events</FormLabel>
-                      <div className="grid grid-cols-2 gap-2">
-                        {['payment.success', 'payment.failed', 'payment.pending', 'refund.processed'].map((event) => (
-                          <div key={event} className="flex items-center space-x-2">
-                            <div className="h-2 w-2 rounded-full bg-green-500" />
-                            <span className="text-sm">{event}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <Alert className="bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
-                      <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                      <AlertTitle>Important</AlertTitle>
-                      <AlertDescription className="text-sm">
-                        You'll need to configure your server to process webhook events from {paymentProvider}. 
-                        Make sure to validate the signature to prevent unauthorized events.
-                      </AlertDescription>
-                    </Alert>
-                    
-                    <div className="space-y-2">
-                      <FormLabel>Sample Webhook Payload</FormLabel>
-                      <Textarea 
-                        className="font-mono text-xs h-32 bg-slate-50 dark:bg-slate-900"
-                        readOnly
-                        value={JSON.stringify({
-                          id: `evt_${Date.now()}`,
-                          type: "payment.success",
-                          data: {
-                            object: {
-                              id: `pay_${Date.now()}`,
-                              amount: 1000,
-                              currency: "USD",
-                              status: "succeeded",
-                              customer: "cus_example"
-                            }
-                          }
-                        }, null, 2)}
-                      />
-                    </div>
-                  </div>
-                </TabsContent>
               </Tabs>
               
               <div className="flex items-center justify-between mt-4 pt-4 border-t">
@@ -626,4 +531,3 @@ const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
 };
 
 export default PaymentSelection;
-
