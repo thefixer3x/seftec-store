@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { ProfileForm } from '@/components/profile/ProfileForm';
 import { AccountDetails } from '@/components/profile/AccountDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
+import { ArrowLeft, Home } from 'lucide-react';
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
@@ -42,6 +43,15 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto px-4 py-10">
+      <div className="flex justify-between items-center mb-6">
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/">
+            <Home className="mr-2 h-4 w-4" />
+            Back to Home
+          </Link>
+        </Button>
+      </div>
+      
       <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
       
       <Tabs 
