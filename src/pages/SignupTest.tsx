@@ -89,7 +89,7 @@ const SignupTest = () => {
             </CardContent>
             <CardFooter>
               {user ? (
-                <Button variant="outline" onClick={() => {}} className="mr-2">
+                <Button variant="outline" asChild>
                   <Link to="/profile">View Full Profile</Link>
                 </Button>
               ) : (
