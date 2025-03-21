@@ -28,6 +28,9 @@ import {
 } from "@/components/ui/form"
 import { Separator } from '@/components/ui/separator';
 import { useSearchParams } from 'react-router-dom';
+import { GoogleSignIn } from './GoogleSignIn';
+import { TwitterSignIn } from './TwitterSignIn';
+import { LinkedInSignIn } from './LinkedInSignIn';
 
 interface AuthFormProps {
   onSuccess?: () => void
@@ -190,14 +193,11 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
           </span>
         </div>
       </div>
-      <Button variant="outline" disabled={isLoading}>
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
-        )}
-        Github
-      </Button>
+      <div className="grid grid-cols-1 gap-2">
+        <GoogleSignIn onSuccess={onSuccess} />
+        <TwitterSignIn onSuccess={onSuccess} />
+        <LinkedInSignIn onSuccess={onSuccess} />
+      </div>
     </div>
   );
 }
