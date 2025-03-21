@@ -1,24 +1,34 @@
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { ProfileForm } from '@/components/profile/ProfileForm';
 import { AccountDetails } from '@/components/profile/AccountDetails';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
-import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
+import DashboardContent from '@/components/dashboard/DashboardContent';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("dashboard");
+  
+  const searchParams = new URLSearchParams(location.search);
+  const tabParam = searchParams.get('tab') || 'dashboard';
+  const [activeTab, setActiveTab] = useState(tabParam);
+
+  useEffect(() => {
+    const newParams = new URLSearchParams(location.search);
+    newParams.set('tab', activeTab);
+    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+  }, [activeTab, location.pathname, location.search, navigate]);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab') || 'dashboard';
+    setActiveTab(tab);
+  }, [location.search]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -41,6 +51,20 @@ const Profile = () => {
 
   if (!user) return null;
 
+  const isDashboardTab = [
+    'dashboard', 'wallet', 'stores', 'marketplace', 'customers', 
+    'invoices', 'transaction', 'inventory', 'bill-payment', 'account', 'settings'
+  ].includes(activeTab);
+
+  if (isDashboardTab) {
+    return (
+      <div className="flex h-screen overflow-hidden">
+        <DashboardSidebar />
+        <DashboardContent />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">Your Dashboard</h1>
@@ -57,15 +81,6 @@ const Profile = () => {
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="dashboard">
-          <div className="space-y-6">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Welcome to your personalized dashboard. View your insights, analytics, and quick actions.
-            </p>
-            <DashboardHighlights />
-          </div>
-        </TabsContent>
         
         <TabsContent value="profile">
           <div className="grid gap-8 md:grid-cols-2">
