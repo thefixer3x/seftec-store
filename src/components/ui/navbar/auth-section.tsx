@@ -1,10 +1,16 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Shield } from "lucide-react";
+import { Shield, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface AuthSectionProps {
   user: any;
@@ -41,16 +47,26 @@ const AuthSection = ({ user }: AuthSectionProps) => {
       {/* Auth Buttons */}
       {!user ? (
         <div className="flex items-center space-x-2">
-          <Link to="/login">
-            <Button variant="outline" size="sm">
-              Log In
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button className="bg-gradient-to-r from-blue-500 to-violet-500 text-white" size="sm">
-              Get Started
-            </Button>
-          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="bg-gradient-to-r from-blue-500 to-violet-500 text-white" size="sm">
+                Get Started
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link to="/login" className="w-full cursor-pointer">
+                  Log In
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/register" className="w-full cursor-pointer">
+                  Sign Up
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       ) : (
         <UserProfileDropdown />
