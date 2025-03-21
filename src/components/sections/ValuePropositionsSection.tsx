@@ -3,6 +3,9 @@ import React from 'react';
 import SectionHeading from '@/components/ui/section-heading';
 import { Brain, Globe, CreditCard, UserPlus, Store, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MainNav } from "@/components/ui/navbar";
+import Footer from "@/components/ui/footer";
+import { useLocation } from 'react-router-dom';
 
 const valuePropositions = [
   {
@@ -38,7 +41,10 @@ const valuePropositions = [
 ];
 
 const ValuePropositionsSection = () => {
-  return (
+  const location = useLocation();
+  const isStandalonePage = location.pathname === '/value-propositions';
+  
+  const content = (
     <section className="py-20 px-6 bg-white dark:bg-seftec-darkNavy">
       <div className="container mx-auto">
         <SectionHeading
@@ -67,6 +73,18 @@ const ValuePropositionsSection = () => {
       </div>
     </section>
   );
+
+  if (isStandalonePage) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-seftec-darkNavy pt-[56px]">
+        <MainNav />
+        {content}
+        <Footer />
+      </div>
+    );
+  }
+
+  return content;
 };
 
 export default ValuePropositionsSection;
