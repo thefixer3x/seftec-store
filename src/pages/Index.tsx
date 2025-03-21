@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
@@ -50,9 +49,17 @@ const Index = () => {
     return () => window.removeEventListener('scroll', reveal);
   }, []);
 
+  // Set light mode on initial load
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('darkMode', 'false');
+  }, []);
+
   return (
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden">
       <MainNav items={siteConfig.mainNav} />
+      
+      {/* Keep existing sections */}
       <HeroSection />
       <ProblemsSection />
       <FeaturesSection />
