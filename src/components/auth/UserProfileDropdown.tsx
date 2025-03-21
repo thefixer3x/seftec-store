@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, Settings, LogOut, ShoppingCart, LayoutDashboard } from 'lucide-react';
+import { User, Settings, LogOut, ShoppingCart, LayoutDashboard, CreditCard, Store, Users } from 'lucide-react';
 import { AuthModal } from './AuthModal';
 import { Link } from 'react-router-dom';
 
@@ -65,9 +65,21 @@ export function UserProfileDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile?tab=dashboard" className="cursor-pointer flex items-center w-full">
             <LayoutDashboard className="mr-2 h-4 w-4" />
             <span>Dashboard</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/profile?tab=wallet" className="cursor-pointer flex items-center w-full">
+            <CreditCard className="mr-2 h-4 w-4" />
+            <span>My Wallet</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/profile?tab=stores" className="cursor-pointer flex items-center w-full">
+            <Store className="mr-2 h-4 w-4" />
+            <span>My Stores</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -77,13 +89,13 @@ export function UserProfileDropdown() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/orders" className="cursor-pointer flex items-center w-full">
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            <span>Orders</span>
+          <Link to="/profile?tab=customers" className="cursor-pointer flex items-center w-full">
+            <Users className="mr-2 h-4 w-4" />
+            <span>Customers</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/settings" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile?tab=settings" className="cursor-pointer flex items-center w-full">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </Link>
