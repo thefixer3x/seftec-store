@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Search, Filter, Bank, ArrowUp, Check } from 'lucide-react';
+import { Search, Filter, Building, ArrowUp, Check } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 const WalletTab = () => {
@@ -20,7 +20,7 @@ const WalletTab = () => {
             <div className="text-sm">Providus Bank BANK</div>
             <div className="text-sm font-medium">NIMMYS DOU...</div>
             <Button variant="ghost" size="icon" className="ml-auto">
-              <Bank className="h-4 w-4" />
+              <Building className="h-4 w-4" />
             </Button>
           </CardContent>
         </Card>
@@ -124,7 +124,7 @@ const WalletTab = () => {
                   </Button>
                   <Card className="border p-4 bg-gray-50">
                     <div className="flex items-center">
-                      <Bank className="h-5 w-5 mr-2 text-blue-700" />
+                      <Building className="h-5 w-5 mr-2 text-blue-700" />
                       <div>
                         <p className="text-blue-700 font-medium">Total Transaction Value</p>
                         <p className="text-2xl font-bold">₦935,670.00</p>
@@ -136,7 +136,7 @@ const WalletTab = () => {
                 <div className="border-t pt-4">
                   <div className="flex items-start space-x-4">
                     <div className="bg-green-100 p-2 rounded-full">
-                      <Bank className="h-6 w-6 text-green-600" />
+                      <Building className="h-6 w-6 text-green-600" />
                     </div>
                     <div className="flex-1">
                       <div className="text-gray-500 text-sm">2025-03-18T12:41:33.000+00:00</div>
