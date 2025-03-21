@@ -24,7 +24,7 @@ const TransactionsCard = ({ activeTab, setActiveTab }: TransactionsCardProps) =>
   ];
 
   return (
-    <Card>
+    <Card className="my-4">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Recent Transactions</CardTitle>
