@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Icons } from '@/components/icons';
+import { Link } from 'react-router-dom';
 
 interface FooterProps {
   className?: string;
@@ -19,13 +21,15 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="md:col-span-1">
-            <a 
-              href="/" 
+            <Link 
+              to="/" 
               className="text-2xl font-bold text-seftec-navy flex items-center mb-4"
             >
-              <span className="mr-1">Seftec</span>
-              <span className="text-seftec-gold">.Store</span>
-            </a>
+              <Icons.logo className="h-6 w-6 text-seftec-gold mr-2" />
+              <span className="font-bold text-seftec-navy dark:text-white">
+                Seftec.<span className="text-seftec-gold">Store</span>
+              </span>
+            </Link>
             <p className="text-seftec-navy/70 mb-6">
               A secure, AI-driven B2B marketplace that enables businesses to connect with verified partners worldwide.
             </p>
