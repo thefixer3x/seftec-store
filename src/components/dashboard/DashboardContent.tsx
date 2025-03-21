@@ -38,7 +38,7 @@ const DashboardContent = () => {
       case 'marketplace':
         return <div className="animate-fade-up"><MarketplaceTab /></div>;
       case 'wallet':
-        return <div className="animate-fade-up"><WalletTab /></div>;
+        return <div className="animate-fade-up w-full"><WalletTab /></div>;
       case 'settings':
         return <div className="animate-fade-up"><SettingsTab /></div>;
       case 'dashboard':
