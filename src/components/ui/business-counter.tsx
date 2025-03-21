@@ -25,7 +25,7 @@ const BusinessCounter: React.FC<BusinessCounterProps> = ({ className }) => {
         <div>
           <CounterDisplay count={counterData.financeDeals} highlightColor="text-seftec-teal" />
           <p className="text-seftec-navy/70 dark:text-white/70 max-w-lg mx-auto">
-            Trade finance deals approved, representing 21% of our business community.
+            Trade finance deals approved, improving cashflow for businesses using BizGenie AI Premium.
           </p>
         </div>
       </div>
