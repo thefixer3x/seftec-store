@@ -22,6 +22,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
+import ValuePropositionsSection from "./components/sections/ValuePropositionsSection";
 
 const App = () => {
   useEffect(() => {
@@ -43,7 +44,8 @@ const App = () => {
         <TooltipProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/value-propositions" element={<BizTools />} />
+            <Route path="/value-propositions" element={<ValuePropositionsSection />} />
+            <Route path="/biz-tools" element={<BizTools />} />
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/auth-test" element={<AuthTest />} />
             <Route path="/products" element={<Products />} />
