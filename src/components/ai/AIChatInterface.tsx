@@ -22,6 +22,7 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
   const [isTyping, setIsTyping] = useState(false);
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [userTrainingEnabled, setUserTrainingEnabled] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
@@ -32,22 +33,40 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     
     setIsTyping(true);
     setResponse("");
+    setError(null);
     
     try {
+      console.log("Sending query to AI service:", query.substring(0, 50) + (query.length > 50 ? "..." : ""));
+      
       const { data, error } = await supabase.functions.invoke('ai-chat', {
         body: { query, isPremium }
       });
       
-      if (error) throw new Error(error.message);
-      if (!data || !data.response) throw new Error('No response received');
+      if (error) {
+        console.error("Edge function error:", error);
+        throw new Error(error.message || 'Error calling AI service');
+      }
+      
+      if (!data) {
+        throw new Error('No response data received');
+      }
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      if (!data.response) {
+        throw new Error('Empty response from AI service');
+      }
       
       const fullResponse = data.response;
       let i = 0;
       
       if (userTrainingEnabled) {
-        console.log("Learning from user query:", query);
+        console.log("Learning from user query:", query.substring(0, 50) + (query.length > 50 ? "..." : ""));
       }
       
+      // Simulate typing effect
       const typingInterval = setInterval(() => {
         if (i < fullResponse.length) {
           setResponse(prev => prev + fullResponse.charAt(i));
@@ -57,14 +76,14 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           setIsTyping(false);
         }
       }, 15);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error calling AI service:', error);
-      setResponse("I apologize, but I'm having trouble processing your request right now. Please try again later.");
+      setError(error.message || "I apologize, but I'm having trouble processing your request right now. Please try again later.");
       setIsTyping(false);
       
       toast({
-        title: "Error",
-        description: "There was a problem connecting to the AI service.",
+        title: "AI Assistant Error",
+        description: error.message || "There was a problem connecting to the AI service.",
         variant: "destructive",
       });
     }
@@ -96,7 +115,11 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         <div className="p-6 space-y-4">
           <MarketInsightAlert marketInsight={marketInsight} />
           
-          <ChatResponseDisplay response={response} isTyping={isTyping} />
+          <ChatResponseDisplay 
+            response={response} 
+            isTyping={isTyping} 
+            error={error} 
+          />
           
           <ChatInputForm
             query={query}
