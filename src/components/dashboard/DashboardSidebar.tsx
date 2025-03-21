@@ -17,6 +17,7 @@ import {
   Home
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Icons } from '@/components/icons';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Control Room', path: '/profile?tab=dashboard' },
@@ -41,7 +42,10 @@ const DashboardSidebar = () => {
     <aside className="w-64 border-r border-border bg-sidebar dark:bg-sidebar-background h-full flex-shrink-0">
       <div className="py-4 flex flex-col h-full">
         <div className="px-3 py-2">
-          <h2 className="text-lg font-semibold mb-6 px-3">Dashboard</h2>
+          <div className="flex items-center mb-6 px-3">
+            <Icons.logo className="h-6 w-6 text-primary mr-2" />
+            <h2 className="text-lg font-semibold">seftec.store</h2>
+          </div>
         </div>
         <nav className="space-y-1 px-3 flex-1">
           {sidebarItems.map((item) => {
