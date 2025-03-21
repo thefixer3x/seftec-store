@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Shield, ChevronDown } from "lucide-react";
+import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
@@ -51,7 +51,6 @@ const AuthSection = ({ user }: AuthSectionProps) => {
             <DropdownMenuTrigger asChild>
               <Button className="bg-gradient-to-r from-blue-500 to-violet-500 text-white" size="sm">
                 Get Started
-                <ChevronDown className="ml-1 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
