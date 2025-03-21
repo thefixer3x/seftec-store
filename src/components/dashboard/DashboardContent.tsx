@@ -8,6 +8,7 @@ import MyStaff from './MyStaff';
 import MarketplaceTab from './MarketplaceTab';
 import WalletTab from './WalletTab';
 import SettingsTab from './SettingsTab';
+import TradeFinanceTab from './TradeFinanceTab';
 import DashboardHighlights from './DashboardHighlights';
 import QuickActions from './QuickActions';
 
@@ -39,6 +40,8 @@ const DashboardContent = () => {
         return <div className="animate-fade-up"><MarketplaceTab /></div>;
       case 'wallet':
         return <div className="animate-fade-up w-full"><WalletTab /></div>;
+      case 'trade-finance':
+        return <div className="animate-fade-up w-full"><TradeFinanceTab /></div>;
       case 'settings':
         return <div className="animate-fade-up"><SettingsTab /></div>;
       case 'dashboard':
