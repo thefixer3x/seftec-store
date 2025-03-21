@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -12,20 +13,43 @@ const AuthCallback = () => {
     // Handle the auth callback
     const handleCallback = async () => {
       try {
-        // Show a welcome toast
-        toast({
-          title: "Authentication successful",
-          description: "You have been successfully signed in.",
-        });
+        console.log("Auth callback page loaded");
         
-        // Redirect to the auth test page or dashboard
-        navigate('/auth-test');
-      } catch (error) {
+        // Get the current session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Error getting session:', sessionError);
+          throw sessionError;
+        }
+        
+        if (session) {
+          console.log("Successfully authenticated:", session.user?.email);
+          
+          // Show a welcome toast
+          toast({
+            title: "Authentication successful",
+            description: "You have been successfully signed in.",
+          });
+          
+          // Redirect to the auth test page or dashboard
+          navigate('/auth-test');
+        } else {
+          console.log("No session found, authentication may have failed");
+          // Handle the case where no session was found
+          toast({
+            variant: "destructive",
+            title: "Authentication incomplete",
+            description: "The authentication process wasn't completed. Please try again.",
+          });
+          navigate('/');
+        }
+      } catch (error: any) {
         console.error('Error handling auth callback:', error);
         toast({
           variant: "destructive",
           title: "Authentication failed",
-          description: "There was a problem signing you in. Please try again.",
+          description: error.message || "There was a problem signing you in. Please try again.",
         });
         navigate('/');
       }
