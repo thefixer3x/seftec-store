@@ -14,7 +14,8 @@ import {
   BookOpen,
   CreditCard,
   Shield,
-  Home
+  Home,
+  Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
@@ -24,6 +25,7 @@ const sidebarItems = [
   { icon: Wallet, label: 'My Wallet', path: '/profile?tab=wallet' },
   { icon: BookOpen, label: 'Inventory', path: '/profile?tab=inventory' },
   { icon: Shield, label: 'Bill Payment', path: '/profile?tab=bill-payment' },
+  { icon: Briefcase, label: 'Trade Finance', path: '/profile?tab=trade-finance' },
   { icon: CreditCard, label: 'Account', path: '/profile?tab=account' },
   { icon: Store, label: 'My Stores', path: '/profile?tab=stores' },
   { icon: ShoppingBag, label: 'Marketplace', path: '/profile?tab=marketplace' },
