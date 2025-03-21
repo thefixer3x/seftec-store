@@ -49,9 +49,17 @@ const DashboardSidebar = () => {
             <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
           </div>
         </div>
-        <nav className="space-y-1 px-3 flex-1">
+        <nav className="space-y-1 px-3 flex-1 overflow-y-auto">
           {sidebarItems.map((item) => {
-            const isActive = currentPath.includes(item.path);
+            // More precise path matching to avoid partial matches
+            const isActive = 
+              item.path === '/' 
+                ? currentPath === '/' 
+                : currentPath.includes(item.path) && 
+                  (item.path.includes('?tab=') ? 
+                   currentPath.includes(item.path) : 
+                   currentPath.startsWith(item.path));
+                   
             return (
               <Link
                 key={item.path}

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Calendar, Briefcase, ArrowUp, ArrowRight, Download, Upload } from 'lucide-react';
+import { FileText, Calendar, Briefcase, ArrowUp, Upload, Download } from 'lucide-react';
 import { TabsList, TabsTrigger, Tabs, TabsContent } from '@/components/ui/tabs';
 
 const TradeFinanceTab = () => {
@@ -68,7 +68,7 @@ const TradeFinanceTab = () => {
 
       {/* Trade Finance Facilities */}
       <div className="mt-8">
-        <Tabs defaultValue="active" value={tradeTab} onValueChange={setTradeTab}>
+        <Tabs value={tradeTab} onValueChange={setTradeTab}>
           <TabsList className="bg-gray-100 p-1 rounded-md mb-6">
             <TabsTrigger 
               value="active" 
