@@ -12,12 +12,13 @@ import { ProfileForm } from '@/components/profile/ProfileForm';
 import { AccountDetails } from '@/components/profile/AccountDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
+import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   useEffect(() => {
     if (!loading && !user) {
@@ -42,19 +43,29 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
+      <h1 className="text-3xl font-bold mb-6">Your Dashboard</h1>
       
       <Tabs 
-        defaultValue="profile" 
+        defaultValue="dashboard" 
         value={activeTab} 
         onValueChange={setActiveTab} 
         className="w-full"
       >
         <TabsList className="mb-6">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="dashboard">
+          <div className="space-y-6">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              Welcome to your personalized dashboard. View your insights, analytics, and quick actions.
+            </p>
+            <DashboardHighlights />
+          </div>
+        </TabsContent>
         
         <TabsContent value="profile">
           <div className="grid gap-8 md:grid-cols-2">
