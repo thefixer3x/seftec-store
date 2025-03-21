@@ -28,13 +28,10 @@ const AuthSection = ({ user }: AuthSectionProps) => {
       )}
       
       {/* Secured by AI Badge */}
-      <Link to="/value-propositions/bizgenie" className="group relative overflow-hidden">
-        <div className="hidden md:flex items-center bg-gradient-to-r from-teal-400 to-purple-500 rounded-full px-3 py-1 relative z-10">
-          <Shield className="h-4 w-4 mr-1 text-white" />
-          <span className="text-sm text-white font-medium">Secured by AI</span>
-        </div>
-        <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer bg-white"></span>
-      </Link>
+      <div className="hidden md:flex items-center bg-gradient-to-r from-teal-400 to-purple-500 rounded-full px-3 py-1">
+        <Shield className="h-4 w-4 mr-1 text-white" />
+        <span className="text-sm text-white font-medium">Secured by AI</span>
+      </div>
       
       <ModeToggle />
       

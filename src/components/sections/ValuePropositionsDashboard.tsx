@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { LayoutDashboard, LineChart, FileText, MousePointer, Bot } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -72,7 +71,7 @@ const ValuePropositionsDashboard = () => {
                 <TabsTrigger 
                   key={idx}
                   value={feature.title.toLowerCase().split(' ')[0]}
-                  className={`${isMobile ? 'text-xs px-2 py-1 flex-grow-0' : 'flex-1 whitespace-nowrap'} relative overflow-hidden`}
+                  className={`${isMobile ? 'text-xs px-2 py-1 flex-grow-0' : 'flex-1 whitespace-nowrap'}`}
                 >
                   {isMobile ? feature.title.split(' ')[0] : feature.title}
                 </TabsTrigger>
