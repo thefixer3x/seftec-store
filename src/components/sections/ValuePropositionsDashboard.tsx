@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, LineChart, FileText, MousePointer, Bot } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,7 +43,6 @@ const ValuePropositionsDashboard = () => {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('dashboard');
   
-  // Find the current feature based on active tab
   const currentFeature = dashboardFeatures.find(
     feature => feature.title.toLowerCase().split(' ')[0] === activeTab
   );
@@ -68,11 +66,10 @@ const ValuePropositionsDashboard = () => {
             value={activeTab}
             onValueChange={(value) => setActiveTab(value)}
           >
-            {/* Custom tabs display for mobile */}
             {isMobile ? (
               <div className="flex flex-col space-y-4 mb-6">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Features</h3>
+                  <span>Select Feature:</span>
                   <select 
                     className="bg-muted text-foreground py-2 px-3 rounded-md border border-input"
                     value={activeTab}
