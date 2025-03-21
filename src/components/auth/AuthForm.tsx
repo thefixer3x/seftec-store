@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,11 +34,12 @@ import { TwitterSignIn } from './TwitterSignIn';
 import { LinkedInSignIn } from './LinkedInSignIn';
 
 interface AuthFormProps {
-  onSuccess?: () => void
+  onSuccess?: () => void;
+  isRegister?: boolean;
 }
 
-export function AuthForm({ onSuccess }: AuthFormProps) {
-  const [isSignUp, setIsSignUp] = useState(false);
+export function AuthForm({ onSuccess, isRegister }: AuthFormProps) {
+  const [isSignUp, setIsSignUp] = useState(isRegister || false);
   const [isLoading, setIsLoading] = useState(false);
   const [isResetPassword, setIsResetPassword] = useState(false);
   const { toast } = useToast()
