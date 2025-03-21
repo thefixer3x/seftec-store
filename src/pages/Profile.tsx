@@ -28,17 +28,6 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    const newParams = new URLSearchParams(location.search);
-    newParams.set('tab', activeTab);
-    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
-  }, [activeTab, location.pathname, location.search, navigate]);
-
-  useEffect(() => {
-    const tab = searchParams.get('tab') || 'dashboard';
-    setActiveTab(tab);
-  }, [location.search]);
-
-  useEffect(() => {
     if (!loading && !user) {
       navigate('/');
       toast({
@@ -48,6 +37,19 @@ const Profile = () => {
       });
     }
   }, [user, loading, navigate, toast]);
+
+  // Update URL when tab changes
+  useEffect(() => {
+    const newParams = new URLSearchParams(location.search);
+    newParams.set('tab', activeTab);
+    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+  }, [activeTab, location.pathname, navigate]);
+
+  // Update active tab when URL changes
+  useEffect(() => {
+    const tab = searchParams.get('tab') || 'dashboard';
+    setActiveTab(tab);
+  }, [location.search, searchParams]);
 
   if (loading) {
     return (
@@ -92,14 +94,14 @@ const Profile = () => {
           onValueChange={setActiveTab} 
           className="w-full"
         >
-          <TabsList className="mb-6 bg-white/50 dark:bg-white/5 border border-seftec-navy/10 dark:border-white/10">
+          <TabsList className="mb-6 bg-white/50 dark:bg-white/5 border border-seftec-navy/10 dark:border-white/10 w-full justify-start overflow-x-auto">
             <TabsTrigger value="dashboard" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Dashboard</TabsTrigger>
             <TabsTrigger value="profile" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Profile</TabsTrigger>
             <TabsTrigger value="account" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Account</TabsTrigger>
             <TabsTrigger value="notifications" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Notifications</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="profile">
+          <TabsContent value="profile" className="outline-none">
             <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-6">
                 <ProfileForm />
@@ -107,7 +109,7 @@ const Profile = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="account">
+          <TabsContent value="account" className="outline-none">
             <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-6">
                 <AccountDetails />
@@ -115,7 +117,7 @@ const Profile = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="notifications">
+          <TabsContent value="notifications" className="outline-none">
             <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-6">
                 <CreateNotificationForm />
