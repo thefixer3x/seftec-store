@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,33 +27,6 @@ const WalletTab = () => {
 
         {/* Empty Card for Layout */}
         <div></div>
-
-        {/* Loan Limit Card */}
-        <Card className="bg-blue-700 text-white shadow-sm border relative overflow-hidden">
-          <CardContent className="p-6">
-            <div className="relative z-10">
-              <p className="text-xl mb-2">Your Loan Limit is</p>
-              <h2 className="text-5xl font-bold text-amber-400">50.0K</h2>
-              <ul className="mt-4 space-y-1">
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-white" />
-                  <span className="text-sm">Disbursement within 24hrs</span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="h-4 w-4 mr-2 text-white" />
-                  <span className="text-sm">Pay small small</span>
-                </li>
-              </ul>
-              <Button className="mt-4 bg-amber-400 hover:bg-amber-500 text-blue-900 font-medium">
-                Request loan
-                <ArrowUp className="h-4 w-4 ml-2 rotate-45" />
-              </Button>
-            </div>
-            {/* Abstract shapes */}
-            <div className="absolute right-0 bottom-0 w-1/2 h-full bg-blue-600 rounded-full -translate-x-1/4 translate-y-1/4 opacity-30"></div>
-            <div className="absolute left-0 top-0 w-24 h-24 bg-blue-500 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-30"></div>
-          </CardContent>
-        </Card>
 
         {/* Wallet Balance Card */}
         <Card className="bg-green-100 shadow-sm border">
