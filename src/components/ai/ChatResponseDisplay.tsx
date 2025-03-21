@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
+import { Markdown } from '@/components/ui/markdown';
 
 interface ChatResponseDisplayProps {
   response: string;
@@ -17,13 +18,20 @@ const ChatResponseDisplay: React.FC<ChatResponseDisplayProps> = ({ response, isT
           <div>
             <p className="text-xs font-semibold mb-1">Error</p>
             <p className="text-sm">{error}</p>
+            {error.includes('API key') && (
+              <p className="text-xs mt-2 text-amber-600 dark:text-amber-400">
+                The AI service is currently unavailable. Please try again later or contact the administrator.
+              </p>
+            )}
           </div>
         </div>
       ) : response ? (
         <>
           <p className="text-xs text-seftec-navy/60 dark:text-white/60 mb-2">BizGenie:</p>
-          <p className="text-seftec-navy dark:text-white/90">{response}</p>
-          {isTyping && <span className="inline-block animate-pulse">▋</span>}
+          <div className="text-seftec-navy dark:text-white/90">
+            <Markdown content={response} />
+            {isTyping && <span className="inline-block animate-pulse">▋</span>}
+          </div>
         </>
       ) : (
         <p className="text-seftec-navy/50 dark:text-white/50 italic">
