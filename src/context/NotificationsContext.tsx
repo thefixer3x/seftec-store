@@ -4,11 +4,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
+export type NotificationType = 'info' | 'warning' | 'success' | 'error';
+
 export interface Notification {
   id: string;
   title: string;
   message: string;
-  type: 'info' | 'warning' | 'success' | 'error';
+  type: NotificationType;
   is_read: boolean;
   created_at: string;
 }
@@ -45,7 +47,13 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (error) throw error;
         
-        setNotifications(data || []);
+        // Type casting to ensure the correct type
+        const typedNotifications = data?.map(item => ({
+          ...item,
+          type: item.type as NotificationType
+        })) || [];
+        
+        setNotifications(typedNotifications);
       } catch (error: any) {
         console.error('Error fetching notifications:', error.message);
       }
@@ -62,7 +70,11 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         table: 'notifications',
         filter: `user_id=eq.${user.id}`
       }, (payload) => {
-        const newNotification = payload.new as Notification;
+        const newNotification = {
+          ...payload.new,
+          type: payload.new.type as NotificationType
+        } as Notification;
+        
         setNotifications(prev => [newNotification, ...prev]);
         
         // Show toast for new notification
