@@ -4,6 +4,7 @@ import SectionHeading from "@/components/ui/section-heading";
 import { Globe, MapPin, Flag } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Icons } from "@/components/icons";
 
 // Data for the regions we cover section with added colors
 const regionsData = [
@@ -32,6 +33,31 @@ const regionsData = [
     bgColor: "bg-gradient-to-r from-orange-500 to-orange-600"
   }
 ];
+
+// Flag emoji mapping for each country
+const countryFlags: Record<string, string> = {
+  "United States": "🇺🇸",
+  "Canada": "🇨🇦",
+  "Mexico": "🇲🇽",
+  "United Kingdom": "🇬🇧",
+  "Germany": "🇩🇪",
+  "France": "🇫🇷",
+  "Italy": "🇮🇹",
+  "Spain": "🇪🇸",
+  "Netherlands": "🇳🇱",
+  "Australia": "🇦🇺",
+  "Japan": "🇯🇵",
+  "Singapore": "🇸🇬",
+  "Hong Kong": "🇭🇰",
+  "New Zealand": "🇳🇿",
+  "UAE": "🇦🇪",
+  "Saudi Arabia": "🇸🇦",
+  "South Africa": "🇿🇦",
+  "Kenya": "🇰🇪",
+  "Cameroon": "🇨🇲",
+  "Ghana": "🇬🇭",
+  "Nigeria": "🇳🇬"
+};
 
 const RegionsCoveredSection: React.FC = () => {
   return (
@@ -71,7 +97,9 @@ const RegionsCoveredSection: React.FC = () => {
                 <div className="grid grid-cols-1 gap-2">
                   {region.countries.map((country, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <Flag className="text-seftec-navy/60 dark:text-white/60" size={14} />
+                      <span className="text-lg" aria-label={`Flag of ${country}`}>
+                        {countryFlags[country] || '🏳️'}
+                      </span>
                       <span className="text-seftec-navy/80 dark:text-white/80">{country}</span>
                     </div>
                   ))}
