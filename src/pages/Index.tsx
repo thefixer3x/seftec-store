@@ -58,7 +58,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden pt-[56px]">
       <MainNav items={siteConfig.mainNav} />
       
       {/* Keep existing sections */}
