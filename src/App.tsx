@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import ValuePropositions from "./pages/ValuePropositions";
+import Solutions from "./pages/Solutions";
 import NotFound from "./pages/NotFound";
 import AuthTest from "./pages/AuthTest";
 import Products from "./pages/Products";
@@ -40,6 +41,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/value-propositions" element={<ValuePropositions />} />
+            <Route path="/solutions" element={<Solutions />} />
             <Route path="/auth-test" element={<AuthTest />} />
             <Route path="/products" element={<Products />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
