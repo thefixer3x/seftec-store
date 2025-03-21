@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
@@ -10,6 +11,7 @@ import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
+import BusinessCounter from "@/components/ui/business-counter";
 import PaymentButton from "@/components/ui/payment-button";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
@@ -67,6 +69,13 @@ const Index = () => {
         <ValuePropositionsSection />
       </div>
       <AIAdvisorSection />
+      
+      {/* Business Counter Section */}
+      <section className="py-12 bg-seftec-slate dark:bg-seftec-navy/20">
+        <div className="container mx-auto px-6">
+          <BusinessCounter />
+        </div>
+      </section>
       
       {/* Payment Integration Demo Section */}
       <section className="py-12 bg-gray-50 dark:bg-seftec-navy/30">
