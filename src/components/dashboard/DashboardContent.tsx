@@ -11,18 +11,20 @@ import SettingsTab from './SettingsTab';
 import TradeFinanceTab from './TradeFinanceTab';
 import DashboardHighlights from './DashboardHighlights';
 import QuickActions from './QuickActions';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const DashboardContent = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const tab = searchParams.get('tab') || 'dashboard';
+  const isMobile = useIsMobile();
 
   const renderTabContent = () => {
     switch(tab) {
       case 'stores':
         return (
           <div className="space-y-6 animate-fade-up">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center flex-wrap gap-4">
               <div className="flex items-center">
                 <Button variant="ghost" className="p-0 mr-4 hover:bg-seftec-slate/50 dark:hover:bg-seftec-darkNavy/50">
                   <ArrowLeft className="h-5 w-5 mr-2 text-seftec-navy dark:text-seftec-teal" />
@@ -69,7 +71,7 @@ const DashboardContent = () => {
   };
 
   return (
-    <div className="p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy">
+    <div className={`p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy ${isMobile ? 'pt-0' : ''}`}>
       {renderTabContent()}
     </div>
   );

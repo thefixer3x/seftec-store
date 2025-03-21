@@ -10,12 +10,14 @@ import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import DashboardContent from '@/components/dashboard/DashboardContent';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkle } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const searchParams = new URLSearchParams(location.search);
   const tabParam = searchParams.get('tab') || 'dashboard';
@@ -74,7 +76,7 @@ const Profile = () => {
 
   if (isDashboardTab) {
     return (
-      <div className="flex h-screen overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
+      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
         <DashboardSidebar />
         <DashboardContent />
       </div>
