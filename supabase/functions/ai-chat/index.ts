@@ -16,12 +16,35 @@ serve(async (req) => {
   }
 
   try {
-    const { query, isPremium } = await req.json();
+    // Validate request
+    if (!req.body) {
+      throw new Error('Request body is required');
+    }
+
+    const reqBody = await req.json();
+    const { query, isPremium } = reqBody;
+
+    if (!query || typeof query !== 'string') {
+      throw new Error('Query parameter must be a non-empty string');
+    }
     
+    // Input validation
+    if (query.trim().length === 0) {
+      throw new Error('Query cannot be empty');
+    }
+
     // Determine system message based on premium status
     const systemMessage = isPremium 
       ? "You are a premium business AI assistant called BizGenie that provides detailed financial advice and business insights. Always format your responses with clear sections and actionable recommendations. Include specific numbers, percentages, and monetary values when applicable. Reference industry benchmarks and best practices."
       : "You are a business AI assistant called BizGenie that provides financial advice and business insights. Keep responses concise and practical.";
+
+    console.log(`Processing ${isPremium ? 'premium' : 'standard'} query: ${query.substring(0, 50)}...`);
+
+    // Validate API key exists
+    if (!openAIApiKey) {
+      console.error('OpenAI API key is not configured');
+      throw new Error('API configuration error');
+    }
 
     // Call OpenAI API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -41,11 +64,19 @@ serve(async (req) => {
       }),
     });
 
+    // Handle non-200 responses from OpenAI
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error response:', errorData);
+      throw new Error(errorData.error?.message || `Error from OpenAI API: ${response.status}`);
+    }
+
     const data = await response.json();
     
-    if (!response.ok) {
-      console.error('OpenAI API error:', data);
-      throw new Error(data.error?.message || 'Error calling OpenAI API');
+    // Validate response structure
+    if (!data || !data.choices || !data.choices[0]?.message?.content) {
+      console.error('Unexpected OpenAI API response structure:', data);
+      throw new Error('Invalid response from AI service');
     }
 
     const aiResponse = data.choices[0].message.content;
@@ -56,7 +87,10 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Error in ai-chat function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message || 'An unknown error occurred',
+      timestamp: new Date().toISOString()
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
