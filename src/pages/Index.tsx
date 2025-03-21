@@ -52,9 +52,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden">
-      <div className="container">
-        <MainNav items={siteConfig.mainNav} />
-      </div>
+      <MainNav items={siteConfig.mainNav} />
       <HeroSection />
       <ProblemsSection />
       <FeaturesSection />

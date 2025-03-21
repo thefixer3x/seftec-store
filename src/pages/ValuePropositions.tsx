@@ -9,9 +9,7 @@ import { siteConfig } from '@/config/site';
 const ValuePropositions = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="container">
-        <MainNav items={siteConfig.mainNav} />
-      </div>
+      <MainNav items={siteConfig.mainNav} />
       <main className="flex-grow pt-20">
         <SolutionsSection />
         <ValuePropositionsDashboard />
