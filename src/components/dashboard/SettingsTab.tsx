@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
 import SettingsSidebar from './settings/SettingsSidebar';
@@ -9,9 +9,22 @@ import PasswordTab from './settings/PasswordTab';
 import PinTab from './settings/PinTab';
 import VerificationStatus from './settings/VerificationStatus';
 
+// Import components to be replicated within business sub-tabs
+import { ProfileForm } from '@/components/profile/ProfileForm';
+import { AccountDetails } from '@/components/profile/AccountDetails';
+import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
+
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("business");
+  const [activeSubTab, setActiveSubTab] = useState("business-profile");
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
+  
+  // When active tab changes away from business, reset sub-tab
+  useEffect(() => {
+    if (activeTab !== 'business') {
+      setActiveSubTab('business-profile');
+    }
+  }, [activeTab]);
 
   return (
     <div className="w-full space-y-8">
@@ -29,7 +42,11 @@ const SettingsTab = () => {
             className="border rounded-lg overflow-hidden shadow-sm"
           >
             <TabsList className="flex flex-col w-full justify-start rounded-none bg-gray-50 p-0">
-              <SettingsSidebar activeTab={activeTab} />
+              <SettingsSidebar 
+                activeTab={activeTab} 
+                setActiveSubTab={setActiveSubTab}
+                activeSubTab={activeSubTab}
+              />
             </TabsList>
             
             {/* TabsContent must be inside the Tabs component */}
@@ -42,10 +59,34 @@ const SettingsTab = () => {
 
         <div className="lg:col-span-3">
           {activeTab === "business" && (
-            <BusinessProfileTab 
-              verificationStatus={verificationStatus} 
-              setVerificationStatus={setVerificationStatus} 
-            />
+            <>
+              {activeSubTab === "business-profile" && (
+                <BusinessProfileTab 
+                  verificationStatus={verificationStatus} 
+                  setVerificationStatus={setVerificationStatus} 
+                />
+              )}
+              
+              {activeSubTab === "business-account" && (
+                <div className="space-y-6">
+                  <div className="border-l-4 border-blue-500 pl-4 mb-6 py-2 bg-blue-50 rounded-r">
+                    <h2 className="text-2xl font-bold text-gray-800">Business Account</h2>
+                    <p className="text-gray-600 mt-1">Manage your business account settings</p>
+                  </div>
+                  <AccountDetails />
+                </div>
+              )}
+              
+              {activeSubTab === "business-notifications" && (
+                <div className="space-y-6">
+                  <div className="border-l-4 border-blue-500 pl-4 mb-6 py-2 bg-blue-50 rounded-r">
+                    <h2 className="text-2xl font-bold text-gray-800">Business Notifications</h2>
+                    <p className="text-gray-600 mt-1">Configure your business notification preferences</p>
+                  </div>
+                  <CreateNotificationForm />
+                </div>
+              )}
+            </>
           )}
 
           {activeTab === "personal" && (
