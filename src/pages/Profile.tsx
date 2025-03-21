@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -11,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ProfileForm } from '@/components/profile/ProfileForm';
 import { AccountDetails } from '@/components/profile/AccountDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
@@ -19,7 +19,6 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
-    // Redirect to login if not authenticated
     if (!loading && !user) {
       navigate('/');
       toast({
@@ -48,6 +47,7 @@ const Profile = () => {
         <TabsList className="mb-6">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
         
         <TabsContent value="profile">
@@ -62,6 +62,14 @@ const Profile = () => {
           <div className="grid gap-8 md:grid-cols-2">
             <div className="space-y-6">
               <AccountDetails />
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="notifications">
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="space-y-6">
+              <CreateNotificationForm />
             </div>
           </div>
         </TabsContent>
