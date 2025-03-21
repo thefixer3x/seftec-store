@@ -15,9 +15,9 @@ const ValuePropositions = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-seftec-darkNavy">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-seftec-darkNavy pt-[56px]">
       <MainNav items={siteConfig.mainNav} />
-      <main className="flex-grow pt-20">
+      <main className="flex-grow">
         <SolutionsSection />
         <ValuePropositionsDashboard />
         
