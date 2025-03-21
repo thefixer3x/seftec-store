@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
@@ -233,8 +232,8 @@ const Index = () => {
                 <div className="bg-seftec-slate dark:bg-seftec-navy/30 rounded-xl p-8">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl font-bold text-seftec-navy dark:text-white">Business Metrics</h2>
-                    <Badge variant="outline" className="bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-400/30">
-                      SANDBOX MODE
+                    <Badge variant="outline" className="bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-400/30">
+                      LIVE
                     </Badge>
                   </div>
                   <BusinessCounter className="py-0" />
@@ -254,7 +253,7 @@ const Index = () => {
                   <PaymentButton 
                     label="Try Payment Integration" 
                     className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white"
-                    apiMode="sandbox"
+                    apiMode="live"
                     onPaymentComplete={handlePaymentComplete}
                   />
                 </div>
