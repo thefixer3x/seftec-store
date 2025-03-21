@@ -1,11 +1,13 @@
 
 import React from 'react';
 import { format, isToday, isYesterday } from 'date-fns';
-import { Check, Info, AlertTriangle, XCircle, Trash2 } from 'lucide-react';
+import { Check, Info, AlertTriangle, XCircle, Trash2, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useNotifications, Notification } from '@/context/NotificationsContext';
 import { useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -76,6 +78,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
     deleteNotification(notification.id);
   };
 
+  // Check if notification has an expiration date
+  const hasExpiration = !!notification.expires_at;
+  const isExpiringSoon = hasExpiration && 
+    new Date(notification.expires_at!).getTime() - Date.now() < 24 * 60 * 60 * 1000;
+
   return (
     <div 
       className={cn(
@@ -87,7 +94,14 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
       <div className="mr-3 pt-1">{getIcon()}</div>
       <div className="flex-1">
         <div className="flex justify-between">
-          <h5 className={cn("text-sm font-medium", !notification.is_read && "font-semibold")}>{notification.title}</h5>
+          <div className="flex items-center gap-2">
+            <h5 className={cn("text-sm font-medium", !notification.is_read && "font-semibold")}>{notification.title}</h5>
+            {notification.notification_group && (
+              <Badge variant="outline" className="text-[10px] px-1 py-0 h-4">
+                {notification.notification_group}
+              </Badge>
+            )}
+          </div>
           <Button 
             variant="ghost" 
             size="icon" 
@@ -98,10 +112,31 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
           </Button>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{notification.message}</p>
-        <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">{formatDate(notification.created_at)}</p>
+        <div className="flex justify-between items-center mt-2">
+          <p className="text-xs text-slate-400 dark:text-slate-500">{formatDate(notification.created_at)}</p>
+          
+          {hasExpiration && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className={cn(
+                    "flex items-center gap-1 text-xs", 
+                    isExpiringSoon ? "text-amber-500" : "text-slate-400"
+                  )}>
+                    <Clock className="h-3 w-3" />
+                    <span>Expires {format(new Date(notification.expires_at!), 'MMM d')}</span>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>This notification will expire on {format(new Date(notification.expires_at!), 'MMMM d, yyyy')}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default NotificationItem;

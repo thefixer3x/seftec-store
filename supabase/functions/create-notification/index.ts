@@ -9,10 +9,12 @@ const corsHeaders = {
 };
 
 interface NotificationRequest {
-  user_id: string;
+  user_id?: string;
   title: string;
   message: string;
   type: 'info' | 'warning' | 'success' | 'error';
+  notification_group?: string;
+  expires_at?: string;
   metadata?: {
     path?: string;
     [key: string]: any;
@@ -46,7 +48,38 @@ serve(async (req) => {
     }
 
     // Get the notification data from the request
-    const { title, message, type = 'info', metadata = {} } = await req.json() as NotificationRequest;
+    const requestData = await req.json() as NotificationRequest;
+    const { 
+      title, 
+      message, 
+      type = 'info', 
+      notification_group, 
+      expires_at,
+      metadata = {}
+    } = requestData;
+
+    // Check if user has the notification type enabled
+    const { data: settings, error: settingsError } = await supabaseClient
+      .from('notification_settings')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+
+    if (!settingsError && settings) {
+      const typeEnabledField = `${type}_enabled` as keyof typeof settings;
+      if (settings[typeEnabledField] === false) {
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            message: `Notifications of type '${type}' are disabled for this user` 
+          }),
+          {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 200,
+          }
+        );
+      }
+    }
 
     // Create the notification
     const { data, error } = await supabaseClient
@@ -56,6 +89,8 @@ serve(async (req) => {
         title,
         message,
         type,
+        notification_group,
+        expires_at,
         metadata
       })
       .select()
