@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import DashboardLayout from './layout/DashboardLayout';
 import DashboardContent from './layout/DashboardContent';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
@@ -14,7 +15,7 @@ const Dashboard = () => {
   // Redirect if not authenticated
   useEffect(() => {
     if (!loading && !user) {
-      navigate('/');
+      navigate('/login');
       toast({
         title: "Authentication required",
         description: "Please sign in to view your dashboard",
@@ -26,7 +27,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-pulse text-lg">Loading dashboard...</div>
+        <Skeleton className="h-12 w-12 rounded-full" />
       </div>
     );
   }
