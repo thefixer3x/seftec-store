@@ -1,4 +1,3 @@
-
 import React from "react"
 import { Github, Shield } from "lucide-react"
 
@@ -15,7 +14,7 @@ export const Icons = {
       {...props}
     >
       <path 
-        d="M5 12L3 4L12 2L21 4L19 12L12 19L5 12Z" 
+        d="M12 2L4 6V12C4 17.1 7.6 21.7 12 22C16.4 21.7 20 17.1 20 12V6L12 2Z" 
         fill="currentColor" 
         stroke="none" 
       />
