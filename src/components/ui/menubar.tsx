@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as MenubarPrimitive from "@radix-ui/react-menubar"
 import { Check, ChevronRight, Circle } from "lucide-react"
@@ -37,14 +36,11 @@ const MenubarTrigger = React.forwardRef<
   <MenubarPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground group relative overflow-hidden",
+      "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground",
       className
     )}
     {...props}
-  >
-    <span className="relative z-10">{props.children}</span>
-    <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer bg-white"></span>
-  </MenubarPrimitive.Trigger>
+  />
 ))
 MenubarTrigger.displayName = MenubarPrimitive.Trigger.displayName
 
