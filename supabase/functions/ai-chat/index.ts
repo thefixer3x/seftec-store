@@ -16,6 +16,17 @@ serve(async (req) => {
   }
 
   try {
+    // Validate API key configuration
+    if (!openAIApiKey) {
+      console.error('OpenAI API key is not configured in Supabase secrets');
+      return new Response(JSON.stringify({ 
+        error: 'AI service is not properly configured. Please contact support.' 
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // Validate request
     if (!req.body) {
       throw new Error('Request body is required');
@@ -40,12 +51,6 @@ serve(async (req) => {
 
     console.log(`Processing ${isPremium ? 'premium' : 'standard'} query: ${query.substring(0, 50)}...`);
 
-    // Validate API key exists
-    if (!openAIApiKey) {
-      console.error('OpenAI API key is not configured');
-      throw new Error('API configuration error');
-    }
-
     // Call OpenAI API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -68,6 +73,17 @@ serve(async (req) => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error('OpenAI API error response:', errorData);
+      
+      // Check for common API key issues
+      if (errorData.error?.message?.includes('API key')) {
+        return new Response(JSON.stringify({ 
+          error: 'AI service authentication failed. The system administrator needs to check the OpenAI API key configuration.' 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
       throw new Error(errorData.error?.message || `Error from OpenAI API: ${response.status}`);
     }
 
