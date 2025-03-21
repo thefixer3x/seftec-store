@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -17,6 +16,8 @@ import {
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { LinkedInSignIn } from './LinkedInSignIn';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -39,7 +40,6 @@ const signupSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-// Add the onSuccess prop to the component props
 interface AuthFormProps {
   onSuccess?: () => void;
 }
@@ -73,7 +73,6 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
   const onLoginSubmit = async (values: LoginFormValues) => {
     try {
       await signIn(values.email, values.password);
-      // Call onSuccess callback if provided
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error('Login error:', error);
@@ -152,6 +151,19 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? 'Signing In...' : 'Sign In'}
                 </Button>
+
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <LinkedInSignIn className="w-full" onSuccess={onSuccess} />
               </form>
             </Form>
           </TabsContent>
@@ -262,6 +274,19 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? 'Creating Account...' : 'Create Account'}
                 </Button>
+
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+
+                <LinkedInSignIn className="w-full" onSuccess={onSuccess} />
               </form>
             </Form>
           </TabsContent>
