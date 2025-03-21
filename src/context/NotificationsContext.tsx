@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -13,6 +12,10 @@ export interface Notification {
   type: NotificationType;
   is_read: boolean;
   created_at: string;
+  metadata?: {
+    path?: string;
+    [key: string]: any;
+  };
 }
 
 interface NotificationsContextType {
@@ -30,7 +33,6 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Fetch notifications when user logs in
   useEffect(() => {
     if (!user) {
       setNotifications([]);
@@ -47,7 +49,6 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (error) throw error;
         
-        // Type casting to ensure the correct type
         const typedNotifications = data?.map(item => ({
           ...item,
           type: item.type as NotificationType
@@ -61,7 +62,6 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     fetchNotifications();
 
-    // Setup real-time subscription
     const channel = supabase
       .channel('public:notifications')
       .on('postgres_changes', {
@@ -77,7 +77,6 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         
         setNotifications(prev => [newNotification, ...prev]);
         
-        // Show toast for new notification
         toast({
           title: newNotification.title,
           description: newNotification.message,
