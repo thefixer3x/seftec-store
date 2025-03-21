@@ -8,7 +8,8 @@ import AIChatInterface from "@/components/ai/AIChatInterface";
 import { useAuth } from "@/context/AuthContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const AIAdvisorSection: React.FC = () => {
   const [hasNotification, setHasNotification] = useState(false);
@@ -86,25 +87,24 @@ const AIAdvisorSection: React.FC = () => {
           
           {/* AI Chat Demo */}
           <div className="lg:col-span-7 animate-fade-up animate-delay-300">
-            {user ? (
-              <AIChatInterface 
-                marketInsight={marketInsight}
-                hasNotification={hasNotification}
-                onClearNotification={handleClearNotification}
-              />
-            ) : (
-              <div className="border rounded-xl p-6 bg-white/5 backdrop-blur-sm flex flex-col items-center text-center">
-                <Lock className="w-12 h-12 text-seftec-teal mb-4" />
-                <h3 className="text-xl font-medium mb-2">Sign in to access AI features</h3>
-                <p className="text-muted-foreground mb-6">
-                  Create an account or sign in to use our AI-powered business advisor and get personalized insights.
-                </p>
-                <AuthModal>
-                  <Button size="lg" className="bg-seftec-teal hover:bg-seftec-teal/90">
-                    Sign In to Continue
-                  </Button>
-                </AuthModal>
-              </div>
+            <AIChatInterface 
+              marketInsight={marketInsight}
+              hasNotification={hasNotification}
+              onClearNotification={handleClearNotification}
+            />
+            
+            {!user && (
+              <Alert className="mt-4 bg-white/5 backdrop-blur-sm border-seftec-teal/30">
+                <AlertCircle className="h-4 w-4 text-seftec-teal" />
+                <AlertDescription className="flex justify-between items-center">
+                  <span>Sign in to unlock premium features, personalized insights, and save your conversation history.</span>
+                  <AuthModal>
+                    <Button size="sm" className="ml-4 bg-seftec-teal hover:bg-seftec-teal/90">
+                      Sign In
+                    </Button>
+                  </AuthModal>
+                </AlertDescription>
+              </Alert>
             )}
           </div>
         </div>
