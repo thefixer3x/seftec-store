@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -124,15 +123,12 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
     if (!config) return false;
     
     try {
-      // In a real implementation, you would use Stripe.js SDK
-      // For demo purposes, we're simulating a fetch request
       console.log(`Making ${apiMode} Stripe API call:`, {
         endpoint: config.apiEndpoint,
         amount: values.amount,
         currency: values.currency
       });
       
-      // Simulate API call
       const response = await fetch(config.apiEndpoint, {
         method: 'POST',
         headers: {
@@ -140,12 +136,11 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
           'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: new URLSearchParams({
-          amount: (Number(values.amount) * 100).toString(), // Stripe uses cents
+          amount: (Number(values.amount) * 100).toString(),
           currency: values.currency,
           payment_method_types: '["card"]'
         })
       }).catch(() => {
-        // Simulate successful response in demo mode
         if (apiMode === "sandbox") {
           return { ok: true, json: () => Promise.resolve({ 
             id: `pi_${Date.now()}`,
@@ -167,7 +162,6 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
       return true;
     } catch (error) {
       console.error("Stripe payment error:", error);
-      // In sandbox mode, always succeed for testing
       return apiMode === "sandbox" ? true : false;
     }
   };
@@ -183,8 +177,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
       method: values.paymentMethod
     });
     
-    // For demo, always succeed in sandbox mode
-    return apiMode === "sandbox" ? true : Math.random() > 0.2; // 80% success rate in live mode for demo
+    return apiMode === "sandbox" ? true : Math.random() > 0.2;
   };
 
   const processPaymentApi = async (values: PaymentFormValues) => {
@@ -202,7 +195,6 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
     }
 
     try {
-      // Process payment based on provider
       let success = false;
       
       if (paymentProvider === "stripe") {
@@ -306,76 +298,11 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
             </div>
           ) : (
             <>
-              <Tabs defaultValue="gateway" className="w-full mb-6">
+              <Tabs defaultValue="method" className="w-full mb-6">
                 <TabsList className="grid grid-cols-2 mb-4">
-                  <TabsTrigger value="gateway">Payment Gateway</TabsTrigger>
                   <TabsTrigger value="method">Payment Method</TabsTrigger>
+                  <TabsTrigger value="gateway">Payment Gateway</TabsTrigger>
                 </TabsList>
-                
-                <TabsContent value="gateway" className="space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <PaymentProviderCard 
-                      id="stripe" 
-                      name="Stripe" 
-                      description="Global payments"
-                      icon={<CreditCard className="h-8 w-8 text-[#635BFF]" />} 
-                      selected={paymentProvider === "stripe"} 
-                      onClick={() => setPaymentProvider("stripe")} 
-                    />
-                    <PaymentProviderCard 
-                      id="flutterwave" 
-                      name="Flutterwave" 
-                      description="Africa focused"
-                      icon={<Banknote className="h-8 w-8 text-[#FB4E20]" />} 
-                      selected={paymentProvider === "flutterwave"} 
-                      onClick={() => setPaymentProvider("flutterwave")} 
-                    />
-                    <PaymentProviderCard 
-                      id="paystack" 
-                      name="Paystack" 
-                      description="African businesses"
-                      icon={<CardIcon className="h-8 w-8 text-[#00C3F7]" />} 
-                      selected={paymentProvider === "paystack"} 
-                      onClick={() => setPaymentProvider("paystack")} 
-                    />
-                    <PaymentProviderCard 
-                      id="wise" 
-                      name="Wise" 
-                      description="International transfers"
-                      icon={<Globe className="h-8 w-8 text-[#00B9FF]" />} 
-                      selected={paymentProvider === "wise"} 
-                      onClick={() => setPaymentProvider("wise")} 
-                    />
-                    <PaymentProviderCard 
-                      id="payoneer" 
-                      name="Payoneer" 
-                      description="Global B2B payments"
-                      icon={<DollarSign className="h-8 w-8 text-[#FF4800]" />} 
-                      selected={paymentProvider === "payoneer"} 
-                      onClick={() => setPaymentProvider("payoneer")} 
-                    />
-                  </div>
-                  
-                  {paymentError && (
-                    <Alert className="bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800">
-                      <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
-                      <AlertTitle>Payment Error</AlertTitle>
-                      <AlertDescription className="text-sm">
-                        {paymentError}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  
-                  <Alert className="bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800">
-                    <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                    <AlertTitle>Security Information</AlertTitle>
-                    <AlertDescription className="text-sm">
-                      {apiMode === "sandbox" 
-                        ? "You're in sandbox mode. No real payments will be processed."
-                        : "You're in live mode. Real payments will be processed."}
-                    </AlertDescription>
-                  </Alert>
-                </TabsContent>
                 
                 <TabsContent value="method">
                   <Form {...form}>
@@ -543,6 +470,71 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                     </form>
                   </Form>
                 </TabsContent>
+
+                <TabsContent value="gateway" className="space-y-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <PaymentProviderCard 
+                      id="stripe" 
+                      name="Stripe" 
+                      description="Global payments"
+                      icon={<CreditCard className="h-8 w-8 text-[#635BFF]" />} 
+                      selected={paymentProvider === "stripe"} 
+                      onClick={() => setPaymentProvider("stripe")} 
+                    />
+                    <PaymentProviderCard 
+                      id="flutterwave" 
+                      name="Flutterwave" 
+                      description="Africa focused"
+                      icon={<Banknote className="h-8 w-8 text-[#FB4E20]" />} 
+                      selected={paymentProvider === "flutterwave"} 
+                      onClick={() => setPaymentProvider("flutterwave")} 
+                    />
+                    <PaymentProviderCard 
+                      id="paystack" 
+                      name="Paystack" 
+                      description="African businesses"
+                      icon={<CardIcon className="h-8 w-8 text-[#00C3F7]" />} 
+                      selected={paymentProvider === "paystack"} 
+                      onClick={() => setPaymentProvider("paystack")} 
+                    />
+                    <PaymentProviderCard 
+                      id="wise" 
+                      name="Wise" 
+                      description="International transfers"
+                      icon={<Globe className="h-8 w-8 text-[#00B9FF]" />} 
+                      selected={paymentProvider === "wise"} 
+                      onClick={() => setPaymentProvider("wise")} 
+                    />
+                    <PaymentProviderCard 
+                      id="payoneer" 
+                      name="Payoneer" 
+                      description="Global B2B payments"
+                      icon={<DollarSign className="h-8 w-8 text-[#FF4800]" />} 
+                      selected={paymentProvider === "payoneer"} 
+                      onClick={() => setPaymentProvider("payoneer")} 
+                    />
+                  </div>
+                  
+                  {paymentError && (
+                    <Alert className="bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800">
+                      <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                      <AlertTitle>Payment Error</AlertTitle>
+                      <AlertDescription className="text-sm">
+                        {paymentError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
+                  <Alert className="bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800">
+                    <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <AlertTitle>Security Information</AlertTitle>
+                    <AlertDescription className="text-sm">
+                      {apiMode === "sandbox" 
+                        ? "You're in sandbox mode. No real payments will be processed."
+                        : "You're in live mode. Real payments will be processed."}
+                    </AlertDescription>
+                  </Alert>
+                </TabsContent>
               </Tabs>
               
               <div className="flex items-center justify-between mt-4 pt-4 border-t">
@@ -588,7 +580,7 @@ const PaymentProviderCard: React.FC<PaymentProviderCardProps> = ({
   return (
     <div 
       className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
-        selected ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700'
+        selected ? 'border-blue-500 bg-blue-50 dark:bg-blue-900' : 'border-gray-200 dark:border-gray-700'
       }`}
       onClick={onClick}
     >
