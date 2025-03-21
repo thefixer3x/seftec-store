@@ -38,18 +38,24 @@ const Profile = () => {
     }
   }, [user, loading, navigate, toast]);
 
-  // Update URL when tab changes
+  // Update URL when tab changes, but only if it's different from current URL
   useEffect(() => {
-    const newParams = new URLSearchParams(location.search);
-    newParams.set('tab', activeTab);
-    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+    const currentTabInUrl = new URLSearchParams(location.search).get('tab');
+    // Only update URL if the active tab is different from what's in the URL
+    if (activeTab !== currentTabInUrl) {
+      const newParams = new URLSearchParams(location.search);
+      newParams.set('tab', activeTab);
+      navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+    }
   }, [activeTab, location.pathname, navigate]);
 
-  // Update active tab when URL changes
+  // Update active tab when URL changes, but avoid circular dependency
   useEffect(() => {
-    const tab = searchParams.get('tab') || 'dashboard';
-    setActiveTab(tab);
-  }, [location.search, searchParams]);
+    const tabFromUrl = searchParams.get('tab') || 'dashboard';
+    if (tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [location.search]);
 
   if (loading) {
     return (
@@ -63,7 +69,7 @@ const Profile = () => {
 
   const isDashboardTab = [
     'dashboard', 'wallet', 'stores', 'marketplace', 'customers', 
-    'invoices', 'transaction', 'inventory', 'bill-payment', 'account', 'settings'
+    'invoices', 'transaction', 'inventory', 'bill-payment', 'trade-finance', 'account', 'settings'
   ].includes(activeTab);
 
   if (isDashboardTab) {
