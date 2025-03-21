@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase, getUserProfile } from '@/integrations/supabase/client';
@@ -24,6 +23,8 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   loading: boolean;
   refreshProfile: () => Promise<void>;
+  sendVerificationEmail: (email: string) => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,7 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -46,7 +46,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
@@ -119,7 +118,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       
-      // Create auth user
       const { error } = await supabase.auth.signUp({ 
         email, 
         password,
@@ -175,6 +173,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const sendVerificationEmail = async (email: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+      });
+      
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Verification email sent",
+        description: "Please check your email for the verification link.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Failed to send verification email",
+        description: error.message || "An error occurred",
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Password reset email sent",
+        description: "Check your email for the password reset link",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Reset password failed",
+        description: error.message || "An error occurred",
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value = {
     session,
     user,
@@ -184,6 +237,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     loading,
     refreshProfile,
+    sendVerificationEmail,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
