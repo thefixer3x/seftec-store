@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { FileText } from 'lucide-react';
+import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
 import SettingsSidebar from './settings/SettingsSidebar';
 import BusinessProfileTab from './settings/BusinessProfileTab';
 import PersonalProfileTab from './settings/PersonalProfileTab';
@@ -23,35 +23,42 @@ const SettingsTab = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div className="lg:col-span-1">
           <Tabs 
-            orientation="vertical" 
             defaultValue="business" 
             value={activeTab} 
             onValueChange={setActiveTab}
             className="border rounded-lg overflow-hidden shadow-sm"
           >
-            <SettingsSidebar activeTab={activeTab} />
+            <TabsList className="flex flex-col w-full justify-start rounded-none bg-gray-50 p-0">
+              <SettingsSidebar activeTab={activeTab} />
+            </TabsList>
+            
+            {/* TabsContent must be inside the Tabs component */}
+            <TabsContent value="business" className="mt-0 p-0 hidden" />
+            <TabsContent value="personal" className="mt-0 p-0 hidden" />
+            <TabsContent value="password" className="mt-0 p-0 hidden" />
+            <TabsContent value="pin" className="mt-0 p-0 hidden" />
           </Tabs>
         </div>
 
         <div className="lg:col-span-3">
-          <TabsContent value="business" className="mt-0 p-0">
+          {activeTab === "business" && (
             <BusinessProfileTab 
               verificationStatus={verificationStatus} 
               setVerificationStatus={setVerificationStatus} 
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="personal" className="mt-0 p-0">
+          {activeTab === "personal" && (
             <PersonalProfileTab />
-          </TabsContent>
+          )}
 
-          <TabsContent value="password" className="mt-0 p-0">
+          {activeTab === "password" && (
             <PasswordTab />
-          </TabsContent>
+          )}
 
-          <TabsContent value="pin" className="mt-0 p-0">
+          {activeTab === "pin" && (
             <PinTab />
-          </TabsContent>
+          )}
         </div>
       </div>
     </div>
