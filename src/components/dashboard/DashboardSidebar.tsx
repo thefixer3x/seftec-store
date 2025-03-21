@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  Home, 
+  LayoutDashboard, 
   Wallet, 
   Store, 
   ShoppingBag, 
@@ -13,12 +13,13 @@ import {
   Settings,
   BookOpen,
   CreditCard,
-  Shield
+  Shield,
+  Home
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const sidebarItems = [
-  { icon: Home, label: 'Home', path: '/profile?tab=dashboard' },
+  { icon: LayoutDashboard, label: 'Control Room', path: '/profile?tab=dashboard' },
   { icon: Wallet, label: 'My Wallet', path: '/profile?tab=wallet' },
   { icon: BookOpen, label: 'Inventory', path: '/profile?tab=inventory' },
   { icon: Shield, label: 'Bill Payment', path: '/profile?tab=bill-payment' },
@@ -29,6 +30,7 @@ const sidebarItems = [
   { icon: Users, label: 'My Customers', path: '/profile?tab=customers' },
   { icon: Percent, label: 'Transaction', path: '/profile?tab=transaction' },
   { icon: Settings, label: 'Settings', path: '/profile?tab=settings' },
+  { icon: Home, label: 'Back to Home', path: '/' },
 ];
 
 const DashboardSidebar = () => {
