@@ -39,12 +39,12 @@ const DashboardSidebar = () => {
   const currentPath = location.pathname + location.search;
 
   return (
-    <aside className="w-64 border-r border-border bg-sidebar dark:bg-sidebar-background h-full flex-shrink-0">
+    <aside className="w-64 border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy h-full flex-shrink-0">
       <div className="py-4 flex flex-col h-full">
         <div className="px-3 py-2">
           <div className="flex items-center mb-6 px-3">
-            <Icons.logo className="h-6 w-6 text-primary mr-2" />
-            <h2 className="text-lg font-semibold">seftec.store</h2>
+            <Icons.logo className="h-6 w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
+            <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
           </div>
         </div>
         <nav className="space-y-1 px-3 flex-1">
@@ -55,13 +55,18 @@ const DashboardSidebar = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center px-3 py-3 text-sm rounded-md group transition-colors",
+                  "flex items-center px-3 py-3 text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5",
                   isActive 
-                    ? "bg-primary/10 text-primary font-medium border-l-4 border-primary" 
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-seftec-gold/10 text-seftec-navy dark:bg-seftec-teal/10 dark:text-seftec-teal font-medium border-l-4 border-seftec-gold dark:border-seftec-teal" 
+                    : "text-seftec-navy/70 dark:text-white/70 hover:text-seftec-navy dark:hover:text-white"
                 )}
               >
-                <item.icon className={cn("h-5 w-5 mr-3", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                <item.icon className={cn(
+                  "h-5 w-5 mr-3", 
+                  isActive 
+                    ? "text-seftec-gold dark:text-seftec-teal" 
+                    : "text-seftec-navy/70 dark:text-white/70 group-hover:text-seftec-navy dark:group-hover:text-white"
+                )} />
                 <span>{item.label}</span>
               </Link>
             );
