@@ -26,12 +26,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       enableSystem
     >
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <AuthProvider>
             <App />
-            <Toaster />
-          </BrowserRouter>
-        </AuthProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
   </React.StrictMode>,

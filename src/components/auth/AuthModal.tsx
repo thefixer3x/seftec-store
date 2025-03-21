@@ -13,9 +13,9 @@ export function AuthModal({ children }: AuthModalProps) {
   const { user } = useAuth();
   const [open, setOpen] = React.useState(false);
 
-  // If user is already logged in, don't show the modal
+  // If user is already logged in, don't show the auth form in modal
   if (user) {
-    return null;
+    return <>{children}</>;
   }
 
   return (
@@ -24,7 +24,7 @@ export function AuthModal({ children }: AuthModalProps) {
         {children || <Button>Sign In</Button>}
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
-        <AuthForm />
+        <AuthForm onSuccess={() => setOpen(false)} />
       </DialogContent>
     </Dialog>
   );
