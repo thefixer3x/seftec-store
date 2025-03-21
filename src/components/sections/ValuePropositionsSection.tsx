@@ -55,10 +55,8 @@ const ValuePropositionsSection = () => {
               className={cn(
                 "bg-white dark:bg-seftec-darkNavy/80 rounded-xl p-8 shadow-apple hover:shadow-apple-hover",
                 "transition-all duration-300 transform hover:-translate-y-1",
-                "border border-seftec-slate dark:border-white/10",
-                "animate-fade-up"
+                "border border-seftec-slate dark:border-white/10"
               )}
-              style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="mb-6">{prop.icon}</div>
               <h3 className="text-xl font-bold mb-3 text-seftec-navy dark:text-white">{prop.title}</h3>
