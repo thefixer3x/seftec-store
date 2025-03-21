@@ -17,10 +17,12 @@ export function TwitterSignIn({ className, onSuccess }: TwitterSignInProps) {
   const handleSignIn = async () => {
     try {
       setIsLoading(true);
+      
       // Get the current URL to use as redirect base
       const redirectUrl = `${window.location.origin}/auth-callback`;
       console.log("Twitter sign-in redirect URL:", redirectUrl);
       
+      // Use the site's origin for the redirect URL to ensure consistency
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'twitter',
         options: {
