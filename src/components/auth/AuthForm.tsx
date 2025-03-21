@@ -39,7 +39,12 @@ const signupSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-export function AuthForm() {
+// Add the onSuccess prop to the component props
+interface AuthFormProps {
+  onSuccess?: () => void;
+}
+
+export function AuthForm({ onSuccess }: AuthFormProps) {
   const [activeTab, setActiveTab] = useState('login');
   const { signIn, signUp, loading } = useAuth();
   const { toast } = useToast();
@@ -68,6 +73,8 @@ export function AuthForm() {
   const onLoginSubmit = async (values: LoginFormValues) => {
     try {
       await signIn(values.email, values.password);
+      // Call onSuccess callback if provided
+      if (onSuccess) onSuccess();
     } catch (error) {
       console.error('Login error:', error);
     }
