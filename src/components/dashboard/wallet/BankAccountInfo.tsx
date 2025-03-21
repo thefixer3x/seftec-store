@@ -4,9 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Copy, Building, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const BankAccountInfo = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -17,23 +19,23 @@ const BankAccountInfo = () => {
   };
 
   return (
-    <Card className="bg-white shadow-sm border">
-      <CardContent className="p-6">
+    <Card className="bg-white shadow-sm border dark:bg-seftec-charcoal dark:border-white/10">
+      <CardContent className={`${isMobile ? 'p-4' : 'p-6'}`}>
         <div className="flex items-center mb-4">
-          <CreditCard className="h-5 w-5 text-blue-600 mr-2" />
-          <h3 className="font-medium text-gray-800">Connected Account</h3>
+          <CreditCard className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2" />
+          <h3 className="font-medium text-seftec-navy dark:text-white">Connected Account</h3>
         </div>
         
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-500">Account Number</div>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <div className="text-sm text-gray-500 dark:text-gray-300">Account Number</div>
             <div className="flex items-center">
-              <div className="font-mono text-sm bg-gray-100 px-3 py-1.5 rounded">1234567890</div>
+              <div className="font-mono text-sm bg-gray-100 dark:bg-seftec-darkNavy/80 px-3 py-1.5 rounded">1234567890</div>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 onClick={() => copyToClipboard('1234567890')}
-                className="h-8 w-8 ml-1 text-gray-500 hover:text-blue-600"
+                className="h-8 w-8 ml-1 text-gray-500 hover:text-seftec-gold dark:hover:text-seftec-teal"
               >
                 <Copy className="h-3.5 w-3.5" />
               </Button>
@@ -41,17 +43,17 @@ const BankAccountInfo = () => {
           </div>
           
           <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-500">Bank Name</div>
-            <div className="text-sm font-medium">Example Bank</div>
+            <div className="text-sm text-gray-500 dark:text-gray-300">Bank Name</div>
+            <div className="text-sm font-medium dark:text-white">Example Bank</div>
           </div>
           
           <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-500">Account Name</div>
-            <div className="text-sm font-medium">COMPANY XYZ</div>
+            <div className="text-sm text-gray-500 dark:text-gray-300">Account Name</div>
+            <div className="text-sm font-medium dark:text-white">COMPANY XYZ</div>
           </div>
           
-          <div className="pt-4 mt-2 border-t border-gray-100">
-            <Button variant="outline" size="sm" className="w-full text-blue-600 border-blue-200 hover:bg-blue-50">
+          <div className="pt-3 mt-2 border-t border-gray-100 dark:border-white/10">
+            <Button variant="outline" size="sm" className="w-full text-seftec-navy border-seftec-navy/20 hover:bg-seftec-navy/10 dark:text-seftec-teal dark:border-seftec-teal/20 dark:hover:bg-seftec-teal/10">
               <Building className="h-3.5 w-3.5 mr-2" />
               Manage Bank Accounts
             </Button>
