@@ -39,7 +39,7 @@ const valuePropositions = [
 
 const ValuePropositionsSection = () => {
   return (
-    <section className="py-20 px-6 bg-gradient-to-b from-white to-seftec-slate dark:from-seftec-darkNavy dark:to-seftec-darkNavy/90">
+    <section className="py-20 px-6 bg-white dark:bg-seftec-darkNavy">
       <div className="container mx-auto">
         <SectionHeading
           label="Our Value Propositions"
