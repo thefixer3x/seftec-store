@@ -32,8 +32,8 @@ const AuthCallback = () => {
             description: "You have been successfully signed in.",
           });
           
-          // Redirect to the auth test page or dashboard
-          navigate('/auth-test');
+          // Redirect to the dashboard
+          navigate('/dashboard');
         } else {
           console.log("No session found, authentication may have failed");
           // Handle the case where no session was found
