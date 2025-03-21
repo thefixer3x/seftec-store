@@ -10,7 +10,7 @@ export const siteConfig = {
       href: "/solutions",
     },
     {
-      title: "Value Props",
+      title: "Biz Tools",
       href: "/value-propositions",
     },
     {
