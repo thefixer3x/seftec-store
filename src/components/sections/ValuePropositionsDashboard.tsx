@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, LineChart, FileText, MousePointer, Bot } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Button } from '@/components/ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const dashboardFeatures = [
   {
@@ -40,6 +41,14 @@ const dashboardFeatures = [
 ];
 
 const ValuePropositionsDashboard = () => {
+  const isMobile = useIsMobile();
+  const [activeTab, setActiveTab] = useState('dashboard');
+  
+  // Find the current feature based on active tab
+  const currentFeature = dashboardFeatures.find(
+    feature => feature.title.toLowerCase().split(' ')[0] === activeTab
+  );
+
   return (
     <section className="py-16 px-4 sm:px-6 bg-white dark:bg-seftec-darkNavy">
       <div className="container mx-auto">
@@ -53,14 +62,46 @@ const ValuePropositionsDashboard = () => {
         </div>
         
         <div className="max-w-6xl mx-auto">
-          <Tabs defaultValue="dashboard" className="w-full">
-            <TabsList className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 mb-8 md:mb-12 overflow-x-auto">
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-              <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="reports">Reports</TabsTrigger>
-              <TabsTrigger value="interface">Interface</TabsTrigger>
-              <TabsTrigger value="advisor">AI Advisor</TabsTrigger>
-            </TabsList>
+          <Tabs 
+            defaultValue="dashboard" 
+            className="w-full"
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value)}
+          >
+            {/* Custom tabs display for mobile */}
+            {isMobile ? (
+              <div className="flex flex-col space-y-4 mb-6">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-medium">Features</h3>
+                  <select 
+                    className="bg-muted text-foreground py-2 px-3 rounded-md border border-input"
+                    value={activeTab}
+                    onChange={(e) => setActiveTab(e.target.value)}
+                  >
+                    {dashboardFeatures.map((feature, idx) => (
+                      <option 
+                        key={idx} 
+                        value={feature.title.toLowerCase().split(' ')[0]}
+                      >
+                        {feature.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <TabsList className="flex mb-8 md:mb-12 overflow-x-auto rounded-lg p-1 bg-muted w-full">
+                {dashboardFeatures.map((feature, idx) => (
+                  <TabsTrigger 
+                    key={idx}
+                    value={feature.title.toLowerCase().split(' ')[0]}
+                    className="flex-1 whitespace-nowrap"
+                  >
+                    {feature.title}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            )}
             
             {dashboardFeatures.map((feature, index) => (
               <TabsContent key={index} value={feature.title.toLowerCase().split(' ')[0]}>
