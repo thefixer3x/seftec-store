@@ -71,19 +71,42 @@ const RegionsCoveredSection: React.FC = () => {
         
         <div className="flex justify-center mb-10 reveal">
           <div className="relative p-4 rounded-full bg-gradient-to-r from-seftec-purple to-seftec-teal dark:from-seftec-teal dark:to-seftec-purple animate-float">
-            {/* World Globe with Grid Pattern */}
-            <div className="relative h-16 w-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              {/* Grid pattern for globe */}
-              <div className="absolute inset-0 rounded-full border border-white/20"></div>
-              <div className="absolute inset-1 rounded-full border border-white/15"></div>
-              <div className="absolute inset-2 rounded-full border border-white/10"></div>
-              <div className="absolute inset-0 rounded-full overflow-hidden">
-                <div className="absolute inset-0 bg-blue-500/20"></div>
-                {/* Continent shapes - simplified */}
-                <div className="absolute top-3 left-3 w-4 h-3 bg-white/20 rounded-sm"></div>
-                <div className="absolute top-5 right-4 w-3 h-4 bg-white/20 rounded-sm"></div>
-                <div className="absolute bottom-4 left-5 w-3 h-3 bg-white/20 rounded-sm"></div>
-              </div>
+            {/* World Globe with improved appearance */}
+            <div className="relative h-16 w-16 rounded-full bg-gradient-to-b from-sky-400 to-blue-600 flex items-center justify-center overflow-hidden">
+              {/* Latitude grid lines */}
+              <div className="absolute inset-x-0 top-2 h-px bg-white/30"></div>
+              <div className="absolute inset-x-0 top-4 h-px bg-white/30"></div>
+              <div className="absolute inset-x-0 top-8 h-px bg-white/30"></div>
+              <div className="absolute inset-x-0 top-12 h-px bg-white/30"></div>
+              <div className="absolute inset-x-0 bottom-2 h-px bg-white/30"></div>
+              <div className="absolute inset-x-0 bottom-4 h-px bg-white/30"></div>
+              <div className="absolute inset-x-0 bottom-8 h-px bg-white/30"></div>
+              
+              {/* Longitude grid lines */}
+              <div className="absolute inset-y-0 left-2 w-px bg-white/30"></div>
+              <div className="absolute inset-y-0 left-4 w-px bg-white/30"></div>
+              <div className="absolute inset-y-0 left-8 w-px bg-white/30"></div>
+              <div className="absolute inset-y-0 left-12 w-px bg-white/30"></div>
+              <div className="absolute inset-y-0 right-2 w-px bg-white/30"></div>
+              <div className="absolute inset-y-0 right-4 w-px bg-white/30"></div>
+              <div className="absolute inset-y-0 right-8 w-px bg-white/30"></div>
+              
+              {/* Continental shapes - more recognizable */}
+              {/* North America */}
+              <div className="absolute top-3 left-3 w-5 h-4 bg-emerald-500/80 rounded-sm transform rotate-12"></div>
+              {/* South America */}
+              <div className="absolute top-8 left-5 w-3 h-5 bg-emerald-500/80 rounded-sm transform rotate-12"></div>
+              {/* Europe */}
+              <div className="absolute top-3 right-7 w-3 h-2 bg-emerald-500/80 rounded-sm"></div>
+              {/* Africa */}
+              <div className="absolute top-6 right-6 w-4 h-5 bg-emerald-500/80 rounded-sm"></div>
+              {/* Asia */}
+              <div className="absolute top-4 right-3 w-5 h-4 bg-emerald-500/80 rounded-sm"></div>
+              {/* Australia */}
+              <div className="absolute bottom-3 right-4 w-3 h-2 bg-emerald-500/80 rounded-sm"></div>
+              
+              {/* Slight highlight effect to give 3D appearance */}
+              <div className="absolute top-0 left-0 right-0 h-8 bg-white/10 rounded-t-full"></div>
               
               {/* Seftec Logo in the middle - transparent */}
               <div className="absolute inset-0 flex items-center justify-center">
