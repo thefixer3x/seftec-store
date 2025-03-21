@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import ValuePropositions from "./pages/ValuePropositions";
+import BizTools from "./pages/BizTools";
 import Solutions from "./pages/Solutions";
 import NotFound from "./pages/NotFound";
 import AuthTest from "./pages/AuthTest";
@@ -42,7 +42,7 @@ const App = () => {
         <TooltipProvider>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/value-propositions" element={<ValuePropositions />} />
+            <Route path="/value-propositions" element={<BizTools />} />
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/auth-test" element={<AuthTest />} />
             <Route path="/products" element={<Products />} />

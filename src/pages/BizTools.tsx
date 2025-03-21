@@ -7,7 +7,7 @@ import ValuePropositionsDashboard from '@/components/sections/ValuePropositionsD
 import BusinessCounter from "@/components/ui/business-counter";
 import { siteConfig } from '@/config/site';
 
-const ValuePropositions = () => {
+const BizTools = () => {
   // Set light mode on initial load
   useEffect(() => {
     document.documentElement.classList.remove('dark');
@@ -18,7 +18,7 @@ const ValuePropositions = () => {
     <div className="min-h-screen flex flex-col bg-white dark:bg-seftec-darkNavy pt-[56px]">
       <MainNav items={siteConfig.mainNav} />
       <main className="flex-grow">
-        {/* Value Propositions Header */}
+        {/* Biz Tools Header */}
         <div className="py-12 bg-gray-50 dark:bg-seftec-navy/30">
           <div className="container mx-auto px-6">
             <h1 className="text-3xl font-bold mb-4 text-seftec-navy dark:text-white">Business Tools</h1>
@@ -43,4 +43,4 @@ const ValuePropositions = () => {
   );
 };
 
-export default ValuePropositions;
+export default BizTools;
