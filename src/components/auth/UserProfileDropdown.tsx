@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, Settings, LogOut, ShoppingCart } from 'lucide-react';
+import { User, Settings, LogOut, ShoppingCart, LayoutDashboard } from 'lucide-react';
 import { AuthModal } from './AuthModal';
 import { Link } from 'react-router-dom';
 
@@ -66,6 +66,12 @@ export function UserProfileDropdown() {
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link to="/profile" className="cursor-pointer flex items-center w-full">
+            <LayoutDashboard className="mr-2 h-4 w-4" />
+            <span>Dashboard</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/profile?tab=profile" className="cursor-pointer flex items-center w-full">
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
