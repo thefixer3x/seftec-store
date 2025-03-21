@@ -11,18 +11,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
 
 interface AuthSectionProps {
   user: any;
 }
 
 const AuthSection = ({ user }: AuthSectionProps) => {
+  const { profile } = useAuth();
+  
   return (
     <div className="hidden md:flex items-center space-x-4">
       {/* Welcome message for logged in users */}
       {user && (
         <span className="hidden md:inline-block text-gray-600 dark:text-white/80">
-          Welcome, {user.email?.split('@')[0] || 'Guest'}
+          Welcome, {profile?.first_name || user.email?.split('@')[0] || 'Guest'}
         </span>
       )}
       
