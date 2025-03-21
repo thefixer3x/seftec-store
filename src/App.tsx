@@ -9,6 +9,7 @@ import ValuePropositions from "./pages/ValuePropositions";
 import NotFound from "./pages/NotFound";
 import AuthTest from "./pages/AuthTest";
 import Products from "./pages/Products";
+import AuthCallback from "./pages/AuthCallback";
 
 const App = () => {
   useEffect(() => {
@@ -31,6 +32,7 @@ const App = () => {
         <Route path="/value-propositions" element={<ValuePropositions />} />
         <Route path="/auth-test" element={<AuthTest />} />
         <Route path="/products" element={<Products />} />
+        <Route path="/auth-callback" element={<AuthCallback />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
