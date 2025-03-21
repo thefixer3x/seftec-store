@@ -33,7 +33,7 @@ serve(async (req) => {
     }
 
     const reqBody = await req.json();
-    const { query, isPremium } = reqBody;
+    const { query, isPremium, generateReport = false } = reqBody;
 
     if (!query || typeof query !== 'string') {
       throw new Error('Query parameter must be a non-empty string');
@@ -44,12 +44,17 @@ serve(async (req) => {
       throw new Error('Query cannot be empty');
     }
 
-    // Determine system message based on premium status
-    const systemMessage = isPremium 
+    // Determine system message based on premium status and whether to generate a report
+    let systemMessage = isPremium 
       ? "You are a premium business AI assistant called BizGenie that provides detailed financial advice and business insights. Always format your responses with clear sections and actionable recommendations. Include specific numbers, percentages, and monetary values when applicable. Reference industry benchmarks and best practices."
       : "You are a business AI assistant called BizGenie that provides financial advice and business insights. Keep responses concise and practical.";
+    
+    // Modify system message for report generation
+    if (generateReport) {
+      systemMessage += " You are now being asked to generate a formal business report. Structure your response as a complete report with executive summary, detailed analysis, recommendations, and conclusion sections. Use markdown formatting for headings, bullet points, and emphasis. Include fictional yet realistic data points and visualizations where appropriate, described in markdown format.";
+    }
 
-    console.log(`Processing ${isPremium ? 'premium' : 'standard'} query: ${query.substring(0, 50)}...`);
+    console.log(`Processing ${isPremium ? 'premium' : 'standard'} ${generateReport ? 'report' : 'query'}: ${query.substring(0, 50)}...`);
 
     // Call OpenAI API
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -64,8 +69,8 @@ serve(async (req) => {
           { role: 'system', content: systemMessage },
           { role: 'user', content: query }
         ],
-        max_tokens: isPremium ? 500 : 200,
-        temperature: 0.7,
+        max_tokens: generateReport ? 1500 : (isPremium ? 500 : 200),
+        temperature: generateReport ? 0.5 : 0.7,
       }),
     });
 
@@ -98,7 +103,10 @@ serve(async (req) => {
     const aiResponse = data.choices[0].message.content;
     console.log('Response generated successfully');
 
-    return new Response(JSON.stringify({ response: aiResponse }), {
+    return new Response(JSON.stringify({ 
+      response: aiResponse,
+      isReport: generateReport
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {

@@ -23,9 +23,11 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [isReport, setIsReport] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [userTrainingEnabled, setUserTrainingEnabled] = useState(true);
   const [isPremium, setIsPremium] = useState(false);
+  const [generateReport, setGenerateReport] = useState(false);
   const { toast } = useToast();
 
   const handleAskAI = async () => {
@@ -34,12 +36,13 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     setIsTyping(true);
     setResponse("");
     setError(null);
+    setIsReport(false);
     
     try {
-      console.log("Sending query to AI service:", query.substring(0, 50) + (query.length > 50 ? "..." : ""));
+      console.log(`Sending ${generateReport ? 'report' : 'query'} to AI service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
       
       const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: { query, isPremium }
+        body: { query, isPremium, generateReport }
       });
       
       if (error) {
@@ -60,6 +63,7 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       }
       
       const fullResponse = data.response;
+      setIsReport(data.isReport || false);
       let i = 0;
       
       if (userTrainingEnabled) {
@@ -74,6 +78,14 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
         } else {
           clearInterval(typingInterval);
           setIsTyping(false);
+          
+          if (data.isReport) {
+            toast({
+              title: "Report Generated",
+              description: "Your business report has been successfully generated.",
+              duration: 3000,
+            });
+          }
         }
       }, 15);
     } catch (error: any) {
@@ -118,7 +130,8 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           <ChatResponseDisplay 
             response={response} 
             isTyping={isTyping} 
-            error={error} 
+            error={error}
+            isReport={isReport}
           />
           
           <ChatInputForm
@@ -129,6 +142,8 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
             isPremium={isPremium}
             userTrainingEnabled={userTrainingEnabled}
             setUserTrainingEnabled={setUserTrainingEnabled}
+            generateReport={generateReport}
+            setGenerateReport={setGenerateReport}
           />
         </div>
       </CardContent>
