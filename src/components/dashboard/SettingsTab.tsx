@@ -30,12 +30,12 @@ const SettingsTab = () => {
   const businessForm = useForm<BusinessFormValues>({
     resolver: zodResolver(businessFormSchema),
     defaultValues: {
-      business_name: "Nimmys Double A Global Enterprise",
-      business_email: "abiodunadewusi87@yahoo.com",
-      business_phone: "08136664520",
-      business_address: "21 Shop, Olowofela road, Magboro, Ogun State",
-      date_of_incorporation: "19/03/2025",
-      rc_number: "7417489"
+      business_name: "Example Business Ltd",
+      business_email: "contact@examplebusiness.com",
+      business_phone: "1234567890",
+      business_address: "123 Business Street, City, Country",
+      date_of_incorporation: "01/01/2023",
+      rc_number: "RC123456"
     }
   });
 
