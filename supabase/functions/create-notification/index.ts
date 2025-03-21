@@ -13,6 +13,10 @@ interface NotificationRequest {
   title: string;
   message: string;
   type: 'info' | 'warning' | 'success' | 'error';
+  metadata?: {
+    path?: string;
+    [key: string]: any;
+  };
 }
 
 serve(async (req) => {
@@ -42,7 +46,7 @@ serve(async (req) => {
     }
 
     // Get the notification data from the request
-    const { title, message, type = 'info' } = await req.json() as NotificationRequest;
+    const { title, message, type = 'info', metadata = {} } = await req.json() as NotificationRequest;
 
     // Create the notification
     const { data, error } = await supabaseClient
@@ -52,6 +56,7 @@ serve(async (req) => {
         title,
         message,
         type,
+        metadata
       })
       .select()
       .single();

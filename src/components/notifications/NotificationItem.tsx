@@ -5,6 +5,7 @@ import { Check, Info, AlertTriangle, XCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useNotifications, Notification } from '@/context/NotificationsContext';
+import { useNavigate } from 'react-router-dom';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -12,6 +13,7 @@ interface NotificationItemProps {
 
 const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => {
   const { markAsRead, deleteNotification } = useNotifications();
+  const navigate = useNavigate();
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -39,9 +41,33 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
     }
   };
 
-  const handleClick = () => {
+  const handleNavigation = () => {
     if (!notification.is_read) {
       markAsRead(notification.id);
+    }
+    
+    // Extract target path from notification data if available
+    if (notification.metadata && notification.metadata.path) {
+      navigate(notification.metadata.path);
+    } else {
+      // Fallback navigation based on notification content
+      if (notification.message.toLowerCase().includes('order')) {
+        navigate('/orders');
+      } else if (notification.message.toLowerCase().includes('profile')) {
+        navigate('/profile');
+      } else if (notification.message.toLowerCase().includes('product') || 
+                notification.message.toLowerCase().includes('shop')) {
+        navigate('/shop');
+      } else if (notification.message.toLowerCase().includes('payment') || 
+                notification.message.toLowerCase().includes('invoice')) {
+        navigate('/cart');
+      } else if (notification.message.toLowerCase().includes('biztool') || 
+                notification.message.toLowerCase().includes('tool')) {
+        navigate('/biz-tools');
+      } else if (notification.message.toLowerCase().includes('bizgenie') || 
+                notification.message.toLowerCase().includes('ai')) {
+        navigate('/value-propositions/bizgenie');
+      }
     }
   };
 
@@ -56,7 +82,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
         "p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer flex",
         !notification.is_read && "bg-slate-50 dark:bg-slate-800/30"
       )}
-      onClick={handleClick}
+      onClick={handleNavigation}
     >
       <div className="mr-3 pt-1">{getIcon()}</div>
       <div className="flex-1">
