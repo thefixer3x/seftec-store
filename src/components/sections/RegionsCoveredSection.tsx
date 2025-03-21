@@ -9,6 +9,12 @@ import { Icons } from "@/components/icons";
 // Data for the regions we cover section with added colors
 const regionsData = [
   {
+    region: "Middle East & Africa",
+    countries: ["UAE", "Saudi Arabia", "South Africa", "Kenya", "Cameroon", "Ghana", "Nigeria"],
+    icon: <Flag className="text-white" size={24} />,
+    bgColor: "bg-gradient-to-r from-orange-500 to-orange-600"
+  },
+  {
     region: "North America",
     countries: ["United States", "Canada", "Mexico"],
     icon: <Flag className="text-white" size={24} />,
@@ -25,12 +31,6 @@ const regionsData = [
     countries: ["Australia", "Japan", "Singapore", "Hong Kong", "New Zealand"],
     icon: <Flag className="text-white" size={24} />,
     bgColor: "bg-gradient-to-r from-green-500 to-green-600"
-  },
-  {
-    region: "Middle East & Africa",
-    countries: ["UAE", "Saudi Arabia", "South Africa", "Kenya", "Cameroon", "Ghana", "Nigeria"],
-    icon: <Flag className="text-white" size={24} />,
-    bgColor: "bg-gradient-to-r from-orange-500 to-orange-600"
   }
 ];
 
