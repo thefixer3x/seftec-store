@@ -16,6 +16,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SignUpAuthFormSchema } from '@/lib/validations/auth';
 
 interface SignUpFormProps {
@@ -27,6 +28,7 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormProps) {
   const { toast } = useToast();
   const { signUp } = useAuth();
+  const [formError, setFormError] = React.useState<string | null>(null);
 
   const form = useForm<z.infer<typeof SignUpAuthFormSchema>>({
     resolver: zodResolver(SignUpAuthFormSchema),
@@ -39,6 +41,7 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
 
   async function handleSubmit(values: z.infer<typeof SignUpAuthFormSchema>) {
     setIsLoading(true);
+    setFormError(null);
 
     try {
       await signUp(values.email, values.password, {
@@ -49,10 +52,26 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
         description: "Please check your email for verification.",
       });
       onSuccess?.();
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      
+      let errorMessage = "There was an error signing up. Please try again.";
+      if (error.message) {
+        // Extract more specific error messages
+        if (error.message.includes("User already registered")) {
+          errorMessage = "This email is already registered. Please use a different email or try signing in.";
+        } else if (error.message.includes("Password should be")) {
+          errorMessage = error.message;
+        } else if (error.message.includes("captcha")) {
+          errorMessage = "We're experiencing technical difficulties with our signup process. Please try again later.";
+        }
+      }
+      
+      setFormError(errorMessage);
+      
       toast({
         title: "Something went wrong.",
-        description: "There was an error signing up. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -63,6 +82,12 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
+        {formError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{formError}</AlertDescription>
+          </Alert>
+        )}
+        
         <FormField
           control={form.control}
           name="name"
@@ -90,7 +115,7 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
               <FormControl>
                 <Input
                   id="email"
-                  placeholder="shadcn@example.com"
+                  placeholder="example@email.com"
                   {...field}
                   type="email"
                   disabled={isLoading}
@@ -118,7 +143,7 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
             </FormItem>
           )}
         />
-        <Button disabled={isLoading}>
+        <Button disabled={isLoading} type="submit">
           {isLoading && (
             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           )}

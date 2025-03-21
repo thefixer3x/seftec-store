@@ -22,7 +22,10 @@ export const fetchUserProfile = async (userId: string): Promise<Profile | null> 
 };
 
 export const handleSignIn = async (email: string, password: string) => {
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword({ 
+    email, 
+    password,
+  });
   
   if (error) {
     throw error;
@@ -37,11 +40,13 @@ export const handleSignUp = async (email: string, password: string, userData: Pa
       data: {
         first_name: userData.first_name,
         last_name: userData.last_name,
-      }
+      },
+      captchaToken: null // Disable captcha requirement
     }
   });
   
   if (error) {
+    console.error('Signup error:', error);
     throw error;
   }
 };
