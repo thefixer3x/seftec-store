@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { User, Settings, LogOut, ShoppingCart } from 'lucide-react';
 import { AuthModal } from './AuthModal';
+import { Link } from 'react-router-dom';
 
 export function UserProfileDropdown() {
   const { user, profile, signOut } = useAuth();
@@ -63,17 +64,23 @@ export function UserProfileDropdown() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <User className="mr-2 h-4 w-4" />
-          <span>Profile</span>
+        <DropdownMenuItem asChild>
+          <Link to="/profile" className="cursor-pointer flex items-center w-full">
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          <span>Orders</span>
+        <DropdownMenuItem asChild>
+          <Link to="/orders" className="cursor-pointer flex items-center w-full">
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            <span>Orders</span>
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
+        <DropdownMenuItem asChild>
+          <Link to="/settings" className="cursor-pointer flex items-center w-full">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => signOut()}>
