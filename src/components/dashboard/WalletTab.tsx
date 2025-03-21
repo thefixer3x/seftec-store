@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,14 +26,6 @@ const WalletTab = () => {
 
         {/* Empty Card for Layout */}
         <div></div>
-
-        {/* Active Loan Card - Changed from blue-400 */}
-        <Card className="bg-amber-500 text-white shadow-sm border">
-          <CardContent className="p-6">
-            <p className="text-amber-100 mb-2">Active loan</p>
-            <h2 className="text-4xl font-bold">NGN5,000</h2>
-          </CardContent>
-        </Card>
 
         {/* Loan Limit Card */}
         <Card className="bg-blue-700 text-white shadow-sm border relative overflow-hidden">
