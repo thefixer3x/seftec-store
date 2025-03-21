@@ -29,8 +29,11 @@ const RecommendationsSection: React.FC = () => {
     isAuthenticated 
   } = useRecommendations();
 
-  // Update filtered recommendations when selection changes
+  // Update filtered recommendations when selection changes or recommendations update
   useEffect(() => {
+    // Skip if recommendations isn't available yet
+    if (!recommendations && selectedType === 'all') return;
+    
     const fetchFilteredRecommendations = async () => {
       if (selectedType === 'all') {
         setFilteredRecommendations(recommendations || []);
