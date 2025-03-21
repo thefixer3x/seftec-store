@@ -10,13 +10,12 @@ import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
-import BusinessCounter from "@/components/ui/business-counter";
-import PaymentButton from "@/components/ui/payment-button";
+import BusinessCounterSection from "@/components/sections/BusinessCounterSection";
+import PaymentSection from "@/components/sections/PaymentSection";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/config/site";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Badge } from "@/components/ui/badge";
 
 const Index = () => {
   const { toast } = useToast();
@@ -71,37 +70,32 @@ const Index = () => {
       <FeaturesSection />
       <AIAdvisorSection />
       
-      <section className="py-12 bg-seftec-slate dark:bg-seftec-navy/20">
+      {/* Side-by-side sections on desktop, stacked on mobile */}
+      <div className="py-12">
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-seftec-navy dark:text-white">Business Metrics</h2>
-            <Badge variant="outline" className="bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-400/30">
-              LIVE
-            </Badge>
-          </div>
-          <BusinessCounter />
+          {isMobile ? (
+            /* Mobile: Stacked view */
+            <>
+              <BusinessCounterSection />
+              <div className="mt-12">
+                <PaymentSection 
+                  apiMode="sandbox"
+                  onPaymentComplete={handlePaymentComplete}
+                />
+              </div>
+            </>
+          ) : (
+            /* Desktop: Side-by-side view */
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <BusinessCounterSection />
+              <PaymentSection 
+                apiMode="live"
+                onPaymentComplete={handlePaymentComplete}
+              />
+            </div>
+          )}
         </div>
-      </section>
-      
-      <section className="py-12 bg-gray-50 dark:bg-seftec-navy/30">
-        <div className="container mx-auto px-6">
-          <h2 className="text-2xl font-bold mb-8 text-seftec-navy dark:text-white text-center">
-            Integrated Payment Solutions
-          </h2>
-          <p className="mb-8 text-seftec-navy/70 dark:text-white/70 max-w-2xl mx-auto text-center">
-            Our marketplace supports multiple payment gateways including Stripe, Flutterwave, 
-            Paystack, Wise, and Payoneer, along with Apple Pay and Google Pay for seamless B2B transactions.
-          </p>
-          <div className="text-center">
-            <PaymentButton 
-              label="Try Payment Integration" 
-              className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white"
-              apiMode={isMobile ? "sandbox" : "live"}
-              onPaymentComplete={handlePaymentComplete}
-            />
-          </div>
-        </div>
-      </section>
+      </div>
       
       <TestimonialsSection />
       <RegionsCoveredSection />
