@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import ValuePropositions from "./pages/ValuePropositions";
 import NotFound from "./pages/NotFound";
 import AuthTest from "./pages/AuthTest";
+import Products from "./pages/Products";
 
 const App = () => {
   useEffect(() => {
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/" element={<Index />} />
         <Route path="/value-propositions" element={<ValuePropositions />} />
         <Route path="/auth-test" element={<AuthTest />} />
+        <Route path="/products" element={<Products />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
