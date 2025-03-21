@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
 import Footer from "@/components/ui/footer";
@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import MobileCollapsibleSections from "@/components/sections/MobileCollapsibleSections";
 import DesktopSections from "@/components/sections/DesktopSections";
+import { useCollapsibleSections } from "@/hooks/use-collapsible-sections";
 
 const Index = () => {
   const { toast } = useToast();
@@ -19,15 +20,8 @@ const Index = () => {
   // Use the scroll reveal hook
   useScrollReveal();
   
-  // Collapsible states
-  const [isProblemsOpen, setIsProblemsOpen] = useState(false);
-  const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
-  const [isAIAdvisorOpen, setIsAIAdvisorOpen] = useState(false);
-  const [isBusinessOpen, setIsBusinessOpen] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-  const [isTestimonialsOpen, setIsTestimonialsOpen] = useState(false);
-  const [isRegionsOpen, setIsRegionsOpen] = useState(false);
-  const [isAdvantagesOpen, setIsAdvantagesOpen] = useState(false);
+  // Use the collapsible sections hook
+  const collapsibleStates = useCollapsibleSections();
 
   // Handle successful payment completion
   const handlePaymentComplete = (paymentData: any) => {
@@ -44,18 +38,6 @@ const Index = () => {
     document.documentElement.classList.remove('dark');
     localStorage.setItem('darkMode', 'false');
   }, []);
-
-  // Collapsible states object for mobile sections
-  const collapsibleStates = {
-    isProblemsOpen, setIsProblemsOpen,
-    isFeaturesOpen, setIsFeaturesOpen,
-    isAIAdvisorOpen, setIsAIAdvisorOpen,
-    isBusinessOpen, setIsBusinessOpen,
-    isPaymentOpen, setIsPaymentOpen,
-    isTestimonialsOpen, setIsTestimonialsOpen,
-    isRegionsOpen, setIsRegionsOpen,
-    isAdvantagesOpen, setIsAdvantagesOpen
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden pt-[56px]">
