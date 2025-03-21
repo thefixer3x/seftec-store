@@ -27,7 +27,7 @@ const regionsData = [
   },
   {
     region: "Middle East & Africa",
-    countries: ["UAE", "Saudi Arabia", "South Africa"],
+    countries: ["UAE", "Saudi Arabia", "South Africa", "Kenya", "Cameroon", "Ghana", "Nigeria"],
     icon: <Flag className="text-white" size={24} />,
     bgColor: "bg-gradient-to-r from-orange-500 to-orange-600"
   }
