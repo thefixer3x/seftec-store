@@ -7,6 +7,7 @@ import { Search, Filter } from 'lucide-react';
 import PaymentTransactions from './PaymentTransactions';
 import LoanTransactions from './LoanTransactions';
 import TradeFinanceTransactions from './TradeFinanceTransactions';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TransactionTabsProps {
   activeTab: string;
@@ -14,37 +15,39 @@ interface TransactionTabsProps {
 }
 
 const TransactionTabs: React.FC<TransactionTabsProps> = ({ activeTab, onTabChange }) => {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="mt-8">
+    <div className="mt-4 md:mt-8">
       <Tabs defaultValue="payment" value={activeTab} onValueChange={onTabChange}>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
-          <TabsList className="bg-gray-100 p-1 rounded-md">
+        <div className="flex flex-col space-y-4 mb-4">
+          <TabsList className={`bg-gray-100 p-1 rounded-md ${isMobile ? 'overflow-x-auto w-full' : ''}`}>
             <TabsTrigger 
               value="payment" 
-              className={`rounded-md ${activeTab === 'payment' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'payment' ? 'bg-white shadow-sm' : ''}`}
             >
-              Payment Transactions
+              {isMobile ? 'Payments' : 'Payment Transactions'}
             </TabsTrigger>
             <TabsTrigger 
               value="loan" 
-              className={`rounded-md ${activeTab === 'loan' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'loan' ? 'bg-white shadow-sm' : ''}`}
             >
-              Loan Transactions
+              {isMobile ? 'Loans' : 'Loan Transactions'}
             </TabsTrigger>
             <TabsTrigger 
               value="trade" 
-              className={`rounded-md ${activeTab === 'trade' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'trade' ? 'bg-white shadow-sm' : ''}`}
             >
-              Trade Finance
+              {isMobile ? 'Trade' : 'Trade Finance'}
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex items-center space-x-2 w-full sm:w-auto">
-            <div className="relative flex-1 sm:flex-none">
+          <div className="flex items-center space-x-2 w-full">
+            <div className="relative flex-1">
               <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input 
-                placeholder="Search References" 
-                className="pl-10 w-full sm:w-64" 
+                placeholder={isMobile ? "Search..." : "Search References"} 
+                className="pl-10 w-full" 
               />
             </div>
             <Button variant="outline" size="icon">
