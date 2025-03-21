@@ -1,6 +1,6 @@
 
 import React, { useEffect } from "react";
-import Navbar from "@/components/ui/navbar";
+import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
 import Footer from "@/components/ui/footer";
 import ProblemsSection from "@/components/sections/ProblemsSection";
@@ -14,6 +14,7 @@ import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
 import PaymentButton from "@/components/ui/payment-button";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
+import { siteConfig } from "@/config/site";
 
 const Index = () => {
   const { toast } = useToast();
@@ -51,7 +52,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden">
-      <Navbar />
+      <div className="container">
+        <MainNav items={siteConfig.mainNav} />
+      </div>
       <HeroSection />
       <ProblemsSection />
       <FeaturesSection />

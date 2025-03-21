@@ -1,5 +1,6 @@
+
 import React from "react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
 
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
@@ -19,7 +20,7 @@ export function MainNav({ items }: MainNavProps) {
   const { user } = useAuth();
   return (
     <div className="flex gap-6 md:gap-10">
-      <Link href="/" className="flex items-center space-x-2">
+      <Link to="/" className="flex items-center space-x-2">
         <Icons.logo className="h-6 w-6" />
         <span className="hidden font-bold sm:inline-block">{siteConfig.name}</span>
       </Link>
@@ -30,7 +31,7 @@ export function MainNav({ items }: MainNavProps) {
               item.href && (
                 <Link
                   key={index}
-                  href={item.href}
+                  to={item.href}
                   className={cn(
                     "flex items-center text-sm font-medium transition-colors hover:text-foreground sm:text-base",
                     item.disabled && "cursor-not-allowed opacity-80"
