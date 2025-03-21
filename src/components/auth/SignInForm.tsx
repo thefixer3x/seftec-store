@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useNavigate } from 'react-router-dom';
 import {
   Form,
   FormControl,
@@ -33,6 +34,7 @@ export function SignInForm({
 }: SignInFormProps) {
   const { toast } = useToast();
   const { signIn } = useAuth();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof SignInAuthFormSchema>>({
     resolver: zodResolver(SignInAuthFormSchema),
@@ -50,6 +52,11 @@ export function SignInForm({
       toast({
         title: "Successfully signed in",
       });
+      
+      // Redirect to profile dashboard page instead of calling onSuccess
+      navigate('/profile?tab=dashboard');
+      
+      // Still call onSuccess if provided (for potential modal closing, etc.)
       onSuccess?.();
     } catch (error) {
       toast({
