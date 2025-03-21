@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FileText, Shield } from 'lucide-react';
+import { FileText, Shield, AlertCircle } from 'lucide-react';
 
 interface VerificationStatusProps {
   status: 'pending' | 'verified' | 'unverified';
@@ -25,7 +25,13 @@ const VerificationStatus = ({ status }: VerificationStatusProps) => {
     );
   }
   
-  return null;
+  // Added unverified status badge
+  return (
+    <div className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm flex items-center">
+      <AlertCircle size={14} className="mr-1" />
+      Unverified
+    </div>
+  );
 };
 
 export default VerificationStatus;
