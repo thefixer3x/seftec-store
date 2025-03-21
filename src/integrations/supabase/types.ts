@@ -9,12 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      notification_settings: {
+        Row: {
+          created_at: string
+          error_enabled: boolean
+          id: string
+          info_enabled: boolean
+          success_enabled: boolean
+          updated_at: string
+          user_id: string
+          warning_enabled: boolean
+        }
+        Insert: {
+          created_at?: string
+          error_enabled?: boolean
+          id?: string
+          info_enabled?: boolean
+          success_enabled?: boolean
+          updated_at?: string
+          user_id: string
+          warning_enabled?: boolean
+        }
+        Update: {
+          created_at?: string
+          error_enabled?: boolean
+          id?: string
+          info_enabled?: boolean
+          success_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+          warning_enabled?: boolean
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
+          expires_at: string | null
           id: string
           is_read: boolean
           message: string
+          notification_group: string | null
           title: string
           type: string
           updated_at: string
@@ -22,9 +57,11 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_read?: boolean
           message: string
+          notification_group?: string | null
           title: string
           type?: string
           updated_at?: string
@@ -32,9 +69,11 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           is_read?: boolean
           message?: string
+          notification_group?: string | null
           title?: string
           type?: string
           updated_at?: string
