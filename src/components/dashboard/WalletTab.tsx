@@ -28,10 +28,10 @@ const WalletTab = () => {
         {/* Empty Card for Layout */}
         <div></div>
 
-        {/* Active Loan Card */}
-        <Card className="bg-blue-400 text-white shadow-sm border">
+        {/* Active Loan Card - Changed from blue-400 */}
+        <Card className="bg-amber-500 text-white shadow-sm border">
           <CardContent className="p-6">
-            <p className="text-blue-100 mb-2">Active loan</p>
+            <p className="text-amber-100 mb-2">Active loan</p>
             <h2 className="text-4xl font-bold">NGN5,000</h2>
           </CardContent>
         </Card>
