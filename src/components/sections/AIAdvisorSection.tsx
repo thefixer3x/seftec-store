@@ -5,32 +5,17 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import AIFeaturesList from "@/components/ai/AIFeaturesList";
 import AIChatInterface from "@/components/ai/AIChatInterface";
+import { useAuth } from "@/context/AuthContext";
+import { AuthModal } from "@/components/auth/AuthModal";
+import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 
 const AIAdvisorSection: React.FC = () => {
   const [hasNotification, setHasNotification] = useState(false);
   const [marketInsight, setMarketInsight] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [user, setUser] = useState<any>(null);
   const { toast } = useToast();
-
-  // Check for current user
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data.session?.user || null);
-    };
-    
-    checkUser();
-    
-    // Subscribe to auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user || null);
-    });
-    
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
-  }, []);
+  const { user } = useAuth();
 
   // Simulate market data fetching
   useEffect(() => {
@@ -52,9 +37,9 @@ const AIAdvisorSection: React.FC = () => {
     return () => clearInterval(marketInterval);
   }, []);
 
-  // Simulate notification system
+  // Simulate notification system - only for logged in users
   useEffect(() => {
-    if (!notificationsEnabled) return;
+    if (!notificationsEnabled || !user) return;
     
     const notifications = [
       "Payment due for Invoice #INV-2023-089 in 3 days",
@@ -77,7 +62,7 @@ const AIAdvisorSection: React.FC = () => {
     }, 45000); // Every 45 seconds
     
     return () => clearInterval(notificationInterval);
-  }, [notificationsEnabled, toast]);
+  }, [notificationsEnabled, toast, user]);
 
   // Clear notification indicator
   const handleClearNotification = () => {
@@ -101,11 +86,26 @@ const AIAdvisorSection: React.FC = () => {
           
           {/* AI Chat Demo */}
           <div className="lg:col-span-7 animate-fade-up animate-delay-300">
-            <AIChatInterface 
-              marketInsight={marketInsight}
-              hasNotification={hasNotification}
-              onClearNotification={handleClearNotification}
-            />
+            {user ? (
+              <AIChatInterface 
+                marketInsight={marketInsight}
+                hasNotification={hasNotification}
+                onClearNotification={handleClearNotification}
+              />
+            ) : (
+              <div className="border rounded-xl p-6 bg-white/5 backdrop-blur-sm flex flex-col items-center text-center">
+                <Lock className="w-12 h-12 text-seftec-teal mb-4" />
+                <h3 className="text-xl font-medium mb-2">Sign in to access AI features</h3>
+                <p className="text-muted-foreground mb-6">
+                  Create an account or sign in to use our AI-powered business advisor and get personalized insights.
+                </p>
+                <AuthModal>
+                  <Button size="lg" className="bg-seftec-teal hover:bg-seftec-teal/90">
+                    Sign In to Continue
+                  </Button>
+                </AuthModal>
+              </div>
+            )}
           </div>
         </div>
       </div>
