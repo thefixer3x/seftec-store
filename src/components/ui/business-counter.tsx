@@ -41,7 +41,7 @@ const BusinessCounter: React.FC<BusinessCounterProps> = ({ className }) => {
         </span>
       </div>
       <p className="text-seftec-navy/70 dark:text-white/70 max-w-lg mx-auto">
-        Active businesses and counting! Our marketplace is growing by 6% every two weeks 
+        Active businesses and counting! Our marketplace is growing 
         as more companies discover the benefits of our secure global trading platform.
       </p>
     </div>
