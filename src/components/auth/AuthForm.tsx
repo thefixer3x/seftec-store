@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { LinkedInSignIn } from './LinkedInSignIn';
+import { GoogleSignIn } from './GoogleSignIn';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -163,7 +164,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                   </div>
                 </div>
 
-                <LinkedInSignIn className="w-full" onSuccess={onSuccess} />
+                <div className="grid grid-cols-2 gap-3">
+                  <GoogleSignIn className="w-full" onSuccess={onSuccess} />
+                  <LinkedInSignIn className="w-full" onSuccess={onSuccess} />
+                </div>
               </form>
             </Form>
           </TabsContent>
@@ -286,7 +290,10 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
                   </div>
                 </div>
 
-                <LinkedInSignIn className="w-full" onSuccess={onSuccess} />
+                <div className="grid grid-cols-2 gap-3">
+                  <GoogleSignIn className="w-full" onSuccess={onSuccess} />
+                  <LinkedInSignIn className="w-full" onSuccess={onSuccess} />
+                </div>
               </form>
             </Form>
           </TabsContent>
