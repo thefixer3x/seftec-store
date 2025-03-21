@@ -1,11 +1,9 @@
-
 import React, { useEffect } from "react";
 import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
 import Footer from "@/components/ui/footer";
 import ProblemsSection from "@/components/sections/ProblemsSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
-import ValuePropositionsSection from "@/components/sections/ValuePropositionsSection";
 import AdvantagesSection from "@/components/sections/AdvantagesSection";
 import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
@@ -61,13 +59,9 @@ const Index = () => {
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden pt-[56px]">
       <MainNav items={siteConfig.mainNav} />
       
-      {/* Keep existing sections */}
       <HeroSection />
       <ProblemsSection />
       <FeaturesSection />
-      <div id="value-props">
-        <ValuePropositionsSection />
-      </div>
       <AIAdvisorSection />
       
       {/* Business Counter Section */}
