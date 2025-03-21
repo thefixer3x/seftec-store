@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,19 +27,15 @@ const RecommendationsSection: React.FC = () => {
     isAuthenticated 
   } = useRecommendations();
 
-  // Update filtered recommendations when selection changes or recommendations update
   useEffect(() => {
-    // Skip if recommendations isn't available yet and we're showing all
     if (!recommendations && selectedType === 'all') return;
     
     const fetchFilteredRecommendations = async () => {
-      // If showing all and we have recommendations data already, just use that
       if (selectedType === 'all') {
         setFilteredRecommendations(recommendations || []);
         return;
       }
       
-      // Only for filtering by type, we need to fetch data
       setIsFiltering(true);
       try {
         const filtered = await getRecommendationsByType(selectedType, 10);
@@ -55,14 +50,12 @@ const RecommendationsSection: React.FC = () => {
     fetchFilteredRecommendations();
   }, [selectedType, recommendations, getRecommendationsByType]);
 
-  // Format recommendation type for display
   const formatType = (type: string) => {
     return type.split('_').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1)
     ).join(' ');
   };
 
-  // Helper to determine which recommendations to display
   const displayRecommendations = isFiltering ? [] : filteredRecommendations;
   
   return (
@@ -152,8 +145,8 @@ const RecommendationsSection: React.FC = () => {
             <div className="text-center py-4">
               <p className="text-seftec-navy/70 dark:text-white/70">
                 {selectedType === 'all' 
-                  ? "No recommendations available yet. Continue using the platform to receive personalized suggestions."
-                  : `No ${formatType(selectedType)} recommendations available.`
+                  ? "Update your business profile and continue using the platform to receive personalized suggestions. Get more recommendations with economic trends tailored to you."
+                  : `No ${formatType(selectedType)} recommendations available. Update your business profile to receive more personalized insights.`
                 }
               </p>
             </div>
