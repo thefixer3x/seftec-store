@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -15,10 +15,15 @@ import {
   CreditCard,
   Shield,
   Home,
-  Briefcase
+  Briefcase,
+  Menu,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Control Room', path: '/profile?tab=dashboard' },
@@ -39,50 +44,84 @@ const sidebarItems = [
 const DashboardSidebar = () => {
   const location = useLocation();
   const currentPath = location.pathname + location.search;
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <aside className="w-64 border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy h-full flex-shrink-0">
-      <div className="py-4 flex flex-col h-full">
-        <div className="px-3 py-2">
-          <div className="flex items-center mb-6 px-3">
+  // Regular sidebar for desktop
+  const SidebarContent = () => (
+    <div className="py-4 flex flex-col h-full">
+      <div className="px-3 py-2">
+        <div className="flex items-center mb-6 px-3">
+          <Icons.logo className="h-6 w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
+          <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
+        </div>
+      </div>
+      <nav className="space-y-1 px-3 flex-1 overflow-y-auto">
+        {sidebarItems.map((item) => {
+          // More precise path matching to avoid partial matches
+          const isActive = 
+            item.path === '/' 
+              ? currentPath === '/' 
+              : currentPath.includes(item.path) && 
+                (item.path.includes('?tab=') ? 
+                 currentPath.includes(item.path) : 
+                 currentPath.startsWith(item.path));
+                 
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex items-center px-3 py-3 text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5",
+                isActive 
+                  ? "bg-seftec-gold/10 text-seftec-navy dark:bg-seftec-teal/10 dark:text-seftec-teal font-medium border-l-4 border-seftec-gold dark:border-seftec-teal" 
+                  : "text-seftec-navy/70 dark:text-white/70 hover:text-seftec-navy dark:hover:text-white"
+              )}
+              onClick={() => isMobile && setIsOpen(false)}
+            >
+              <item.icon className={cn(
+                "h-5 w-5 mr-3", 
+                isActive 
+                  ? "text-seftec-gold dark:text-seftec-teal" 
+                  : "text-seftec-navy/70 dark:text-white/70 group-hover:text-seftec-navy dark:group-hover:text-white"
+              )} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
+  );
+
+  // Mobile version with sheet
+  if (isMobile) {
+    return (
+      <>
+        <div className="flex items-center p-4 border-b dark:border-seftec-darkNavy/50">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-6 w-6 text-seftec-navy dark:text-white" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-[240px] border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy">
+              <SidebarContent />
+            </SheetContent>
+          </Sheet>
+          <div className="flex items-center ml-2">
             <Icons.logo className="h-6 w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
             <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
           </div>
         </div>
-        <nav className="space-y-1 px-3 flex-1 overflow-y-auto">
-          {sidebarItems.map((item) => {
-            // More precise path matching to avoid partial matches
-            const isActive = 
-              item.path === '/' 
-                ? currentPath === '/' 
-                : currentPath.includes(item.path) && 
-                  (item.path.includes('?tab=') ? 
-                   currentPath.includes(item.path) : 
-                   currentPath.startsWith(item.path));
-                   
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "flex items-center px-3 py-3 text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5",
-                  isActive 
-                    ? "bg-seftec-gold/10 text-seftec-navy dark:bg-seftec-teal/10 dark:text-seftec-teal font-medium border-l-4 border-seftec-gold dark:border-seftec-teal" 
-                    : "text-seftec-navy/70 dark:text-white/70 hover:text-seftec-navy dark:hover:text-white"
-                )}
-              >
-                <item.icon className={cn(
-                  "h-5 w-5 mr-3", 
-                  isActive 
-                    ? "text-seftec-gold dark:text-seftec-teal" 
-                    : "text-seftec-navy/70 dark:text-white/70 group-hover:text-seftec-navy dark:group-hover:text-white"
-                )} />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
+      </>
+    );
+  }
+
+  // Desktop version
+  return (
+    <aside className="w-64 border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy h-full flex-shrink-0 hidden md:block">
+      <SidebarContent />
     </aside>
   );
 };
