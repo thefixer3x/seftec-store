@@ -44,6 +44,10 @@ const ValuePropositionsDashboard = () => {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('dashboard');
   
+  const currentFeature = dashboardFeatures.find(
+    feature => feature.title.toLowerCase().split(' ')[0] === activeTab
+  );
+  
   return (
     <section className="py-16 px-4 sm:px-6 bg-white dark:bg-seftec-darkNavy">
       <div className="container mx-auto">
