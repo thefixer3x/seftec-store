@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { LayoutDashboard, LineChart, FileText, MousePointer, Bot } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -66,39 +66,17 @@ const ValuePropositionsDashboard = () => {
             value={activeTab}
             onValueChange={(value) => setActiveTab(value)}
           >
-            {isMobile ? (
-              <div className="flex flex-col space-y-4 mb-6">
-                <div className="flex justify-between items-center">
-                  <span>Select Feature:</span>
-                  <select 
-                    className="bg-muted text-foreground py-2 px-3 rounded-md border border-input"
-                    value={activeTab}
-                    onChange={(e) => setActiveTab(e.target.value)}
-                  >
-                    {dashboardFeatures.map((feature, idx) => (
-                      <option 
-                        key={idx} 
-                        value={feature.title.toLowerCase().split(' ')[0]}
-                      >
-                        {feature.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            ) : (
-              <TabsList className="flex mb-8 md:mb-12 overflow-x-auto rounded-lg p-1 bg-muted w-full">
-                {dashboardFeatures.map((feature, idx) => (
-                  <TabsTrigger 
-                    key={idx}
-                    value={feature.title.toLowerCase().split(' ')[0]}
-                    className="flex-1 whitespace-nowrap"
-                  >
-                    {feature.title}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            )}
+            <TabsList className={`flex mb-8 md:mb-12 rounded-lg p-1 bg-muted w-full ${isMobile ? 'flex-wrap gap-2 justify-center' : 'overflow-x-auto'}`}>
+              {dashboardFeatures.map((feature, idx) => (
+                <TabsTrigger 
+                  key={idx}
+                  value={feature.title.toLowerCase().split(' ')[0]}
+                  className={`${isMobile ? 'text-xs px-2 py-1 flex-grow-0' : 'flex-1 whitespace-nowrap'}`}
+                >
+                  {isMobile ? feature.title.split(' ')[0] : feature.title}
+                </TabsTrigger>
+              ))}
+            </TabsList>
             
             {dashboardFeatures.map((feature, index) => (
               <TabsContent key={index} value={feature.title.toLowerCase().split(' ')[0]}>
