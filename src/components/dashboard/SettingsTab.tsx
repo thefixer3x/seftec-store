@@ -8,6 +8,7 @@ import PersonalProfileTab from './settings/PersonalProfileTab';
 import PasswordTab from './settings/PasswordTab';
 import PinTab from './settings/PinTab';
 import VerificationStatus from './settings/VerificationStatus';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Import components to be replicated within business sub-tabs
 import { ProfileForm } from '@/components/profile/ProfileForm';
@@ -18,6 +19,7 @@ const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("business");
   const [activeSubTab, setActiveSubTab] = useState("business-profile");
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
+  const isMobile = useIsMobile();
   
   // When active tab changes away from business, reset sub-tab
   useEffect(() => {
@@ -33,8 +35,8 @@ const SettingsTab = () => {
         <VerificationStatus status={verificationStatus} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1">
+      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-4'} gap-8`}>
+        <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-1'}`}>
           <Tabs 
             defaultValue="business" 
             value={activeTab} 
@@ -57,7 +59,7 @@ const SettingsTab = () => {
           </Tabs>
         </div>
 
-        <div className="lg:col-span-3">
+        <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-3'}`}>
           {activeTab === "business" && (
             <>
               {activeSubTab === "business-profile" && (
