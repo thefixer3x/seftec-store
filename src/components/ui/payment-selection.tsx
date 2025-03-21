@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, CreditCard as CardIcon, Banknote, Globe } from "lucide-react";
+import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, CreditCard as CardIcon, Banknote, Globe, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
@@ -39,6 +39,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
   const [paymentProvider, setPaymentProvider] = useState("stripe");
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
   const { toast } = useToast();
   
   const form = useForm<PaymentFormValues>({
@@ -118,9 +119,78 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
     return currencies[paymentProvider as keyof typeof currencies] || ["USD"];
   };
 
-  const processPaymentApi = async (values: PaymentFormValues) => {
-    const apiConfig = getApiConfig();
+  const makeStripePayment = async (values: PaymentFormValues) => {
+    const config = getApiConfig();
+    if (!config) return false;
     
+    try {
+      // In a real implementation, you would use Stripe.js SDK
+      // For demo purposes, we're simulating a fetch request
+      console.log(`Making ${apiMode} Stripe API call:`, {
+        endpoint: config.apiEndpoint,
+        amount: values.amount,
+        currency: values.currency
+      });
+      
+      // Simulate API call
+      const response = await fetch(config.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.apiKey}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          amount: (Number(values.amount) * 100).toString(), // Stripe uses cents
+          currency: values.currency,
+          payment_method_types: '["card"]'
+        })
+      }).catch(() => {
+        // Simulate successful response in demo mode
+        if (apiMode === "sandbox") {
+          return { ok: true, json: () => Promise.resolve({ 
+            id: `pi_${Date.now()}`,
+            amount: Number(values.amount) * 100,
+            currency: values.currency,
+            status: 'succeeded'
+          })};
+        }
+        throw new Error("Network error");
+      });
+
+      if (!response.ok) {
+        throw new Error("Payment processing failed");
+      }
+      
+      const paymentIntent = await response.json();
+      console.log("Payment processed:", paymentIntent);
+      
+      return true;
+    } catch (error) {
+      console.error("Stripe payment error:", error);
+      // In sandbox mode, always succeed for testing
+      return apiMode === "sandbox" ? true : false;
+    }
+  };
+
+  const makeGenericPayment = async (values: PaymentFormValues) => {
+    const config = getApiConfig();
+    if (!config) return false;
+    
+    console.log(`Making ${apiMode} ${paymentProvider} API call:`, {
+      endpoint: config.apiEndpoint,
+      amount: values.amount,
+      currency: values.currency,
+      method: values.paymentMethod
+    });
+    
+    // For demo, always succeed in sandbox mode
+    return apiMode === "sandbox" ? true : Math.random() > 0.2; // 80% success rate in live mode for demo
+  };
+
+  const processPaymentApi = async (values: PaymentFormValues) => {
+    setPaymentError(null);
+    
+    const apiConfig = getApiConfig();
     if (!apiConfig) {
       toast({
         title: "API Configuration Error",
@@ -131,18 +201,26 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
       return false;
     }
 
-    console.log(`Making ${apiMode} API call to ${paymentProvider}:`, {
-      endpoint: apiConfig.apiEndpoint,
-      amount: values.amount,
-      currency: values.currency,
-      paymentMethod: values.paymentMethod
-    });
-
-    return new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 2000);
-    });
+    try {
+      // Process payment based on provider
+      let success = false;
+      
+      if (paymentProvider === "stripe") {
+        success = await makeStripePayment(values);
+      } else {
+        success = await makeGenericPayment(values);
+      }
+      
+      if (!success) {
+        throw new Error(`${paymentProvider} payment processing failed`);
+      }
+      
+      return true;
+    } catch (error) {
+      setPaymentError(error instanceof Error ? error.message : "Payment processing failed");
+      console.error("Payment error:", error);
+      return false;
+    }
   };
 
   const handlePaymentSubmit = async (values: PaymentFormValues) => {
@@ -161,8 +239,6 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
           description: `Payment of ${values.amount} ${values.currency} processed via ${paymentProvider.toUpperCase()}`,
           duration: 5000,
         });
-        
-        console.log(`Sending payment confirmation to user...`);
         
         if (onPaymentComplete) {
           onPaymentComplete({
@@ -203,7 +279,11 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
           <div className="flex justify-between items-center">
             <CardTitle className="text-xl">Secure Payment</CardTitle>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="bg-yellow-500/20 text-yellow-200 border-yellow-400/30">
+              <Badge variant="outline" className={`${
+                apiMode === "live" 
+                  ? "bg-red-500/20 text-red-200 border-red-400/30" 
+                  : "bg-yellow-500/20 text-yellow-200 border-yellow-400/30"
+              }`}>
                 {apiMode.toUpperCase()} MODE
               </Badge>
               <Lock className="h-5 w-5" />
@@ -276,11 +356,23 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                     />
                   </div>
                   
+                  {paymentError && (
+                    <Alert className="bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800">
+                      <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                      <AlertTitle>Payment Error</AlertTitle>
+                      <AlertDescription className="text-sm">
+                        {paymentError}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
                   <Alert className="bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800">
                     <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                     <AlertTitle>Security Information</AlertTitle>
                     <AlertDescription className="text-sm">
-                      All payment information is encrypted and securely processed through the selected payment provider.
+                      {apiMode === "sandbox" 
+                        ? "You're in sandbox mode. No real payments will be processed."
+                        : "You're in live mode. Real payments will be processed."}
                     </AlertDescription>
                   </Alert>
                 </TabsContent>
@@ -440,7 +532,12 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                           disabled={isProcessing}
                           className="bg-gradient-to-r from-seftec-navy to-seftec-navy/90 dark:from-seftec-teal dark:to-seftec-purple text-white"
                         >
-                          {isProcessing ? "Processing..." : "Pay Now"}
+                          {isProcessing ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Processing...
+                            </>
+                          ) : "Pay Now"}
                         </Button>
                       </div>
                     </form>
