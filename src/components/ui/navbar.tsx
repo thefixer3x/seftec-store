@@ -24,10 +24,17 @@ export function MainNav({ items }: MainNavProps) {
   
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+    
+    // Prevent body scrolling when menu is open
+    if (!mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
   };
   
   return (
-    <div className="w-full bg-white dark:bg-seftec-darkNavy py-3 border-b border-gray-100 dark:border-gray-800">
+    <div className="w-full bg-white dark:bg-seftec-darkNavy py-3 border-b border-gray-100 dark:border-gray-800 fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2 z-20">
@@ -119,7 +126,7 @@ export function MainNav({ items }: MainNavProps) {
         
         {/* Mobile Menu (Full Screen Overlay) */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 bg-white dark:bg-seftec-darkNavy z-10 flex flex-col">
+          <div className="md:hidden fixed inset-0 bg-white dark:bg-seftec-darkNavy z-40 flex flex-col">
             <div className="flex-1 flex flex-col items-center justify-center p-4 overflow-y-auto">
               {/* Navigation Links */}
               {items?.length ? (
@@ -134,7 +141,10 @@ export function MainNav({ items }: MainNavProps) {
                             "text-lg font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors",
                             item.disabled && "cursor-not-allowed opacity-80"
                           )}
-                          onClick={() => setMobileMenuOpen(false)}
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            document.body.style.overflow = '';
+                          }}
                         >
                           {item.title}
                         </Link>
@@ -152,12 +162,18 @@ export function MainNav({ items }: MainNavProps) {
               {/* Auth Buttons (Mobile) */}
               {!user ? (
                 <div className="flex flex-col space-y-3 w-full max-w-xs">
-                  <Link to="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to="/login" className="w-full" onClick={() => {
+                    setMobileMenuOpen(false);
+                    document.body.style.overflow = '';
+                  }}>
                     <Button variant="outline" className="w-full">
                       Log In
                     </Button>
                   </Link>
-                  <Link to="/register" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to="/register" className="w-full" onClick={() => {
+                    setMobileMenuOpen(false);
+                    document.body.style.overflow = '';
+                  }}>
                     <Button className="bg-gradient-to-r from-blue-500 to-violet-500 text-white w-full">
                       Get Started
                     </Button>

@@ -49,7 +49,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
     <section
       ref={heroRef}
       className={cn(
-        'relative min-h-screen flex items-center pt-20 overflow-hidden',
+        'relative min-h-screen flex items-center overflow-hidden',
         'dark:bg-gradient-navy',
         className
       )}
