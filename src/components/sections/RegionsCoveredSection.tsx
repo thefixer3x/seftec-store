@@ -1,7 +1,7 @@
 
 import React from "react";
 import SectionHeading from "@/components/ui/section-heading";
-import { Globe, MapPin, Flag } from "lucide-react";
+import { Flag } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/icons";
@@ -70,8 +70,26 @@ const RegionsCoveredSection: React.FC = () => {
         />
         
         <div className="flex justify-center mb-10 reveal">
-          <div className="p-4 rounded-full bg-gradient-to-r from-seftec-purple to-seftec-teal dark:from-seftec-teal dark:to-seftec-purple animate-float">
-            <Globe className="text-white h-16 w-16" />
+          <div className="relative p-4 rounded-full bg-gradient-to-r from-seftec-purple to-seftec-teal dark:from-seftec-teal dark:to-seftec-purple animate-float">
+            {/* World Globe with Grid Pattern */}
+            <div className="relative h-16 w-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+              {/* Grid pattern for globe */}
+              <div className="absolute inset-0 rounded-full border border-white/20"></div>
+              <div className="absolute inset-1 rounded-full border border-white/15"></div>
+              <div className="absolute inset-2 rounded-full border border-white/10"></div>
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <div className="absolute inset-0 bg-blue-500/20"></div>
+                {/* Continent shapes - simplified */}
+                <div className="absolute top-3 left-3 w-4 h-3 bg-white/20 rounded-sm"></div>
+                <div className="absolute top-5 right-4 w-3 h-4 bg-white/20 rounded-sm"></div>
+                <div className="absolute bottom-4 left-5 w-3 h-3 bg-white/20 rounded-sm"></div>
+              </div>
+              
+              {/* Seftec Logo in the middle - transparent */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Icons.logo className="h-8 w-8 text-white/40" />
+              </div>
+            </div>
           </div>
         </div>
         
