@@ -9,11 +9,9 @@ import BizTools from "./pages/BizTools";
 import Solutions from "./pages/Solutions";
 import NotFound from "./pages/NotFound";
 import AuthTest from "./pages/AuthTest";
-import SignupTest from "./pages/SignupTest";
 import Products from "./pages/Products";
 import AuthCallback from "./pages/AuthCallback";
 import Profile from "./pages/Profile";
-import Dashboard from "./pages/Dashboard";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
@@ -50,11 +48,9 @@ const App = () => {
             <Route path="/biz-tools" element={<BizTools />} />
             <Route path="/solutions" element={<Solutions />} />
             <Route path="/auth-test" element={<AuthTest />} />
-            <Route path="/signup-test" element={<SignupTest />} />
             <Route path="/products" element={<Products />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/orders" element={<Orders />} />
