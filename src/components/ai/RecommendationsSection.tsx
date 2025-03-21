@@ -7,7 +7,6 @@ import { ShoppingCart, AlertTriangle, FilterIcon } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useRecommendations, RecommendationType } from '@/hooks/use-recommendations';
 import RecommendationCard from './RecommendationCard';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAuth } from '@/context/AuthContext';
 import { AuthModal } from '@/components/auth/AuthModal';
@@ -31,15 +30,17 @@ const RecommendationsSection: React.FC = () => {
 
   // Update filtered recommendations when selection changes or recommendations update
   useEffect(() => {
-    // Skip if recommendations isn't available yet
+    // Skip if recommendations isn't available yet and we're showing all
     if (!recommendations && selectedType === 'all') return;
     
     const fetchFilteredRecommendations = async () => {
+      // If showing all and we have recommendations data already, just use that
       if (selectedType === 'all') {
         setFilteredRecommendations(recommendations || []);
         return;
       }
       
+      // Only for filtering by type, we need to fetch data
       setIsFiltering(true);
       try {
         const filtered = await getRecommendationsByType(selectedType, 10);
