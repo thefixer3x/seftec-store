@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import SectionHeading from "@/components/ui/section-heading";
 import { useToast } from "@/hooks/use-toast";
@@ -6,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import AIFeaturesList from "@/components/ai/AIFeaturesList";
 import AIChatInterface from "@/components/ai/AIChatInterface";
 import { useAuth } from "@/context/AuthContext";
-import { AuthModal } from "@/components/auth/AuthModal";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -18,7 +17,6 @@ const AIAdvisorSection: React.FC = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  // Simulate market data fetching
   useEffect(() => {
     const insights = [
       "USD/EUR exchange rate changed by +0.7% in the last hour. Consider adjusting your pricing strategy.",
@@ -27,18 +25,15 @@ const AIAdvisorSection: React.FC = () => {
       "Commodity prices for aluminum decreased 3.2%. Potential savings opportunity for manufacturers."
     ];
     
-    // Set initial market insight
     setMarketInsight(insights[Math.floor(Math.random() * insights.length)]);
     
-    // Update market insights periodically
     const marketInterval = setInterval(() => {
       setMarketInsight(insights[Math.floor(Math.random() * insights.length)]);
-    }, 30000); // Every 30 seconds
+    }, 30000);
     
     return () => clearInterval(marketInterval);
   }, []);
 
-  // Simulate notification system - only for logged in users
   useEffect(() => {
     if (!notificationsEnabled || !user) return;
     
@@ -60,12 +55,11 @@ const AIAdvisorSection: React.FC = () => {
           duration: 5000,
         });
       }
-    }, 45000); // Every 45 seconds
+    }, 45000);
     
     return () => clearInterval(notificationInterval);
   }, [notificationsEnabled, toast, user]);
 
-  // Clear notification indicator
   const handleClearNotification = () => {
     setHasNotification(false);
   };
@@ -80,12 +74,10 @@ const AIAdvisorSection: React.FC = () => {
         />
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-12 reveal">
-          {/* AI Features */}
           <div className="lg:col-span-5">
             <AIFeaturesList />
           </div>
           
-          {/* AI Chat Demo */}
           <div className="lg:col-span-7 animate-fade-up animate-delay-300">
             <AIChatInterface 
               marketInsight={marketInsight}
@@ -98,11 +90,11 @@ const AIAdvisorSection: React.FC = () => {
                 <AlertCircle className="h-4 w-4 text-seftec-teal" />
                 <AlertDescription className="flex justify-between items-center">
                   <span>Sign in to unlock premium features, personalized insights, and save your conversation history.</span>
-                  <AuthModal>
+                  <Link to="/login">
                     <Button size="sm" className="ml-4 bg-seftec-teal hover:bg-seftec-teal/90">
                       Sign In
                     </Button>
-                  </AuthModal>
+                  </Link>
                 </AlertDescription>
               </Alert>
             )}
