@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,10 @@ import AuthTest from "./pages/AuthTest";
 import Products from "./pages/Products";
 import AuthCallback from "./pages/AuthCallback";
 import Profile from "./pages/Profile";
+import Shop from "./pages/Shop";
+import Cart from "./pages/Cart";
+import Orders from "./pages/Orders";
+import { CartProvider } from "./context/CartContext";
 
 const App = () => {
   useEffect(() => {
@@ -26,20 +31,25 @@ const App = () => {
   }, []);
 
   return (
-    <TooltipProvider>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/value-propositions" element={<ValuePropositions />} />
-        <Route path="/auth-test" element={<AuthTest />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/auth-callback" element={<AuthCallback />} />
-        <Route path="/profile" element={<Profile />} />
-        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Toaster />
-      <Sonner />
-    </TooltipProvider>
+    <CartProvider>
+      <TooltipProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/value-propositions" element={<ValuePropositions />} />
+          <Route path="/auth-test" element={<AuthTest />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/auth-callback" element={<AuthCallback />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+        <Sonner />
+      </TooltipProvider>
+    </CartProvider>
   );
 };
 
