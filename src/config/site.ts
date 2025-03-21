@@ -6,20 +6,20 @@ export const siteConfig = {
   description: "B2B Marketplace for Africa's Global Trade",
   mainNav: [
     {
-      title: "Home",
-      href: "/",
+      title: "Solutions",
+      href: "/solutions",
     },
     {
-      title: "Products",
-      href: "/products",
-    },
-    {
-      title: "Shop",
-      href: "/shop",
-    },
-    {
-      title: "Value Propositions",
+      title: "Value Props",
       href: "/value-propositions",
+    },
+    {
+      title: "About",
+      href: "/about",
+    },
+    {
+      title: "Contact",
+      href: "/contact",
     },
   ],
   links: {

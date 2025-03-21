@@ -1,6 +1,6 @@
 
 import React from "react"
-import { Github } from "lucide-react"
+import { Github, Shield } from "lucide-react"
 
 export type IconProps = React.HTMLAttributes<SVGElement>
 
@@ -15,8 +15,7 @@ export const Icons = {
       strokeLinejoin="round"
       {...props}
     >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32" />
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none" />
     </svg>
   ),
   spinner: (props: IconProps) => (
@@ -36,4 +35,5 @@ export const Icons = {
     </svg>
   ),
   gitHub: Github,
+  shield: Shield,
 }
