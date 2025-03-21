@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -43,7 +44,12 @@ const Profile = () => {
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
       
-      <Tabs defaultValue="profile" value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <Tabs 
+        defaultValue="profile" 
+        value={activeTab} 
+        onValueChange={setActiveTab} 
+        className="w-full"
+      >
         <TabsList className="mb-6">
           <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="account">Account</TabsTrigger>

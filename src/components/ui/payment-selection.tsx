@@ -39,6 +39,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("method");
   const { toast } = useToast();
   
   const form = useForm<PaymentFormValues>({
@@ -298,7 +299,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
             </div>
           ) : (
             <>
-              <Tabs defaultValue="method" className="w-full mb-6">
+              <Tabs defaultValue="method" value={activeTab} onValueChange={setActiveTab} className="w-full mb-6">
                 <TabsList className="grid grid-cols-2 mb-4">
                   <TabsTrigger value="method">Payment Method</TabsTrigger>
                   <TabsTrigger value="gateway">Payment Gateway</TabsTrigger>
@@ -387,7 +388,7 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                           )}
                         />
                       </div>
-                      
+
                       {form.watch("paymentMethod") === "card" && (
                         <div className="space-y-4 pt-2">
                           <FormField
