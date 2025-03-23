@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowLeft, Sparkle } from 'lucide-react';
@@ -12,32 +11,28 @@ import TradeFinanceTab from './TradeFinanceTab';
 import DashboardHighlights from './DashboardHighlights';
 import QuickActions from './QuickActions';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 const DashboardContent = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const tab = searchParams.get('tab') || 'dashboard';
   const isMobile = useIsMobile();
-
   const renderTabContent = () => {
-    switch(tab) {
+    switch (tab) {
       case 'stores':
-        return (
-          <div className="space-y-6 animate-fade-up">
+        return <div className="space-y-6 animate-fade-up">
             <div className="flex justify-between items-center flex-wrap gap-4">
               <div className="flex items-center">
                 <Button variant="ghost" className="p-0 mr-4 hover:bg-seftec-slate/50 dark:hover:bg-seftec-darkNavy/50">
                   <ArrowLeft className="h-5 w-5 mr-2 text-seftec-navy dark:text-seftec-teal" />
                   <span className="text-seftec-navy dark:text-white">Go Back</span>
                 </Button>
-                <h1 className="text-2xl font-bold text-seftec-navy dark:text-white">My Stores</h1>
+                <h1 className="text-2xl font-bold text-seftec-navy dark:text-white">My Branches</h1>
               </div>
               <Button className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white transition-all">Create Store</Button>
             </div>
             <MyStores />
             <MyStaff />
-          </div>
-        );
+          </div>;
       case 'marketplace':
         return <div className="animate-fade-up"><MarketplaceTab /></div>;
       case 'wallet':
@@ -48,8 +43,7 @@ const DashboardContent = () => {
         return <div className="animate-fade-up"><SettingsTab /></div>;
       case 'dashboard':
       default:
-        return (
-          <div className="space-y-6 animate-fade-up">
+        return <div className="space-y-6 animate-fade-up">
             <div className="mb-8">
               <div className="inline-block mb-4">
                 <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
@@ -65,16 +59,11 @@ const DashboardContent = () => {
             
             <QuickActions />
             <DashboardHighlights />
-          </div>
-        );
+          </div>;
     }
   };
-
-  return (
-    <div className={`p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy ${isMobile ? 'pt-0' : ''}`}>
+  return <div className={`p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy ${isMobile ? 'pt-0' : ''}`}>
       {renderTabContent()}
-    </div>
-  );
+    </div>;
 };
-
 export default DashboardContent;
