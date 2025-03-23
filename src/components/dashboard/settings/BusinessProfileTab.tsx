@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -202,7 +201,7 @@ const BusinessProfileTab = ({ verificationStatus, setVerificationStatus }: Busin
             <div className="border border-gray-200 rounded-lg p-6 bg-gray-50 mt-8">
               <Label className="flex items-center gap-2 mb-4 text-gray-800 font-medium">
                 <User className="h-4 w-4" />
-                Shareholders Information
+                Directors/Shareholders Information
               </Label>
               
               {shareholders.length > 0 && (
