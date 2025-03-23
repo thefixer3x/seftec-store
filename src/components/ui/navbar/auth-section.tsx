@@ -24,21 +24,21 @@ const AuthSection = ({ user }: AuthSectionProps) => {
     <div className="hidden md:flex items-center space-x-4">
       {/* Welcome message for logged in users */}
       {user && (
-        <span className="hidden md:inline-block text-gray-600 dark:text-white/80">
-          Welcome, {profile?.first_name || user.email?.split('@')[0] || 'Guest'}
+        <span className="hidden md:inline-block text-seftec-navy/80 dark:text-white/80">
+          Welcome, Demo User
         </span>
       )}
       
       {/* "Guest" message if no user */}
       {!user && (
-        <span className="hidden md:inline-block text-gray-600 dark:text-white/80">
+        <span className="hidden md:inline-block text-seftec-navy/80 dark:text-white/80">
           Welcome, Guest
         </span>
       )}
       
       {/* Secured by AI Badge */}
       <Link to="/value-propositions/bizgenie" className="group relative overflow-hidden">
-        <div className="hidden md:flex items-center bg-gradient-to-r from-teal-400 to-purple-500 rounded-full px-3 py-1 relative z-10">
+        <div className="hidden md:flex items-center bg-gradient-to-r from-seftec-teal to-seftec-purple rounded-full px-3 py-1 relative z-10">
           <Shield className="h-4 w-4 mr-1 text-white" />
           <span className="text-sm text-white font-medium">Secured by AI</span>
         </div>
@@ -52,7 +52,7 @@ const AuthSection = ({ user }: AuthSectionProps) => {
         <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="bg-gradient-to-r from-blue-500 to-violet-500 text-white" size="sm">
+              <Button className="bg-gradient-to-r from-seftec-gold to-seftec-gold/80 dark:from-seftec-teal dark:to-seftec-purple text-white" size="sm">
                 Get Started
               </Button>
             </DropdownMenuTrigger>
