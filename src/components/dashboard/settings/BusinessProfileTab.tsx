@@ -1,13 +1,15 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Building, Upload, FileText, Calendar, User, Mail, Phone, MapPin, Key, Shield } from 'lucide-react';
+import { Plus, Building, Upload, FileText, Calendar, User, Mail, Phone, MapPin, Key, Shield, Briefcase, Hash } from 'lucide-react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const businessFormSchema = z.object({
   business_name: z.string().min(1, 'Business name is required'),
@@ -16,6 +18,8 @@ const businessFormSchema = z.object({
   business_address: z.string().min(1, 'Business address is required'),
   date_of_incorporation: z.string().min(1, 'Date of incorporation is required'),
   rc_number: z.string().min(1, 'RC Number is required'),
+  business_type: z.string().min(1, 'Business type is required'),
+  tax_id: z.string().min(1, 'Tax Identification Number is required'),
 });
 
 type BusinessFormValues = z.infer<typeof businessFormSchema>;
@@ -36,7 +40,9 @@ const BusinessProfileTab = ({ verificationStatus, setVerificationStatus }: Busin
       business_phone: "1234567890",
       business_address: "123 Business Street, City, Country",
       date_of_incorporation: "01/01/2023",
-      rc_number: "RC123456"
+      rc_number: "RC123456",
+      business_type: "limited_company",
+      tax_id: "TIN123456789"
     }
   });
 
@@ -104,6 +110,37 @@ const BusinessProfileTab = ({ verificationStatus, setVerificationStatus }: Busin
                       <FormControl>
                         <Input {...field} className="border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={businessForm.control}
+                  name="business_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-gray-700">
+                        <Briefcase className="h-4 w-4 text-gray-500" />
+                        Business Type
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                            <SelectValue placeholder="Select business type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="sole_proprietorship">Sole Proprietorship</SelectItem>
+                          <SelectItem value="partnership">Partnership</SelectItem>
+                          <SelectItem value="limited_company">Limited Company</SelectItem>
+                          <SelectItem value="corporation">Corporation</SelectItem>
+                          <SelectItem value="non_profit">Non-Profit Organization</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -187,6 +224,23 @@ const BusinessProfileTab = ({ verificationStatus, setVerificationStatus }: Busin
                       <FormLabel className="flex items-center gap-2 text-gray-700">
                         <Key className="h-4 w-4 text-gray-500" />
                         RC Number
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} className="border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={businessForm.control}
+                  name="tax_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-gray-700">
+                        <Hash className="h-4 w-4 text-gray-500" />
+                        Tax Identification Number (TIN)
                       </FormLabel>
                       <FormControl>
                         <Input {...field} className="border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
