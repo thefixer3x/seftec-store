@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowRight, Plus, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,28 +6,23 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 // Mock data for staff
-const staffData = [
-  { 
-    name: "Hello Abim", 
-    initials: "HA",
-    storeAccess: "Nimmy's store", 
-    totalSales: "0", 
-    activity: "Yet to Login" 
-  },
-  { 
-    name: "Attendant 2 Abba", 
-    initials: "AA",
-    storeAccess: "Nimmy's store", 
-    totalSales: "₦1,500.00", 
-    activity: "Yet to Login" 
-  },
-];
-
+const staffData = [{
+  name: "Hello Abim",
+  initials: "HA",
+  storeAccess: "Nimmy's store",
+  totalSales: "0",
+  activity: "Yet to Login"
+}, {
+  name: "Attendant 2 Abba",
+  initials: "AA",
+  storeAccess: "Nimmy's store",
+  totalSales: "₦1,500.00",
+  activity: "Yet to Login"
+}];
 const MyStaff = () => {
-  return (
-    <Card className="w-full border border-seftec-navy/10 dark:border-white/10 bg-white/70 dark:bg-white/5 shadow-sm mt-6">
+  return <Card className="w-full border border-seftec-navy/10 dark:border-white/10 bg-white/70 dark:bg-white/5 shadow-sm mt-6">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xl font-bold text-seftec-navy dark:text-white">My Staff (2)</CardTitle>
+        <CardTitle className="text-xl font-bold text-seftec-navy dark:text-white">Branch Service Managers</CardTitle>
         <Button className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white transition-all">
           <Plus className="h-4 w-4 mr-2" />
           Add Shop Attendant
@@ -46,8 +40,7 @@ const MyStaff = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {staffData.map((staff, index) => (
-              <TableRow key={index} className="hover:bg-seftec-slate/30 dark:hover:bg-white/5 transition-colors">
+            {staffData.map((staff, index) => <TableRow key={index} className="hover:bg-seftec-slate/30 dark:hover:bg-white/5 transition-colors">
                 <TableCell>
                   <div className="flex items-center">
                     <Avatar className="h-8 w-8 mr-2 bg-seftec-gold dark:bg-seftec-teal text-white">
@@ -64,21 +57,14 @@ const MyStaff = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="rounded-full hover:bg-seftec-gold/10 dark:hover:bg-seftec-teal/10"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full hover:bg-seftec-gold/10 dark:hover:bg-seftec-teal/10">
                     <ArrowRight className="h-4 w-4 text-seftec-navy dark:text-white" />
                   </Button>
                 </TableCell>
-              </TableRow>
-            ))}
+              </TableRow>)}
           </TableBody>
         </Table>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default MyStaff;
