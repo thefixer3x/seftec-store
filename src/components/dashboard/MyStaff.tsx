@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, Plus, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +26,7 @@ const MyStaff = () => {
         <CardTitle className="text-xl font-bold text-seftec-navy dark:text-white">Branch Service Managers</CardTitle>
         <Button className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white transition-all">
           <Plus className="h-4 w-4 mr-2" />
-          Add Shop Attendant
+          Add Branch Manager
         </Button>
       </CardHeader>
       <CardContent>
@@ -33,7 +34,7 @@ const MyStaff = () => {
           <TableHeader className="bg-seftec-slate/50 dark:bg-white/5">
             <TableRow>
               <TableHead className="text-seftec-navy dark:text-white">Name</TableHead>
-              <TableHead className="text-seftec-navy dark:text-white">Store Access</TableHead>
+              <TableHead className="text-seftec-navy dark:text-white">Branch Access</TableHead>
               <TableHead className="text-seftec-navy dark:text-white">Total Sales</TableHead>
               <TableHead className="text-seftec-navy dark:text-white">Activity</TableHead>
               <TableHead className="text-seftec-navy dark:text-white">Action</TableHead>

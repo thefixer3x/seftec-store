@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -32,7 +31,7 @@ const sidebarItems = [
   { icon: Shield, label: 'Bill Payment', path: '/profile?tab=bill-payment' },
   { icon: Briefcase, label: 'Trade Finance', path: '/profile?tab=trade-finance' },
   { icon: CreditCard, label: 'Account', path: '/profile?tab=account' },
-  { icon: Store, label: 'My Stores', path: '/profile?tab=stores' },
+  { icon: Store, label: 'My Branches', path: '/profile?tab=stores' },
   { icon: ShoppingBag, label: 'Marketplace', path: '/profile?tab=marketplace' },
   { icon: FileText, label: 'Invoices', path: '/profile?tab=invoices' },
   { icon: Users, label: 'My Customers', path: '/profile?tab=customers' },
@@ -47,7 +46,6 @@ const DashboardSidebar = () => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
 
-  // Regular sidebar for desktop
   const SidebarContent = () => (
     <div className="py-4 flex flex-col h-full">
       <div className="px-3 py-2">
@@ -58,7 +56,6 @@ const DashboardSidebar = () => {
       </div>
       <nav className="space-y-1 px-3 flex-1 overflow-y-auto">
         {sidebarItems.map((item) => {
-          // More precise path matching to avoid partial matches
           const isActive = 
             item.path === '/' 
               ? currentPath === '/' 
@@ -93,7 +90,6 @@ const DashboardSidebar = () => {
     </div>
   );
 
-  // Mobile version with sheet
   if (isMobile) {
     return (
       <>
@@ -118,7 +114,6 @@ const DashboardSidebar = () => {
     );
   }
 
-  // Desktop version
   return (
     <aside className="w-64 border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy h-full flex-shrink-0 hidden md:block">
       <SidebarContent />
