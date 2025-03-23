@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, AlertTriangle, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,14 +23,14 @@ const MyStores = () => {
         <CardTitle className="text-xl font-bold text-seftec-navy dark:text-white">My Branches (2)</CardTitle>
         <Button className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white transition-all">
           <Plus className="h-4 w-4 mr-2" />
-          Create Store
+          Create Branch
         </Button>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader className="bg-seftec-slate/50 dark:bg-white/5">
             <TableRow>
-              <TableHead className="text-seftec-navy dark:text-white">Shop Name</TableHead>
+              <TableHead className="text-seftec-navy dark:text-white">Branch Name</TableHead>
               <TableHead className="text-seftec-navy dark:text-white">Stock Value</TableHead>
               <TableHead className="text-seftec-navy dark:text-white">Stock Count</TableHead>
               <TableHead className="text-seftec-navy dark:text-white">Low Stock</TableHead>

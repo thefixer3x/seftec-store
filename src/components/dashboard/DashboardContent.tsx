@@ -11,11 +11,13 @@ import TradeFinanceTab from './TradeFinanceTab';
 import DashboardHighlights from './DashboardHighlights';
 import QuickActions from './QuickActions';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 const DashboardContent = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const tab = searchParams.get('tab') || 'dashboard';
   const isMobile = useIsMobile();
+
   const renderTabContent = () => {
     switch (tab) {
       case 'stores':
@@ -28,7 +30,7 @@ const DashboardContent = () => {
                 </Button>
                 <h1 className="text-2xl font-bold text-seftec-navy dark:text-white">My Branches</h1>
               </div>
-              <Button className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white transition-all">Create Store</Button>
+              <Button className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white transition-all">Create Branch</Button>
             </div>
             <MyStores />
             <MyStaff />
@@ -62,8 +64,10 @@ const DashboardContent = () => {
           </div>;
     }
   };
+
   return <div className={`p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy ${isMobile ? 'pt-0' : ''}`}>
       {renderTabContent()}
     </div>;
 };
+
 export default DashboardContent;
