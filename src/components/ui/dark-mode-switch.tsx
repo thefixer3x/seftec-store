@@ -33,18 +33,19 @@ const DarkModeSwitch: React.FC<DarkModeSwitchProps> = ({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {showLabel && (
-        <Label htmlFor="dark-mode" className="text-seftec-navy/80 dark:text-white/80 cursor-pointer select-none">
-          {theme === "dark" ? "Dark" : "Light"} Mode
+        <Label htmlFor="dark-mode" className="text-seftec-navy/80 dark:text-white/80 cursor-pointer select-none flex items-center">
+          {theme === "dark" ? <Moon className="h-3.5 w-3.5 mr-2 flex-shrink-0 text-slate-400" /> : <Sun className="h-3.5 w-3.5 mr-2 flex-shrink-0 text-orange-400" />}
+          <span>{theme === "dark" ? "Dark" : "Light"} Mode</span>
         </Label>
       )}
       <div className="flex items-center space-x-2">
-        <Sun className="h-4 w-4 text-orange-400 dark:text-white/70" />
+        <Sun className="h-4 w-4 flex-shrink-0 text-orange-400 dark:text-white/70" />
         <Switch
           id="dark-mode"
           checked={theme === "dark"}
           onCheckedChange={toggleTheme}
         />
-        <Moon className="h-4 w-4 text-seftec-navy/70 dark:text-slate-400" />
+        <Moon className="h-4 w-4 flex-shrink-0 text-seftec-navy/70 dark:text-slate-400" />
       </div>
     </div>
   );
