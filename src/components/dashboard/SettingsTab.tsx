@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
