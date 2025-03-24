@@ -24,6 +24,10 @@ const Profile = () => {
   const tabParam = searchParams.get('tab') || 'dashboard';
   const [activeTab, setActiveTab] = useState(tabParam);
 
+  // Remove the automatic light mode on load
+  // This code was causing the page to always start in light mode
+  // We'll now rely on the theme provider's system
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/');
@@ -105,7 +109,6 @@ const Profile = () => {
             <TabsTrigger value="profile" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Profile</TabsTrigger>
             <TabsTrigger value="account" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Account</TabsTrigger>
             <TabsTrigger value="notifications" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Notifications</TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="profile" className="outline-none">
