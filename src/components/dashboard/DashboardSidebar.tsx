@@ -23,6 +23,7 @@ import { Icons } from '@/components/icons';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import DarkModeSwitch from '@/components/ui/dark-mode-switch';
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Control Room', path: '/profile?tab=dashboard' },
@@ -87,6 +88,9 @@ const DashboardSidebar = () => {
           );
         })}
       </nav>
+      <div className="mt-auto px-6 py-4 border-t border-seftec-navy/10 dark:border-white/10">
+        <DarkModeSwitch />
+      </div>
     </div>
   );
 
