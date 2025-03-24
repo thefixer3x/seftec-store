@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,21 +23,20 @@ import ValuePropositions from "./pages/ValuePropositions";
 import BizGenie from "./pages/BizGenie";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
-import { useTheme } from "next-themes";
 
 const App = () => {
-  // Use the theme provider to sync with localStorage
-  const { setTheme } = useTheme();
-  
   useEffect(() => {
     // Check for user's preference in localStorage or use system preference
-    const isDark = localStorage.getItem('darkMode') === 'true';
+    const isDark = localStorage.getItem('darkMode') === 'true' || 
+                 (!localStorage.getItem('darkMode') && 
+                  window.matchMedia('(prefers-color-scheme: dark)').matches);
     
-    // Set the theme based on localStorage value
-    if (isDark !== null) {
-      setTheme(isDark ? "dark" : "light");
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
-  }, [setTheme]);
+  }, []);
 
   return (
     <CartProvider>
@@ -74,3 +72,4 @@ const App = () => {
 };
 
 export default App;
+
