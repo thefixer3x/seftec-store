@@ -65,37 +65,37 @@ export function UserProfileDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile?tab=dashboard" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile/dashboard" className="cursor-pointer flex items-center w-full">
             <LayoutDashboard className="mr-2 h-4 w-4" />
             <span>Dashboard</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/profile?tab=wallet" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile/wallet" className="cursor-pointer flex items-center w-full">
             <CreditCard className="mr-2 h-4 w-4" />
             <span>My Wallet</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/profile?tab=stores" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile/stores" className="cursor-pointer flex items-center w-full">
             <Store className="mr-2 h-4 w-4" />
             <span>My Stores</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/profile?tab=profile" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile/account" className="cursor-pointer flex items-center w-full">
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/profile?tab=customers" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile/customers" className="cursor-pointer flex items-center w-full">
             <Users className="mr-2 h-4 w-4" />
             <span>Customers</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link to="/profile?tab=settings" className="cursor-pointer flex items-center w-full">
+          <Link to="/profile/settings" className="cursor-pointer flex items-center w-full">
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
           </Link>

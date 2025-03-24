@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowLeft, Sparkle } from 'lucide-react';
@@ -14,12 +15,12 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 const DashboardContent = () => {
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const tab = searchParams.get('tab') || 'dashboard';
+  const pathSegments = location.pathname.split('/');
+  const currentTab = pathSegments[pathSegments.length - 1];
   const isMobile = useIsMobile();
 
   const renderTabContent = () => {
-    switch (tab) {
+    switch (currentTab) {
       case 'stores':
         return <div className="space-y-6 animate-fade-up">
             <div className="flex justify-between items-center flex-wrap gap-4">
@@ -65,9 +66,7 @@ const DashboardContent = () => {
     }
   };
 
-  return <div className={`p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy ${isMobile ? 'pt-0' : ''}`}>
-      {renderTabContent()}
-    </div>;
+  return <>{renderTabContent()}</>;
 };
 
 export default DashboardContent;
