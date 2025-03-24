@@ -87,6 +87,17 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
                 <span>Notifications</span>
               </div>
             </TabsTrigger>
+
+            <TabsTrigger 
+              value="business-personal-profile" 
+              className={`rounded-none px-6 py-3 justify-start text-left border-l-4 text-sm ${activeSubTab === 'business-personal-profile' ? 'border-blue-400 text-blue-700 font-medium' : 'border-transparent'}`}
+              onClick={() => setActiveSubTab('business-personal-profile')}
+            >
+              <div className="flex items-center">
+                <User className="h-3.5 w-3.5 mr-3 flex-shrink-0" />
+                <span>Personal Profile</span>
+              </div>
+            </TabsTrigger>
           </CollapsibleContent>
         </Collapsible>
       )}
