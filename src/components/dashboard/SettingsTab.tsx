@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
@@ -8,7 +9,11 @@ import PasswordTab from './settings/PasswordTab';
 import PinTab from './settings/PinTab';
 import VerificationStatus from './settings/VerificationStatus';
 import { useIsMobile } from '@/hooks/use-mobile';
-import DarkModeSwitch from '@/components/ui/dark-mode-switch';
+
+// Import components to be replicated within business sub-tabs
+import { ProfileForm } from '@/components/profile/ProfileForm';
+import { AccountDetails } from '@/components/profile/AccountDetails';
+import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
 
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("business");
@@ -16,6 +21,7 @@ const SettingsTab = () => {
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
   const isMobile = useIsMobile();
   
+  // When active tab changes away from business, reset sub-tab
   useEffect(() => {
     if (activeTab !== 'business') {
       setActiveSubTab('business-profile');
@@ -24,12 +30,9 @@ const SettingsTab = () => {
 
   return (
     <div className="w-full space-y-8">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-3xl font-bold text-seftec-navy dark:text-white">Settings</h1>
-          <VerificationStatus status={verificationStatus} />
-        </div>
-        <DarkModeSwitch className="ml-auto" />
+      <div className="flex items-center space-x-4">
+        <h1 className="text-3xl font-bold">Settings</h1>
+        <VerificationStatus status={verificationStatus} />
       </div>
 
       <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-4'} gap-8`}>
@@ -38,9 +41,9 @@ const SettingsTab = () => {
             defaultValue="business" 
             value={activeTab} 
             onValueChange={setActiveTab}
-            className="border rounded-lg overflow-hidden shadow-sm dark:border-gray-700 dark:bg-gray-800/20"
+            className="border rounded-lg overflow-hidden shadow-sm"
           >
-            <TabsList className="flex flex-col w-full justify-start rounded-none bg-gray-50 dark:bg-gray-800/50 p-0">
+            <TabsList className="flex flex-col w-full justify-start rounded-none bg-gray-50 p-0">
               <SettingsSidebar 
                 activeTab={activeTab} 
                 setActiveSubTab={setActiveSubTab}
@@ -48,6 +51,7 @@ const SettingsTab = () => {
               />
             </TabsList>
             
+            {/* TabsContent must be inside the Tabs component */}
             <TabsContent value="business" className="mt-0 p-0 hidden" />
             <TabsContent value="personal" className="mt-0 p-0 hidden" />
             <TabsContent value="password" className="mt-0 p-0 hidden" />

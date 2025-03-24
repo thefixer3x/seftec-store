@@ -11,7 +11,6 @@ import DashboardContent from '@/components/dashboard/DashboardContent';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import DarkModeSwitch from '@/components/ui/dark-mode-switch';
 
 const Profile = () => {
   const { user, profile, loading } = useAuth();
@@ -24,9 +23,11 @@ const Profile = () => {
   const tabParam = searchParams.get('tab') || 'dashboard';
   const [activeTab, setActiveTab] = useState(tabParam);
 
-  // Remove the automatic light mode on load
-  // This code was causing the page to always start in light mode
-  // We'll now rely on the theme provider's system
+  useEffect(() => {
+    // Set light mode on initial load for consistency with Index page
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('darkMode', 'false');
+  }, []);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -85,17 +86,14 @@ const Profile = () => {
   return (
     <div className="container mx-auto px-4 py-10 bg-seftec-slate dark:bg-seftec-darkNavy min-h-screen">
       <div className="animate-fade-up">
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <div className="inline-block mb-4">
-              <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/50 border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
-                <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
-                Your Profile Settings
-              </span>
-            </div>
-            <h1 className="text-3xl font-bold text-seftec-navy dark:text-white">Your Dashboard</h1>
+        <div className="mb-8">
+          <div className="inline-block mb-4">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/50 border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
+              <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+              Your Profile Settings
+            </span>
           </div>
-          <DarkModeSwitch className="mt-2" />
+          <h1 className="text-3xl font-bold text-seftec-navy dark:text-white">Your Dashboard</h1>
         </div>
         
         <Tabs 
