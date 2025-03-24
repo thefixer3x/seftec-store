@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
@@ -15,7 +16,7 @@ import { CreateNotificationForm } from '@/components/notifications/CreateNotific
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("business");
   const [activeSubTab, setActiveSubTab] = useState("business-profile");
-  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
+  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('verified');
   const isMobile = useIsMobile();
   
   useEffect(() => {
