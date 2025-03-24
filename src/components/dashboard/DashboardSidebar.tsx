@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -25,24 +26,24 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 
 const sidebarItems = [
-  { icon: LayoutDashboard, label: 'Control Room', path: '/profile?tab=dashboard' },
-  { icon: Wallet, label: 'My Wallet', path: '/profile?tab=wallet' },
-  { icon: BookOpen, label: 'Inventory', path: '/profile?tab=inventory' },
-  { icon: Shield, label: 'Bill Payment', path: '/profile?tab=bill-payment' },
-  { icon: Briefcase, label: 'Trade Finance', path: '/profile?tab=trade-finance' },
-  { icon: CreditCard, label: 'Account', path: '/profile?tab=account' },
-  { icon: Store, label: 'My Branches', path: '/profile?tab=stores' },
-  { icon: ShoppingBag, label: 'Marketplace', path: '/profile?tab=marketplace' },
-  { icon: FileText, label: 'Invoices', path: '/profile?tab=invoices' },
-  { icon: Users, label: 'My Customers', path: '/profile?tab=customers' },
-  { icon: Percent, label: 'Transaction', path: '/profile?tab=transaction' },
-  { icon: Settings, label: 'Settings', path: '/profile?tab=settings' },
+  { icon: LayoutDashboard, label: 'Control Room', path: '/profile/dashboard' },
+  { icon: Wallet, label: 'My Wallet', path: '/profile/wallet' },
+  { icon: BookOpen, label: 'Inventory', path: '/profile/inventory' },
+  { icon: Shield, label: 'Bill Payment', path: '/profile/bill-payment' },
+  { icon: Briefcase, label: 'Trade Finance', path: '/profile/trade-finance' },
+  { icon: CreditCard, label: 'Account', path: '/profile/account' },
+  { icon: Store, label: 'My Branches', path: '/profile/stores' },
+  { icon: ShoppingBag, label: 'Marketplace', path: '/profile/marketplace' },
+  { icon: FileText, label: 'Invoices', path: '/profile/invoices' },
+  { icon: Users, label: 'My Customers', path: '/profile/customers' },
+  { icon: Percent, label: 'Transaction', path: '/profile/transaction' },
+  { icon: Settings, label: 'Settings', path: '/profile/settings' },
   { icon: Home, label: 'Back to Home', path: '/' },
 ];
 
 const DashboardSidebar = () => {
   const location = useLocation();
-  const currentPath = location.pathname + location.search;
+  const currentPath = location.pathname;
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,13 +57,8 @@ const DashboardSidebar = () => {
       </div>
       <nav className="space-y-1 px-3 flex-1 overflow-y-auto">
         {sidebarItems.map((item) => {
-          const isActive = 
-            item.path === '/' 
-              ? currentPath === '/' 
-              : currentPath.includes(item.path) && 
-                (item.path.includes('?tab=') ? 
-                 currentPath.includes(item.path) : 
-                 currentPath.startsWith(item.path));
+          const isActive = currentPath === item.path || 
+                          (item.path !== '/' && currentPath.startsWith(item.path));
                  
           return (
             <Link

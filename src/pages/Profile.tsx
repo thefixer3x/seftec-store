@@ -1,28 +1,19 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation, Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { ProfileForm } from '@/components/profile/ProfileForm';
-import { AccountDetails } from '@/components/profile/AccountDetails';
-import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import DashboardContent from '@/components/dashboard/DashboardContent';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Profile = () => {
-  const { user, profile, loading } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
-  const searchParams = new URLSearchParams(location.search);
-  const tabParam = searchParams.get('tab') || 'dashboard';
-  const [activeTab, setActiveTab] = useState(tabParam);
-
   useEffect(() => {
     // Set light mode on initial load for consistency with Index page
     document.documentElement.classList.remove('dark');
@@ -40,24 +31,10 @@ const Profile = () => {
     }
   }, [user, loading, navigate, toast]);
 
-  // Update URL when tab changes, but only if it's different from current URL
-  useEffect(() => {
-    const currentTabInUrl = new URLSearchParams(location.search).get('tab');
-    // Only update URL if the active tab is different from what's in the URL
-    if (activeTab !== currentTabInUrl) {
-      const newParams = new URLSearchParams(location.search);
-      newParams.set('tab', activeTab);
-      navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
-    }
-  }, [activeTab, location.pathname, navigate]);
-
-  // Update active tab when URL changes, but avoid circular dependency
-  useEffect(() => {
-    const tabFromUrl = searchParams.get('tab') || 'dashboard';
-    if (tabFromUrl !== activeTab) {
-      setActiveTab(tabFromUrl);
-    }
-  }, [location.search]);
+  // If at /profile root, redirect to /profile/dashboard
+  if (!loading && user && location.pathname === '/profile') {
+    return <Navigate to="/profile/dashboard" replace />;
+  }
 
   if (loading) {
     return (
@@ -69,70 +46,11 @@ const Profile = () => {
 
   if (!user) return null;
 
-  const isDashboardTab = [
-    'dashboard', 'wallet', 'stores', 'marketplace', 'customers', 
-    'invoices', 'transaction', 'inventory', 'bill-payment', 'trade-finance', 'account', 'settings'
-  ].includes(activeTab);
-
-  if (isDashboardTab) {
-    return (
-      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
-        <DashboardSidebar />
-        <DashboardContent />
-      </div>
-    );
-  }
-
   return (
-    <div className="container mx-auto px-4 py-10 bg-seftec-slate dark:bg-seftec-darkNavy min-h-screen">
-      <div className="animate-fade-up">
-        <div className="mb-8">
-          <div className="inline-block mb-4">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/50 border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
-              <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
-              Your Profile Settings
-            </span>
-          </div>
-          <h1 className="text-3xl font-bold text-seftec-navy dark:text-white">Your Dashboard</h1>
-        </div>
-        
-        <Tabs 
-          defaultValue="dashboard" 
-          value={activeTab} 
-          onValueChange={setActiveTab} 
-          className="w-full"
-        >
-          <TabsList className="mb-6 bg-white/50 dark:bg-white/5 border border-seftec-navy/10 dark:border-white/10 w-full justify-start overflow-x-auto">
-            <TabsTrigger value="dashboard" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Dashboard</TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Profile</TabsTrigger>
-            <TabsTrigger value="account" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Account</TabsTrigger>
-            <TabsTrigger value="notifications" className="data-[state=active]:bg-seftec-gold/10 data-[state=active]:text-seftec-navy dark:data-[state=active]:bg-seftec-teal/10 dark:data-[state=active]:text-seftec-teal">Notifications</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="profile" className="outline-none">
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="space-y-6">
-                <ProfileForm />
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="account" className="outline-none">
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="space-y-6">
-                <AccountDetails />
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="notifications" className="outline-none">
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="space-y-6">
-                <CreateNotificationForm />
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
+      <DashboardSidebar />
+      <div className="p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy">
+        <Outlet />
       </div>
     </div>
   );

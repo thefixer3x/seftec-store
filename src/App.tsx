@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +24,7 @@ import ValuePropositions from "./pages/ValuePropositions";
 import BizGenie from "./pages/BizGenie";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
+import Dashboard from "./pages/Dashboard";
 
 const App = () => {
   useEffect(() => {
@@ -49,7 +51,24 @@ const App = () => {
             <Route path="/auth-test" element={<AuthTest />} />
             <Route path="/products" element={<Products />} />
             <Route path="/auth-callback" element={<AuthCallback />} />
-            <Route path="/profile" element={<Profile />} />
+            
+            {/* Profile Routes */}
+            <Route path="/profile" element={<Profile />}>
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="wallet" element={<Profile />} />
+              <Route path="inventory" element={<Profile />} />
+              <Route path="bill-payment" element={<Profile />} />
+              <Route path="trade-finance" element={<Profile />} />
+              <Route path="account" element={<Profile />} />
+              <Route path="stores" element={<Profile />} />
+              <Route path="marketplace" element={<Profile />} />
+              <Route path="invoices" element={<Profile />} />
+              <Route path="customers" element={<Profile />} />
+              <Route path="transaction" element={<Profile />} />
+              <Route path="settings" element={<Profile />} />
+              <Route index element={<Dashboard />} />
+            </Route>
+            
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/orders" element={<Orders />} />
@@ -72,4 +91,3 @@ const App = () => {
 };
 
 export default App;
-
