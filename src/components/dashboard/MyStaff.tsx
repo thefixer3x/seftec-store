@@ -8,18 +8,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 // Mock data for staff
 const staffData = [{
-  name: "Hello Abim",
-  initials: "HA",
-  storeAccess: "Nimmy's store",
-  totalSales: "0",
-  activity: "Yet to Login"
-}, {
-  name: "Attendant 2 Abba",
-  initials: "AA",
-  storeAccess: "Nimmy's store",
+  name: "Derick",
+  initials: "D",
+  storeAccess: "Lekki Branch",
   totalSales: "₦1,500.00",
-  activity: "Yet to Login"
+  activity: "Active"
+}, {
+  name: "Tolu",
+  initials: "T",
+  storeAccess: "Ikoyi Branch",
+  totalSales: "₦820.00",
+  activity: "Active"
 }];
+
 const MyStaff = () => {
   return (
     <Card className="w-full border border-seftec-navy/10 dark:border-white/10 bg-white/90 dark:bg-white/5 shadow-md rounded-xl overflow-hidden mt-6">
@@ -82,4 +83,5 @@ const MyStaff = () => {
     </Card>
   );
 };
+
 export default MyStaff;
