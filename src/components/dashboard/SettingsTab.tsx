@@ -11,6 +11,7 @@ import VerificationStatus from './settings/VerificationStatus';
 import { useIsMobile } from '@/hooks/use-mobile';
 import DarkModeSwitch from '@/components/ui/dark-mode-switch';
 import { AccountDetails } from '@/components/profile/AccountDetails';
+import { ProfileForm } from '@/components/profile/ProfileForm';
 import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -90,6 +91,16 @@ const SettingsTab = () => {
                     <p className="text-gray-600 mt-1">Configure your business notification preferences</p>
                   </div>
                   <CreateNotificationForm />
+                </div>
+              )}
+
+              {activeSubTab === "business-personal-profile" && (
+                <div className="space-y-6">
+                  <div className="border-l-4 border-blue-500 pl-4 mb-6 py-2 bg-blue-50 rounded-r">
+                    <h2 className="text-2xl font-bold text-gray-800">Personal Profile</h2>
+                    <p className="text-gray-600 mt-1">Manage your personal profile information</p>
+                  </div>
+                  <ProfileForm />
                 </div>
               )}
             </>
