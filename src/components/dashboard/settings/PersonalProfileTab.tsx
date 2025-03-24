@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User, Mail, Phone, MapPin, Globe } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const PersonalProfileTab = () => {
+  const { profile } = useAuth();
+  
   return (
     <Card className="border border-seftec-navy/10 dark:border-white/10 bg-white/70 dark:bg-white/5 shadow-sm">
       <CardContent className="p-8">
@@ -22,7 +25,7 @@ const PersonalProfileTab = () => {
                 <User className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
                 First Name
               </Label>
-              <Input defaultValue="John" className="mt-1 border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy/30" />
+              <Input defaultValue={profile?.first_name || "John"} className="mt-1 border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy/30" />
             </div>
             <div>
               <Label className="flex items-center gap-2 text-seftec-navy/80 dark:text-white/80">
@@ -46,7 +49,7 @@ const PersonalProfileTab = () => {
                 <User className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
                 Last Name
               </Label>
-              <Input defaultValue="Doe" className="mt-1 border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy/30" />
+              <Input defaultValue={profile?.last_name || "Doe"} className="mt-1 border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy/30" />
             </div>
             <div>
               <Label className="flex items-center gap-2 text-seftec-navy/80 dark:text-white/80">

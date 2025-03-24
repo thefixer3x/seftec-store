@@ -85,7 +85,7 @@ export function UserProfileDropdown() {
         <DropdownMenuItem asChild>
           <Link to="/profile/account" className="cursor-pointer flex items-center w-full">
             <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <span>Account</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
