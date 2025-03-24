@@ -7,16 +7,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 // Mock data for stores
 const storeData = [{
-  name: "Nimmy's store",
+  name: "Lekki Branch",
   stockValue: "₦820,800.00",
   stockCount: "213.92",
   lowStock: 0
 }, {
-  name: "ELLA STORE",
+  name: "Ikoyi Branch",
   stockValue: "₦32,025.00",
   stockCount: "25",
   lowStock: 0
 }];
+
 const MyStores = () => {
   return (
     <Card className="w-full border border-seftec-navy/10 dark:border-white/10 bg-white/90 dark:bg-white/5 shadow-md rounded-xl overflow-hidden">
@@ -73,4 +74,5 @@ const MyStores = () => {
     </Card>
   );
 };
+
 export default MyStores;
