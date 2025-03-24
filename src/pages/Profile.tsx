@@ -4,7 +4,6 @@ import { useNavigate, useLocation, Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
-import DashboardContent from '@/components/dashboard/DashboardContent';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Profile = () => {

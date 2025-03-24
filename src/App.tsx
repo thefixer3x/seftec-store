@@ -25,6 +25,9 @@ import BizGenie from "./pages/BizGenie";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 import Dashboard from "./pages/Dashboard";
+import DashboardContent from "./components/dashboard/DashboardContent";
+import WalletTab from "./components/dashboard/WalletTab";
+import SettingsTab from "./components/dashboard/SettingsTab";
 
 const App = () => {
   useEffect(() => {
@@ -55,17 +58,17 @@ const App = () => {
             {/* Profile Routes */}
             <Route path="/profile" element={<Profile />}>
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="wallet" element={<Profile />} />
-              <Route path="inventory" element={<Profile />} />
-              <Route path="bill-payment" element={<Profile />} />
-              <Route path="trade-finance" element={<Profile />} />
-              <Route path="account" element={<Profile />} />
-              <Route path="stores" element={<Profile />} />
-              <Route path="marketplace" element={<Profile />} />
-              <Route path="invoices" element={<Profile />} />
-              <Route path="customers" element={<Profile />} />
-              <Route path="transaction" element={<Profile />} />
-              <Route path="settings" element={<Profile />} />
+              <Route path="wallet" element={<WalletTab />} />
+              <Route path="inventory" element={<DashboardContent />} />
+              <Route path="bill-payment" element={<DashboardContent />} />
+              <Route path="trade-finance" element={<DashboardContent />} />
+              <Route path="account" element={<DashboardContent />} />
+              <Route path="stores" element={<DashboardContent />} />
+              <Route path="marketplace" element={<DashboardContent />} />
+              <Route path="invoices" element={<DashboardContent />} />
+              <Route path="customers" element={<DashboardContent />} />
+              <Route path="transaction" element={<DashboardContent />} />
+              <Route path="settings" element={<SettingsTab />} />
               <Route index element={<Dashboard />} />
             </Route>
             
