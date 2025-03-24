@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { TabsTrigger } from '@/components/ui/tabs';
-import { Building, User, Lock, Key, CreditCard, Bell, ChevronRight, ChevronDown, BadgeDollarSign } from 'lucide-react';
+import { Building, User, Lock, Key, Mail, Shield, Bell, ChevronRight, ChevronDown, Moon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import DarkModeSwitch from '@/components/ui/dark-mode-switch';
@@ -34,8 +33,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center">
-            <Building className="h-4 w-4 mr-3 flex-shrink-0" />
-            <span>Business Profile</span>
+            <Building className="h-4 w-4 mr-3" />
+            Business Profile
           </div>
           {isMobile && activeTab === 'business' && (
             <button
@@ -46,7 +45,7 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
               }}
               className="ml-2"
             >
-              {isOpen ? <ChevronDown className="h-4 w-4 flex-shrink-0" /> : <ChevronRight className="h-4 w-4 flex-shrink-0" />}
+              {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
             </button>
           )}
         </div>
@@ -61,8 +60,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
               onClick={() => setActiveSubTab('business-profile')}
             >
               <div className="flex items-center">
-                <User className="h-3.5 w-3.5 mr-3 flex-shrink-0" />
-                <span>Profile</span>
+                <User className="h-3.5 w-3.5 mr-3" />
+                Profile
               </div>
             </TabsTrigger>
             
@@ -72,8 +71,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
               onClick={() => setActiveSubTab('business-account')}
             >
               <div className="flex items-center">
-                <CreditCard className="h-3.5 w-3.5 mr-3 flex-shrink-0" />
-                <span>Account</span>
+                <Shield className="h-3.5 w-3.5 mr-3" />
+                Account
               </div>
             </TabsTrigger>
             
@@ -83,19 +82,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
               onClick={() => setActiveSubTab('business-notifications')}
             >
               <div className="flex items-center">
-                <Bell className="h-3.5 w-3.5 mr-3 flex-shrink-0" />
-                <span>Notifications</span>
-              </div>
-            </TabsTrigger>
-
-            <TabsTrigger 
-              value="business-personal-profile" 
-              className={`rounded-none px-6 py-3 justify-start text-left border-l-4 text-sm ${activeSubTab === 'business-personal-profile' ? 'border-blue-400 text-blue-700 font-medium' : 'border-transparent'}`}
-              onClick={() => setActiveSubTab('business-personal-profile')}
-            >
-              <div className="flex items-center">
-                <User className="h-3.5 w-3.5 mr-3 flex-shrink-0" />
-                <span>Personal Profile</span>
+                <Bell className="h-3.5 w-3.5 mr-3" />
+                Notifications
               </div>
             </TabsTrigger>
           </CollapsibleContent>
@@ -107,38 +95,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
         className={`${tabTriggerClasses} ${activeTab === 'personal' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium dark:bg-blue-950/20 dark:text-blue-300 dark:border-blue-400' : 'border-transparent'}`}
       >
         <div className="flex items-center">
-          <User className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span>Personal Profile</span>
-        </div>
-      </TabsTrigger>
-      
-      <TabsTrigger 
-        value="account" 
-        className={`${tabTriggerClasses} ${activeTab === 'account' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium dark:bg-blue-950/20 dark:text-blue-300 dark:border-blue-400' : 'border-transparent'}`}
-      >
-        <div className="flex items-center">
-          <CreditCard className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span>Account</span>
-        </div>
-      </TabsTrigger>
-      
-      <TabsTrigger 
-        value="notifications" 
-        className={`${tabTriggerClasses} ${activeTab === 'notifications' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium dark:bg-blue-950/20 dark:text-blue-300 dark:border-blue-400' : 'border-transparent'}`}
-      >
-        <div className="flex items-center">
-          <Bell className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span>Notifications</span>
-        </div>
-      </TabsTrigger>
-      
-      <TabsTrigger 
-        value="subscription" 
-        className={`${tabTriggerClasses} ${activeTab === 'subscription' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium dark:bg-blue-950/20 dark:text-blue-300 dark:border-blue-400' : 'border-transparent'}`}
-      >
-        <div className="flex items-center">
-          <BadgeDollarSign className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span>Subscription</span>
+          <User className="h-4 w-4 mr-3" />
+          Personal Profile
         </div>
       </TabsTrigger>
       
@@ -147,8 +105,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
         className={`${tabTriggerClasses} ${activeTab === 'password' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium dark:bg-blue-950/20 dark:text-blue-300 dark:border-blue-400' : 'border-transparent'}`}
       >
         <div className="flex items-center">
-          <Lock className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span>Password</span>
+          <Lock className="h-4 w-4 mr-3" />
+          Password
         </div>
       </TabsTrigger>
       
@@ -157,8 +115,8 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
         className={`${tabTriggerClasses} ${activeTab === 'pin' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium dark:bg-blue-950/20 dark:text-blue-300 dark:border-blue-400' : 'border-transparent'}`}
       >
         <div className="flex items-center">
-          <Key className="h-4 w-4 mr-3 flex-shrink-0" />
-          <span>Pin</span>
+          <Key className="h-4 w-4 mr-3" />
+          Pin
         </div>
       </TabsTrigger>
 
