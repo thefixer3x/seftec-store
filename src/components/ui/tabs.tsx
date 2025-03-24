@@ -33,7 +33,7 @@ const TabsTrigger = React.forwardRef<
     )}
     {...props}
   >
-    <span className="relative z-10">{props.children}</span>
+    <span className="relative z-10 flex items-center justify-start gap-2">{props.children}</span>
     <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer dark:bg-white bg-gray-800 transition-opacity"></span>
   </TabsPrimitive.Trigger>
 ))

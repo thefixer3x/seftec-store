@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { FileText } from 'lucide-react';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
@@ -9,6 +10,8 @@ import PinTab from './settings/PinTab';
 import VerificationStatus from './settings/VerificationStatus';
 import { useIsMobile } from '@/hooks/use-mobile';
 import DarkModeSwitch from '@/components/ui/dark-mode-switch';
+import { AccountDetails } from '@/components/profile/AccountDetails';
+import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
 
 const SettingsTab = () => {
   const [activeTab, setActiveTab] = useState("business");

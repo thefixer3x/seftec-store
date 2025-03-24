@@ -26,19 +26,28 @@ const TransactionTabs: React.FC<TransactionTabsProps> = ({ activeTab, onTabChang
               value="payment" 
               className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'payment' ? 'bg-white shadow-sm' : ''}`}
             >
-              {isMobile ? 'Payments' : 'Payment Transactions'}
+              <div className="flex items-center">
+                <Search className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+                <span>{isMobile ? 'Payments' : 'Payment Transactions'}</span>
+              </div>
             </TabsTrigger>
             <TabsTrigger 
               value="loan" 
               className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'loan' ? 'bg-white shadow-sm' : ''}`}
             >
-              {isMobile ? 'Loans' : 'Loan Transactions'}
+              <div className="flex items-center">
+                <Filter className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+                <span>{isMobile ? 'Loans' : 'Loan Transactions'}</span>
+              </div>
             </TabsTrigger>
             <TabsTrigger 
               value="trade" 
               className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'trade' ? 'bg-white shadow-sm' : ''}`}
             >
-              {isMobile ? 'Trade' : 'Trade Finance'}
+              <div className="flex items-center">
+                <Filter className="h-3.5 w-3.5 mr-2 flex-shrink-0" />
+                <span>{isMobile ? 'Trade' : 'Trade Finance'}</span>
+              </div>
             </TabsTrigger>
           </TabsList>
 
