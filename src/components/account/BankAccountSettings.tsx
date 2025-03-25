@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Bank, CreditCard, Plus, Trash2 } from 'lucide-react';
+import { CreditCard, Plus, Trash2, Building } from 'lucide-react';
 
 const BankAccountSettings = () => {
   return (
@@ -19,7 +20,7 @@ const BankAccountSettings = () => {
           <div className="flex items-start justify-between">
             <div className="flex items-start space-x-4">
               <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full">
-                <Bank className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <Building className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
                 <h3 className="font-medium text-gray-800 dark:text-white">ABC Bank</h3>
