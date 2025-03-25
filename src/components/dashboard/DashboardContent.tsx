@@ -12,8 +12,6 @@ import TradeFinanceTab from './TradeFinanceTab';
 import DashboardHighlights from './DashboardHighlights';
 import QuickActions from './QuickActions';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ProfileForm } from '@/components/profile/ProfileForm';
-import { AccountDetails } from '@/components/profile/AccountDetails';
 
 const DashboardContent = () => {
   const location = useLocation();
@@ -46,21 +44,6 @@ const DashboardContent = () => {
         return <div className="animate-fade-up w-full"><TradeFinanceTab /></div>;
       case 'settings':
         return <div className="animate-fade-up"><SettingsTab /></div>;
-      case 'account':
-        return (
-          <div className="space-y-6 animate-fade-up">
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-seftec-navy dark:text-white">Account & Profile</h1>
-              <p className="text-seftec-navy/70 dark:text-white/70 mt-1">
-                Manage your account information and personal profile
-              </p>
-            </div>
-            <div className="grid grid-cols-1 gap-8">
-              <ProfileForm />
-              <AccountDetails />
-            </div>
-          </div>
-        );
       case 'dashboard':
       default:
         return <div className="space-y-6 animate-fade-up">
