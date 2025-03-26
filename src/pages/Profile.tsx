@@ -5,13 +5,13 @@ import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useResponsive } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { ErrorBoundary, withErrorBoundary } from '@/components/ui/error-boundary';
 
 interface ProfileProps {
   defaultPath?: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashboard' }) => {
+const ProfileContent: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashboard' }) => {
   const location = useLocation();
   const { isMobile } = useResponsive();
   
@@ -46,5 +46,22 @@ const Profile: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashboard' })
     </ProtectedLayout>
   );
 };
+
+// Apply the withErrorBoundary HOC to the component
+const Profile = withErrorBoundary(ProfileContent, {
+  onError: (error, errorInfo) => {
+    console.error("Profile error:", error, errorInfo);
+  },
+  fallback: (
+    <div className="container mx-auto px-4 py-10 flex justify-center items-center min-h-[50vh] bg-seftec-slate dark:bg-seftec-darkNavy">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-4 w-full max-w-md mx-auto">
+        <h2 className="text-xl font-semibold text-red-700 dark:text-red-400">Profile Error</h2>
+        <p className="text-red-600 dark:text-red-300 mt-2">
+          We encountered an issue while loading your profile. Please try refreshing the page.
+        </p>
+      </div>
+    </div>
+  )
+});
 
 export default Profile;

@@ -3,8 +3,9 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { User } from '@/types/auth';
 
-interface UseProtectedRouteOptions {
+export interface UseProtectedRouteOptions {
   redirectTo?: string;
   message?: {
     title?: string;
@@ -12,10 +13,17 @@ interface UseProtectedRouteOptions {
   };
 }
 
+export interface ProtectedRouteResult {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: User | null;
+  error?: Error;
+}
+
 /**
  * Custom hook to handle protected routes with consistent behavior
  */
-export const useProtectedRoute = (options: UseProtectedRouteOptions = {}) => {
+export const useProtectedRoute = (options: UseProtectedRouteOptions = {}): ProtectedRouteResult => {
   const { 
     redirectTo = '/login', 
     message = {
@@ -24,7 +32,7 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}) => {
     }
   } = options;
   
-  const { user, loading } = useAuth();
+  const { user, loading, error } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -42,6 +50,7 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}) => {
   return {
     isAuthenticated: !!user,
     isLoading: loading,
-    user
+    user,
+    error
   };
 };
