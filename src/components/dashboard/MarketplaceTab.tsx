@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 // Define type-safe interfaces
-interface Order {
+export interface Order {
   id: string;
   product: string;
   value: string;
@@ -19,7 +19,7 @@ interface Order {
   status?: 'pending' | 'complete' | 'cancelled';
 }
 
-interface MarketplaceTabProps {
+export interface MarketplaceTabProps {
   initialTab?: 'received' | 'bids' | 'offers';
 }
 
@@ -100,13 +100,13 @@ const OrdersTable = ({ orders }: { orders: Order[] }) => {
                 <TableCell className="text-gray-500 dark:text-gray-400">{order.timePosted}</TableCell>
                 <TableCell>
                   {order.status === 'pending' && (
-                    <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50 border-amber-200">Pending</Badge>
+                    <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/50">Pending</Badge>
                   )}
                   {order.status === 'complete' && (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200">Complete</Badge>
+                    <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800/50">Complete</Badge>
                   )}
                   {order.status === 'cancelled' && (
-                    <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50 border-red-200">Cancelled</Badge>
+                    <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/50">Cancelled</Badge>
                   )}
                 </TableCell>
                 <TableCell>
@@ -188,95 +188,97 @@ const MarketplaceTab: React.FC<MarketplaceTabProps> = ({ initialTab = "received"
   };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
-        <div className="flex items-center">
-          <Button variant="ghost" className="p-2 mr-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-            <span className="ml-2">Go Back</span>
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Marketplace</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">Manage your orders, bids, and offers</p>
+    <ErrorBoundary>
+      <div className="w-full">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+          <div className="flex items-center">
+            <Button variant="ghost" className="p-2 mr-4 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+              <ArrowLeft className="h-5 w-5" />
+              <span className="ml-2">Go Back</span>
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Marketplace</h1>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">Manage your orders, bids, and offers</p>
+            </div>
+          </div>
+          
+          <div className="flex space-x-2">
+            <Button variant="outline" className="border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-400">
+              <FileCheck className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              <ShoppingBag className="h-4 w-4 mr-2" />
+              New Order
+            </Button>
           </div>
         </div>
-        
-        <div className="flex space-x-2">
-          <Button variant="outline" className="border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-400">
-            <FileCheck className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <ShoppingBag className="h-4 w-4 mr-2" />
-            New Order
-          </Button>
-        </div>
+
+        <Card className="overflow-hidden border-gray-200 dark:border-gray-700 shadow-sm">
+          <Tabs 
+            defaultValue="received" 
+            value={activeTab} 
+            onValueChange={(value) => handleTabChange(value as 'received' | 'bids' | 'offers')}
+            className="w-full"
+          >
+            <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 px-4">
+              <TabsList className="w-full justify-start rounded-none bg-transparent p-0">
+                <TabsTrigger 
+                  value="received" 
+                  className={`rounded-none px-4 py-3 data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 ${activeTab === 'received' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent'}`}
+                >
+                  Received Orders
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="bids" 
+                  className={`rounded-none px-4 py-3 data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 ${activeTab === 'bids' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent'}`}
+                >
+                  My Bids
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="offers" 
+                  className={`rounded-none px-4 py-3 data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 ${activeTab === 'offers' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent'}`}
+                >
+                  My Offers
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            <CardContent className="p-0">
+              <TabsContent value="received" className="m-0 p-0">
+                {isLoading ? (
+                  <div className="p-6">
+                    <TableSkeleton />
+                  </div>
+                ) : (
+                  <OrdersTable orders={orderData} />
+                )}
+              </TabsContent>
+
+              <TabsContent value="bids" className="m-0">
+                {isLoading ? (
+                  <div className="p-6">
+                    <TableSkeleton />
+                  </div>
+                ) : (
+                  <EmptyState type="bids" />
+                )}
+              </TabsContent>
+
+              <TabsContent value="offers" className="m-0">
+                {isLoading ? (
+                  <div className="p-6">
+                    <TableSkeleton />
+                  </div>
+                ) : (
+                  <EmptyState type="offers" />
+                )}
+              </TabsContent>
+            </CardContent>
+          </Tabs>
+        </Card>
       </div>
-
-      <Card className="overflow-hidden border-gray-200 dark:border-gray-700 shadow-sm">
-        <Tabs 
-          defaultValue="received" 
-          value={activeTab} 
-          onValueChange={(value) => handleTabChange(value as 'received' | 'bids' | 'offers')}
-          className="w-full"
-        >
-          <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30 px-4">
-            <TabsList className="w-full justify-start rounded-none bg-transparent p-0">
-              <TabsTrigger 
-                value="received" 
-                className={`rounded-none px-4 py-3 data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 ${activeTab === 'received' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent'}`}
-              >
-                Received Orders
-              </TabsTrigger>
-              <TabsTrigger 
-                value="bids" 
-                className={`rounded-none px-4 py-3 data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 ${activeTab === 'bids' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent'}`}
-              >
-                My Bids
-              </TabsTrigger>
-              <TabsTrigger 
-                value="offers" 
-                className={`rounded-none px-4 py-3 data-[state=active]:bg-transparent data-[state=active]:shadow-none border-b-2 ${activeTab === 'offers' ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent'}`}
-              >
-                My Offers
-              </TabsTrigger>
-            </TabsList>
-          </div>
-
-          <CardContent className="p-0">
-            <TabsContent value="received" className="m-0 p-0">
-              {isLoading ? (
-                <div className="p-6">
-                  <TableSkeleton />
-                </div>
-              ) : (
-                <OrdersTable orders={orderData} />
-              )}
-            </TabsContent>
-
-            <TabsContent value="bids" className="m-0">
-              {isLoading ? (
-                <div className="p-6">
-                  <TableSkeleton />
-                </div>
-              ) : (
-                <EmptyState type="bids" />
-              )}
-            </TabsContent>
-
-            <TabsContent value="offers" className="m-0">
-              {isLoading ? (
-                <div className="p-6">
-                  <TableSkeleton />
-                </div>
-              ) : (
-                <EmptyState type="offers" />
-              )}
-            </TabsContent>
-          </CardContent>
-        </Tabs>
-      </Card>
-    </div>
+    </ErrorBoundary>
   );
 };
 

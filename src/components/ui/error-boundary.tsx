@@ -1,35 +1,43 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 
-interface Props {
+export interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
+  onReset?: () => void;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
+/**
+ * ErrorBoundary component that catches JavaScript errors in its child component tree.
+ * Displays a fallback UI instead of the component tree that crashed.
+ */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public state: ErrorBoundaryState = {
     hasError: false,
     error: null,
   };
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
+    this.props.onError?.(error, errorInfo);
   }
 
   private handleRetry = () => {
     this.setState({ hasError: false, error: null });
+    this.props.onReset?.();
   };
 
   public render() {
@@ -39,18 +47,20 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <Alert className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-900/20 my-4">
+        <Alert className="border-red-200 bg-red-50 dark:border-red-900/50 dark:bg-red-900/20 my-4 shadow-sm">
           <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-          <AlertTitle className="text-red-800 dark:text-red-400">Something went wrong</AlertTitle>
-          <AlertDescription className="text-red-700 dark:text-red-300">
+          <AlertTitle className="text-red-800 dark:text-red-400 font-medium">Something went wrong</AlertTitle>
+          <AlertDescription className="text-red-700 dark:text-red-300 mt-2">
             {this.state.error?.message || "An unexpected error has occurred."}
           </AlertDescription>
-          <div className="mt-4">
+          <div className="mt-4 flex items-center">
             <Button 
               onClick={this.handleRetry}
               variant="outline" 
-              className="border-red-300 text-red-700 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
+              size="sm"
+              className="border-red-300 text-red-700 hover:bg-red-50 hover:text-red-800 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30 flex items-center gap-2"
             >
+              <RefreshCw className="h-3.5 w-3.5" />
               Try again
             </Button>
           </div>
@@ -60,4 +70,26 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
+}
+
+/**
+ * A higher-order component that wraps the specified component in an ErrorBoundary
+ */
+export function withErrorBoundary<P extends object>(
+  Component: React.ComponentType<P>,
+  errorBoundaryProps: Omit<ErrorBoundaryProps, 'children'> = {}
+): React.ComponentType<P> {
+  const displayName = Component.displayName || Component.name || 'Component';
+  
+  const ComponentWithErrorBoundary = (props: P) => {
+    return (
+      <ErrorBoundary {...errorBoundaryProps}>
+        <Component {...props} />
+      </ErrorBoundary>
+    );
+  };
+  
+  ComponentWithErrorBoundary.displayName = `withErrorBoundary(${displayName})`;
+  
+  return ComponentWithErrorBoundary;
 }
