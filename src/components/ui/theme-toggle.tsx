@@ -30,18 +30,18 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       size="icon"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className={cn(
-        "w-9 h-9 rounded-full border-2 fixed bottom-4 right-4 z-50 shadow-lg transition-all duration-300",
+        "w-9 h-9 rounded-full border-2 shadow-lg transition-all duration-300",
         isDark 
-          ? "bg-seftec-darkNavy border-seftec-teal hover:bg-seftec-darkNavy/80" 
-          : "bg-white border-seftec-gold hover:bg-gray-100",
+          ? "bg-white border-seftec-teal hover:bg-gray-100" 
+          : "bg-seftec-darkNavy border-seftec-gold hover:bg-seftec-darkNavy/80",
         className
       )}
       aria-label="Toggle theme"
     >
       {isDark ? (
-        <Sun className="h-5 w-5 text-seftec-teal hover:text-seftec-teal animate-pulse" />
+        <Moon className="h-5 w-5 text-seftec-darkNavy hover:text-seftec-navy" />
       ) : (
-        <Moon className="h-5 w-5 text-seftec-gold hover:text-seftec-gold" />
+        <Sun className="h-5 w-5 text-seftec-gold hover:text-seftec-gold/90 animate-pulse" />
       )}
     </Button>
   );

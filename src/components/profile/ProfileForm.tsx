@@ -38,8 +38,12 @@ export function ProfileForm() {
   const onSubmit = async (data: ProfileFormValues) => {
     setIsSubmitting(true);
     try {
-      // Call update profile function from auth context
-      await updateProfile(data);
+      // Ensure required properties are present before calling updateProfile
+      await updateProfile({
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone
+      });
       
       toast({
         title: "Profile updated",

@@ -52,7 +52,9 @@ export function MainNav({ items }: MainNavProps) {
       </div>
       
       {/* Floating theme toggle for all pages - will appear on bottom right of screen */}
-      <ThemeToggle />
+      <div className="fixed bottom-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
     </div>
   );
 }
