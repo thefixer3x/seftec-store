@@ -21,7 +21,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           cancelButton:
             "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
           // Add custom styling for icons inside toasts
-          icon: "group-[.toast]:flex group-[.toast]:items-center",
+          icon: "group-[.toast]:flex group-[.toast]:items-center group-[.toast]:text-seftec-gold dark:group-[.toast]:text-seftec-teal",
         },
       }}
       {...props}

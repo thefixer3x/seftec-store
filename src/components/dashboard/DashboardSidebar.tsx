@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -24,6 +23,7 @@ import { Icons } from '@/components/icons';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Control Room', path: '/profile/dashboard' },
@@ -111,9 +111,13 @@ const DashboardSidebar = () => {
   }
 
   return (
-    <aside className="w-64 border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy h-full flex-shrink-0 hidden md:block">
+    <div className="dashboard-sidebar h-full md:w-64 flex-shrink-0 border-r border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-seftec-navy/10 dark:border-white/10">
+        <div className="font-semibold text-seftec-navy dark:text-white">Dashboard</div>
+        <ThemeToggle />
+      </div>
       <SidebarContent />
-    </aside>
+    </div>
   );
 };
 

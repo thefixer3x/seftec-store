@@ -21,22 +21,22 @@ const TransactionTabs: React.FC<TransactionTabsProps> = ({ activeTab, onTabChang
     <div className="mt-4 md:mt-8">
       <Tabs defaultValue="payment" value={activeTab} onValueChange={onTabChange}>
         <div className="flex flex-col space-y-4 mb-4">
-          <TabsList className={`bg-gray-100 p-1 rounded-md ${isMobile ? 'overflow-x-auto w-full' : ''}`}>
+          <TabsList className={`bg-gray-100 dark:bg-seftec-darkNavy/30 p-1 rounded-md ${isMobile ? 'overflow-x-auto w-full' : ''}`}>
             <TabsTrigger 
               value="payment" 
-              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'payment' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'payment' ? 'bg-white dark:bg-seftec-darkNavy text-seftec-navy dark:text-white shadow-sm' : 'text-seftec-navy/80 dark:text-white/80'}`}
             >
               {isMobile ? 'Payments' : 'Payment Transactions'}
             </TabsTrigger>
             <TabsTrigger 
               value="loan" 
-              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'loan' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'loan' ? 'bg-white dark:bg-seftec-darkNavy text-seftec-navy dark:text-white shadow-sm' : 'text-seftec-navy/80 dark:text-white/80'}`}
             >
               {isMobile ? 'Loans' : 'Loan Transactions'}
             </TabsTrigger>
             <TabsTrigger 
               value="trade" 
-              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'trade' ? 'bg-white shadow-sm' : ''}`}
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'trade' ? 'bg-white dark:bg-seftec-darkNavy text-seftec-navy dark:text-white shadow-sm' : 'text-seftec-navy/80 dark:text-white/80'}`}
             >
               {isMobile ? 'Trade' : 'Trade Finance'}
             </TabsTrigger>
@@ -47,11 +47,11 @@ const TransactionTabs: React.FC<TransactionTabsProps> = ({ activeTab, onTabChang
               <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input 
                 placeholder={isMobile ? "Search..." : "Search References"} 
-                className="pl-10 w-full" 
+                className="pl-10 w-full border-seftec-navy/10 dark:border-white/10 text-seftec-navy dark:text-white"
               />
             </div>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
+            <Button variant="outline" size="icon" className="border-seftec-navy/10 dark:border-white/10">
+              <Filter className="h-4 w-4 text-seftec-navy dark:text-white" />
             </Button>
           </div>
         </div>

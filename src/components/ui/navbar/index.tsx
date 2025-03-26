@@ -7,6 +7,7 @@ import MobileToggle from "./mobile-toggle";
 import DesktopNav from "./desktop-nav";
 import AuthSection from "./auth-section";
 import MobileMenu from "./mobile-menu";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface MainNavProps {
   items?: MainNavItem[];
@@ -38,7 +39,10 @@ export function MainNav({ items }: MainNavProps) {
         <Logo />
         <MobileToggle isOpen={mobileMenuOpen} onClick={toggleMobileMenu} />
         <DesktopNav items={items} />
-        <AuthSection user={user} />
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <AuthSection user={user} />
+        </div>
         <MobileMenu 
           items={items} 
           user={user} 

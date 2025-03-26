@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/types/auth';
 
@@ -73,4 +72,25 @@ export const handleResetPassword = async (email: string) => {
   if (error) {
     throw error;
   }
+};
+
+export const handleUpdateProfile = async (
+  userId: string, 
+  data: { fullName: string; email: string; phone?: string }
+) => {
+  const { fullName, phone } = data;
+  
+  // Update user metadata
+  const { error } = await supabase.auth.updateUser({
+    data: { 
+      full_name: fullName,
+      phone: phone || null
+    }
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return true;
 };

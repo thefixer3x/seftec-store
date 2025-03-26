@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { AuthContextType, Profile } from '@/types/auth';
@@ -8,7 +7,8 @@ import {
   handleSignUp,
   handleSignOut,
   handleSendVerificationEmail,
-  handleResetPassword
+  handleResetPassword,
+  handleUpdateProfile
 } from '@/utils/auth-utils';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -101,6 +101,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateProfile = async (data: { fullName: string, email: string, phone?: string }) => {
+    try {
+      if (!user) throw new Error("You must be logged in to update your profile");
+      await handleUpdateProfile(user.id, data);
+      await refreshProfile();
+      toast({
+        title: "Profile updated",
+        description: "Your profile information has been updated successfully.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Update failed",
+        description: error.message || "An error occurred while updating your profile",
+      });
+      throw error;
+    }
+  };
+
   const value = {
     session,
     user,
@@ -112,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshProfile,
     sendVerificationEmail,
     resetPassword,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
