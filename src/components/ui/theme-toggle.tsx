@@ -7,9 +7,10 @@ import { cn } from "@/lib/utils";
 
 interface ThemeToggleProps {
   className?: string;
+  floating?: boolean;
 }
 
-export function ThemeToggle({ className }: ThemeToggleProps) {
+export function ThemeToggle({ className, floating = false }: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -34,6 +35,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         isDark 
           ? "bg-white border-seftec-teal hover:bg-gray-100" 
           : "bg-seftec-darkNavy border-seftec-gold hover:bg-seftec-darkNavy/80",
+        floating ? "fixed bottom-4 right-4 z-50" : "",
         className
       )}
       aria-label="Toggle theme"

@@ -4,6 +4,7 @@ import { useLocation, Outlet, Navigate } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useResponsive } from '@/hooks/use-mobile';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const Profile = () => {
   const location = useLocation();
@@ -27,6 +28,13 @@ const Profile = () => {
         <div className="p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy">
           <Outlet />
         </div>
+        
+        {/* Add floating theme toggle for mobile view in profile section */}
+        {isMobile && (
+          <div className="fixed bottom-4 right-4 z-50">
+            <ThemeToggle />
+          </div>
+        )}
       </div>
     </ProtectedLayout>
   );
