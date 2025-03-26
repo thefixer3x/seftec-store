@@ -1,118 +1,92 @@
-
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Sparkle } from 'lucide-react';
-
 interface HeroSectionProps {
   className?: string;
 }
-
-const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
+const HeroSection: React.FC<HeroSectionProps> = ({
+  className
+}) => {
   const heroRef = useRef<HTMLDivElement>(null);
-  
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!heroRef.current) return;
-      
-      const { clientX, clientY } = e;
+      const {
+        clientX,
+        clientY
+      } = e;
       const rect = heroRef.current.getBoundingClientRect();
-      
       const x = ((clientX - rect.left) / rect.width - 0.5) * 20;
       const y = ((clientY - rect.top) / rect.height - 0.5) * 20;
-      
       const elements = heroRef.current.querySelectorAll('.parallax');
       elements.forEach((el, index) => {
         const depth = index * 0.2 + 0.5;
         const translateX = x * depth;
         const translateY = y * depth;
-        
         (el as HTMLElement).style.transform = `translate(${translateX}px, ${translateY}px)`;
       });
     };
-    
     window.addEventListener('mousemove', handleMouseMove);
-    
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
-  
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById('features');
     if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
+      featuresSection.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <section
-      ref={heroRef}
-      className={cn(
-        'relative min-h-screen flex items-center overflow-hidden',
-        'dark:bg-gradient-navy',
-        className
-      )}
-    >
+  return <section ref={heroRef} className={cn('relative min-h-screen flex items-center overflow-hidden', 'dark:bg-gradient-navy', className)}>
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-10 w-68 h-68 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
-        <div className="absolute bottom-20 left-10 w-85 h-85 bg-seftec-navy/10 dark:bg-seftec-purple/10 rounded-full blur-3xl opacity-60 parallax"></div>
-        <div className="absolute top-1/3 left-1/4 w-44 h-44 bg-seftec-navy/5 dark:bg-white/5 rounded-full blur-2xl opacity-70 parallax"></div>
+        <div className="absolute top-20 right-10 w-64 h-64 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
+        <div className="absolute bottom-20 left-10 w-80 h-80 bg-seftec-navy/10 dark:bg-seftec-purple/10 rounded-full blur-3xl opacity-60 parallax"></div>
+        <div className="absolute top-1/3 left-1/4 w-40 h-40 bg-seftec-navy/5 dark:bg-white/5 rounded-full blur-2xl opacity-70 parallax"></div>
       </div>
       
-      <div className="container mx-auto px-7 relative z-10">
-        <div className="max-w-[1080px] mx-auto text-center">
-          <div className="mb-7 inline-block animate-fade-in">
-            <span className="inline-flex items-center px-4 py-2 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-[1.05rem] dark:bg-white/10 dark:border-white/10 dark:text-white/90">
-              <Sparkle size={16} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="mb-6 inline-block animate-fade-in">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
+              <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
               The Future of Secure B2B Trade & Vendor Payments
             </span>
           </div>
           
-          <h1 className="text-[2.7rem] md:text-[3.3rem] lg:text-[4.0rem] xl:text-[4.7rem] font-bold mb-7 animate-fade-up text-balance leading-tight text-seftec-navy dark:text-white">
-            <span className="font-handwritten text-seftec-gold dark:text-seftec-teal text-[1.15em]">Grow Smarter, Together</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 animate-fade-up text-balance leading-tight text-seftec-navy dark:text-white">
+            <span className="font-handwritten text-seftec-gold dark:text-seftec-teal">Grow Smarter, Together</span>
             <br />
             Revolutionizing Global Trade with a Trusted AI-Powered Marketplace
           </h1>
           
-          <p className="text-2xl text-seftec-navy/70 dark:text-white/70 mb-11 max-w-3xl mx-auto animate-fade-up animate-delay-200">
+          <p className="text-seftec-navy/70 dark:text-white/70 mb-10 max-w-3xl mx-auto animate-fade-up animate-delay-200 text-3xl">
             Trade with Trust, Pay with Confidence. Connect with verified businesses worldwide, 
             transact securely, and access financing solutions all in one platform.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-up animate-delay-300">
-            <Button 
-              size="lg" 
-              className="bg-seftec-navy dark:bg-gradient-teal-purple text-white hover:bg-seftec-navy/90 dark:hover:opacity-90 transition-all duration-300 py-[1.65rem] px-9 rounded-lg text-xl custom-btn cta-sparkle group"
-            >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up animate-delay-300">
+            <Button size="lg" className="bg-seftec-navy dark:bg-gradient-teal-purple text-white hover:bg-seftec-navy/90 dark:hover:opacity-90 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn cta-sparkle group">
               <span className="relative z-10">Get Started</span>
               <span className="absolute inset-0 overflow-hidden rounded-lg">
                 <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer bg-white"></span>
               </span>
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 py-[1.65rem] px-9 rounded-lg text-xl custom-btn"
-            >
+            <Button variant="outline" size="lg" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn">
               Book a Demo
             </Button>
           </div>
         </div>
         
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <button 
-            onClick={scrollToFeatures}
-            className="text-seftec-navy/60 dark:text-white/60 hover:text-seftec-navy dark:hover:text-white transition-colors duration-300 focus:outline-none"
-            aria-label="Scroll to features"
-          >
-            <ChevronDown size={35} />
+          <button onClick={scrollToFeatures} className="text-seftec-navy/60 dark:text-white/60 hover:text-seftec-navy dark:hover:text-white transition-colors duration-300 focus:outline-none" aria-label="Scroll to features">
+            <ChevronDown size={32} />
           </button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
