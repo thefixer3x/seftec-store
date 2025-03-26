@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -40,7 +41,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       });
     }
   };
-  return <section ref={heroRef} className={cn('relative min-h-screen flex items-center overflow-hidden', 'dark:bg-gradient-navy', className)}>
+  return <section ref={heroRef} className={cn('relative min-h-screen flex items-center overflow-hidden transition-all duration-300 hover:bg-seftec-slate/30 dark:hover:bg-seftec-navy/30', 'dark:bg-gradient-navy', className)}>
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-10 w-64 h-64 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
@@ -63,7 +64,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             Revolutionizing Global Trade with a Trusted AI-Powered Marketplace
           </h1>
           
-          <p className="text-seftec-navy/70 dark:text-white/70 mb-10 max-w-3xl mx-auto animate-fade-up animate-delay-200 text-3xl">
+          <p className="text-seftec-navy/70 dark:text-white/70 mb-10 max-w-3xl mx-auto animate-fade-up animate-delay-200 text-[3.3rem] leading-tight transition-all duration-300 hover:text-seftec-navy dark:hover:text-white">
             Trade with Trust, Pay with Confidence. Connect with verified businesses worldwide, 
             transact securely, and access financing solutions all in one platform.
           </p>
