@@ -2,7 +2,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { profileRoutes } from "./routes/profileRoutes";
 import Index from "./pages/Index";
@@ -26,19 +25,6 @@ import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 
 const App = () => {
-  useEffect(() => {
-    // Check for user's preference in localStorage or use system preference
-    const isDark = localStorage.getItem('darkMode') === 'true' || 
-                 (!localStorage.getItem('darkMode') && 
-                  window.matchMedia('(prefers-color-scheme: dark)').matches);
-    
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, []);
-
   return (
     <CartProvider>
       <NotificationsProvider>
