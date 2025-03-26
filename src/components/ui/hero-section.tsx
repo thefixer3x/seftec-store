@@ -56,35 +56,35 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
     >
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-10 w-64 h-64 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
-        <div className="absolute bottom-20 left-10 w-80 h-80 bg-seftec-navy/10 dark:bg-seftec-purple/10 rounded-full blur-3xl opacity-60 parallax"></div>
-        <div className="absolute top-1/3 left-1/4 w-40 h-40 bg-seftec-navy/5 dark:bg-white/5 rounded-full blur-2xl opacity-70 parallax"></div>
+        <div className="absolute top-20 right-10 w-68 h-68 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
+        <div className="absolute bottom-20 left-10 w-85 h-85 bg-seftec-navy/10 dark:bg-seftec-purple/10 rounded-full blur-3xl opacity-60 parallax"></div>
+        <div className="absolute top-1/3 left-1/4 w-44 h-44 bg-seftec-navy/5 dark:bg-white/5 rounded-full blur-2xl opacity-70 parallax"></div>
       </div>
       
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="mb-6 inline-block animate-fade-in">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
-              <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+      <div className="container mx-auto px-7 relative z-10">
+        <div className="max-w-[1080px] mx-auto text-center">
+          <div className="mb-7 inline-block animate-fade-in">
+            <span className="inline-flex items-center px-4 py-2 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-[1.05rem] dark:bg-white/10 dark:border-white/10 dark:text-white/90">
+              <Sparkle size={16} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
               The Future of Secure B2B Trade & Vendor Payments
             </span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 animate-fade-up text-balance leading-tight text-seftec-navy dark:text-white">
-            <span className="font-handwritten text-seftec-gold dark:text-seftec-teal">Grow Smarter, Together</span>
+          <h1 className="text-[2.7rem] md:text-[3.3rem] lg:text-[4.0rem] xl:text-[4.7rem] font-bold mb-7 animate-fade-up text-balance leading-tight text-seftec-navy dark:text-white">
+            <span className="font-handwritten text-seftec-gold dark:text-seftec-teal text-[1.15em]">Grow Smarter, Together</span>
             <br />
             Revolutionizing Global Trade with a Trusted AI-Powered Marketplace
           </h1>
           
-          <p className="text-xl text-seftec-navy/70 dark:text-white/70 mb-10 max-w-3xl mx-auto animate-fade-up animate-delay-200">
+          <p className="text-2xl text-seftec-navy/70 dark:text-white/70 mb-11 max-w-3xl mx-auto animate-fade-up animate-delay-200">
             Trade with Trust, Pay with Confidence. Connect with verified businesses worldwide, 
             transact securely, and access financing solutions all in one platform.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up animate-delay-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 animate-fade-up animate-delay-300">
             <Button 
               size="lg" 
-              className="bg-seftec-navy dark:bg-gradient-teal-purple text-white hover:bg-seftec-navy/90 dark:hover:opacity-90 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn cta-sparkle group"
+              className="bg-seftec-navy dark:bg-gradient-teal-purple text-white hover:bg-seftec-navy/90 dark:hover:opacity-90 transition-all duration-300 py-[1.65rem] px-9 rounded-lg text-xl custom-btn cta-sparkle group"
             >
               <span className="relative z-10">Get Started</span>
               <span className="absolute inset-0 overflow-hidden rounded-lg">
@@ -94,7 +94,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
             <Button 
               variant="outline" 
               size="lg" 
-              className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn"
+              className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 py-[1.65rem] px-9 rounded-lg text-xl custom-btn"
             >
               Book a Demo
             </Button>
@@ -107,7 +107,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
             className="text-seftec-navy/60 dark:text-white/60 hover:text-seftec-navy dark:hover:text-white transition-colors duration-300 focus:outline-none"
             aria-label="Scroll to features"
           >
-            <ChevronDown size={32} />
+            <ChevronDown size={35} />
           </button>
         </div>
       </div>
