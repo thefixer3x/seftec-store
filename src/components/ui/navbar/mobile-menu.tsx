@@ -6,7 +6,7 @@ import { MainNavItem } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface MobileMenuProps {
   items?: MainNavItem[];
@@ -77,7 +77,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
         
         {/* Dark Mode Toggle (Mobile) */}
         <div className="mt-8">
-          <ModeToggle />
+          <ThemeToggle />
         </div>
       </div>
     </div>

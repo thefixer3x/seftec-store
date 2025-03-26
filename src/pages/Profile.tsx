@@ -29,7 +29,7 @@ const Profile = () => {
           <Outlet />
         </div>
         
-        {/* Add floating theme toggle for mobile view in profile section */}
+        {/* Add floating theme toggle only for mobile view in profile section */}
         {isMobile && (
           <div className="fixed bottom-4 right-4 z-50">
             <ThemeToggle />

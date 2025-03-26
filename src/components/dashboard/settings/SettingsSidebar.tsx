@@ -27,11 +27,21 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
   // Common styles for the main tab triggers
   const tabTriggerClasses = `rounded-none px-6 py-4 justify-start text-left border-l-4`;
   
+  const handleBusinessTab = (e: React.MouseEvent) => {
+    // Don't need to do anything special here, the TabsTrigger component will handle the tab change
+  };
+  
+  const handleCollapsibleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+  
   return (
     <>
       <TabsTrigger 
         value="business" 
         className={`${tabTriggerClasses} ${activeTab === 'business' ? 'border-blue-600 bg-blue-50 text-blue-700 font-medium' : 'border-transparent'}`}
+        onClick={handleBusinessTab}
       >
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center">
@@ -41,10 +51,7 @@ const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsS
           {isMobile && activeTab === 'business' && (
             <button
               type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpen(!isOpen);
-              }}
+              onClick={handleCollapsibleToggle}
               className="ml-2"
             >
               {isOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
