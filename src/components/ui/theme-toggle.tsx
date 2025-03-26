@@ -22,24 +22,26 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     return <div className="w-9 h-9"></div>; // Placeholder to prevent layout shift
   }
 
+  const isDark = theme === "dark";
+
   return (
     <Button
       variant="outline"
       size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
       className={cn(
-        "w-9 h-9 rounded-full border-2 transition-all duration-300",
-        theme === "dark" 
-          ? "bg-seftec-darkNavy border-seftec-teal" 
-          : "bg-white border-seftec-gold",
+        "w-9 h-9 rounded-full border-2 fixed bottom-4 right-4 z-50 shadow-lg transition-all duration-300",
+        isDark 
+          ? "bg-seftec-darkNavy border-seftec-teal hover:bg-seftec-darkNavy/80" 
+          : "bg-white border-seftec-gold hover:bg-gray-100",
         className
       )}
       aria-label="Toggle theme"
     >
-      {theme === "dark" ? (
-        <Sun className="h-5 w-5 text-seftec-teal/90 hover:text-seftec-teal" />
+      {isDark ? (
+        <Sun className="h-5 w-5 text-seftec-teal hover:text-seftec-teal animate-pulse" />
       ) : (
-        <Moon className="h-5 w-5 text-seftec-gold/90 hover:text-seftec-gold" />
+        <Moon className="h-5 w-5 text-seftec-gold hover:text-seftec-gold" />
       )}
     </Button>
   );
