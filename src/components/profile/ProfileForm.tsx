@@ -16,8 +16,8 @@ import {
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle } from 'lucide-react';
 
 const profileFormSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
@@ -44,7 +44,15 @@ export function ProfileForm() {
   });
 
   const onSubmit = async (values: ProfileFormValues) => {
-    if (!profile?.id) return;
+    if (!profile?.id) {
+      toast({
+        variant: "destructive",
+        title: "Profile not found",
+        description: "Unable to update profile. Your profile information could not be found.",
+        icon: <AlertCircle className="h-5 w-5" />
+      });
+      return;
+    }
     
     setIsSubmitting(true);
     try {
@@ -66,16 +74,34 @@ export function ProfileForm() {
       toast({
         title: "Profile updated",
         description: "Your profile information has been updated successfully.",
+        variant: "default",
       });
     } catch (error: any) {
+      console.error("Profile update error:", error);
       toast({
         variant: "destructive",
         title: "Update failed",
         description: error.message || "Failed to update your profile. Please try again.",
+        icon: <AlertCircle className="h-5 w-5" />
       });
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Add reset functionality
+  const handleReset = () => {
+    form.reset({
+      first_name: profile?.first_name || '',
+      last_name: profile?.last_name || '',
+      company_name: profile?.company_name || '',
+      business_type: profile?.business_type || '',
+    });
+    
+    toast({
+      title: "Form reset",
+      description: "Your changes have been discarded.",
+    });
   };
 
   return (
@@ -89,7 +115,7 @@ export function ProfileForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="first_name"
@@ -147,7 +173,15 @@ export function ProfileForm() {
               )}
             />
             
-            <div className="flex justify-end">
+            <div className="flex justify-end space-x-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleReset}
+                disabled={isSubmitting}
+              >
+                Reset
+              </Button>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Updating...' : 'Update Profile'}
               </Button>

@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Calendar, User } from 'lucide-react';
+import { AlertCircle, Calendar, User, ShieldAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
 
 export function AccountDetails() {
   const { user, signOut } = useAuth();
@@ -17,25 +18,45 @@ export function AccountDetails() {
   const handleSignOut = async () => {
     try {
       await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
       navigate('/');
     } catch (error: any) {
+      console.error("Sign out error:", error);
       toast({
         variant: "destructive",
         title: "Sign out failed",
         description: error.message || "An error occurred during sign out",
+        icon: <AlertCircle className="h-5 w-5" />
       });
     }
   };
 
-  // Use dummy dates instead of actual user dates
-  const createdAt = "January 15, 2023, 09:30 AM";
-  const lastSignIn = "August 21, 2023, 02:45 PM";
+  // Format dates nicely or use placeholders if not available
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "Not available";
+    try {
+      return format(new Date(dateString), "PPpp"); // Format: 'Apr 29, 2021, 5:34 PM'
+    } catch (e) {
+      return "Invalid date";
+    }
+  };
+
+  // Use actual user data or fallbacks
+  const email = user?.email || "user@example.com";
+  const createdAt = formatDate(user?.created_at);
+  const lastSignIn = formatDate(user?.last_sign_in_at);
 
   return (
     <div className="space-y-6">
       <Card className="border border-seftec-navy/10 dark:border-white/10 bg-white/70 dark:bg-white/5 shadow-sm">
         <CardHeader>
-          <CardTitle className="text-seftec-navy dark:text-white">Account Information</CardTitle>
+          <CardTitle className="text-seftec-navy dark:text-white flex items-center">
+            <ShieldAlert className="h-5 w-5 mr-2 text-seftec-gold" />
+            Account Information
+          </CardTitle>
           <CardDescription className="text-seftec-navy/70 dark:text-white/70">
             View your account details and manage your session
           </CardDescription>
@@ -48,7 +69,7 @@ export function AccountDetails() {
             </Label>
             <Input 
               id="email" 
-              value="user@example.com" 
+              value={email} 
               readOnly 
               className="border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy/30"
             />
@@ -81,6 +102,13 @@ export function AccountDetails() {
             className="border-seftec-navy/20 text-seftec-navy hover:bg-seftec-navy/10 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
           >
             Sign Out
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => navigate('/profile/account/password')}
+            className="border-seftec-navy/20 text-seftec-navy hover:bg-seftec-navy/10 dark:border-white/20 dark:text-white dark:hover:bg-white/10"
+          >
+            Change Password
           </Button>
         </CardFooter>
       </Card>
