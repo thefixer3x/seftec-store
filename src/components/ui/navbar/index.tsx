@@ -40,7 +40,7 @@ export function MainNav({ items }: MainNavProps) {
         <MobileToggle isOpen={mobileMenuOpen} onClick={toggleMobileMenu} />
         <DesktopNav items={items} />
         <div className="flex items-center gap-4">
-          <ThemeToggle />
+          <ThemeToggle className="static bottom-auto right-auto" />
           <AuthSection user={user} />
         </div>
         <MobileMenu 
@@ -50,6 +50,9 @@ export function MainNav({ items }: MainNavProps) {
           onClose={closeMobileMenu} 
         />
       </div>
+      
+      {/* Floating theme toggle for all pages - will appear on bottom right of screen */}
+      <ThemeToggle />
     </div>
   );
 }

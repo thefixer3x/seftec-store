@@ -23,5 +23,5 @@ export interface AuthContextType {
   refreshProfile: () => Promise<void>;
   sendVerificationEmail: (email: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  updateProfile: (data: { fullName: string, email: string, phone?: string }) => Promise<void>;
+  updateProfile: (data: { fullName: string; email: string; phone?: string }) => Promise<void>;
 }
