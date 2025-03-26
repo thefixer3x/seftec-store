@@ -1,194 +1,131 @@
 
 import React, { useState } from 'react';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle, User, Mail, Phone } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
-const profileFormSchema = z.object({
-  first_name: z.string().min(1, 'First name is required'),
-  last_name: z.string().min(1, 'Last name is required'),
-  company_name: z.string().optional(),
-  business_type: z.string().optional(),
+// Form schema validation
+const formSchema = z.object({
+  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+  email: z.string().email('Please enter a valid email address'),
+  phone: z.string().optional(),
 });
 
-type ProfileFormValues = z.infer<typeof profileFormSchema>;
+type ProfileFormValues = z.infer<typeof formSchema>;
 
 export function ProfileForm() {
-  const { profile, refreshProfile } = useAuth();
+  const { user, updateProfile } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
+  
+  // Initialize form with existing values
+  const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      first_name: profile?.first_name || '',
-      last_name: profile?.last_name || '',
-      company_name: profile?.company_name || '',
-      business_type: profile?.business_type || '',
+      fullName: user?.user_metadata?.full_name || '',
+      email: user?.email || '',
+      phone: user?.user_metadata?.phone || '',
     },
   });
 
-  const onSubmit = async (values: ProfileFormValues) => {
-    if (!profile?.id) {
-      toast({
-        variant: "destructive",
-        title: "Profile not found",
-        description: "Unable to update profile. Your profile information could not be found.",
-        icon: <AlertCircle className="h-5 w-5" />
-      });
-      return;
-    }
-    
+  const onSubmit = async (data: ProfileFormValues) => {
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({
-          first_name: values.first_name,
-          last_name: values.last_name,
-          company_name: values.company_name || null,
-          business_type: values.business_type || null,
-        })
-        .eq('id', profile.id);
-
-      if (error) throw error;
-
-      // Refresh profile data
-      await refreshProfile();
-
+      // Call update profile function from auth context
+      await updateProfile(data);
+      
       toast({
         title: "Profile updated",
         description: "Your profile information has been updated successfully.",
-        variant: "default",
       });
     } catch (error: any) {
       console.error("Profile update error:", error);
       toast({
         variant: "destructive",
         title: "Update failed",
-        description: error.message || "Failed to update your profile. Please try again.",
-        icon: <AlertCircle className="h-5 w-5" />
+        description: (
+          <div className="flex items-center">
+            <AlertCircle className="h-5 w-5 mr-2" />
+            <span>{error.message || "An error occurred while updating your profile"}</span>
+          </div>
+        )
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Add reset functionality
-  const handleReset = () => {
-    form.reset({
-      first_name: profile?.first_name || '',
-      last_name: profile?.last_name || '',
-      company_name: profile?.company_name || '',
-      business_type: profile?.business_type || '',
-    });
-    
-    toast({
-      title: "Form reset",
-      description: "Your changes have been discarded.",
-    });
-  };
-
   return (
-    <Card>
+    <Card className="border border-seftec-navy/10 dark:border-white/10 bg-white/70 dark:bg-white/5 shadow-sm">
       <CardHeader>
-        <CardTitle>Personal Information</CardTitle>
-        <CardDescription>
-          Update your personal and business information
+        <CardTitle className="text-seftec-navy dark:text-white">Personal Information</CardTitle>
+        <CardDescription className="text-seftec-navy/70 dark:text-white/70">
+          Update your personal details
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="first_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="last_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            <FormField
-              control={form.control}
-              name="company_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name (Optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your Company" {...field} value={field.value || ''} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="fullName" className="flex items-center gap-2">
+              <User className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+              Full Name
+            </Label>
+            <Input 
+              id="fullName" 
+              {...register('fullName')} 
+              className="border-seftec-navy/10 dark:border-white/10"
             />
-            
-            <FormField
-              control={form.control}
-              name="business_type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Business Type (Optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Retail, Manufacturing" {...field} value={field.value || ''} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            {errors.fullName && (
+              <p className="text-sm text-red-500 mt-1">{errors.fullName.message}</p>
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="email" className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+              Email Address
+            </Label>
+            <Input 
+              id="email" 
+              type="email" 
+              {...register('email')} 
+              className="border-seftec-navy/10 dark:border-white/10"
+              disabled
             />
-            
-            <div className="flex justify-end space-x-2">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={handleReset}
-                disabled={isSubmitting}
-              >
-                Reset
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Updating...' : 'Update Profile'}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+            )}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="phone" className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+              Phone Number (optional)
+            </Label>
+            <Input 
+              id="phone" 
+              {...register('phone')} 
+              className="border-seftec-navy/10 dark:border-white/10"
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="border-t border-seftec-navy/10 dark:border-white/10 pt-6">
+          <Button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="bg-seftec-navy text-white hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90"
+          >
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 }

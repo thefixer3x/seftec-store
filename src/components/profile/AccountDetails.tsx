@@ -28,8 +28,12 @@ export function AccountDetails() {
       toast({
         variant: "destructive",
         title: "Sign out failed",
-        description: error.message || "An error occurred during sign out",
-        icon: <AlertCircle className="h-5 w-5" />
+        description: (
+          <div className="flex items-center">
+            <AlertCircle className="h-5 w-5 mr-2" />
+            <span>{error.message || "An error occurred during sign out"}</span>
+          </div>
+        )
       });
     }
   };
