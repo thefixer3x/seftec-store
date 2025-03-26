@@ -8,6 +8,7 @@ import DesktopNav from "./desktop-nav";
 import AuthSection from "./auth-section";
 import MobileMenu from "./mobile-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MainNavProps {
   items?: MainNavItem[];
@@ -16,6 +17,7 @@ interface MainNavProps {
 export function MainNav({ items }: MainNavProps) {
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -51,10 +53,10 @@ export function MainNav({ items }: MainNavProps) {
         />
       </div>
       
-      {/* Floating theme toggle for all pages - will appear on bottom right of screen */}
-      <div className="fixed bottom-4 right-4 z-50">
-        <ThemeToggle />
-      </div>
+      {/* Add floating theme toggle for profile pages only */}
+      {window.location.pathname.includes('/profile') && (
+        <ThemeToggle floating={true} />
+      )}
     </div>
   );
 }
