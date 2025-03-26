@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { User } from '@/types/auth';
 
 export interface UseProtectedRouteOptions {
   redirectTo?: string;
@@ -16,7 +15,7 @@ export interface UseProtectedRouteOptions {
 export interface ProtectedRouteResult {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: User | null;
+  user: any | null;
   error?: Error;
 }
 
@@ -32,7 +31,7 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}): Prote
     }
   } = options;
   
-  const { user, loading, error } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -51,6 +50,6 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}): Prote
     isAuthenticated: !!user,
     isLoading: loading,
     user,
-    error
+    error: undefined
   };
 };
