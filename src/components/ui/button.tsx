@@ -42,7 +42,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <div className="flex items-center justify-center gap-2 relative z-10">
           {children}
         </div>
-        <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer dark:bg-white bg-gray-800 text-left"></span>
+        <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer dark:bg-white bg-gray-800 text-left scale-105">
+          {/* Enlarged content by 5% using scale-105 */}
+        </span>
       </Comp>
     );
   }
