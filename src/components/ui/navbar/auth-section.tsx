@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
 import {
   DropdownMenu,
@@ -44,8 +44,6 @@ const AuthSection = ({ user }: AuthSectionProps) => {
         </div>
         <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer bg-white"></span>
       </Link>
-      
-      <ModeToggle />
       
       {/* Auth Buttons */}
       {!user ? (

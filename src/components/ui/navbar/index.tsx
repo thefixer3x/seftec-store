@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MainNavItem } from "@/types";
 import { useAuth } from "@/context/AuthContext";
 import Logo from "./logo";
@@ -35,6 +35,29 @@ export function MainNav({ items }: MainNavProps) {
     document.body.style.overflow = '';
   };
   
+  // Check if current path is a profile page
+  const [isProfilePage, setIsProfilePage] = useState(false);
+  
+  useEffect(() => {
+    const checkPathAndUpdateState = () => {
+      setIsProfilePage(window.location.pathname.includes('/profile'));
+    };
+    
+    // Check on initial load
+    checkPathAndUpdateState();
+    
+    // Set up a listener for path changes if using client-side routing
+    const handleRouteChange = () => {
+      checkPathAndUpdateState();
+    };
+    
+    window.addEventListener('popstate', handleRouteChange);
+    
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
+  
   return (
     <div className="w-full bg-white dark:bg-seftec-darkNavy py-3 border-b border-gray-100 dark:border-gray-800 fixed top-0 left-0 right-0 z-50">
       <div className="container mx-auto flex items-center justify-between px-4">
@@ -53,8 +76,8 @@ export function MainNav({ items }: MainNavProps) {
         />
       </div>
       
-      {/* Add floating theme toggle for profile pages only */}
-      {window.location.pathname.includes('/profile') && (
+      {/* Add floating theme toggle for profile pages only when not in mobile view */}
+      {isProfilePage && !isMobile && (
         <ThemeToggle floating={true} />
       )}
     </div>
