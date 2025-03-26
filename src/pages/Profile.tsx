@@ -5,14 +5,19 @@ import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useResponsive } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
-const Profile = () => {
+interface ProfileProps {
+  defaultPath?: string;
+}
+
+const Profile: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashboard' }) => {
   const location = useLocation();
   const { isMobile } = useResponsive();
   
   // If at /profile root, redirect to /profile/dashboard
   if (location.pathname === '/profile') {
-    return <Navigate to="/profile/dashboard" replace />;
+    return <Navigate to={defaultPath} replace />;
   }
 
   const loadingComponent = (
@@ -26,7 +31,9 @@ const Profile = () => {
       <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
         <DashboardSidebar />
         <div className="p-4 md:p-6 flex-1 overflow-auto bg-white dark:bg-seftec-darkNavy">
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </div>
         
         {/* Add floating theme toggle only for mobile view in profile section */}

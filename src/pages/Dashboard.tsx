@@ -1,12 +1,16 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
-const Dashboard = () => {
+interface DashboardProps {
+  title?: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ title = "Dashboard" }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -33,14 +37,16 @@ const Dashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-8">
-        Welcome to your personalized dashboard. View your insights, analytics, and quick actions.
-      </p>
-      
-      <DashboardHighlights />
-    </div>
+    <ErrorBoundary>
+      <div className="container mx-auto px-4 py-10">
+        <h1 className="text-3xl font-bold mb-2">{title}</h1>
+        <p className="text-gray-600 dark:text-gray-400 mb-8">
+          Welcome to your personalized dashboard. View your insights, analytics, and quick actions.
+        </p>
+        
+        <DashboardHighlights />
+      </div>
+    </ErrorBoundary>
   );
 };
 
