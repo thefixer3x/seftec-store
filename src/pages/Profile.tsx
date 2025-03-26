@@ -3,11 +3,11 @@ import React from 'react';
 import { useLocation, Outlet, Navigate } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useResponsive } from '@/hooks/use-mobile';
 
 const Profile = () => {
   const location = useLocation();
-  const isMobile = useIsMobile();
+  const { isMobile } = useResponsive();
   
   // If at /profile root, redirect to /profile/dashboard
   if (location.pathname === '/profile') {
