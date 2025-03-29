@@ -17,11 +17,12 @@ import InvoicesPage from '@/pages/InvoicesPage';
 import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
 import { ProfileSettings } from '@/components/account/ProfileSettings';
-import { PasswordSettings } from '@/components/account/PasswordSettings';
-import { PinSettings } from '@/components/account/PinSettings'; 
-import { NotificationSettings } from '@/components/account/NotificationSettings';
-import { BankAccountSettings } from '@/components/account/BankAccountSettings';
-import { AccountSubscription } from '@/components/account/AccountSubscription';
+// Fix the imports by using default imports instead of named imports
+import PasswordSettings from '@/components/account/PasswordSettings';
+import PinSettings from '@/components/account/PinSettings'; 
+import NotificationSettings from '@/components/account/NotificationSettings';
+import BankAccountSettings from '@/components/account/BankAccountSettings';
+import AccountSubscription from '@/components/account/AccountSubscription';
 
 export const profileRoutes = (
   <>
