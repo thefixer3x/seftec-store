@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -40,7 +41,7 @@ export const useUserPreferences = () => {
         
       if (error) throw error;
       
-      setPreferences(data);
+      setPreferences(data as UserPreferences);
     } catch (err) {
       console.error('Error fetching user preferences:', err);
       setError(err instanceof Error ? err : new Error('Unknown error occurred'));
