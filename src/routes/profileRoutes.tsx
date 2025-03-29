@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
