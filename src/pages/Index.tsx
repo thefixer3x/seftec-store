@@ -9,7 +9,7 @@ import AdvantagesSection from "@/components/sections/AdvantagesSection";
 import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
-import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
+import PersonalizedAIAdvisorSection from "@/components/sections/PersonalizedAIAdvisorSection";
 import BusinessCounterSection from "@/components/sections/BusinessCounterSection";
 import PaymentSection from "@/components/sections/PaymentSection";
 import { Toaster } from "@/components/ui/toaster";
@@ -68,7 +68,7 @@ const Index = () => {
       {/* Main content sections */}
       <ProblemsSection />
       <FeaturesSection />
-      <AIAdvisorSection />
+      <PersonalizedAIAdvisorSection />
       
       {/* Side-by-side sections on desktop, stacked on mobile */}
       <div className="py-12">
