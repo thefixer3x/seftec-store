@@ -48,7 +48,7 @@ const App = () => {
             <Route path="/value-propositions" element={<ValuePropositions />} />
             <Route path="/value-propositions/bizgenie" element={<BizGenie />} />
             
-            {/* Profile routes - imported from profileRoutes.tsx */}
+            {/* Include both account and profile routes */}
             {profileRoutes}
             
             {/* Catch-all route */}
