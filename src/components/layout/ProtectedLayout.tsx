@@ -1,10 +1,10 @@
 
 import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useProtectedRoute } from '@/hooks/use-protected-route';
 
-interface ProtectedLayoutProps {
-  children: ReactNode;
+export interface ProtectedLayoutProps {
+  children?: ReactNode;
   redirectTo?: string;
   loadingComponent?: ReactNode;
 }
@@ -35,5 +35,5 @@ export const ProtectedLayout = ({
   // We return null during loading because the redirect happens in the hook
   if (!isAuthenticated) return null;
 
-  return <>{children}</>;
+  return children ? <>{children}</> : <Outlet />;
 };

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ProtectedLayout } from './ProtectedLayout';
@@ -8,12 +8,13 @@ import AccountSidebar from '@/components/account/AccountSidebar';
 interface AccountPageLayoutProps {
   title: string;
   description: string;
+  children?: ReactNode;
 }
 
 /**
  * Layout for account-related pages with consistent sidebar and auth check
  */
-const AccountPageLayout = ({ title, description }: AccountPageLayoutProps) => {
+const AccountPageLayout = ({ title, description, children }: AccountPageLayoutProps) => {
   const isMobile = useIsMobile();
 
   const loadingComponent = (
@@ -39,7 +40,7 @@ const AccountPageLayout = ({ title, description }: AccountPageLayoutProps) => {
             <AccountSidebar />
           </div>
           <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-3'}`}>
-            <Outlet />
+            {children || <Outlet />}
           </div>
         </div>
       </div>
