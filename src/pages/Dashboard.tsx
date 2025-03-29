@@ -11,19 +11,19 @@ interface DashboardProps {
 
 const DashboardContent: React.FC<DashboardProps> = ({ title = "Dashboard" }) => {
   return (
-    <div className="container mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-2">{title}</h1>
-      <p className="text-gray-600 dark:text-gray-400 mb-8">
+    <div className="container mx-auto px-4 py-6 md:py-10">
+      <h1 className="text-2xl md:text-3xl font-bold mb-2">{title}</h1>
+      <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-6 md:mb-8">
         Welcome to your personalized dashboard. View your insights, analytics, and quick actions.
       </p>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-4 md:gap-6 mb-6 md:mb-8">
+        <div className="w-full">
           <ErrorBoundary>
             <DashboardHighlights />
           </ErrorBoundary>
         </div>
-        <div className="lg:col-span-1">
+        <div className="w-full">
           <ErrorBoundary>
             <PersonalizedAIChat />
           </ErrorBoundary>
@@ -39,7 +39,7 @@ const Dashboard = withErrorBoundary(DashboardContent, {
     console.error("Dashboard error:", error, errorInfo);
   },
   fallback: (
-    <div className="container mx-auto px-4 py-10">
+    <div className="container mx-auto px-4 py-6 md:py-10">
       <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-lg p-4">
         <h2 className="text-xl font-semibold text-red-700 dark:text-red-400">Dashboard Error</h2>
         <p className="text-red-600 dark:text-red-300 mt-2">
