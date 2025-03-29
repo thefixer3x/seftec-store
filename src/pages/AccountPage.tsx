@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import { withErrorBoundary } from '@/components/ui/error-boundary';
 import AccountSidebar from '@/components/account/AccountSidebar';
 
@@ -13,10 +14,7 @@ const AccountPageContent = () => {
         </div>
         <div className="md:col-span-3">
           <div className="bg-white dark:bg-seftec-darkNavy/30 p-6 rounded-lg shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              Please select an option from the sidebar to manage your account settings.
-            </p>
+            <Outlet />
           </div>
         </div>
       </div>

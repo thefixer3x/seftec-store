@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
@@ -15,6 +16,12 @@ import MarketplacePage from '@/pages/MarketplacePage';
 import InvoicesPage from '@/pages/InvoicesPage';
 import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
+import { ProfileSettings } from '@/components/account/ProfileSettings';
+import { PasswordSettings } from '@/components/account/PasswordSettings';
+import { PinSettings } from '@/components/account/PinSettings'; 
+import { NotificationSettings } from '@/components/account/NotificationSettings';
+import { BankAccountSettings } from '@/components/account/BankAccountSettings';
+import { AccountSubscription } from '@/components/account/AccountSubscription';
 
 export const profileRoutes = (
   <>
@@ -31,7 +38,17 @@ export const profileRoutes = (
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="wallet" element={<WalletPage />} />
       <Route path="settings" element={<SettingsPage />} />
-      <Route path="account" element={<AccountPage />} />
+      
+      {/* Account settings nested routes */}
+      <Route path="account" element={<AccountPage />}>
+        <Route index element={<ProfileSettings />} />
+        <Route path="password" element={<PasswordSettings />} />
+        <Route path="pin" element={<PinSettings />} />
+        <Route path="notifications" element={<NotificationSettings />} />
+        <Route path="bank" element={<BankAccountSettings />} />
+        <Route path="subscription" element={<AccountSubscription />} />
+      </Route>
+      
       <Route path="inventory" element={<InventoryPage />} />
       <Route path="bill-payment" element={<BillPaymentPage />} />
       <Route path="trade-finance" element={<TradeFinancePage />} />

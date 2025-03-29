@@ -1,43 +1,15 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import React from 'react';
+import { withErrorBoundary } from '@/components/ui/error-boundary';
 import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
 import PersonalizedAIChat from '@/components/ai/PersonalizedAIChat';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
-import { withErrorBoundary } from '@/components/ui/error-boundary';
 
 interface DashboardProps {
   title?: string;
 }
 
 const DashboardContent: React.FC<DashboardProps> = ({ title = "Dashboard" }) => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/login');
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to access your dashboard",
-        variant: "destructive",
-      });
-    }
-  }, [user, loading, navigate, toast]);
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-10 flex justify-center items-center min-h-[50vh]">
-        <div className="animate-pulse text-lg">Loading dashboard...</div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
   return (
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-2">{title}</h1>
