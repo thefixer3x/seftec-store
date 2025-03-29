@@ -488,6 +488,51 @@ export type Database = {
           },
         ]
       }
+      user_preferences: {
+        Row: {
+          business_size: string | null
+          created_at: string
+          id: string
+          industry_focus: string[] | null
+          payment_methods: string[] | null
+          preferred_currencies: string[] | null
+          regions_of_interest: string[] | null
+          risk_tolerance: string | null
+          trade_frequency: string | null
+          trade_volume: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_size?: string | null
+          created_at?: string
+          id?: string
+          industry_focus?: string[] | null
+          payment_methods?: string[] | null
+          preferred_currencies?: string[] | null
+          regions_of_interest?: string[] | null
+          risk_tolerance?: string | null
+          trade_frequency?: string | null
+          trade_volume?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_size?: string | null
+          created_at?: string
+          id?: string
+          industry_focus?: string[] | null
+          payment_methods?: string[] | null
+          preferred_currencies?: string[] | null
+          regions_of_interest?: string[] | null
+          risk_tolerance?: string | null
+          trade_frequency?: string | null
+          trade_volume?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
