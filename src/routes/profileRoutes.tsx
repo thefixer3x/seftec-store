@@ -5,6 +5,17 @@ import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import AccountProfile from '@/pages/AccountPreferences';
 import Profile from '@/pages/Profile';
 import Dashboard from '@/pages/Dashboard';
+import WalletPage from '@/pages/WalletPage';
+import SettingsPage from '@/pages/SettingsPage';
+import AccountPage from '@/pages/AccountPage';
+import InventoryPage from '@/pages/InventoryPage';
+import BillPaymentPage from '@/pages/BillPaymentPage';
+import TradeFinancePage from '@/pages/TradeFinancePage';
+import StoresPage from '@/pages/StoresPage';
+import MarketplacePage from '@/pages/MarketplacePage';
+import InvoicesPage from '@/pages/InvoicesPage';
+import CustomersPage from '@/pages/CustomersPage';
+import TransactionPage from '@/pages/TransactionPage';
 
 export const profileRoutes = (
   <>
@@ -19,6 +30,17 @@ export const profileRoutes = (
     <Route path="/profile" element={<Profile />}>
       <Route index element={<Navigate to="/profile/dashboard" />} />
       <Route path="dashboard" element={<Dashboard />} />
+      <Route path="wallet" element={<WalletPage />} />
+      <Route path="settings" element={<SettingsPage />} />
+      <Route path="account" element={<AccountPage />} />
+      <Route path="inventory" element={<InventoryPage />} />
+      <Route path="bill-payment" element={<BillPaymentPage />} />
+      <Route path="trade-finance" element={<TradeFinancePage />} />
+      <Route path="stores" element={<StoresPage />} />
+      <Route path="marketplace" element={<MarketplacePage />} />
+      <Route path="invoices" element={<InvoicesPage />} />
+      <Route path="customers" element={<CustomersPage />} />
+      <Route path="transaction" element={<TransactionPage />} />
     </Route>
   </>
 );
