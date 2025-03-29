@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
+import PersonalizedAIChat from '@/components/ai/PersonalizedAIChat';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { withErrorBoundary } from '@/components/ui/error-boundary';
 
@@ -44,9 +45,18 @@ const DashboardContent: React.FC<DashboardProps> = ({ title = "Dashboard" }) => 
         Welcome to your personalized dashboard. View your insights, analytics, and quick actions.
       </p>
       
-      <ErrorBoundary>
-        <DashboardHighlights />
-      </ErrorBoundary>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="lg:col-span-2">
+          <ErrorBoundary>
+            <DashboardHighlights />
+          </ErrorBoundary>
+        </div>
+        <div className="lg:col-span-1">
+          <ErrorBoundary>
+            <PersonalizedAIChat />
+          </ErrorBoundary>
+        </div>
+      </div>
     </div>
   );
 };

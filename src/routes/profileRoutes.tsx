@@ -8,14 +8,14 @@ import Dashboard from '@/pages/Dashboard';
 
 export const profileRoutes = (
   <>
-    {/* Profile section routes */}
+    {/* Account section routes - for settings and preferences */}
     <Route path="/account" element={<ProtectedLayout />}>
       <Route index element={<Navigate to="/account/profile" />} />
       <Route path="profile" element={<AccountProfile />} />
       <Route path="preferences" element={<AccountProfile />} />
     </Route>
     
-    {/* Dashboard & related routes */}
+    {/* Profile section routes - for dashboard and other user-specific content */}
     <Route path="/profile" element={<Profile />}>
       <Route index element={<Navigate to="/profile/dashboard" />} />
       <Route path="dashboard" element={<Dashboard />} />
