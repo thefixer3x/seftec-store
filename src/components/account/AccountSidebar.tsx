@@ -12,6 +12,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Card } from '@/components/ui/card';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const AccountSidebar = () => {
   const location = useLocation();
@@ -53,11 +54,37 @@ const AccountSidebar = () => {
 
   return (
     <Card className="shadow-sm bg-white dark:bg-seftec-darkNavy/30 overflow-hidden">
-      <div className="p-0">
-        <nav className={cn(
-          "flex md:flex-col",
-          isMobile ? "overflow-x-auto" : ""
-        )}>
+      {isMobile ? (
+        <ScrollArea className="w-full">
+          <div className="flex overflow-x-auto py-1">
+            {navItems.map((item) => {
+              const isActive = item.exact 
+                ? location.pathname === item.path
+                : location.pathname.startsWith(item.path);
+                
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.exact}
+                  className={cn(
+                    "flex flex-col items-center min-w-[100px] py-3 px-2 text-xs transition-colors border-b-4",
+                    isActive 
+                      ? "border-b-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-b-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white"
+                      : "border-transparent text-seftec-navy/70 hover:bg-seftec-slate/30 hover:text-seftec-navy dark:text-white/70 dark:hover:bg-seftec-darkNavy/20 dark:hover:text-white"
+                  )}
+                >
+                  <item.icon className={cn(
+                    "h-5 w-5 mb-1 text-seftec-gold dark:text-seftec-teal"
+                  )} />
+                  <span className="text-center">{item.title}</span>
+                </NavLink>
+              );
+            })}
+          </div>
+        </ScrollArea>
+      ) : (
+        <nav className="flex flex-col">
           {navItems.map((item) => {
             const isActive = item.exact 
               ? location.pathname === item.path
@@ -69,30 +96,19 @@ const AccountSidebar = () => {
                 to={item.path}
                 end={item.exact}
                 className={cn(
-                  "flex items-center gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3 text-xs md:text-sm transition-colors",
-                  isMobile
-                    ? "min-w-[100px] justify-center md:justify-start border-b-4 md:border-b-0 md:border-l-4"
-                    : "border-l-4",
+                  "flex items-center gap-3 px-4 py-3 text-sm transition-colors border-l-4",
                   isActive 
-                    ? isMobile
-                      ? "border-b-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-b-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white md:border-b-0 md:border-l-seftec-gold dark:md:border-l-seftec-teal" 
-                      : "border-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white"
+                    ? "border-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white"
                     : "border-transparent text-seftec-navy/70 hover:bg-seftec-slate/30 hover:text-seftec-navy dark:text-white/70 dark:hover:bg-seftec-darkNavy/20 dark:hover:text-white"
                 )}
               >
-                <item.icon className={cn(
-                  "h-4 w-4",
-                  isMobile ? "mr-0 md:mr-3" : "mr-3",
-                  "text-seftec-gold dark:text-seftec-teal"
-                )} />
-                <span className={cn(
-                  isMobile ? "hidden md:inline" : ""
-                )}>{item.title}</span>
+                <item.icon className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+                <span>{item.title}</span>
               </NavLink>
             );
           })}
         </nav>
-      </div>
+      )}
     </Card>
   );
 };
