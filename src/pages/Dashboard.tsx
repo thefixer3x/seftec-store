@@ -18,16 +18,13 @@ const DashboardContent: React.FC<DashboardProps> = ({ title = "Dashboard" }) => 
       </p>
       
       <div className="grid grid-cols-1 gap-4 md:gap-6 mb-6 md:mb-8">
-        <div className="w-full">
-          <ErrorBoundary>
-            <DashboardHighlights />
-          </ErrorBoundary>
-        </div>
-        <div className="w-full">
-          <ErrorBoundary>
-            <PersonalizedAIChat />
-          </ErrorBoundary>
-        </div>
+        <ErrorBoundary>
+          <DashboardHighlights />
+        </ErrorBoundary>
+        
+        <ErrorBoundary>
+          <PersonalizedAIChat />
+        </ErrorBoundary>
       </div>
     </div>
   );
