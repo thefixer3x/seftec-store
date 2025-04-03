@@ -1,161 +1,90 @@
 
 import React from 'react';
-import { Lightbulb, BrainCircuit, Globe, TrendingUp } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AIFeaturesList } from '@/components/ai/AIFeaturesList';
+import { Link } from 'react-router-dom';
+import { Sparkle } from 'lucide-react';
 
-interface FeatureProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-const Feature: React.FC<FeatureProps> = ({ icon, title, description }) => {
+const PersonalizedAIAdvisorSection = () => {
+  const { user } = useAuth();
+  
   return (
-    <div className="bg-seftec-slate dark:bg-seftec-darkNavy border border-seftec-navy/10 dark:border-white/10 rounded-lg p-6 transition-all hover:shadow-md">
-      <div className="flex items-start gap-4">
-        <div className="mt-1 flex-shrink-0">
-          {icon}
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold mb-2 text-seftec-navy dark:text-white">{title}</h3>
-          <p className="text-seftec-navy/70 dark:text-white/70">{description}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PersonalizedAIAdvisorSection: React.FC = () => {
-  return (
-    <section id="ai-advisor" className="py-20 bg-white dark:bg-seftec-darkNavy/50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-12 reveal">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-seftec-navy dark:text-white">
-            <span className="flex items-center justify-center gap-2">
-              <BrainCircuit className="h-8 w-8 text-seftec-gold dark:text-seftec-teal" />
-              <span>AI-Powered Business Advisor</span>
-            </span>
-          </h2>
-          <p className="text-lg text-seftec-navy/70 dark:text-white/70 max-w-3xl mx-auto">
-            Our AI assistant provides personalized insights and recommendations tailored to your business needs, trade patterns, and preferences.
+    <section id="ai-advisor" className="py-16 md:py-24 bg-gradient-to-b from-white to-seftec-slate/30 dark:from-seftec-darkNavy dark:to-seftec-darkNavy/95">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90 mb-4">
+            <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+            AI-Powered Insights
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold text-seftec-navy dark:text-white mb-4">Meet Your Personal AI Business Advisor</h2>
+          <p className="text-lg text-seftec-navy/70 dark:text-white/70 max-w-2xl mx-auto">
+            Get personalized recommendations, market insights, and business analysis from our advanced AI.
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 reveal">
-          {/* AI Chat Demo Interface - using the design from the provided image */}
-          <div className="lg:col-span-2">
-            <Card className="h-full overflow-hidden border-0 shadow-lg">
-              <CardContent className="p-0 h-full">
-                {/* Header */}
-                <div className="bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple p-4 text-white flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <BrainCircuit className="h-5 w-5" />
-                    <h3 className="font-medium">BizGenie AI Assistant</h3>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs">Notifications</span>
-                      <div className="h-5 w-10 rounded-full bg-teal-400/30 p-0.5">
-                        <div className="h-4 w-4 rounded-full bg-white"></div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs">Premium</span>
-                      <div className="h-5 w-10 rounded-full bg-gray-700 p-0.5">
-                        <div className="h-4 w-4 rounded-full bg-white ml-0"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Market Insight */}
-                <div className="p-4 bg-seftec-darkNavy text-white">
-                  <div className="flex items-center gap-2 mb-1">
-                    <TrendingUp className="h-4 w-4" />
-                    <h4 className="font-medium">Live Market Insight</h4>
-                  </div>
-                  <p className="text-sm text-white/80">
-                    Commodity prices for aluminum decreased 3.2%. Potential savings opportunity for manufacturers.
-                  </p>
-                </div>
-                
-                {/* Chat Area */}
-                <div className="bg-seftec-darkNavy/90 p-6 text-white min-h-[120px] flex items-center justify-center">
-                  <p className="text-white/70 italic">
-                    Ask a question about your business finances, market trends, or strategic opportunities...
-                  </p>
-                </div>
-                
-                {/* Controls */}
-                <div className="p-4 bg-seftec-darkNavy/80 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="h-5 w-10 rounded-full bg-teal-400/30 p-0.5">
-                        <div className="h-4 w-4 rounded-full bg-white ml-5"></div>
-                      </div>
-                      <span className="text-xs text-white/70">Allow BizGenie to learn from my queries</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="h-5 w-5 rounded bg-gray-700/50">
-                        <TrendingUp className="h-4 w-4 text-white/70 m-0.5" />
-                      </div>
-                      <span className="text-xs text-white/70">Generate Report</span>
-                    </div>
-                  </div>
-                  
-                  {/* Input */}
-                  <div className="bg-seftec-darkNavy/90 rounded px-4 py-3 text-white/50">
-                    e.g., How can I improve my company's cash flow?
-                  </div>
-                  
-                  {/* Button */}
-                  <button className="w-full bg-gradient-to-r from-teal-400 to-blue-500 text-white py-2 rounded">
-                    Ask BizGenie
-                  </button>
-                  
-                  <p className="text-xs text-center text-white/50">
-                    Your data is analyzed securely using enterprise-grade encryption
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Alert className="mt-4 bg-white/5 backdrop-blur-sm border-seftec-teal/30">
-              <AlertCircle className="h-4 w-4 text-seftec-teal" />
-              <AlertDescription className="flex justify-between items-center">
-                <span>Sign in to unlock premium features, personalized insights, and save your conversation history.</span>
-                <Link to="/login">
-                  <Button size="sm" className="ml-4 bg-seftec-teal hover:bg-seftec-teal/90">
-                    Sign In
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="order-2 lg:order-1">
+            <AIFeaturesList />
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              {user ? (
+                <Link to="/profile/dashboard">
+                  <Button size="lg" className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white">
+                    Access Your AI Advisor
                   </Button>
                 </Link>
-              </AlertDescription>
-            </Alert>
+              ) : (
+                <Link to="/login">
+                  <Button size="lg" className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white">
+                    Sign In To Access AI
+                  </Button>
+                </Link>
+              )}
+              <Link to="/value-propositions/bizgenie">
+                <Button variant="outline" size="lg" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10">
+                  Learn More
+                </Button>
+              </Link>
+            </div>
           </div>
-          
-          {/* AI Features */}
-          <div className="space-y-4">
-            <Feature 
-              icon={<Globe className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />}
-              title="Global Market Insights"
-              description="Get real-time insights on markets worldwide with localized trade regulations and opportunities."
-            />
+
+          <div className="order-1 lg:order-2 bg-white dark:bg-seftec-darkNavy/50 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-800 max-w-md mx-auto lg:mx-0 lg:ml-auto relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-seftec-gold/20 to-seftec-purple/20 dark:from-seftec-teal/20 dark:to-seftec-purple/20 rounded-full blur-xl"></div>
             
-            <Feature 
-              icon={<TrendingUp className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />}
-              title="Personalized Recommendations"
-              description="Receive tailored suggestions based on your business profile, past transactions, and preferences."
-            />
-            
-            <Feature 
-              icon={<Lightbulb className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />}
-              title="Smart Risk Assessment"
-              description="AI analyzes potential risks in transactions and suggests safer alternatives based on your risk tolerance."
-            />
+            <div className="relative z-10">
+              <div className="flex items-start gap-3 mb-6">
+                <div className="bg-seftec-gold/20 dark:bg-seftec-teal/20 p-2 rounded-full">
+                  <Sparkle className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-lg mb-1 text-seftec-navy dark:text-white">Business AI Assistant</h3>
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">Available 24/7 for personalized business advice</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-seftec-slate/50 dark:bg-white/5 p-3 rounded-lg rounded-tl-none max-w-xs">
+                  <p className="text-sm text-seftec-navy dark:text-white/90">How can BizGenie AI help my business today?</p>
+                </div>
+                
+                <div className="bg-seftec-navy/5 dark:bg-white/10 p-3 rounded-lg rounded-tr-none ml-auto max-w-xs">
+                  <p className="text-sm text-seftec-navy dark:text-white/90">
+                    I can analyze your financial data, recommend cost-saving opportunities, and identify potential growth areas based on market trends.
+                  </p>
+                </div>
+
+                <div className="p-3 border border-dashed border-seftec-navy/30 dark:border-white/20 rounded-lg text-center">
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                    {user ? "Access your personalized insights in your dashboard" : "Sign in to get personalized business insights"}
+                  </p>
+                  {!user && (
+                    <Link to="/login" className="inline-block mt-2">
+                      <Button size="sm" variant="secondary">Sign In Now</Button>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
