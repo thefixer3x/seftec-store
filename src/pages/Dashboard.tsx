@@ -4,12 +4,15 @@ import { withErrorBoundary } from '@/components/ui/error-boundary';
 import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
 import PersonalizedAIChat from '@/components/ai/PersonalizedAIChat';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardProps {
   title?: string;
 }
 
 const DashboardContent: React.FC<DashboardProps> = ({ title = "Dashboard" }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="container mx-auto px-4 py-6 md:py-10">
       <h1 className="text-2xl md:text-3xl font-bold mb-2">{title}</h1>

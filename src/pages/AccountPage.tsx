@@ -10,9 +10,9 @@ const AccountPageContent = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 md:py-10">
-      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8">Account</h1>
+      <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Account</h1>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
-        <div className={`${isMobile ? "mb-4" : "md:col-span-1"} mb-4 md:mb-0`}>
+        <div className={`${isMobile ? "col-span-1" : "md:col-span-1"} mb-4 md:mb-0`}>
           <AccountSidebar />
         </div>
         <div className={`${isMobile ? "col-span-1" : "md:col-span-3"}`}>

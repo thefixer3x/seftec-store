@@ -57,7 +57,7 @@ const DashboardSidebar = () => {
           <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
         </div>
       </div>
-      <ScrollArea className="flex-grow px-3">
+      <ScrollArea className="flex-grow px-3 h-[calc(100vh-120px)]">
         <nav className="space-y-1">
           {sidebarItems.map((item) => {
             const isActive = currentPath === item.path || 
@@ -120,7 +120,7 @@ const DashboardSidebar = () => {
         <div className="font-semibold text-seftec-navy dark:text-white">Dashboard</div>
         <ThemeToggle />
       </div>
-      <ScrollArea className="flex-grow">
+      <ScrollArea className="flex-grow h-[calc(100vh-56px)]">
         <SidebarContent />
       </ScrollArea>
     </div>

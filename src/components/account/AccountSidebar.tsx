@@ -56,7 +56,7 @@ const AccountSidebar = () => {
     <Card className="shadow-sm bg-white dark:bg-seftec-darkNavy/30 overflow-hidden">
       {isMobile ? (
         <ScrollArea className="w-full">
-          <div className="flex overflow-x-auto py-1">
+          <div className="flex overflow-x-auto py-1 px-1">
             {navItems.map((item) => {
               const isActive = item.exact 
                 ? location.pathname === item.path
@@ -77,37 +77,39 @@ const AccountSidebar = () => {
                   <item.icon className={cn(
                     "h-5 w-5 mb-1 text-seftec-gold dark:text-seftec-teal"
                   )} />
-                  <span className="text-center">{item.title}</span>
+                  <span className="text-center whitespace-nowrap">{item.title}</span>
                 </NavLink>
               );
             })}
           </div>
         </ScrollArea>
       ) : (
-        <nav className="flex flex-col">
-          {navItems.map((item) => {
-            const isActive = item.exact 
-              ? location.pathname === item.path
-              : location.pathname.startsWith(item.path);
-              
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                end={item.exact}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 text-sm transition-colors border-l-4",
-                  isActive 
-                    ? "border-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white"
-                    : "border-transparent text-seftec-navy/70 hover:bg-seftec-slate/30 hover:text-seftec-navy dark:text-white/70 dark:hover:bg-seftec-darkNavy/20 dark:hover:text-white"
-                )}
-              >
-                <item.icon className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
-                <span>{item.title}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
+        <ScrollArea className="max-h-[calc(100vh-200px)]">
+          <nav className="flex flex-col py-2">
+            {navItems.map((item) => {
+              const isActive = item.exact 
+                ? location.pathname === item.path
+                : location.pathname.startsWith(item.path);
+                
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.exact}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3 text-sm transition-colors border-l-4",
+                    isActive 
+                      ? "border-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white"
+                      : "border-transparent text-seftec-navy/70 hover:bg-seftec-slate/30 hover:text-seftec-navy dark:text-white/70 dark:hover:bg-seftec-darkNavy/20 dark:hover:text-white"
+                  )}
+                >
+                  <item.icon className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+                  <span>{item.title}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
+        </ScrollArea>
       )}
     </Card>
   );
