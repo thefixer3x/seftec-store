@@ -1,1 +1,23 @@
+
 project_id = "ptnrwrgzrsbocgxlpvhd"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+
+[studio]
+port = 54323
+
+[functions]
+[functions.ai-chat]
+verify_jwt = true
+
+[functions.personalized-ai-chat]
+verify_jwt = true
+
+[functions.create-notification]
+verify_jwt = true
