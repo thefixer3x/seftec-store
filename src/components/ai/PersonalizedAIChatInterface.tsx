@@ -43,18 +43,18 @@ const PersonalizedAIChatInterface: React.FC<PersonalizedAIChatInterfaceProps> = 
     setIsLoading(true);
     
     try {
-      // Call Supabase Edge Function with user's message and user ID
+      // Call Supabase Edge Function with user's message
       const { data, error } = await supabase.functions.invoke(endpoint, {
         body: {
-          message: userMessage,
-          userId: user?.id || null // Pass user ID for personalization
+          prompt: userMessage,
+          generateReport: false
         }
       });
       
       if (error) throw error;
       
       // Add AI response to chat
-      setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
     } catch (error) {
       console.error('Error fetching AI response:', error);
       toast({
