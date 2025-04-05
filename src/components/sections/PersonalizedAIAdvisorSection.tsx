@@ -2,9 +2,10 @@
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { AIFeaturesList } from '@/components/ai/AIFeaturesList';
+import AIFeaturesList from '@/components/ai/AIFeaturesList';
 import { Link } from 'react-router-dom';
 import { Sparkle } from 'lucide-react';
+import AIDemoPromptBox from '@/components/ai/AIDemoPromptBox';
 
 const PersonalizedAIAdvisorSection = () => {
   const { user } = useAuth();
@@ -48,43 +49,8 @@ const PersonalizedAIAdvisorSection = () => {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 bg-white dark:bg-seftec-darkNavy/50 rounded-xl shadow-lg p-6 border border-gray-100 dark:border-gray-800 max-w-md mx-auto lg:mx-0 lg:ml-auto relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-seftec-gold/20 to-seftec-purple/20 dark:from-seftec-teal/20 dark:to-seftec-purple/20 rounded-full blur-xl"></div>
-            
-            <div className="relative z-10">
-              <div className="flex items-start gap-3 mb-6">
-                <div className="bg-seftec-gold/20 dark:bg-seftec-teal/20 p-2 rounded-full">
-                  <Sparkle className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg mb-1 text-seftec-navy dark:text-white">Business AI Assistant</h3>
-                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">Available 24/7 for personalized business advice</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="bg-seftec-slate/50 dark:bg-white/5 p-3 rounded-lg rounded-tl-none max-w-xs">
-                  <p className="text-sm text-seftec-navy dark:text-white/90">How can BizGenie AI help my business today?</p>
-                </div>
-                
-                <div className="bg-seftec-navy/5 dark:bg-white/10 p-3 rounded-lg rounded-tr-none ml-auto max-w-xs">
-                  <p className="text-sm text-seftec-navy dark:text-white/90">
-                    I can analyze your financial data, recommend cost-saving opportunities, and identify potential growth areas based on market trends.
-                  </p>
-                </div>
-
-                <div className="p-3 border border-dashed border-seftec-navy/30 dark:border-white/20 rounded-lg text-center">
-                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
-                    {user ? "Access your personalized insights in your dashboard" : "Sign in to get personalized business insights"}
-                  </p>
-                  {!user && (
-                    <Link to="/login" className="inline-block mt-2">
-                      <Button size="sm" variant="secondary">Sign In Now</Button>
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </div>
+          <div className="order-1 lg:order-2 max-w-md mx-auto lg:mx-0 lg:ml-auto w-full">
+            <AIDemoPromptBox />
           </div>
         </div>
       </div>

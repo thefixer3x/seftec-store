@@ -13,7 +13,9 @@ const AccountPageContent = () => {
       <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Account</h1>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
         <div className={`${isMobile ? "col-span-1" : "md:col-span-1"} mb-4 md:mb-0`}>
-          <AccountSidebar />
+          <div className="h-full">
+            <AccountSidebar />
+          </div>
         </div>
         <div className={`${isMobile ? "col-span-1" : "md:col-span-3"}`}>
           <div className="bg-white dark:bg-seftec-darkNavy/30 p-4 md:p-6 rounded-lg shadow-sm">

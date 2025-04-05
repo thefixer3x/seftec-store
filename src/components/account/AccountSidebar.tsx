@@ -53,7 +53,7 @@ const AccountSidebar = () => {
   ];
 
   return (
-    <Card className="shadow-sm bg-white dark:bg-seftec-darkNavy/30 overflow-hidden">
+    <Card className="shadow-sm bg-white dark:bg-seftec-darkNavy/30 overflow-hidden h-full">
       {isMobile ? (
         <ScrollArea className="w-full">
           <div className="flex overflow-x-auto py-1 px-1">
@@ -84,7 +84,7 @@ const AccountSidebar = () => {
           </div>
         </ScrollArea>
       ) : (
-        <ScrollArea className="max-h-[calc(100vh-200px)]">
+        <ScrollArea className="h-[calc(100vh-200px)]">
           <nav className="flex flex-col py-2">
             {navItems.map((item) => {
               const isActive = item.exact 
