@@ -2,9 +2,9 @@
 import React from 'react';
 import { withErrorBoundary } from '@/components/ui/error-boundary';
 import DashboardHighlights from '@/components/dashboard/DashboardHighlights';
-import PersonalizedAIChat from '@/components/ai/PersonalizedAIChat';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { useIsMobile } from '@/hooks/use-mobile';
+import BizGenieDashboard from '@/components/ai/BizGenieDashboard';
 
 interface DashboardProps {
   title?: string;
@@ -26,7 +26,7 @@ const DashboardContent: React.FC<DashboardProps> = ({ title = "Dashboard" }) => 
         </ErrorBoundary>
         
         <ErrorBoundary>
-          <PersonalizedAIChat />
+          <BizGenieDashboard />
         </ErrorBoundary>
       </div>
     </div>
