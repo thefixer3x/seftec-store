@@ -1,122 +1,118 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { stripIndent } from "https://esm.sh/common-tags@1.8.2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 
-const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+// Get API key from environment variable
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 
+// Update CORS headers to include both the original domain and the new api.seftec.store domain
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*", // Allow requests from any origin
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 serve(async (req) => {
   // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: corsHeaders,
+    });
   }
 
   try {
-    // Validate API key configuration
-    if (!openAIApiKey) {
-      console.error('OpenAI API key is not configured in Supabase secrets');
-      return new Response(JSON.stringify({ 
-        error: 'AI service is not properly configured. Please contact support.' 
-      }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Validate request
-    if (!req.body) {
-      throw new Error('Request body is required');
-    }
-
-    const reqBody = await req.json();
-    const { query, isPremium, generateReport = false } = reqBody;
-
-    if (!query || typeof query !== 'string') {
-      throw new Error('Query parameter must be a non-empty string');
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Get the authorization header from the request
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing Authorization header');
     }
     
-    // Input validation
-    if (query.trim().length === 0) {
-      throw new Error('Query cannot be empty');
-    }
-
-    // Determine system message based on premium status and whether to generate a report
-    let systemMessage = isPremium 
-      ? "You are a premium business AI assistant called BizGenie that provides detailed financial advice and business insights. Always format your responses with clear sections and actionable recommendations. Include specific numbers, percentages, and monetary values when applicable. Reference industry benchmarks and best practices."
-      : "You are a business AI assistant called BizGenie that provides financial advice and business insights. Keep responses concise and practical.";
+    // Set up the client with the auth header
+    const supabaseClient = supabase.auth.setSession({
+      access_token: authHeader.replace('Bearer ', ''),
+      refresh_token: '',
+    });
     
-    // Modify system message for report generation
-    if (generateReport) {
-      systemMessage += " You are now being asked to generate a formal business report. Structure your response as a complete report with executive summary, detailed analysis, recommendations, and conclusion sections. Use markdown formatting for headings, bullet points, and emphasis. Include fictional yet realistic data points and visualizations where appropriate, described in markdown format.";
+    // Get the request body
+    const { prompt } = await req.json();
+    
+    if (!prompt) {
+      throw new Error("Missing required field: prompt");
     }
-
-    console.log(`Processing ${isPremium ? 'premium' : 'standard'} ${generateReport ? 'report' : 'query'}: ${query.substring(0, 50)}...`);
-
-    // Call OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    
+    // Get OpenAI response
+    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: isPremium ? 'gpt-4o' : 'gpt-4o-mini',
+        model: "gpt-4o-mini",
         messages: [
-          { role: 'system', content: systemMessage },
-          { role: 'user', content: query }
+          {
+            role: "system",
+            content: stripIndent`
+              You are BizGenie, an AI business advisor embedded within the SefTec platform.
+              Your primary role is to provide advice, insights, and recommendations on business strategies, market trends, and financial decisions.
+              
+              When providing responses:
+              - Be professional, concise, and direct in your advice
+              - Focus on actionable insights rather than generalities
+              - When appropriate, reference business metrics, trends, or data points
+              - Tailor your advice to the context of international trade and business finance when relevant
+              - Use bullet points for clarity when listing multiple recommendations
+              
+              If you don't know something, acknowledge it and suggest how the user might find that information.
+            `,
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
         ],
-        max_tokens: generateReport ? 1500 : (isPremium ? 500 : 200),
-        temperature: generateReport ? 0.5 : 0.7,
+        temperature: 0.7,
       }),
     });
-
-    // Handle non-200 responses from OpenAI
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('OpenAI API error response:', errorData);
-      
-      // Check for common API key issues
-      if (errorData.error?.message?.includes('API key')) {
-        return new Response(JSON.stringify({ 
-          error: 'AI service authentication failed. The system administrator needs to check the OpenAI API key configuration.' 
-        }), {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-      
-      throw new Error(errorData.error?.message || `Error from OpenAI API: ${response.status}`);
-    }
-
-    const data = await response.json();
     
-    // Validate response structure
-    if (!data || !data.choices || !data.choices[0]?.message?.content) {
-      console.error('Unexpected OpenAI API response structure:', data);
-      throw new Error('Invalid response from AI service');
+    if (!openaiResponse.ok) {
+      const errorData = await openaiResponse.json();
+      console.error("OpenAI API error:", errorData);
+      throw new Error(`OpenAI API error: ${errorData.error?.message || "Unknown error"}`);
     }
-
+    
+    const data = await openaiResponse.json();
     const aiResponse = data.choices[0].message.content;
-    console.log('Response generated successfully');
-
-    return new Response(JSON.stringify({ 
-      response: aiResponse,
-      isReport: generateReport
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    
+    // Return the response
+    return new Response(
+      JSON.stringify({ text: aiResponse }),
+      {
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json" 
+        },
+      }
+    );
   } catch (error) {
-    console.error('Error in ai-chat function:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message || 'An unknown error occurred',
-      timestamp: new Date().toISOString()
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error("Error in ai-chat function:", error);
+    
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      {
+        status: 500,
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json" 
+        },
+      }
+    );
   }
 });

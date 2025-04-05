@@ -1,133 +1,189 @@
 
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import { stripIndent } from "https://esm.sh/common-tags@1.8.2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 
-interface RequestBody {
-  message: string;
-  userId?: string | null;
-}
+// Get API key from environment variable
+const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
+// Update CORS headers to include both the original domain and the new api.seftec.store domain
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*", // Allow requests from any origin
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 serve(async (req) => {
-  // Handle CORS preflight request
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: corsHeaders,
+    });
   }
 
   try {
-    // Get request body
-    const body: RequestBody = await req.json();
-    const { message, userId } = body;
-
-    if (!message) {
-      return new Response(
-        JSON.stringify({ error: 'Message is required' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-      );
-    }
-
-    // Create Supabase client
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
-    let userContext = '';
-    
-    // If userId exists, fetch user preferences for personalization
-    if (userId) {
-      try {
-        // Get user preferences
-        const { data: preferencesData, error: preferencesError } = await supabaseClient
-          .from('user_preferences')
-          .select('*')
-          .eq('user_id', userId)
-          .single();
-
-        if (preferencesError) throw preferencesError;
-
-        // Get user profile data
-        const { data: profileData, error: profileError } = await supabaseClient
-          .from('profiles')
-          .select('*')
-          .eq('id', userId)
-          .single();
-
-        if (profileError) throw profileError;
-
-        // Get recent transactions if they exist
-        const { data: transactionsData, error: transactionsError } = await supabaseClient
-          .from('transactions')
-          .select('*')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false })
-          .limit(5);
-
-        // Build user context string
-        userContext = `
-User Preferences: ${JSON.stringify(preferencesData || {})}
-User Profile: ${JSON.stringify(profileData || {})}
-Recent Transactions: ${JSON.stringify(transactionsData || [])}
-`;
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        // Continue without user data if there's an error
-        userContext = 'No user data available.';
+    // Create supabase admin client for fetching user data
+    const supabaseAdmin = createClient(
+      SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
       }
+    );
+    
+    // Create supabase client with user's JWT
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Get the authorization header from the request
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing Authorization header');
     }
-
-    // Call OpenAI API with personalized context
-    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openaiApiKey) {
-      throw new Error('OPENAI_API_KEY is not set');
+    
+    // Get the user's JWT
+    const jwt = authHeader.replace('Bearer ', '');
+    
+    // Verify the JWT and get the user
+    const { data: { user }, error: userError } = await supabase.auth.getUser(jwt);
+    
+    if (userError || !user) {
+      throw new Error('Invalid user token');
     }
-
-    const prompt = `${userContext ? `Based on the following user context:\n${userContext}\n\n` : ''}Please respond to the following user message: ${message}`;
-
-    const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    
+    // Get the request body
+    const { prompt, generateReport = false } = await req.json();
+    
+    if (!prompt) {
+      throw new Error("Missing required field: prompt");
+    }
+    
+    // Get user preferences
+    const { data: userPreferences, error: preferencesError } = await supabaseAdmin
+      .from('user_preferences')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+      
+    if (preferencesError && preferencesError.code !== 'PGRST116') {
+      console.error("Error fetching user preferences:", preferencesError);
+    }
+    
+    // Get user profile
+    const { data: userProfile, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+      
+    if (profileError) {
+      console.error("Error fetching user profile:", profileError);
+    }
+    
+    // Construct user context for the AI
+    const userContext = {
+      name: user.user_metadata?.full_name || `${userProfile?.first_name || ''} ${userProfile?.last_name || ''}`.trim(),
+      email: user.email,
+      company: userProfile?.company_name,
+      businessType: userProfile?.business_type,
+      preferences: userPreferences || {},
+    };
+    
+    // Get OpenAI response
+    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${openaiApiKey}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: "gpt-4o-mini",
         messages: [
           {
-            role: 'system',
-            content: 'You are a helpful AI assistant for a B2B trade and payments platform. Provide personalized advice based on user context when available. Be concise, professional, and focused on business trade, finance, and payment topics.'
+            role: "system",
+            content: stripIndent`
+              You are BizGenie, an AI business advisor embedded within the SefTec platform.
+              Your primary role is to provide personalized advice, insights, and recommendations on business strategies, market trends, and financial decisions.
+              
+              User Context:
+              - Name: ${userContext.name || 'Unknown'}
+              - Company: ${userContext.company || 'Unknown'}
+              - Business Type: ${userContext.businessType || 'Unknown'}
+              - Industry Focus: ${userContext.preferences.industry_focus?.join(', ') || 'Unknown'}
+              - Regions of Interest: ${userContext.preferences.regions_of_interest?.join(', ') || 'Unknown'}
+              - Business Size: ${userContext.preferences.business_size || 'Unknown'}
+              - Risk Tolerance: ${userContext.preferences.risk_tolerance || 'Unknown'}
+              - Payment Methods: ${userContext.preferences.payment_methods?.join(', ') || 'Unknown'}
+              - Preferred Currencies: ${userContext.preferences.preferred_currencies?.join(', ') || 'Unknown'}
+              
+              When providing responses:
+              - Personalize your advice based on the user context provided
+              - Be professional, concise, and direct in your advice
+              - Focus on actionable insights rather than generalities
+              - When appropriate, reference business metrics, trends, or data points
+              - Tailor your advice to the context of international trade and business finance when relevant
+              - Use bullet points for clarity when listing multiple recommendations
+              ${generateReport ? 
+                `- Format your response as a detailed business report with sections, headings, and structured analysis
+                - Include an executive summary at the beginning
+                - Organize the information in a professional report format
+                - Provide more comprehensive analysis than a standard response` 
+                : ''}
+              
+              If you don't know something, acknowledge it and suggest how the user might find that information.
+            `,
           },
-          { role: 'user', content: prompt }
+          {
+            role: "user",
+            content: prompt,
+          },
         ],
-        max_tokens: 500,
         temperature: 0.7,
       }),
     });
-
-    const openaiData = await openaiResponse.json();
     
     if (!openaiResponse.ok) {
-      throw new Error(`OpenAI API error: ${JSON.stringify(openaiData)}`);
+      const errorData = await openaiResponse.json();
+      console.error("OpenAI API error:", errorData);
+      throw new Error(`OpenAI API error: ${errorData.error?.message || "Unknown error"}`);
     }
-
-    const aiResponse = openaiData.choices[0].message.content;
-
-    // Return AI response
-    return new Response(
-      JSON.stringify({ response: aiResponse }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
-    );
     
+    const data = await openaiResponse.json();
+    const aiResponse = data.choices[0].message.content;
+    
+    // Return the response
+    return new Response(
+      JSON.stringify({ 
+        text: aiResponse,
+        personalized: true,
+        generateReport
+      }),
+      {
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json" 
+        },
+      }
+    );
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error in personalized-ai-chat function:", error);
     
     return new Response(
       JSON.stringify({ error: error.message }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      {
+        status: 500,
+        headers: { 
+          ...corsHeaders, 
+          "Content-Type": "application/json" 
+        },
+      }
     );
   }
 });
