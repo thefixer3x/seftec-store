@@ -148,7 +148,7 @@ const FAQ = () => {
                   </ul>
                   <p className="mb-3">To add users:</p>
                   <ol className="list-decimal pl-6 mb-3 space-y-2">
-                    <li>Navigate to Settings > Team Members</li>
+                    <li>Navigate to Settings {'>'} Team Members</li>
                     <li>Click "Add Team Member"</li>
                     <li>Enter their email and assign appropriate role</li>
                     <li>Set specific permissions if needed</li>
@@ -162,7 +162,7 @@ const FAQ = () => {
                 <AccordionContent className="px-6 text-gray-700 dark:text-gray-300">
                   <p className="mb-3">Seftec.Store's multi-branch management allows you to oversee multiple business locations from a single dashboard:</p>
                   <ol className="list-decimal pl-6 mb-3 space-y-2">
-                    <li>Go to Dashboard > Stores</li>
+                    <li>Go to Dashboard {'>'} Stores</li>
                     <li>Click "Create Branch" to add a new location</li>
                     <li>Enter the branch details including address and contact information</li>
                     <li>Assign branch managers and staff as needed</li>
@@ -232,7 +232,7 @@ const FAQ = () => {
                   </ul>
                   <p className="mb-3">For order disputes:</p>
                   <ol className="list-decimal pl-6 mb-3 space-y-2">
-                    <li>Navigate to Orders > View Details on the disputed order</li>
+                    <li>Navigate to Orders {'>'} View Details on the disputed order</li>
                     <li>Click "Open Dispute" and select the reason</li>
                     <li>Provide evidence and requested information</li>
                     <li>Our dispute resolution team will review within 3-5 business days</li>
@@ -254,7 +254,7 @@ const FAQ = () => {
                   <p className="mb-3">To apply for Trade Finance:</p>
                   <ol className="list-decimal pl-6 mb-3 space-y-2">
                     <li>Verify your business account (minimum 6 months platform history required)</li>
-                    <li>Navigate to Wallet > Trade Finance</li>
+                    <li>Navigate to Wallet {'>'} Trade Finance</li>
                     <li>Select the appropriate financing option</li>
                     <li>Complete the application with required financial documents</li>
                     <li>Receive a decision typically within 2-3 business days</li>
@@ -491,3 +491,4 @@ const FAQ = () => {
 };
 
 export default FAQ;
+
