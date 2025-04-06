@@ -53,6 +53,9 @@ const PersonalizedAIChatInterface: React.FC<PersonalizedAIChatInterfaceProps> = 
       
       if (error) throw error;
       
+      // Log the response for debugging
+      console.log('Edge function response:', data);
+      
       // Add AI response to chat
       setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
     } catch (error) {
