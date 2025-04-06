@@ -23,7 +23,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
       <div className="flex-1 flex flex-col items-center justify-center p-4 overflow-y-auto">
         {/* Navigation Links */}
         {items?.length ? (
-          <div className="flex flex-col items-center space-y-6 mb-8 w-full">
+          <div className="flex flex-col items-center space-y-4 mb-6 w-full">
             {items?.map(
               (item, index) =>
                 item.href && (
@@ -31,7 +31,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
                     key={index}
                     to={item.href}
                     className={cn(
-                      "text-lg font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors",
+                      "text-base font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors py-2",
                       item.disabled && "cursor-not-allowed opacity-80"
                     )}
                     onClick={() => {
@@ -47,10 +47,14 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
         ) : null}
         
         {/* Secured by AI Badge (Mobile) */}
-        <div className="flex items-center bg-gradient-to-r from-teal-400 to-purple-500 rounded-full px-3 py-1 mb-6">
+        <Link 
+          to="/value-propositions/bizgenie" 
+          className="flex items-center bg-gradient-to-r from-teal-400 to-purple-500 rounded-full px-3 py-1 mb-6"
+          onClick={onClose}
+        >
           <Shield className="h-4 w-4 mr-1 text-white" />
           <span className="text-sm text-white font-medium">Secured by AI</span>
-        </div>
+        </Link>
         
         {/* Auth Buttons (Mobile) */}
         {!user ? (
@@ -61,7 +65,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
               </Button>
             </Link>
             <Link to="/register" className="w-full" onClick={onClose}>
-              <Button className="bg-gradient-to-r from-blue-500 to-violet-500 text-white w-full">
+              <Button className="bg-gradient-to-r from-seftec-gold to-seftec-gold/80 dark:from-seftec-teal dark:to-seftec-purple text-white w-full">
                 Get Started
               </Button>
             </Link>

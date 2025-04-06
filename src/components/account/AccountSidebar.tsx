@@ -68,14 +68,14 @@ const AccountSidebar = () => {
                   to={item.path}
                   end={item.exact}
                   className={cn(
-                    "flex flex-col items-center min-w-[100px] py-3 px-2 text-xs transition-colors border-b-4",
+                    "flex flex-col items-center min-w-[80px] sm:min-w-[100px] py-2 sm:py-3 px-1 sm:px-2 text-2xs sm:text-xs transition-colors border-b-4",
                     isActive 
                       ? "border-b-seftec-gold bg-seftec-slate/50 text-seftec-navy font-medium dark:border-b-seftec-teal dark:bg-seftec-darkNavy/50 dark:text-white"
                       : "border-transparent text-seftec-navy/70 hover:bg-seftec-slate/30 hover:text-seftec-navy dark:text-white/70 dark:hover:bg-seftec-darkNavy/20 dark:hover:text-white"
                   )}
                 >
                   <item.icon className={cn(
-                    "h-5 w-5 mb-1 text-seftec-gold dark:text-seftec-teal"
+                    "h-4 w-4 sm:h-5 sm:w-5 mb-1 text-seftec-gold dark:text-seftec-teal"
                   )} />
                   <span className="text-center whitespace-nowrap">{item.title}</span>
                 </NavLink>

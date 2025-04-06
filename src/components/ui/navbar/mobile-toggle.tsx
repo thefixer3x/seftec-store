@@ -15,12 +15,13 @@ const MobileToggle = ({ isOpen, onClick }: MobileToggleProps) => {
         variant="ghost" 
         size="sm" 
         onClick={onClick}
-        className="p-1"
+        className="p-1 focus:outline-none focus:ring-0"
+        aria-label={isOpen ? "Close menu" : "Open menu"}
       >
         {isOpen ? (
-          <X className="h-6 w-6" />
+          <X className="h-5 w-5 text-seftec-navy dark:text-white" />
         ) : (
-          <Menu className="h-6 w-6" />
+          <Menu className="h-5 w-5 text-seftec-navy dark:text-white" />
         )}
       </Button>
     </div>

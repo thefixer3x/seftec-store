@@ -97,6 +97,20 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
+    font-size: 16px; /* Base font size */
+  }
+
+  /* Responsive font size adjustments */
+  @media (max-width: 640px) {
+    html {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    html {
+      font-size: 12px;
+    }
   }
 
   body {
@@ -158,6 +172,12 @@
 
   .security-badge {
     @apply flex items-center gap-2 bg-gradient-teal-purple bg-opacity-10 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300;
+  }
+  
+  /* Mobile helpers */
+  .text-2xs {
+    font-size: 0.625rem;
+    line-height: 0.75rem;
   }
 }
 
@@ -260,4 +280,24 @@
   25% { opacity: 0.5; }
   50% { opacity: 0; transform: scale(1.2) rotate(180deg); }
   100% { opacity: 0; transform: scale(0.5) rotate(360deg); }
+}
+
+/* Responsive menu adjustments */
+.mobile-menu-item {
+  @apply py-2 px-3 text-base border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors;
+}
+
+/* Mobile dropdown styles */
+.mobile-dropdown-content {
+  @apply absolute z-50 bg-white dark:bg-seftec-darkNavy shadow-lg rounded-md py-2 mt-1 w-full left-0 border border-gray-200 dark:border-gray-700;
+}
+
+/* Ensure menus are visible in mobile view */
+.z-dropdown {
+  z-index: 50 !important;
+}
+
+/* Fix scrolling issues on modals on mobile */
+.overflow-fix {
+  -webkit-overflow-scrolling: touch;
 }
