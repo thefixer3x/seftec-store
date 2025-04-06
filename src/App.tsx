@@ -21,10 +21,47 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ValuePropositions from "./pages/ValuePropositions";
 import BizGenie from "./pages/BizGenie";
+import ComingSoon from "./pages/ComingSoon";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 
+// Helper function to determine if we should show Coming Soon page
+const shouldShowComingSoon = () => {
+  const hostname = window.location.hostname;
+  
+  // Check if we're on a subdomain
+  const parts = hostname.split('.');
+  if (parts.length > 2) {
+    const subdomain = parts[0];
+    
+    // app.seftec.store should show coming soon during phased deployment
+    if (subdomain === 'app') {
+      return true;
+    }
+    
+    // api.seftec.store should normally redirect to API docs, but during dev might show coming soon
+    if (subdomain === 'api' && process.env.NODE_ENV === 'development') {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
 const App = () => {
+  // For the phased deployment, show coming soon on certain subdomains
+  if (shouldShowComingSoon()) {
+    return (
+      <TooltipProvider>
+        <Routes>
+          <Route path="*" element={<ComingSoon />} />
+        </Routes>
+        <Toaster />
+        <Sonner />
+      </TooltipProvider>
+    );
+  }
+  
   return (
     <CartProvider>
       <NotificationsProvider>
