@@ -98,35 +98,35 @@ const AIDemoPromptBox: React.FC = () => {
       <CardHeader className="pb-3 bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkle className="h-5 w-5 text-seftec-gold dark:text-white animate-sparkle" />
-            <CardTitle className="text-lg font-medium">BizGenie AI Demo</CardTitle>
+            <Sparkle className="h-4 w-4 sm:h-5 sm:w-5 text-seftec-gold dark:text-white animate-sparkle" />
+            <CardTitle className="text-base sm:text-lg font-medium">BizGenie AI Demo</CardTitle>
           </div>
-          <div className="text-xs font-medium bg-white/10 px-2 py-1 rounded-full">
+          <div className="text-2xs sm:text-xs font-medium bg-white/10 px-2 py-1 rounded-full">
             {promptCount}/{PROMPT_LIMIT} Prompts
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-5">
+      <CardContent className="p-3 sm:p-5">
         {response && (
           <div 
             ref={responseRef}
-            className="bg-seftec-slate/30 dark:bg-white/5 p-4 rounded-lg mb-4 text-seftec-navy dark:text-white/90 max-h-[200px] overflow-y-auto"
+            className="bg-seftec-slate/30 dark:bg-white/5 p-3 sm:p-4 rounded-lg mb-3 sm:mb-4 text-seftec-navy dark:text-white/90 max-h-[150px] sm:max-h-[200px] overflow-y-auto text-sm sm:text-base"
           >
-            <div className="flex items-center gap-2 text-xs text-seftec-navy/60 dark:text-white/60 mb-2">
+            <div className="flex items-center gap-2 text-2xs sm:text-xs text-seftec-navy/60 dark:text-white/60 mb-2">
               <span>BizGenie:</span>
             </div>
             <p className="whitespace-pre-line">{response}</p>
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
           <div className="relative">
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder={limitReached ? "Prompt limit reached. Sign up for more." : "Ask BizGenie about business strategies, market trends..."}
               className={cn(
-                "resize-none min-h-[80px] focus:border-seftec-gold dark:focus:border-seftec-teal",
+                "resize-none min-h-[60px] sm:min-h-[80px] text-sm sm:text-base focus:border-seftec-gold dark:focus:border-seftec-teal",
                 limitReached && "bg-gray-100 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400"
               )}
               disabled={limitReached || isLoading}
@@ -135,20 +135,20 @@ const AIDemoPromptBox: React.FC = () => {
           </div>
           
           {error && (
-            <div className="flex items-start space-x-2 text-red-500 dark:text-red-400 text-sm bg-red-50 dark:bg-red-900/10 p-2 rounded">
-              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <div className="flex items-start space-x-2 text-red-500 dark:text-red-400 text-xs sm:text-sm bg-red-50 dark:bg-red-900/10 p-2 rounded">
+              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mt-0.5 flex-shrink-0" />
               <p>{error}</p>
             </div>
           )}
           
           <div className="flex justify-between items-center">
             {limitReached ? (
-              <div className="w-full bg-amber-100 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 p-3 rounded-lg text-center">
-                <span className="text-amber-800 dark:text-amber-300 font-medium">🚫 Limit Reached. Sign up to unlock personalized advice.</span>
+              <div className="w-full bg-amber-100 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 p-2 sm:p-3 rounded-lg text-center">
+                <span className="text-xs sm:text-sm text-amber-800 dark:text-amber-300 font-medium">🚫 Limit Reached. Sign up to unlock personalized advice.</span>
                 <Button 
                   variant="outline"
                   size="sm" 
-                  className="mt-2 bg-seftec-navy text-white hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:text-white dark:hover:bg-seftec-teal/90"
+                  className="mt-2 text-xs sm:text-sm bg-seftec-navy text-white hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:text-white dark:hover:bg-seftec-teal/90"
                   onClick={() => window.location.href = "/register"}
                 >
                   Sign Up Now
@@ -156,16 +156,17 @@ const AIDemoPromptBox: React.FC = () => {
               </div>
             ) : (
               <>
-                <div className="text-xs text-seftec-navy/50 dark:text-white/50">
+                <div className="text-2xs sm:text-xs text-seftec-navy/50 dark:text-white/50">
                   Demo Mode: {PROMPT_LIMIT - promptCount} prompts remaining
                 </div>
                 <Button 
                   type="submit" 
                   disabled={!prompt.trim() || isLoading}
-                  className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white"
+                  className="text-xs sm:text-sm bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white"
                   aria-label="Submit prompt"
+                  size="sm"
                 >
-                  <Send className="h-4 w-4 mr-2" />
+                  <Send className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                   {isLoading ? "Processing..." : "Ask BizGenie"}
                 </Button>
               </>

@@ -52,9 +52,9 @@ const DashboardSidebar = () => {
   const SidebarContent = () => (
     <div className="py-4 flex flex-col h-full">
       <div className="px-3 py-2">
-        <div className="flex items-center mb-6 px-3">
-          <Icons.logo className="h-6 w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
-          <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
+        <div className="flex items-center mb-4 sm:mb-6 px-3">
+          <Icons.logo className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
+          <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
         </div>
       </div>
       <ScrollArea className="flex-grow px-3 h-[calc(100vh-120px)]">
@@ -68,7 +68,7 @@ const DashboardSidebar = () => {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center px-3 py-3 text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5",
+                  "flex items-center px-3 py-2 sm:py-3 text-xs sm:text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5",
                   isActive 
                     ? "bg-seftec-gold/10 text-seftec-navy dark:bg-seftec-teal/10 dark:text-seftec-teal font-medium border-l-4 border-seftec-gold dark:border-seftec-teal" 
                     : "text-seftec-navy/70 dark:text-white/70 hover:text-seftec-navy dark:hover:text-white"
@@ -76,7 +76,7 @@ const DashboardSidebar = () => {
                 onClick={() => isMobile && setIsOpen(false)}
               >
                 <item.icon className={cn(
-                  "h-5 w-5 mr-3", 
+                  "h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3", 
                   isActive 
                     ? "text-seftec-gold dark:text-seftec-teal" 
                     : "text-seftec-navy/70 dark:text-white/70 group-hover:text-seftec-navy dark:group-hover:text-white"
@@ -93,21 +93,21 @@ const DashboardSidebar = () => {
   if (isMobile) {
     return (
       <>
-        <div className="flex items-center p-4 border-b dark:border-seftec-darkNavy/50">
+        <div className="flex items-center p-3 sm:p-4 border-b dark:border-seftec-darkNavy/50">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6 text-seftec-navy dark:text-white" />
+              <Button variant="ghost" size="sm" className="p-1 md:hidden">
+                <Menu className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-navy dark:text-white" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-[240px] border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy">
+            <SheetContent side="left" className="p-0 w-[240px] sm:w-[280px] border-r border-border bg-seftec-slate dark:bg-seftec-darkNavy">
               <SidebarContent />
             </SheetContent>
           </Sheet>
           <div className="flex items-center ml-2">
-            <Icons.logo className="h-6 w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
-            <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
+            <Icons.logo className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
+            <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
           </div>
         </div>
       </>
