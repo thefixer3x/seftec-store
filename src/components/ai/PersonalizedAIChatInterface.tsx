@@ -50,30 +50,33 @@ const PersonalizedAIChatInterface: React.FC<PersonalizedAIChatInterfaceProps> = 
       console.log(`Auth session exists: ${!!session}, User authenticated: ${!!user}`);
       
       // Call Supabase Edge Function with user's message
-      const { data, error, status } = await supabase.functions.invoke(endpoint, {
+      const response = await supabase.functions.invoke(endpoint, {
         body: {
           prompt: userMessage,
           generateReport: false
         }
       });
       
-      console.log(`Response status: ${status}, Error: ${error ? 'Yes' : 'No'}`);
+      console.log(`Response received:`, response);
+      // Safely check for status code from response
+      const statusCode = response.error ? (response.error as any).status || 500 : 200;
+      console.log(`Response status code: ${statusCode}, Error: ${response.error ? 'Yes' : 'No'}`);
       
-      if (error) {
-        console.error('Edge function error details:', error);
-        throw new Error(`Edge function error: ${error.message || 'Unknown error'}`);
+      if (response.error) {
+        console.error('Edge function error details:', response.error);
+        throw new Error(`Edge function error: ${response.error.message || 'Unknown error'}`);
       }
       
-      if (!data) {
+      if (!response.data) {
         console.error('No data received from edge function');
         throw new Error('No response data received from AI service');
       }
       
       // Log the complete response for debugging
-      console.log('Edge function complete response:', data);
+      console.log('Edge function complete response:', response.data);
       
       // Add AI response to chat
-      setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: response.data.text }]);
     } catch (error: any) {
       console.error('Error fetching AI response:', error);
       
