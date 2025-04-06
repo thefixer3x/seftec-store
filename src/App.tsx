@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,34 +20,30 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ValuePropositions from "./pages/ValuePropositions";
 import BizGenie from "./pages/BizGenie";
+import FAQ from "./pages/FAQ";
 import ComingSoon from "./components/ui/coming-soon";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 
-// Define the type for coming soon config
 interface ComingSoonConfig {
   title: string;
   message: string;
   showNotifyForm?: boolean;
 }
 
-// Helper function to determine if we should show Coming Soon page
 const shouldShowComingSoon = () => {
   const hostname = window.location.hostname;
   
-  // Check if we're on a subdomain
   const parts = hostname.split('.');
   if (parts.length > 2) {
     const subdomain = parts[0];
     
-    // These subdomains show coming soon
     return ['app', 'api', 'dashboard', 'admin'].includes(subdomain);
   }
   
   return false;
 };
 
-// Get custom messages for different subdomains
 const getComingSoonConfig = (): ComingSoonConfig => {
   const hostname = window.location.hostname;
   const subdomain = hostname.split('.')[0];
@@ -73,7 +68,6 @@ const getComingSoonConfig = (): ComingSoonConfig => {
     }
   };
   
-  // Return the config for the subdomain or a default config if not found
   return configs[subdomain] || {
     title: "Coming Soon",
     message: "This section is under development and will be available shortly.",
@@ -82,7 +76,6 @@ const getComingSoonConfig = (): ComingSoonConfig => {
 };
 
 const App = () => {
-  // For the phased deployment, show coming soon on certain subdomains
   if (shouldShowComingSoon()) {
     const comingSoonConfig = getComingSoonConfig();
     
@@ -104,7 +97,6 @@ const App = () => {
       <NotificationsProvider>
         <TooltipProvider>
           <Routes>
-            {/* Public routes */}
             <Route path="/" element={<Index />} />
             <Route path="/biz-tools" element={<BizTools />} />
             <Route path="/solutions" element={<Solutions />} />
@@ -119,13 +111,12 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="/value-propositions" element={<ValuePropositions />} />
             <Route path="/value-propositions/bizgenie" element={<BizGenie />} />
             
-            {/* Include both account and profile routes */}
             {profileRoutes}
             
-            {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
