@@ -22,10 +22,32 @@ export const supabase = createClient<Database>(
       persistSession: true,
       detectSessionInUrl: true,
       flowType: "pkce",
-      // Configure proper redirect URLs for authentication
-      redirect: {
-        login: `${window.location.origin}/auth-callback`,
-        signup: `${window.location.origin}/auth-callback`,
+      // Configure authentication callbacks
+      // Note: Using object notation that's compatible with the Supabase types
+      storage: {
+        getItem: (key) => {
+          try {
+            const storedSession = localStorage.getItem(key);
+            return storedSession;
+          } catch (error) {
+            console.error('Error getting session from storage:', error);
+            return null;
+          }
+        },
+        setItem: (key, value) => {
+          try {
+            localStorage.setItem(key, value);
+          } catch (error) {
+            console.error('Error storing session:', error);
+          }
+        },
+        removeItem: (key) => {
+          try {
+            localStorage.removeItem(key);
+          } catch (error) {
+            console.error('Error removing session:', error);
+          }
+        }
       }
     },
     global: {
@@ -42,7 +64,7 @@ export const supabase = createClient<Database>(
         }
         
         // For all other requests, use the default fetch behavior
-        return fetch(...args);
+        return fetch(url, options);
       }
     }
   }
@@ -73,7 +95,7 @@ export const getUserProfile = async () => {
   const { data, error } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', userId)
+    .eq('id', userId as string)
     .single();
     
   if (error) {

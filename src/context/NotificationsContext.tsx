@@ -83,11 +83,15 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         const { data, error } = await supabase
           .from('notification_settings')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', user.id as string)
           .single();
 
         if (error) throw error;
-        setSettings(data);
+        
+        // Type safety check
+        if (data) {
+          setSettings(data as NotificationSettings);
+        }
       } catch (error: any) {
         console.error('Error fetching notification settings:', error.message);
       }
@@ -112,17 +116,17 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         let query = supabase
           .from('notifications')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', user.id as string)
           .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
         // Apply filters
         if (activeFilter !== 'all' && activeFilter !== 'group') {
-          query = query.eq('type', activeFilter);
+          query = query.eq('type', activeFilter as string);
         }
 
         // Apply group filter
         if (activeFilter === 'group' && activeGroup) {
-          query = query.eq('notification_group', activeGroup);
+          query = query.eq('notification_group', activeGroup as string);
         }
 
         // Apply sorting
@@ -140,13 +144,16 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
         if (error) throw error;
         
-        const typedNotifications = data?.map(item => ({
-          ...item,
-          type: item.type as NotificationType
-        })) || [];
+        if (data) {
+          const typedNotifications = data.map(item => ({
+            ...item,
+            type: (item.type || 'info') as NotificationType
+          })) as Notification[];
+          
+          setNotifications(prev => page === 0 ? typedNotifications : [...prev, ...typedNotifications]);
+          setHasMore(typedNotifications.length === PAGE_SIZE);
+        }
         
-        setNotifications(prev => page === 0 ? typedNotifications : [...prev, ...typedNotifications]);
-        setHasMore(typedNotifications.length === PAGE_SIZE);
         setLoading(false);
       } catch (error: any) {
         console.error('Error fetching notifications:', error.message);
@@ -160,15 +167,21 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         const { data, error } = await supabase
           .from('notifications')
           .select('notification_group')
-          .eq('user_id', user.id)
+          .eq('user_id', user.id as string)
           .not('notification_group', 'is', null)
           .order('notification_group');
 
         if (error) throw error;
         
-        // Extract unique groups
-        const uniqueGroups = [...new Set(data?.map(item => item.notification_group).filter(Boolean))];
-        setNotificationGroups(uniqueGroups as string[]);
+        if (data) {
+          // Extract unique groups
+          const groups = data
+            .map(item => item.notification_group)
+            .filter((group): group is string => !!group);
+            
+          const uniqueGroups = [...new Set(groups)];
+          setNotificationGroups(uniqueGroups);
+        }
       } catch (error: any) {
         console.error('Error fetching notification groups:', error.message);
       }
@@ -185,9 +198,11 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         table: 'notifications',
         filter: `user_id=eq.${user.id}`
       }, (payload) => {
+        if (!payload.new) return;
+        
         const newNotification = {
           ...payload.new,
-          type: payload.new.type as NotificationType
+          type: (payload.new.type || 'info') as NotificationType
         } as Notification;
         
         // Check if notification type is enabled in user settings
@@ -238,9 +253,9 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { error } = await supabase
         .from('notifications')
-        .update({ is_read: true })
-        .eq('id', id)
-        .eq('user_id', user.id);
+        .update({ is_read: true } as any)
+        .eq('id', id as string)
+        .eq('user_id', user.id as string);
 
       if (error) throw error;
 
@@ -260,9 +275,9 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { error } = await supabase
         .from('notifications')
-        .update({ is_read: true })
-        .eq('user_id', user.id)
-        .eq('is_read', false);
+        .update({ is_read: true } as any)
+        .eq('user_id', user.id as string)
+        .eq('is_read', false as any);
 
       if (error) throw error;
 
@@ -281,8 +296,8 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
       const { error } = await supabase
         .from('notifications')
         .delete()
-        .eq('id', id)
-        .eq('user_id', user.id);
+        .eq('id', id as string)
+        .eq('user_id', user.id as string);
 
       if (error) throw error;
 
@@ -298,8 +313,8 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const { error } = await supabase
         .from('notification_settings')
-        .update(newSettings)
-        .eq('user_id', user.id);
+        .update(newSettings as any)
+        .eq('user_id', user.id as string);
 
       if (error) throw error;
 

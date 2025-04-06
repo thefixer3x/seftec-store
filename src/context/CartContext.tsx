@@ -132,21 +132,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       // Create order in database
-      const { data: order, error: orderError } = await supabase
+      const { data, error } = await supabase
         .from('orders')
         .insert({
           customer_id: user.id,
           total_amount: cartTotal,
           status: 'pending'
-        })
+        } as any)
         .select()
         .single();
 
-      if (orderError) throw orderError;
+      if (error) throw error;
+      
+      if (!data) throw new Error("Failed to create order");
 
       // Create order items
       const orderItems = cart.map(item => ({
-        order_id: order.id,
+        order_id: data.id,
         product_id: item.product_id,
         quantity: item.quantity,
         unit_price: item.price
@@ -154,7 +156,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const { error: itemsError } = await supabase
         .from('order_items')
-        .insert(orderItems);
+        .insert(orderItems as any);
 
       if (itemsError) throw itemsError;
 
@@ -163,10 +165,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       toast({
         title: "Order placed successfully!",
-        description: `Your order #${order.id.substring(0, 8)} has been placed`,
+        description: `Your order #${data.id.substring(0, 8)} has been placed`,
       });
 
-      return { success: true, orderId: order.id };
+      return { success: true, orderId: data.id };
     } catch (error: any) {
       console.error('Checkout error:', error);
       toast({

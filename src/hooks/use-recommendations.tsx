@@ -48,7 +48,7 @@ export function useRecommendations() {
             category
           )
         `)
-        .eq('user_id', userId)
+        .eq('user_id', userId as string)
         .order('relevance_score', { ascending: false })
         .limit(5);
       
@@ -57,8 +57,10 @@ export function useRecommendations() {
         throw error;
       }
       
+      if (!data) return [];
+      
       // Format the data to flatten the structure
-      return (data || []).map(rec => ({
+      return data.map(rec => ({
         id: rec.id,
         product_id: rec.product_id,
         supplier_id: rec.supplier_id,
@@ -97,8 +99,8 @@ export function useRecommendations() {
           category
         )
       `)
-      .eq('user_id', userId)
-      .eq('recommendation_type', type)
+      .eq('user_id', userId as string)
+      .eq('recommendation_type', type as string)
       .order('relevance_score', { ascending: false })
       .limit(limit);
     
@@ -107,7 +109,9 @@ export function useRecommendations() {
       return [];
     }
     
-    return (data || []).map(rec => ({
+    if (!data) return [];
+    
+    return data.map(rec => ({
       id: rec.id,
       product_id: rec.product_id,
       supplier_id: rec.supplier_id,
@@ -132,9 +136,9 @@ export function useRecommendations() {
     
     const { error } = await supabase
       .from('recommendations')
-      .update({ viewed: true })
-      .eq('id', recommendationId)
-      .eq('user_id', userId);
+      .update({ viewed: true } as any)
+      .eq('id', recommendationId as string)
+      .eq('user_id', userId as string);
       
     if (error) {
       console.error("Error marking recommendation as viewed:", error);
@@ -150,9 +154,9 @@ export function useRecommendations() {
     
     const { error } = await supabase
       .from('recommendations')
-      .update({ clicked: true })
-      .eq('id', recommendationId)
-      .eq('user_id', userId);
+      .update({ clicked: true } as any)
+      .eq('id', recommendationId as string)
+      .eq('user_id', userId as string);
       
     if (error) {
       console.error("Error marking recommendation as clicked:", error);
