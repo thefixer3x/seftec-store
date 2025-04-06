@@ -21,7 +21,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ValuePropositions from "./pages/ValuePropositions";
 import BizGenie from "./pages/BizGenie";
-import ComingSoon from "./pages/ComingSoon";
+import ComingSoon from "./components/ui/coming-soon";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 
@@ -34,28 +34,53 @@ const shouldShowComingSoon = () => {
   if (parts.length > 2) {
     const subdomain = parts[0];
     
-    // app.seftec.store should show coming soon during phased deployment
-    if (subdomain === 'app') {
-      return true;
-    }
-    
-    // api.seftec.store should normally redirect to API docs, but during dev might show coming soon
-    if (subdomain === 'api' && process.env.NODE_ENV === 'development') {
-      return true;
-    }
+    // These subdomains show coming soon
+    return ['app', 'api', 'dashboard', 'admin'].includes(subdomain);
   }
   
   return false;
 };
 
+// Get custom messages for different subdomains
+const getComingSoonConfig = () => {
+  const hostname = window.location.hostname;
+  const subdomain = hostname.split('.')[0];
+  
+  const configs = {
+    app: {
+      title: "App Coming Soon",
+      message: "Our secure B2B marketplace app is under development and will be launching soon. Sign up to be notified when we go live!",
+    },
+    api: {
+      title: "API Coming Soon",
+      message: "Our developer API is under development. Subscribe for updates on documentation and launch dates.",
+    },
+    dashboard: {
+      title: "Dashboard Coming Soon",
+      message: "The business dashboard is in final testing and will be available soon.",
+    },
+    admin: {
+      title: "Admin Portal Coming Soon",
+      message: "The admin portal is currently under development.",
+      showNotifyForm: false,
+    }
+  };
+  
+  return configs[subdomain as keyof typeof configs] || {};
+};
+
 const App = () => {
   // For the phased deployment, show coming soon on certain subdomains
   if (shouldShowComingSoon()) {
+    const comingSoonConfig = getComingSoonConfig();
+    
     return (
       <TooltipProvider>
-        <Routes>
-          <Route path="*" element={<ComingSoon />} />
-        </Routes>
+        <ComingSoon 
+          title={comingSoonConfig.title}
+          message={comingSoonConfig.message}
+          showNotifyForm={comingSoonConfig.showNotifyForm !== false}
+        />
         <Toaster />
         <Sonner />
       </TooltipProvider>
