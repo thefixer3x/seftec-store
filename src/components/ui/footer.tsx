@@ -58,7 +58,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <div>
             <h3 className="text-lg font-semibold text-seftec-navy dark:text-white mb-4">Contact</h3>
             <ul className="space-y-3">
-              <li className="text-seftec-navy/70 dark:text-white/70">hello@seftec.store</li>
+              <li className="text-seftec-navy/70 dark:text-white/70">info@seftec.tech</li>
               <li className="text-seftec-navy/70 dark:text-white/70">Support</li>
               <li className="text-seftec-navy/70 dark:text-white/70">Documentation</li>
             </ul>
