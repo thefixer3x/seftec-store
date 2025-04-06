@@ -15,9 +15,12 @@ port = 54323
 [functions]
 [functions.ai-chat]
 verify_jwt = true
+allowed_domains = ["seftec.store", "*.seftec.store"]
 
 [functions.personalized-ai-chat]
 verify_jwt = true
+allowed_domains = ["seftec.store", "*.seftec.store"]
 
 [functions.create-notification]
 verify_jwt = true
+allowed_domains = ["seftec.store", "*.seftec.store"]

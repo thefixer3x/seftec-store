@@ -6,6 +6,10 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bnJ3cmd6cnNib2NneGxwdmhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzNDY0MTYsImV4cCI6MjA1NzkyMjQxNn0.--EOILmgTdPD2uZxu3LcLuSDXsYWV9ElhGPI5m4Ng-8";
 
+// Define the API endpoint that will be used for all backend services
+// This will be used in a phased approach where api.seftec.store handles all backend services
+const API_ENDPOINT = "https://api.seftec.store";
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
@@ -17,7 +21,30 @@ export const supabase = createClient<Database>(
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: true,
+      flowType: "pkce",
+      // Configure proper redirect URLs for authentication
+      redirect: {
+        login: `${window.location.origin}/auth-callback`,
+        signup: `${window.location.origin}/auth-callback`,
+      }
     },
+    global: {
+      // Configure custom fetch function to use the API endpoint for functions
+      fetch: (...args) => {
+        const [url, options] = args;
+        
+        // Check if this is a function invocation request (matches /functions/invoke)
+        if (typeof url === 'string' && url.includes('/functions/invoke')) {
+          // Replace the URL with the new API endpoint
+          // This is temporary until the proper DNS configuration is in place
+          const newUrl = url.replace(SUPABASE_URL, API_ENDPOINT);
+          return fetch(newUrl, options);
+        }
+        
+        // For all other requests, use the default fetch behavior
+        return fetch(...args);
+      }
+    }
   }
 );
 
