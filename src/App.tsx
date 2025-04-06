@@ -25,6 +25,13 @@ import ComingSoon from "./components/ui/coming-soon";
 import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 
+// Define the type for coming soon config
+interface ComingSoonConfig {
+  title: string;
+  message: string;
+  showNotifyForm?: boolean;
+}
+
 // Helper function to determine if we should show Coming Soon page
 const shouldShowComingSoon = () => {
   const hostname = window.location.hostname;
@@ -42,11 +49,11 @@ const shouldShowComingSoon = () => {
 };
 
 // Get custom messages for different subdomains
-const getComingSoonConfig = () => {
+const getComingSoonConfig = (): ComingSoonConfig => {
   const hostname = window.location.hostname;
   const subdomain = hostname.split('.')[0];
   
-  const configs = {
+  const configs: Record<string, ComingSoonConfig> = {
     app: {
       title: "App Coming Soon",
       message: "Our secure B2B marketplace app is under development and will be launching soon. Sign up to be notified when we go live!",
@@ -66,7 +73,12 @@ const getComingSoonConfig = () => {
     }
   };
   
-  return configs[subdomain as keyof typeof configs] || {};
+  // Return the config for the subdomain or a default config if not found
+  return configs[subdomain] || {
+    title: "Coming Soon",
+    message: "This section is under development and will be available shortly.",
+    showNotifyForm: true
+  };
 };
 
 const App = () => {
