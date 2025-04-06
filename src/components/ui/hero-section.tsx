@@ -1,17 +1,39 @@
-import React, { useEffect, useRef } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Sparkle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
 interface HeroSectionProps {
   className?: string;
 }
+
 const HeroSection: React.FC<HeroSectionProps> = ({
   className
 }) => {
   const heroRef = useRef<HTMLDivElement>(null);
+  const [isInteractionBlocked, setIsInteractionBlocked] = useState(false);
+  const { toast } = useToast();
+  
+  // Debounce function to prevent rapid calls
+  const debounce = (func: Function, wait: number) => {
+    let timeout: ReturnType<typeof setTimeout>;
+    return function executedFunction(...args: any[]) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  };
+  
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!heroRef.current) return;
+    // Optimized mouse move handler with rate limiting
+    const handleMouseMove = debounce((e: MouseEvent) => {
+      if (!heroRef.current || isInteractionBlocked) return;
+      
       const {
         clientX,
         clientY
@@ -20,18 +42,32 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       const x = ((clientX - rect.left) / rect.width - 0.5) * 20;
       const y = ((clientY - rect.top) / rect.height - 0.5) * 20;
       const elements = heroRef.current.querySelectorAll('.parallax');
+      
       elements.forEach((el, index) => {
         const depth = index * 0.2 + 0.5;
         const translateX = x * depth;
         const translateY = y * depth;
         (el as HTMLElement).style.transform = `translate(${translateX}px, ${translateY}px)`;
       });
-    };
+    }, 10); // 10ms debounce for smoother performance
+    
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
+  }, [isInteractionBlocked]);
+  
+  // Handle cases where user's device may struggle with animations
+  useEffect(() => {
+    // Detect slow devices or reduced motion preferences
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isLowPowerMode = 'connection' in navigator && (navigator as any).connection?.saveData;
+    
+    if (prefersReducedMotion || isLowPowerMode) {
+      setIsInteractionBlocked(true);
+    }
   }, []);
+
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById('features');
     if (featuresSection) {
@@ -40,7 +76,32 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       });
     }
   };
-  return <section ref={heroRef} className={cn('relative min-h-screen flex items-center overflow-hidden', 'dark:bg-gradient-navy', className)}>
+  
+  const handleGetStarted = () => {
+    toast({
+      title: "Early Access",
+      description: "Thanks for your interest! We'll notify you when the platform launches.",
+      duration: 5000,
+    });
+  };
+  
+  const handleBookDemo = () => {
+    toast({
+      title: "Demo Request",
+      description: "Thanks for your interest! Our team will contact you shortly to schedule a demo.",
+      duration: 5000,
+    });
+  };
+
+  return (
+    <section 
+      ref={heroRef} 
+      className={cn(
+        'relative min-h-screen flex items-center overflow-hidden', 
+        'dark:bg-gradient-navy', 
+        className
+      )}
+    >
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-10 w-64 h-64 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
@@ -63,30 +124,45 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             Revolutionizing Global Trade with a Trusted AI-Powered Marketplace
           </h1>
           
-          <p className="text-seftec-navy/70 dark:text-white/70 mb-10 max-w-3xl mx-auto animate-fade-up animate-delay-200 text-3xl">
+          <p className="text-seftec-navy/70 dark:text-white/70 mb-10 max-w-3xl mx-auto animate-fade-up animate-delay-200 text-xl md:text-2xl lg:text-3xl">
             Trade with Trust, Pay with Confidence. Connect with verified businesses worldwide, 
             transact securely, and access financing solutions all in one platform.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up animate-delay-300">
-            <Button size="lg" className="bg-seftec-navy dark:bg-gradient-teal-purple text-white hover:bg-seftec-navy/90 dark:hover:opacity-90 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn cta-sparkle group">
+            <Button 
+              size="lg" 
+              className="bg-seftec-navy dark:bg-gradient-teal-purple text-white hover:bg-seftec-navy/90 dark:hover:opacity-90 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn cta-sparkle group"
+              onClick={handleGetStarted}
+            >
               <span className="relative z-10">Get Started</span>
               <span className="absolute inset-0 overflow-hidden rounded-lg">
                 <span className="absolute inset-0 opacity-0 group-hover:opacity-20 group-hover:animate-shimmer bg-white"></span>
               </span>
             </Button>
-            <Button variant="outline" size="lg" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 py-6 px-8 rounded-lg text-lg custom-btn"
+              onClick={handleBookDemo}
+            >
               Book a Demo
             </Button>
           </div>
         </div>
         
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <button onClick={scrollToFeatures} className="text-seftec-navy/60 dark:text-white/60 hover:text-seftec-navy dark:hover:text-white transition-colors duration-300 focus:outline-none" aria-label="Scroll to features">
+          <button 
+            onClick={scrollToFeatures} 
+            className="text-seftec-navy/60 dark:text-white/60 hover:text-seftec-navy dark:hover:text-white transition-colors duration-300 focus:outline-none" 
+            aria-label="Scroll to features"
+          >
             <ChevronDown size={32} />
           </button>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default HeroSection;
