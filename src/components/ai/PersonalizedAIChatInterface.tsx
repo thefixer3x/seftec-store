@@ -43,33 +43,50 @@ const PersonalizedAIChatInterface: React.FC<PersonalizedAIChatInterfaceProps> = 
     setIsLoading(true);
     
     try {
+      console.log(`Calling Supabase Edge Function: ${endpoint} with message: ${userMessage.substring(0, 50)}${userMessage.length > 50 ? '...' : ''}`);
+      
+      // Log JWT token status to help debug authentication issues
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log(`Auth session exists: ${!!session}, User authenticated: ${!!user}`);
+      
       // Call Supabase Edge Function with user's message
-      const { data, error } = await supabase.functions.invoke(endpoint, {
+      const { data, error, status } = await supabase.functions.invoke(endpoint, {
         body: {
           prompt: userMessage,
           generateReport: false
         }
       });
       
-      if (error) throw error;
+      console.log(`Response status: ${status}, Error: ${error ? 'Yes' : 'No'}`);
       
-      // Log the response for debugging
-      console.log('Edge function response:', data);
+      if (error) {
+        console.error('Edge function error details:', error);
+        throw new Error(`Edge function error: ${error.message || 'Unknown error'}`);
+      }
+      
+      if (!data) {
+        console.error('No data received from edge function');
+        throw new Error('No response data received from AI service');
+      }
+      
+      // Log the complete response for debugging
+      console.log('Edge function complete response:', data);
       
       // Add AI response to chat
       setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching AI response:', error);
+      
       toast({
         title: 'Error',
-        description: 'Failed to get a response. Please try again.',
+        description: `Failed to get AI response: ${error.message || 'Unknown error'}`,
         variant: 'destructive'
       });
       
       // Add error message to chat
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Sorry, I encountered an error processing your request. Please try again.'
+        content: 'Sorry, I encountered an error processing your request. Please try again or contact support if the issue persists.'
       }]);
     } finally {
       setIsLoading(false);
@@ -125,7 +142,11 @@ const PersonalizedAIChatInterface: React.FC<PersonalizedAIChatInterfaceProps> = 
             disabled={isLoading}
             className="flex-1"
           />
-          <Button type="submit" disabled={isLoading || !input.trim()}>
+          <Button 
+            type="submit" 
+            disabled={isLoading || !input.trim()}
+            onClick={() => console.log('Send button clicked')}
+          >
             {isLoading ? 'Sending...' : <Send className="h-4 w-4" />}
           </Button>
         </form>

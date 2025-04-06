@@ -26,81 +26,117 @@ serve(async (req) => {
   }
 
   try {
+    console.log("AI Chat function invoked");
+    
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     
     // Get the authorization header from the request
     const authHeader = req.headers.get('Authorization');
+    console.log(`Auth header present: ${!!authHeader}`);
+    
     if (!authHeader) {
       throw new Error('Missing Authorization header');
     }
     
+    // Validate the API key is available
+    if (!OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is not set");
+      throw new Error("OpenAI API key is not configured");
+    }
+    
     // Set up the client with the auth header
-    const supabaseClient = supabase.auth.setSession({
-      access_token: authHeader.replace('Bearer ', ''),
-      refresh_token: '',
-    });
+    try {
+      await supabase.auth.setSession({
+        access_token: authHeader.replace('Bearer ', ''),
+        refresh_token: '',
+      });
+      console.log("Session set successfully");
+    } catch (sessionError) {
+      console.error("Error setting session:", sessionError);
+      throw new Error(`Session error: ${sessionError.message}`);
+    }
     
     // Get the request body
-    const { prompt } = await req.json();
+    let requestBody;
+    try {
+      requestBody = await req.json();
+      console.log("Request body parsed successfully");
+    } catch (parseError) {
+      console.error("Error parsing request body:", parseError);
+      throw new Error("Invalid request body format");
+    }
+    
+    const { prompt } = requestBody;
     
     if (!prompt) {
       throw new Error("Missing required field: prompt");
     }
     
+    console.log(`Processing prompt: ${prompt.substring(0, 50)}${prompt.length > 50 ? '...' : ''}`);
+    
     // Get OpenAI response
-    const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: stripIndent`
-              You are BizGenie, an AI business advisor embedded within the SefTec platform.
-              Your primary role is to provide advice, insights, and recommendations on business strategies, market trends, and financial decisions.
-              
-              When providing responses:
-              - Be professional, concise, and direct in your advice
-              - Focus on actionable insights rather than generalities
-              - When appropriate, reference business metrics, trends, or data points
-              - Tailor your advice to the context of international trade and business finance when relevant
-              - Use bullet points for clarity when listing multiple recommendations
-              
-              If you don't know something, acknowledge it and suggest how the user might find that information.
-            `,
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        temperature: 0.7,
-      }),
-    });
-    
-    if (!openaiResponse.ok) {
-      const errorData = await openaiResponse.json();
-      console.error("OpenAI API error:", errorData);
-      throw new Error(`OpenAI API error: ${errorData.error?.message || "Unknown error"}`);
-    }
-    
-    const data = await openaiResponse.json();
-    const aiResponse = data.choices[0].message.content;
-    
-    // Return the response
-    return new Response(
-      JSON.stringify({ text: aiResponse }),
-      {
-        headers: { 
-          ...corsHeaders, 
-          "Content-Type": "application/json" 
+    try {
+      const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: [
+            {
+              role: "system",
+              content: stripIndent`
+                You are BizGenie, an AI business advisor embedded within the SefTec platform.
+                Your primary role is to provide advice, insights, and recommendations on business strategies, market trends, and financial decisions.
+                
+                When providing responses:
+                - Be professional, concise, and direct in your advice
+                - Focus on actionable insights rather than generalities
+                - When appropriate, reference business metrics, trends, or data points
+                - Tailor your advice to the context of international trade and business finance when relevant
+                - Use bullet points for clarity when listing multiple recommendations
+                
+                If you don't know something, acknowledge it and suggest how the user might find that information.
+              `,
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 0.7,
+        }),
+      });
+      
+      console.log("OpenAI API request sent, status:", openaiResponse.status);
+      
+      if (!openaiResponse.ok) {
+        const errorData = await openaiResponse.json();
+        console.error("OpenAI API error:", errorData);
+        throw new Error(`OpenAI API error: ${errorData.error?.message || "Unknown error"}`);
       }
-    );
+      
+      const data = await openaiResponse.json();
+      console.log("OpenAI API response received successfully");
+      
+      const aiResponse = data.choices[0].message.content;
+      
+      // Return the response
+      return new Response(
+        JSON.stringify({ text: aiResponse }),
+        {
+          headers: { 
+            ...corsHeaders, 
+            "Content-Type": "application/json" 
+          },
+        }
+      );
+    } catch (openaiError) {
+      console.error("Error calling OpenAI API:", openaiError);
+      throw openaiError;
+    }
   } catch (error) {
     console.error("Error in ai-chat function:", error);
     
