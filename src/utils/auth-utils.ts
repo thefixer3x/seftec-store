@@ -7,14 +7,16 @@ export const fetchUserProfile = async (userId: string): Promise<Profile | null> 
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', userId)
+      .eq('id', userId as string)
       .single();
 
     if (error) {
       throw error;
     }
 
-    return data;
+    if (!data) return null;
+    
+    return data as Profile;
   } catch (error) {
     console.error('Error fetching profile:', error);
     return null;

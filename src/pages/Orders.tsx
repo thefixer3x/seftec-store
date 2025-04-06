@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,17 +14,19 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import { CalendarIcon, Package, ClipboardList, ArrowRight } from 'lucide-react';
 
+interface OrderItem {
+  id: string;
+  product_name: string;
+  quantity: number;
+  unit_price: number;
+}
+
 interface OrderWithItems {
   id: string;
   order_date: string;
   status: string;
   total_amount: number;
-  items: {
-    id: string;
-    product_name: string;
-    quantity: number;
-    unit_price: number;
-  }[];
+  items: OrderItem[];
 }
 
 const Orders = () => {
@@ -51,10 +52,16 @@ const Orders = () => {
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select('*')
-        .eq('customer_id', user?.id)
+        .eq('customer_id', user?.id as string)
         .order('order_date', { ascending: false });
         
       if (ordersError) throw ordersError;
+      
+      if (!ordersData) {
+        setOrders([]);
+        setLoading(false);
+        return;
+      }
       
       // For each order, fetch its items
       const ordersWithItems = await Promise.all(
@@ -72,6 +79,11 @@ const Orders = () => {
             .eq('order_id', order.id);
             
           if (itemsError) throw itemsError;
+          
+          if (!orderItems) return {
+            ...order,
+            items: []
+          };
           
           return {
             ...order,

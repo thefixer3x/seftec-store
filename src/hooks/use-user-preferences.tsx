@@ -36,12 +36,14 @@ export const useUserPreferences = () => {
       const { data, error } = await supabase
         .from('user_preferences')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user.id as string)
         .single();
         
       if (error) throw error;
       
-      setPreferences(data as UserPreferences);
+      if (data) {
+        setPreferences(data as UserPreferences);
+      }
     } catch (err) {
       console.error('Error fetching user preferences:', err);
       setError(err instanceof Error ? err : new Error('Unknown error occurred'));
@@ -65,8 +67,8 @@ export const useUserPreferences = () => {
           .update({
             ...newPreferences,
             updated_at: new Date().toISOString()
-          })
-          .eq('id', preferences.id);
+          } as any)
+          .eq('id', preferences.id as string);
           
         if (error) throw error;
       } else {
@@ -76,9 +78,7 @@ export const useUserPreferences = () => {
           .insert({
             user_id: user.id,
             ...newPreferences,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          });
+          } as any);
           
         if (error) throw error;
       }
