@@ -1,26 +1,22 @@
 
+# This is the Supabase configuration file for the project
 project_id = "ptnrwrgzrsbocgxlpvhd"
 
 [api]
-enabled = true
+# Port to use for the API URL.
 port = 54321
-schemas = ["public", "storage"]
+# Enable PostgreSQL extensions.
+enabled_extensions = ["pg_graphql"]
 
 [db]
+# Port to use for the local database URL.
 port = 54322
 
 [studio]
+# Port to use for Supabase Studio.
 port = 54323
 
-[functions]
-[functions.ai-chat]
-verify_jwt = true
-allowed_domains = ["seftec.store", "*.seftec.store"]
+[functions.create-stripe-checkout]
+verify_jwt = false
 
-[functions.personalized-ai-chat]
-verify_jwt = true
-allowed_domains = ["seftec.store", "*.seftec.store"]
-
-[functions.create-notification]
-verify_jwt = true
-allowed_domains = ["seftec.store", "*.seftec.store"]
+# Keep any other existing function configurations

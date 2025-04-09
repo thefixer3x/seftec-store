@@ -1,9 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PaymentButton from "@/components/ui/payment-button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useSearchParams } from 'react-router-dom';
 
 interface PaymentSectionProps {
   onPaymentComplete?: (paymentData: any) => void;
@@ -17,6 +18,45 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
   const [lastPayment, setLastPayment] = useState<any>(null);
+  const [searchParams] = useSearchParams();
+  
+  // Check for payment success or canceled status from URL params
+  useEffect(() => {
+    const status = window.location.pathname;
+    const sessionId = searchParams.get('session_id');
+    
+    if (status === '/payment-success' && sessionId) {
+      toast({
+        title: "Payment Successfully Completed",
+        description: `Your payment has been processed successfully.`,
+        duration: 5000,
+      });
+      
+      setLastPayment({
+        amount: "Transaction completed",
+        currency: "",
+        provider: "Stripe",
+        transactionId: sessionId,
+      });
+      
+      // Notify parent component if callback provided
+      if (onPaymentComplete) {
+        onPaymentComplete({
+          provider: "Stripe",
+          status: "success",
+          sessionId,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } else if (status === '/payment-canceled') {
+      toast({
+        title: "Payment Canceled",
+        description: "Your payment process was canceled.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
+  }, [searchParams, toast, onPaymentComplete]);
 
   const handlePaymentComplete = (paymentData: any) => {
     setLastPayment(paymentData);
@@ -26,11 +66,14 @@ const PaymentSection: React.FC<PaymentSectionProps> = ({
       onPaymentComplete(paymentData);
     }
     
-    toast({
-      title: "Payment Successfully Processed",
-      description: `${paymentData.amount} ${paymentData.currency} via ${paymentData.provider}`,
-      duration: 5000,
-    });
+    // For non-Stripe payments that don't use redirect
+    if (paymentData.provider !== "stripe") {
+      toast({
+        title: "Payment Successfully Processed",
+        description: `${paymentData.amount} ${paymentData.currency} via ${paymentData.provider}`,
+        duration: 5000,
+      });
+    }
   };
 
   return (
