@@ -20,3 +20,4 @@ port = 54323
 verify_jwt = false
 
 # Keep any other existing function configurations
+
