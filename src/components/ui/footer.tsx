@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, ExternalLink } from 'lucide-react';
+import { Shield, Lock, ExternalLink, Mail, Phone, MapPin, Clock } from 'lucide-react';
 
 interface FooterProps {
   className?: string;
@@ -20,7 +20,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       )}
     >
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           <div className="md:col-span-1">
             <Link 
               to="/" 
@@ -54,6 +54,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
               <li><Link to="/biz-tools" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Features</Link></li>
               <li><Link to="/solutions" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Solutions</Link></li>
               <li><Link to="/value-propositions" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Value Propositions</Link></li>
+              <li><Link to="/faq" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">FAQ</Link></li>
               <li><a href="#" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Pricing</a></li>
             </ul>
           </div>
@@ -71,20 +72,49 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           <div>
             <h3 className="text-lg font-semibold text-seftec-navy dark:text-white mb-4">Contact</h3>
             <ul className="space-y-3">
-              <li className="text-seftec-navy/70 dark:text-white/70">
-                <a href="mailto:info@seftec.tech" className="hover:text-seftec-navy dark:hover:text-white transition-colors">
-                  info@seftec.tech
-                </a>
+              <li className="flex items-start">
+                <Mail size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
+                <div>
+                  <a href="mailto:info@seftec.tech" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">info@seftec.tech</a>
+                  <a href="mailto:support@seftec.tech" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">support@seftec.tech</a>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <Phone size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
+                <div>
+                  <span className="text-seftec-navy/70 dark:text-white/70 block">+44 (079) 5607-0021</span>
+                  <span className="text-seftec-navy/70 dark:text-white/70 block">+234 (803) 803-0696</span>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <MapPin size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
+                <div className="text-seftec-navy/70 dark:text-white/70">
+                  <p>Lagos, Nigeria</p>
+                  <p>London, United Kingdom</p>
+                  <p>Dubai, U.A.E.</p>
+                  <p>Nairobi, Kenya</p>
+                  <p>Cape Town, South Africa</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="text-lg font-semibold text-seftec-navy dark:text-white mb-4">Business Hours</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start">
+                <Clock size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
+                <div className="text-seftec-navy/70 dark:text-white/70">
+                  <p>Monday - Friday:</p>
+                  <p className="font-medium">9AM - 4PM (WAT)</p>
+                  <p className="mt-2">Saturday, Sunday:</p>
+                  <p className="font-medium">10AM - 2PM (WAT)</p>
+                </div>
               </li>
               <li>
-                <Link to="/contact" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">
-                  Support
+                <Link to="/contact" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors mt-4 inline-block">
+                  Contact Us
                 </Link>
-              </li>
-              <li>
-                <a href="#" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">
-                  Documentation
-                </a>
               </li>
             </ul>
           </div>

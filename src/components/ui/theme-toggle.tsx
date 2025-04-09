@@ -11,7 +11,7 @@ interface ThemeToggleProps {
 }
 
 export function ThemeToggle({ className, floating = false }: ThemeToggleProps) {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Wait for component to mount to access window
@@ -23,7 +23,7 @@ export function ThemeToggle({ className, floating = false }: ThemeToggleProps) {
     return <div className="w-9 h-9"></div>; // Placeholder to prevent layout shift
   }
 
-  const isDark = theme === "dark";
+  const isDark = resolvedTheme === "dark";
 
   return (
     <Button

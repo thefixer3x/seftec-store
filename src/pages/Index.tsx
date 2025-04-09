@@ -12,6 +12,7 @@ import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import PersonalizedAIAdvisorSection from "@/components/sections/PersonalizedAIAdvisorSection";
 import BusinessCounterSection from "@/components/sections/BusinessCounterSection";
 import PaymentSection from "@/components/sections/PaymentSection";
+import HomeFAQSection from "@/components/sections/HomeFAQSection";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/config/site";
@@ -50,12 +51,6 @@ const Index = () => {
     reveal(); // Initial check
     
     return () => window.removeEventListener('scroll', reveal);
-  }, []);
-
-  // Set light mode on initial load
-  useEffect(() => {
-    document.documentElement.classList.remove('dark');
-    localStorage.setItem('darkMode', 'false');
   }, []);
 
   return (
@@ -100,6 +95,10 @@ const Index = () => {
       <TestimonialsSection />
       <RegionsCoveredSection />
       <AdvantagesSection />
+      
+      {/* FAQ Section */}
+      <HomeFAQSection />
+      
       <CTASection />
       <Footer />
       <Toaster />

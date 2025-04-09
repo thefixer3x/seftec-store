@@ -9,27 +9,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useTheme } from "next-themes"
 
 export function ModeToggle() {
-  const [theme, setTheme] = React.useState(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("darkMode");
-      return savedTheme === "true" ? "dark" : "light";
-    }
-    return "light";
-  });
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
-    const root = window.document.documentElement;
-    
-    if (theme === "dark") {
-      root.classList.add("dark");
-      localStorage.setItem("darkMode", "true");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("darkMode", "false");
-    }
-  }, [theme]);
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <DropdownMenu>
