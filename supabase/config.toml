@@ -19,5 +19,8 @@ port = 54323
 [functions.create-stripe-checkout]
 verify_jwt = false
 
+[functions.stripe-webhook]
+verify_jwt = false
+
 # Keep any other existing function configurations
 
