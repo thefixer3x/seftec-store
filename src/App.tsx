@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +28,7 @@ import { NotificationsProvider } from "./context/NotificationsContext";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCanceled from "./pages/PaymentCanceled";
 import SocialLoginTest from "./pages/SocialLoginTest";
+import DefiLeadership from "./pages/DefiLeadership";
 
 interface ComingSoonConfig {
   title: string;
@@ -117,6 +119,7 @@ const App = () => {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/value-propositions" element={<ValuePropositions />} />
           <Route path="/value-propositions/bizgenie" element={<BizGenie />} />
+          <Route path="/defi-leadership" element={<DefiLeadership />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-canceled" element={<PaymentCanceled />} />
           

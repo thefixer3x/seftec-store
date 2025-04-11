@@ -14,6 +14,10 @@ export const siteConfig = {
       href: "/value-propositions",
     },
     {
+      title: "DeFi Leadership",
+      href: "/defi-leadership",
+    },
+    {
       title: "Shop",
       href: "/shop",
     },
