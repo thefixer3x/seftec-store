@@ -13,7 +13,7 @@ const DefiHero = () => {
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 max-w-3xl">Pioneering Enterprise DeFi Solutions</h1>
           <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl">Seftec is revolutionizing how businesses access and utilize decentralized finance with our secure, compliant, and scalable platform.</p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button asChild size="lg">
+            <Button size="lg">
               <Link to="/contact">Request Demo</Link>
             </Button>
             <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white hover:text-blue-900">

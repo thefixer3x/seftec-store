@@ -22,11 +22,11 @@ const HomeFAQSection = () => {
         </div>
         
         <div className="text-center mt-10">
-          <Link to="/faq">
-            <Button variant="outline" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10">
+          <Button variant="outline" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10">
+            <Link to="/faq">
               View All FAQs <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
