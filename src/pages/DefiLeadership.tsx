@@ -1,757 +1,595 @@
 
-import React, { useEffect } from "react";
+import React from 'react';
 import { MainNav } from "@/components/ui/navbar";
 import Footer from "@/components/ui/footer";
 import { siteConfig } from "@/config/site";
-import { Button } from "@/components/ui/button";
-import { 
-  TrendingUp, 
-  Shield, 
-  Landmark, 
-  CircleDollarSign, 
-  Handshake, 
-  Award, 
-  CheckCircle2, 
-  BarChart4, 
-  Lock,
-  ArrowRight,
-  Globe,
-  BriefcaseBusiness,
-  Scale
-} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChevronRight, Shield, TrendingUp, BarChart, Lock, Globe, Zap, Calendar, Users } from "lucide-react";
 
 const DefiLeadership = () => {
-  // Scroll reveal effect
-  useEffect(() => {
-    const revealElements = document.querySelectorAll('.reveal');
-    
-    const reveal = () => {
-      revealElements.forEach(el => {
-        const elementTop = el.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        
-        if (elementTop < windowHeight - 100) {
-          el.classList.add('active');
-        }
-      });
-    };
-    
-    window.addEventListener('scroll', reveal);
-    reveal(); // Initial check
-    
-    return () => window.removeEventListener('scroll', reveal);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy pt-[56px]">
       <MainNav items={siteConfig.mainNav} />
       
-      {/* Hero Banner */}
-      <section className="relative py-20 bg-gradient-to-r from-seftec-navy/90 to-seftec-navy dark:from-seftec-darkNavy dark:to-seftec-purple/80 overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse">
-                <path d="M 8 0 L 0 0 0 8" fill="none" stroke="currentColor" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-          </svg>
-        </div>
-        
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-4 px-4 py-1.5 bg-white/10 text-white border-white/20 text-sm">
-              Enterprise DeFi Innovation
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
-              Pioneering the Future of <span className="text-seftec-gold dark:text-seftec-teal">Decentralized Finance</span>
-            </h1>
-            <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
-              Seftec is redefining how enterprises access, implement, and benefit from DeFi solutions with our industry-leading platform and ISO 20022 compliance.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button className="bg-seftec-gold hover:bg-seftec-gold/90 text-white dark:bg-seftec-teal dark:hover:bg-seftec-teal/90">
-                Book Enterprise Demo
-              </Button>
-              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                View Success Stories
-              </Button>
-            </div>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-seftec-navy to-seftec-navy/90 dark:from-seftec-teal dark:to-seftec-purple py-20 px-4">
+        <div className="container mx-auto text-center">
+          <Badge className="mb-4 bg-white/10 text-white hover:bg-white/20 border-none px-4 py-1">
+            Enterprise DeFi Leadership
+          </Badge>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
+            Leading the Future of <span className="text-seftec-gold dark:text-white">Secure Enterprise DeFi</span>
+          </h1>
+          <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+            Seftec is pioneering ISO 20022 compliant decentralized finance solutions, bridging the gap between enterprise requirements and blockchain innovations.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button size="lg" className="bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-white dark:text-seftec-navy dark:hover:bg-white/90">
+              Explore Our DeFi Solutions
+            </Button>
+            <Button variant="outline" size="lg" className="text-white border-white/30 hover:bg-white/10">
+              Schedule a Demo
+            </Button>
           </div>
         </div>
       </section>
       
-      {/* Quick Stats */}
-      <section className="py-16 bg-seftec-slate/30 dark:bg-seftec-darkNavy/30">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-            <div className="bg-white dark:bg-seftec-darkNavy/60 p-6 rounded-lg shadow-md reveal">
-              <TrendingUp className="h-12 w-12 mb-4 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-3xl font-bold mb-2 text-seftec-navy dark:text-white">$4.2B+</h3>
-              <p className="text-seftec-navy/70 dark:text-white/70">Transaction Volume Processed</p>
-            </div>
-            
-            <div className="bg-white dark:bg-seftec-darkNavy/60 p-6 rounded-lg shadow-md reveal">
-              <BriefcaseBusiness className="h-12 w-12 mb-4 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-3xl font-bold mb-2 text-seftec-navy dark:text-white">340+</h3>
-              <p className="text-seftec-navy/70 dark:text-white/70">Enterprise Clients Worldwide</p>
-            </div>
-            
-            <div className="bg-white dark:bg-seftec-darkNavy/60 p-6 rounded-lg shadow-md reveal">
-              <Shield className="h-12 w-12 mb-4 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-3xl font-bold mb-2 text-seftec-navy dark:text-white">99.99%</h3>
-              <p className="text-seftec-navy/70 dark:text-white/70">Platform Security Uptime</p>
-            </div>
-            
-            <div className="bg-white dark:bg-seftec-darkNavy/60 p-6 rounded-lg shadow-md reveal">
-              <Award className="h-12 w-12 mb-4 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-3xl font-bold mb-2 text-seftec-navy dark:text-white">12</h3>
-              <p className="text-seftec-navy/70 dark:text-white/70">Industry Awards (2023-2024)</p>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* Market Leadership Position */}
-      <section id="market-leadership" className="py-16">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4 px-4 py-1.5 bg-seftec-slate dark:bg-white/10 text-seftec-navy dark:text-white border-seftec-navy/10 dark:border-white/20 text-sm">
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-16">
+        <Tabs defaultValue="leadership" className="space-y-8">
+          <TabsList className="grid grid-cols-1 md:grid-cols-3 gap-2 bg-seftec-slate/20 dark:bg-white/5 p-1">
+            <TabsTrigger value="leadership" className="data-[state=active]:bg-seftec-navy data-[state=active]:text-white dark:data-[state=active]:bg-seftec-teal">
               Market Leadership
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-seftec-navy dark:text-white">
-              Setting the Standard in Enterprise DeFi
-            </h2>
-            <p className="text-lg text-seftec-navy/70 dark:text-white/70">
-              Seftec has established itself as the premier provider of enterprise-grade decentralized finance solutions, backed by industry recognition and proven results.
-            </p>
-          </div>
+            </TabsTrigger>
+            <TabsTrigger value="solutions" className="data-[state=active]:bg-seftec-navy data-[state=active]:text-white dark:data-[state=active]:bg-seftec-teal">
+              Technical Solutions
+            </TabsTrigger>
+            <TabsTrigger value="roadmap" className="data-[state=active]:bg-seftec-navy data-[state=active]:text-white dark:data-[state=active]:bg-seftec-teal">
+              Strategic Roadmap
+            </TabsTrigger>
+          </TabsList>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-            <div className="space-y-8 reveal">
-              <h3 className="text-2xl font-bold text-seftec-navy dark:text-white">
-                Industry Metrics & Recognition
-              </h3>
+          {/* Market Leadership Position Tab */}
+          <TabsContent value="leadership" className="space-y-8">
+            <section>
+              <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-6 flex items-center">
+                <BarChart className="mr-3 h-8 w-8 text-seftec-gold dark:text-seftec-teal" />
+                Market Leadership Position
+              </h2>
               
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <Card className="bg-white shadow-md dark:bg-seftec-darkNavy/50 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="text-4xl font-bold text-seftec-gold dark:text-seftec-teal mb-2">15,000+</div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">Enterprise Users</p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-white shadow-md dark:bg-seftec-darkNavy/50 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="text-4xl font-bold text-seftec-gold dark:text-seftec-teal mb-2">$3.8B</div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">Transaction Volume</p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-white shadow-md dark:bg-seftec-darkNavy/50 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="text-4xl font-bold text-seftec-gold dark:text-seftec-teal mb-2">34</div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">Countries Covered</p>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-4">Enterprise Success Stories</h3>
+              
+              <div className="space-y-6 mb-12">
+                <Card className="bg-white shadow-sm dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                      Global Financial Group
+                    </h4>
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
+                      Implemented Seftec's ISO 20022 compliant DeFi platform, resulting in 78% faster cross-border settlements and 42% reduction in transaction costs.
+                    </p>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50">
+                      $1.2B Annual Transaction Volume
+                    </Badge>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-white shadow-sm dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                      Continental Supply Chain Network
+                    </h4>
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
+                      Leveraged Seftec's DeFi solutions to streamline trade financing, automating 95% of compliance checks and reducing financing wait times from weeks to hours.
+                    </p>
+                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50">
+                      5,000+ Suppliers Onboarded
+                    </Badge>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-4">Our Competitive Advantages</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="bg-white shadow-sm dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-3">
+                      <div className="bg-seftec-navy/10 dark:bg-seftec-teal/10 p-2 rounded-full mr-3">
+                        <Shield className="h-5 w-5 text-seftec-navy dark:text-seftec-teal" />
+                      </div>
+                      <h4 className="font-semibold text-seftec-navy dark:text-white">ISO 20022 Compliance</h4>
+                    </div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">
+                      Full adherence to the global standard for electronic data interchange between financial institutions.
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-white shadow-sm dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-3">
+                      <div className="bg-seftec-navy/10 dark:bg-seftec-teal/10 p-2 rounded-full mr-3">
+                        <Lock className="h-5 w-5 text-seftec-navy dark:text-seftec-teal" />
+                      </div>
+                      <h4 className="font-semibold text-seftec-navy dark:text-white">Enterprise-Grade Security</h4>
+                    </div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">
+                      Military-grade encryption with multi-layered authentication and regulatory compliance built-in.
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-white shadow-sm dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-3">
+                      <div className="bg-seftec-navy/10 dark:bg-seftec-teal/10 p-2 rounded-full mr-3">
+                        <Globe className="h-5 w-5 text-seftec-navy dark:text-seftec-teal" />
+                      </div>
+                      <h4 className="font-semibold text-seftec-navy dark:text-white">Global Interoperability</h4>
+                    </div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">
+                      Seamless integration with existing banking systems, ERP solutions, and blockchain networks worldwide.
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-white shadow-sm dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-3">
+                      <div className="bg-seftec-navy/10 dark:bg-seftec-teal/10 p-2 rounded-full mr-3">
+                        <Zap className="h-5 w-5 text-seftec-navy dark:text-seftec-teal" />
+                      </div>
+                      <h4 className="font-semibold text-seftec-navy dark:text-white">Real-Time Processing</h4>
+                    </div>
+                    <p className="text-seftec-navy/70 dark:text-white/70">
+                      Instant settlement capabilities with 99.99% uptime and sub-second transaction finality.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </section>
+          </TabsContent>
+          
+          {/* Technical Solution Tab */}
+          <TabsContent value="solutions" className="space-y-8">
+            <section>
+              <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-6 flex items-center">
+                <Shield className="mr-3 h-8 w-8 text-seftec-gold dark:text-seftec-teal" />
+                Secure Enterprise DeFi Access Platform
+              </h2>
+              
+              <p className="text-lg text-seftec-navy/80 dark:text-white/80 mb-8 max-w-4xl">
+                Our platform provides enterprises with a secure gateway to decentralized finance capabilities, enabling seamless access to blockchain-based financial services while maintaining compliance with institutional standards.
+              </p>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
                 <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="font-medium text-seftec-navy dark:text-white">Market Share</span>
-                    <span className="text-seftec-gold dark:text-seftec-teal font-bold">42%</span>
+                  <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-4">ISO 20022 Integration</h3>
+                  <div className="bg-white dark:bg-seftec-darkNavy/30 border border-seftec-navy/10 dark:border-white/10 rounded-lg p-6 mb-6">
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
+                      Seftec's platform is built on the ISO 20022 standard for electronic data interchange between financial institutions, providing:
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                        <span className="text-seftec-navy/70 dark:text-white/70">Enhanced interoperability between traditional banking systems and blockchain networks</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                        <span className="text-seftec-navy/70 dark:text-white/70">Standardized message formats for financial data exchange across all systems</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                        <span className="text-seftec-navy/70 dark:text-white/70">Compliant integration with global payment systems and financial networks</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                        <span className="text-seftec-navy/70 dark:text-white/70">Future-proof architecture aligned with evolving global financial standards</span>
+                      </li>
+                    </ul>
                   </div>
-                  <Progress value={42} className="h-2" />
+                  
+                  <div className="bg-seftec-navy/5 dark:bg-white/5 rounded-lg p-6">
+                    <h4 className="font-semibold text-seftec-navy dark:text-white mb-3">Integration Examples</h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center">
+                        <div className="w-2 h-2 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span className="text-seftec-navy/70 dark:text-white/70">SWIFT gpi network integration</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-2 h-2 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span className="text-seftec-navy/70 dark:text-white/70">Central Bank Digital Currency (CBDC) compatibility</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-2 h-2 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span className="text-seftec-navy/70 dark:text-white/70">Enterprise blockchain networks (Hyperledger Fabric, R3 Corda)</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-2 h-2 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span className="text-seftec-navy/70 dark:text-white/70">Common ERP systems (SAP, Oracle, Microsoft Dynamics)</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 
                 <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="font-medium text-seftec-navy dark:text-white">Client Retention</span>
-                    <span className="text-seftec-gold dark:text-seftec-teal font-bold">96%</span>
+                  <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-4">Security & Risk Management</h3>
+                  <div className="bg-white dark:bg-seftec-darkNavy/30 border border-seftec-navy/10 dark:border-white/10 rounded-lg p-6 mb-6">
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
+                      Our comprehensive security framework provides enterprise-grade protection:
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-seftec-navy/5 dark:bg-white/5 p-4 rounded-lg">
+                        <h5 className="font-semibold text-seftec-navy dark:text-white mb-2">Multi-Layer Authentication</h5>
+                        <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                          Hardware security keys, biometrics, and role-based access controls
+                        </p>
+                      </div>
+                      <div className="bg-seftec-navy/5 dark:bg-white/5 p-4 rounded-lg">
+                        <h5 className="font-semibold text-seftec-navy dark:text-white mb-2">AML & KYC Compliance</h5>
+                        <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                          Automated compliance checks with real-time transaction monitoring
+                        </p>
+                      </div>
+                      <div className="bg-seftec-navy/5 dark:bg-white/5 p-4 rounded-lg">
+                        <h5 className="font-semibold text-seftec-navy dark:text-white mb-2">Smart Contract Auditing</h5>
+                        <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                          Rigorous auditing process with formal verification methods
+                        </p>
+                      </div>
+                      <div className="bg-seftec-navy/5 dark:bg-white/5 p-4 rounded-lg">
+                        <h5 className="font-semibold text-seftec-navy dark:text-white mb-2">Data Encryption</h5>
+                        <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                          End-to-end encryption for all transactions and sensitive data
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <Progress value={96} className="h-2" />
-                </div>
-                
-                <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="font-medium text-seftec-navy dark:text-white">ISO 20022 Implementation Success</span>
-                    <span className="text-seftec-gold dark:text-seftec-teal font-bold">99%</span>
+                  
+                  <div className="bg-white dark:bg-seftec-darkNavy/30 border border-seftec-navy/10 dark:border-white/10 rounded-lg p-6">
+                    <h4 className="font-semibold text-seftec-navy dark:text-white mb-4">Risk Management Protocols</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-start">
+                        <div className="bg-seftec-gold/20 dark:bg-seftec-teal/20 p-1 rounded-full mr-3 mt-1">
+                          <Shield className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+                        </div>
+                        <div>
+                          <h5 className="font-medium text-seftec-navy dark:text-white">Liquidity Risk Monitoring</h5>
+                          <p className="text-sm text-seftec-navy/70 dark:text-white/70">Real-time monitoring of liquidity pools with automated risk alerts</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="bg-seftec-gold/20 dark:bg-seftec-teal/20 p-1 rounded-full mr-3 mt-1">
+                          <Shield className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+                        </div>
+                        <div>
+                          <h5 className="font-medium text-seftec-navy dark:text-white">Circuit Breakers & Fail-Safes</h5>
+                          <p className="text-sm text-seftec-navy/70 dark:text-white/70">Automatic transaction halting during abnormal market conditions</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start">
+                        <div className="bg-seftec-gold/20 dark:bg-seftec-teal/20 p-1 rounded-full mr-3 mt-1">
+                          <Shield className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+                        </div>
+                        <div>
+                          <h5 className="font-medium text-seftec-navy dark:text-white">Regulatory Compliance Engine</h5>
+                          <p className="text-sm text-seftec-navy/70 dark:text-white/70">Adaptive compliance controls for different jurisdictions</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <Progress value={99} className="h-2" />
                 </div>
               </div>
               
-              <div className="flex flex-wrap gap-3">
-                <Badge className="bg-seftec-slate dark:bg-white/10 text-seftec-navy/80 dark:text-white/80 hover:text-seftec-navy dark:hover:text-white border-seftec-navy/10 dark:border-white/20 rounded-full px-4 py-2">
-                  "DeFi Innovator of the Year 2024"
-                </Badge>
-                <Badge className="bg-seftec-slate dark:bg-white/10 text-seftec-navy/80 dark:text-white/80 hover:text-seftec-navy dark:hover:text-white border-seftec-navy/10 dark:border-white/20 rounded-full px-4 py-2">
-                  "Best Enterprise Blockchain Solution"
-                </Badge>
-                <Badge className="bg-seftec-slate dark:bg-white/10 text-seftec-navy/80 dark:text-white/80 hover:text-seftec-navy dark:hover:text-white border-seftec-navy/10 dark:border-white/20 rounded-full px-4 py-2">
-                  "Top 10 FinTech Disruptors"
-                </Badge>
-              </div>
-            </div>
-            
-            <div className="space-y-8 reveal">
-              <h3 className="text-2xl font-bold text-seftec-navy dark:text-white">
-                Competitive Advantages
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Full ISO 20022 Compliance</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      One of only three platforms globally with complete ISO 20022 integration, enabling seamless interoperability between traditional banking and blockchain networks.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Enterprise-Grade Security</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Military-grade encryption and multi-layered authentication protocols, with quarterly third-party security audits that exceed industry standards.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Regulatory-First Approach</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Built from the ground up to address compliance requirements across 37 jurisdictions, with proactive regulatory monitoring and adaptation.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Case Studies */}
-          <h3 className="text-2xl font-bold text-seftec-navy dark:text-white text-center mb-8 reveal">
-            Enterprise Success Stories
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <Card className="reveal">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Landmark className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                  Global Financial Institution
-                </CardTitle>
-                <CardDescription>Cross-Border Payment Transformation</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-4 text-seftec-navy/80 dark:text-white/80">
-                  A top-tier global bank implemented Seftec's DeFi platform to revolutionize their cross-border payment infrastructure, achieving:
-                </p>
-                <ul className="space-y-2 text-seftec-navy/80 dark:text-white/80">
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                    <span>94% reduction in settlement time</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                    <span>78% decrease in transaction costs</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                    <span>100% compliance with global regulatory requirements</span>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Read Full Case Study
+              <div className="text-center">
+                <Button className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white">
+                  Request Technical Whitepaper
+                  <ChevronRight className="h-4 w-4 ml-2" />
                 </Button>
-              </CardFooter>
-            </Card>
-            
-            <Card className="reveal">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                  Multinational Supply Chain Corp
-                </CardTitle>
-                <CardDescription>Trade Finance Optimization</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-4 text-seftec-navy/80 dark:text-white/80">
-                  A Fortune 500 supply chain company integrated Seftec's DeFi solutions to streamline trade finance operations, resulting in:
-                </p>
-                <ul className="space-y-2 text-seftec-navy/80 dark:text-white/80">
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                    <span>$47M annual working capital optimization</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                    <span>60% faster supplier financing</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ArrowRight className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                    <span>85% reduction in documentation processing time</span>
-                  </li>
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Read Full Case Study
+              </div>
+            </section>
+          </TabsContent>
+          
+          {/* Strategic Roadmap Tab */}
+          <TabsContent value="roadmap" className="space-y-8">
+            <section>
+              <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-6 flex items-center">
+                <Calendar className="mr-3 h-8 w-8 text-seftec-gold dark:text-seftec-teal" />
+                Strategic Roadmap
+              </h2>
+              
+              <p className="text-lg text-seftec-navy/80 dark:text-white/80 mb-8 max-w-4xl">
+                Our comprehensive development plan outlines Seftec's vision for the next 24 months, focusing on expanding our DeFi capabilities for enterprise clients.
+              </p>
+              
+              <div className="mb-12">
+                <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-6">Product Development Milestones</h3>
+                
+                <div className="relative border-l-2 border-seftec-navy/20 dark:border-white/20 pl-8 space-y-8">
+                  <div className="relative">
+                    <div className="absolute -left-10 top-0 bg-seftec-gold dark:bg-seftec-teal rounded-full w-5 h-5 flex items-center justify-center">
+                      <div className="bg-white dark:bg-seftec-darkNavy rounded-full w-2.5 h-2.5"></div>
+                    </div>
+                    <Badge className="mb-2 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800">
+                      Q2 2025 - Current Quarter
+                    </Badge>
+                    <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                      Enhanced ISO 20022 Implementation
+                    </h4>
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                      Complete integration with all ISO 20022 message types and expand middleware connectivity options.
+                    </p>
+                    <ul className="space-y-1 text-sm text-seftec-navy/70 dark:text-white/70">
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span>Full support for all ISO 20022 message types</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span>Cross-border payment optimization</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                        <span>SWIFT and SEPA network enhancements</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="absolute -left-10 top-0 bg-seftec-navy/30 dark:bg-white/30 rounded-full w-5 h-5 flex items-center justify-center">
+                      <div className="bg-white dark:bg-seftec-darkNavy rounded-full w-2.5 h-2.5"></div>
+                    </div>
+                    <Badge className="mb-2 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 border-blue-200 dark:border-blue-800">
+                      Q3-Q4 2025
+                    </Badge>
+                    <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                      Advanced Trade Finance Platform
+                    </h4>
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                      Launch our comprehensive trade finance solution with smart contract automation for Letters of Credit and supply chain financing.
+                    </p>
+                    <ul className="space-y-1 text-sm text-seftec-navy/70 dark:text-white/70">
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Automated Letter of Credit processing</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Supply chain financing with real-time tracking</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Multi-party document verification platform</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="absolute -left-10 top-0 bg-seftec-navy/30 dark:bg-white/30 rounded-full w-5 h-5 flex items-center justify-center">
+                      <div className="bg-white dark:bg-seftec-darkNavy rounded-full w-2.5 h-2.5"></div>
+                    </div>
+                    <Badge className="mb-2 bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400 border-purple-200 dark:border-purple-800">
+                      Q1-Q2 2026
+                    </Badge>
+                    <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                      Enterprise Stablecoin Settlement
+                    </h4>
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                      Deploy our institutional-grade stablecoin settlement layer with support for multiple fiat currencies.
+                    </p>
+                    <ul className="space-y-1 text-sm text-seftec-navy/70 dark:text-white/70">
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Multi-currency stablecoin ecosystem</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Real-time settlement with traditional banking systems</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Regulatory-compliant tokenization framework</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="absolute -left-10 top-0 bg-seftec-navy/30 dark:bg-white/30 rounded-full w-5 h-5 flex items-center justify-center">
+                      <div className="bg-white dark:bg-seftec-darkNavy rounded-full w-2.5 h-2.5"></div>
+                    </div>
+                    <Badge className="mb-2 bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800">
+                      Q3-Q4 2026
+                    </Badge>
+                    <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                      Global DeFi Interoperability Network
+                    </h4>
+                    <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                      Launch our cross-chain interoperability protocol connecting major enterprise blockchain networks and public DeFi ecosystems.
+                    </p>
+                    <ul className="space-y-1 text-sm text-seftec-navy/70 dark:text-white/70">
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Multi-chain liquidity network</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Enterprise-to-public blockchain bridge</span>
+                      </li>
+                      <li className="flex items-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-seftec-navy/50 dark:bg-white/50 mr-2"></div>
+                        <span>Central Bank Digital Currency (CBDC) integration</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div>
+                  <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-4">
+                    <Users className="inline-block mr-2 h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                    Strategic Partnerships
+                  </h3>
+                  <Card className="bg-white dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                    <CardContent className="p-6">
+                      <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
+                        Seftec is actively expanding our alliance network with key industry players to accelerate adoption:
+                      </p>
+                      <ul className="space-y-3">
+                        <li className="flex items-start">
+                          <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium text-seftec-navy dark:text-white">Banking Consortium Partnership</span>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Collaboration with a consortium of 12+ multinational banks to standardize DeFi protocols for institutional use.
+                            </p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium text-seftec-navy dark:text-white">Central Bank Pilot Programs</span>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Participation in CBDC sandbox environments with 3 central banks globally.
+                            </p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium text-seftec-navy dark:text-white">Enterprise Blockchain Alliances</span>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Integration partnerships with leading enterprise blockchain providers including R3, Hyperledger, and ConsenSys.
+                            </p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <ChevronRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mt-0.5 mr-2 flex-shrink-0" />
+                          <div>
+                            <span className="font-medium text-seftec-navy dark:text-white">ERP System Integrations</span>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Strategic partnerships with major ERP providers to enable seamless DeFi access through existing enterprise systems.
+                            </p>
+                          </div>
+                        </li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div>
+                  <h3 className="text-2xl font-semibold text-seftec-navy dark:text-white mb-4">
+                    <TrendingUp className="inline-block mr-2 h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                    Enterprise Benefits
+                  </h3>
+                  <Card className="bg-white dark:bg-seftec-darkNavy/30 border-seftec-navy/10 dark:border-white/10">
+                    <CardContent className="p-6">
+                      <p className="text-seftec-navy/70 dark:text-white/70 mb-4">
+                        Our strategic roadmap delivers significant advantages for enterprise clients:
+                      </p>
+                      <div className="space-y-4">
+                        <div className="flex items-start">
+                          <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full mr-3 mt-1">
+                            <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-seftec-navy dark:text-white">Cost Reduction</h5>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Up to 65% reduction in settlement costs and 72% decrease in international transaction fees.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full mr-3 mt-1">
+                            <Zap className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-seftec-navy dark:text-white">Operational Efficiency</h5>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Automation reduces processing time by 85% and eliminates 95% of manual reconciliation tasks.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-full mr-3 mt-1">
+                            <Globe className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-seftec-navy dark:text-white">Global Market Access</h5>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Seamless access to global liquidity pools and cross-border payment networks in over 180 countries.
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-start">
+                          <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-full mr-3 mt-1">
+                            <Lock className="h-4 w-4 text-red-600 dark:text-red-400" />
+                          </div>
+                          <div>
+                            <h5 className="font-medium text-seftec-navy dark:text-white">Regulatory Compliance</h5>
+                            <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                              Built-in compliance with global financial regulations, reducing compliance costs by up to 45%.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <Button className="bg-gradient-to-r from-seftec-navy to-seftec-navy/90 dark:from-seftec-teal dark:to-seftec-purple text-white">
+                  Schedule Strategic Consultation
                 </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </div>
-      </section>
+              </div>
+            </section>
+          </TabsContent>
+        </Tabs>
+      </div>
       
-      {/* Technical Solution */}
-      <section id="technical-solution" className="py-16 bg-seftec-navy dark:bg-seftec-darkNavy/80 text-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4 px-4 py-1.5 bg-white/10 text-white border-white/20 text-sm">
-              Technical Excellence
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-              Enterprise-Grade DeFi Platform
-            </h2>
-            <p className="text-lg text-white/70">
-              Our secure, scalable framework enables enterprises to harness the power of decentralized finance while maintaining compliance and security.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            <div className="bg-white/5 p-8 rounded-lg border border-white/10 hover:bg-white/10 transition-colors duration-300 reveal">
-              <CircleDollarSign className="h-12 w-12 mb-6 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-xl font-bold mb-4">ISO 20022 Integration</h3>
-              <p className="text-white/80 mb-4">
-                Our platform is built on the foundation of ISO 20022 message standards, enabling seamless interoperability between traditional banking systems and blockchain networks.
-              </p>
-              <ul className="space-y-2 text-white/80">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Complete message format compatibility</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Automated translation between standards</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Enhanced data richness for compliance</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-white/5 p-8 rounded-lg border border-white/10 hover:bg-white/10 transition-colors duration-300 reveal">
-              <Lock className="h-12 w-12 mb-6 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-xl font-bold mb-4">Security Framework</h3>
-              <p className="text-white/80 mb-4">
-                Our multi-layered security architecture protects enterprise assets through advanced protocols and continuous monitoring.
-              </p>
-              <ul className="space-y-2 text-white/80">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Military-grade encryption (AES-256)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Multi-signature authentication</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Real-time threat detection and response</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Quarterly third-party security audits</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="bg-white/5 p-8 rounded-lg border border-white/10 hover:bg-white/10 transition-colors duration-300 reveal">
-              <Scale className="h-12 w-12 mb-6 text-seftec-gold dark:text-seftec-teal" />
-              <h3 className="text-xl font-bold mb-4">Risk Management</h3>
-              <p className="text-white/80 mb-4">
-                Advanced risk assessment and mitigation capabilities protect enterprises from market volatility and operational risks.
-              </p>
-              <ul className="space-y-2 text-white/80">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>AI-powered fraud detection</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Real-time compliance monitoring</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Customizable risk parameters</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <span>Automated hedging mechanisms</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold mb-6 text-center reveal">
-              Integration Examples
-            </h3>
-            
-            <Accordion type="single" collapsible className="bg-white/5 rounded-lg border border-white/10 reveal">
-              <AccordionItem value="core-banking">
-                <AccordionTrigger className="px-6 py-4 hover:bg-white/5">
-                  Core Banking System Integration
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-white/80">
-                  <p className="mb-4">
-                    Seftec's API-driven architecture enables seamless integration with existing core banking systems, allowing financial institutions to extend their capabilities into DeFi markets without disrupting established operations.
-                  </p>
-                  <p>
-                    Our platform supports standard protocols including REST, SOAP, and ISO 20022 XML messaging, with comprehensive documentation and sandbox environments for testing.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="multi-chain">
-                <AccordionTrigger className="px-6 py-4 hover:bg-white/5">
-                  Multi-Chain Support
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-white/80">
-                  <p className="mb-4">
-                    Seftec supports all major blockchain networks including Ethereum, Solana, Avalanche, and enterprise solutions like Hyperledger Fabric and R3 Corda. This multi-chain approach ensures enterprises can operate across ecosystems based on business requirements.
-                  </p>
-                  <p>
-                    Our unified dashboard provides consistent governance and visibility across all supported chains, with automatic optimization for transaction costs and settlement times.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="regulatory">
-                <AccordionTrigger className="px-6 py-4 hover:bg-white/5">
-                  Regulatory Reporting
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-white/80">
-                  <p className="mb-4">
-                    Automated compliance with reporting requirements across major financial jurisdictions, including FATF Travel Rule, MiCA, and regional regulations like SEC requirements.
-                  </p>
-                  <p>
-                    The platform maintains comprehensive audit trails and can generate regulator-ready reports in standardized formats, dramatically reducing the compliance burden for enterprises.
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        </div>
-      </section>
-      
-      {/* Strategic Roadmap */}
-      <section id="strategic-roadmap" className="py-16">
-        <div className="container mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4 px-4 py-1.5 bg-seftec-slate dark:bg-white/10 text-seftec-navy dark:text-white border-seftec-navy/10 dark:border-white/20 text-sm">
-              Future Trajectory
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-seftec-navy dark:text-white">
-              Strategic DeFi Roadmap
-            </h2>
-            <p className="text-lg text-seftec-navy/70 dark:text-white/70">
-              Our detailed development and expansion plan outlines how Seftec will continue to lead enterprise DeFi innovation over the next 24 months.
-            </p>
-          </div>
-          
-          {/* Roadmap Timeline */}
-          <div className="relative max-w-4xl mx-auto mb-20">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-seftec-slate dark:bg-white/10"></div>
-            
-            {/* Q2 2024 */}
-            <div className="relative z-10 mb-12 reveal">
-              <div className="flex items-center">
-                <div className="flex-1 text-right pr-8 md:pr-12">
-                  <div className="inline-block bg-seftec-gold dark:bg-seftec-teal text-white rounded-lg px-4 py-2 mb-2">
-                    Q2 2024
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-seftec-navy dark:text-white">Enhanced ISO 20022 Capabilities</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70 max-w-md ml-auto">
-                    Expanding ISO 20022 message support to include all transaction types and introducing advanced mapping tools for legacy systems.
-                  </p>
-                </div>
-                <div className="h-8 w-8 rounded-full bg-seftec-gold dark:bg-seftec-teal flex items-center justify-center border-4 border-white dark:border-seftec-darkNavy">
-                  <span className="bg-white dark:bg-seftec-darkNavy h-2 w-2 rounded-full"></span>
-                </div>
-                <div className="flex-1"></div>
-              </div>
-            </div>
-            
-            {/* Q3 2024 */}
-            <div className="relative z-10 mb-12 reveal">
-              <div className="flex items-center">
-                <div className="flex-1"></div>
-                <div className="h-8 w-8 rounded-full bg-seftec-gold dark:bg-seftec-teal flex items-center justify-center border-4 border-white dark:border-seftec-darkNavy">
-                  <span className="bg-white dark:bg-seftec-darkNavy h-2 w-2 rounded-full"></span>
-                </div>
-                <div className="flex-1 pl-8 md:pl-12">
-                  <div className="inline-block bg-seftec-gold dark:bg-seftec-teal text-white rounded-lg px-4 py-2 mb-2">
-                    Q3 2024
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-seftec-navy dark:text-white">Global Financial Partnership Network</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70 max-w-md">
-                    Launch of strategic partnerships with five major global financial institutions to create an interoperable DeFi liquidity network.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Q4 2024 */}
-            <div className="relative z-10 mb-12 reveal">
-              <div className="flex items-center">
-                <div className="flex-1 text-right pr-8 md:pr-12">
-                  <div className="inline-block bg-seftec-gold dark:bg-seftec-teal text-white rounded-lg px-4 py-2 mb-2">
-                    Q4 2024
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-seftec-navy dark:text-white">Enterprise Tokenization Platform</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70 max-w-md ml-auto">
-                    Release of comprehensive asset tokenization capabilities for enterprises, enabling tokenization of traditional financial instruments with regulatory compliance.
-                  </p>
-                </div>
-                <div className="h-8 w-8 rounded-full bg-seftec-gold dark:bg-seftec-teal flex items-center justify-center border-4 border-white dark:border-seftec-darkNavy">
-                  <span className="bg-white dark:bg-seftec-darkNavy h-2 w-2 rounded-full"></span>
-                </div>
-                <div className="flex-1"></div>
-              </div>
-            </div>
-            
-            {/* Q1 2025 */}
-            <div className="relative z-10 mb-12 reveal">
-              <div className="flex items-center">
-                <div className="flex-1"></div>
-                <div className="h-8 w-8 rounded-full bg-seftec-gold dark:bg-seftec-teal flex items-center justify-center border-4 border-white dark:border-seftec-darkNavy">
-                  <span className="bg-white dark:bg-seftec-darkNavy h-2 w-2 rounded-full"></span>
-                </div>
-                <div className="flex-1 pl-8 md:pl-12">
-                  <div className="inline-block bg-seftec-gold dark:bg-seftec-teal text-white rounded-lg px-4 py-2 mb-2">
-                    Q1 2025
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-seftec-navy dark:text-white">Cross-Border Settlement Network</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70 max-w-md">
-                    Launch of next-generation cross-border payment and settlement network with near-instantaneous finality and complete regulatory compliance.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Q2 2025 */}
-            <div className="relative z-10 reveal">
-              <div className="flex items-center">
-                <div className="flex-1 text-right pr-8 md:pr-12">
-                  <div className="inline-block bg-seftec-gold dark:bg-seftec-teal text-white rounded-lg px-4 py-2 mb-2">
-                    Q2 2025
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-seftec-navy dark:text-white">AI-Powered DeFi Analytics Suite</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70 max-w-md ml-auto">
-                    Introduction of advanced predictive analytics for liquidity optimization, risk management, and strategic treasury operations.
-                  </p>
-                </div>
-                <div className="h-8 w-8 rounded-full bg-seftec-gold dark:bg-seftec-teal flex items-center justify-center border-4 border-white dark:border-seftec-darkNavy">
-                  <span className="bg-white dark:bg-seftec-darkNavy h-2 w-2 rounded-full"></span>
-                </div>
-                <div className="flex-1"></div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Partnership & Expansion */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-            <div className="space-y-6 reveal">
-              <h3 className="text-2xl font-bold text-seftec-navy dark:text-white">
-                Strategic Partnerships
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Handshake className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Global Banking Consortium</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Partnership with a consortium of 20+ global banks to establish DeFi interoperability standards and develop compliant cross-border solutions.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Handshake className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Central Bank Digital Currency Initiatives</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Collaboration with three central banks to develop CBDC frameworks compatible with ISO 20022 standards for seamless integration with DeFi ecosystems.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Handshake className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Enterprise Blockchain Alliance</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Leading a consortium of enterprise technology providers to develop interoperable standards for private and public blockchain integration in financial services.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-6 reveal">
-              <h3 className="text-2xl font-bold text-seftec-navy dark:text-white">
-                Global Expansion Initiatives
-              </h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Globe className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">APAC Expansion</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Opening regional headquarters in Singapore with satellite offices in Tokyo and Sydney to serve the rapidly growing Asian-Pacific enterprise market.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Globe className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">Middle East Financial Hub</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Establishing a regional center in Dubai to facilitate DeFi adoption among sovereign wealth funds and major financial institutions in the Gulf region.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Globe className="h-6 w-6 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-medium text-seftec-navy dark:text-white">African Financial Markets Access</h4>
-                    <p className="text-seftec-navy/70 dark:text-white/70">
-                      Dedicated initiative to expand DeFi infrastructure across key African markets, focusing on cross-border payments and trade finance solutions.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Upcoming DeFi Offerings */}
-          <div className="bg-seftec-slate/20 dark:bg-white/5 rounded-lg p-8 border border-seftec-navy/10 dark:border-white/10 reveal">
-            <h3 className="text-2xl font-bold text-seftec-navy dark:text-white text-center mb-8">
-              Upcoming Enterprise DeFi Capabilities
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="bg-white/90 dark:bg-seftec-darkNavy/60">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <BarChart4 className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                    Institutional Yield Optimization
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-seftec-navy/80 dark:text-white/80 text-sm">
-                    AI-driven treasury management tools that automatically optimize yields across DeFi protocols while maintaining strict risk parameters.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 dark:bg-seftec-darkNavy/60">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Landmark className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                    Compliant DeFi Access
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-seftec-navy/80 dark:text-white/80 text-sm">
-                    Permissioned access to DeFi liquidity pools and protocols with built-in compliance controls and complete audit trails.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 dark:bg-seftec-darkNavy/60">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <CircleDollarSign className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                    Tokenized Asset Framework
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-seftec-navy/80 dark:text-white/80 text-sm">
-                    End-to-end platform for creating, managing, and trading tokenized traditional assets with regulatory compliance.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 dark:bg-seftec-darkNavy/60">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                    Advanced Risk Management
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-seftec-navy/80 dark:text-white/80 text-sm">
-                    Next-generation risk controls with real-time monitoring, automated hedging, and sophisticated market impact analysis.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 dark:bg-seftec-darkNavy/60">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Globe className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                    Cross-Chain Settlement
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-seftec-navy/80 dark:text-white/80 text-sm">
-                    Unified settlement layer that enables instant, secure transactions across multiple blockchain networks with atomic execution.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/90 dark:bg-seftec-darkNavy/60">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <BriefcaseBusiness className="h-5 w-5 text-seftec-gold dark:text-seftec-teal" />
-                    Enterprise Smart Contracts
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-seftec-navy/80 dark:text-white/80 text-sm">
-                    Audited, customizable smart contract templates designed specifically for enterprise use cases with comprehensive legal frameworks.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal/90 dark:to-seftec-purple/90 text-white">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      {/* Call to Action */}
+      <section className="bg-gradient-to-br from-seftec-navy/10 to-seftec-navy/5 dark:from-seftec-teal/10 dark:to-seftec-purple/5 py-16 px-4">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-6">
             Ready to Transform Your Enterprise with DeFi?
           </h2>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
-            Join the leading financial institutions already leveraging Seftec's enterprise DeFi platform to drive innovation and efficiency.
+          <p className="text-xl text-seftec-navy/80 dark:text-white/80 max-w-3xl mx-auto mb-8">
+            Connect with our experts to discover how Seftec's ISO 20022 compliant DeFi solutions can revolutionize your financial operations.
           </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" className="bg-white text-seftec-navy hover:bg-white/90">
-              Request Enterprise Demo
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button size="lg" className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white">
+              Request Demo
             </Button>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-              Download Technical Whitepaper
+            <Button variant="outline" size="lg" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white dark:text-white dark:hover:bg-white/10">
+              Contact Sales Team
             </Button>
           </div>
         </div>
