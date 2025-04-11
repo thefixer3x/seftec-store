@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/context/AuthContext';
 import { FeatureFlagProvider } from '@/components/ui/feature-flags/FeatureFlagProvider';
+import { CartProvider } from '@/context/CartContext';
 
 // Create a custom render function that includes providers
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
@@ -22,9 +23,11 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <FeatureFlagProvider>
-              {children}
-            </FeatureFlagProvider>
+            <CartProvider>
+              <FeatureFlagProvider>
+                {children}
+              </FeatureFlagProvider>
+            </CartProvider>
           </AuthProvider>
         </QueryClientProvider>
       </ThemeProvider>
@@ -74,4 +77,15 @@ export const setViewport = (width: number, height: number) => {
   Object.defineProperty(window, 'innerWidth', { value: width, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: height, writable: true });
   window.dispatchEvent(new Event('resize'));
+};
+
+// Mock cart context
+export const mockCartContext = {
+  cart: [],
+  cartCount: 0,
+  addToCart: jest.fn(),
+  removeFromCart: jest.fn(),
+  clearCart: jest.fn(),
+  updateQuantity: jest.fn(),
+  cartTotal: 0,
 };
