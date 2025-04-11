@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BarChart, LineChart, PieChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -111,7 +110,9 @@ const MarketLeadershipSection = () => {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button variant="outline" size="sm">Full Case Study</Button>
+            <Button variant="outline" size="sm">
+              Full Case Study
+            </Button>
           </CardFooter>
         </Card>
         
@@ -129,7 +130,9 @@ const MarketLeadershipSection = () => {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button variant="outline" size="sm">Full Case Study</Button>
+            <Button variant="outline" size="sm">
+              Full Case Study
+            </Button>
           </CardFooter>
         </Card>
       </div>
