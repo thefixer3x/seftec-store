@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Routes, Route } from "react-router-dom";
 import { profileRoutes } from "./routes/profileRoutes";
+import { FeatureFlagProvider } from "@/components/ui/feature-flags/FeatureFlagProvider";
 import Index from "./pages/Index";
 import BizTools from "./pages/BizTools";
 import Solutions from "./pages/Solutions";
@@ -23,7 +24,6 @@ import ValuePropositions from "./pages/ValuePropositions";
 import BizGenie from "./pages/BizGenie";
 import FAQ from "./pages/FAQ";
 import ComingSoon from "./components/ui/coming-soon";
-import { CartProvider } from "./context/CartContext";
 import { NotificationsProvider } from "./context/NotificationsContext";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCanceled from "./pages/PaymentCanceled";
@@ -96,39 +96,37 @@ const App = () => {
   }
   
   return (
-    <CartProvider>
-      <NotificationsProvider>
-        <TooltipProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/biz-tools" element={<BizTools />} />
-            <Route path="/solutions" element={<Solutions />} />
-            <Route path="/auth-test" element={<AuthTest />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/auth-callback" element={<AuthCallback />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/value-propositions" element={<ValuePropositions />} />
-            <Route path="/value-propositions/bizgenie" element={<BizGenie />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            <Route path="/payment-canceled" element={<PaymentCanceled />} />
-            
-            {profileRoutes}
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <Toaster />
-          <Sonner />
-        </TooltipProvider>
-      </NotificationsProvider>
-    </CartProvider>
+    <NotificationsProvider>
+      <TooltipProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/biz-tools" element={<BizTools />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/auth-test" element={<AuthTest />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/auth-callback" element={<AuthCallback />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/value-propositions" element={<ValuePropositions />} />
+          <Route path="/value-propositions/bizgenie" element={<BizGenie />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-canceled" element={<PaymentCanceled />} />
+          
+          {profileRoutes}
+          
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+        <Sonner />
+      </TooltipProvider>
+    </NotificationsProvider>
   );
 };
 

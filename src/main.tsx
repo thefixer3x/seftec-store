@@ -8,6 +8,8 @@ import App from './App';
 import './index.css';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { FeatureFlagProvider } from './components/ui/feature-flags/FeatureFlagProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,7 +30,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <App />
+            <CartProvider>
+              <FeatureFlagProvider>
+                <App />
+              </FeatureFlagProvider>
+            </CartProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>

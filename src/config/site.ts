@@ -14,6 +14,10 @@ export const siteConfig = {
       href: "/value-propositions",
     },
     {
+      title: "Shop",
+      href: "/shop",
+    },
+    {
       title: "About",
       href: "/about",
     },
