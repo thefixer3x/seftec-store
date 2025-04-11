@@ -1,10 +1,11 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/context/AuthContext';
 import { Sparkle } from 'lucide-react';
 import { Icons } from '@/components/icons';
+import { Button } from '@/components/ui/button';
 
 const Login = () => {
   const { user } = useAuth();
@@ -38,6 +39,14 @@ const Login = () => {
           </p>
           
           <AuthForm />
+          
+          <div className="mt-6 text-center">
+            <Link to="/social-login-test">
+              <Button variant="link" className="text-sm">
+                Test Social Login Options
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

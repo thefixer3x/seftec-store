@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +26,7 @@ import ComingSoon from "./components/ui/coming-soon";
 import { NotificationsProvider } from "./context/NotificationsContext";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCanceled from "./pages/PaymentCanceled";
+import SocialLoginTest from "./pages/SocialLoginTest";
 
 interface ComingSoonConfig {
   title: string;
@@ -103,6 +103,7 @@ const App = () => {
           <Route path="/biz-tools" element={<BizTools />} />
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/auth-test" element={<AuthTest />} />
+          <Route path="/social-login-test" element={<SocialLoginTest />} />
           <Route path="/products" element={<Products />} />
           <Route path="/auth-callback" element={<AuthCallback />} />
           <Route path="/shop" element={<Shop />} />
