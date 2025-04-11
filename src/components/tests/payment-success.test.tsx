@@ -1,6 +1,9 @@
 
 /// <reference types="jest" />
 
+// FIXED: Added jest-dom import for extended matchers
+import '@testing-library/jest-dom';
+
 // Basic test file for PaymentSuccess component
 // This serves as a template for implementing more tests
 
