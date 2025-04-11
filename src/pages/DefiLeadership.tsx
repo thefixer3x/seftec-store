@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
-import Navbar from "@/components/ui/navbar";
+import { MainNav } from "@/components/ui/navbar";
 import Footer from "@/components/ui/footer";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -30,7 +30,13 @@ const DefiLeadership = () => {
       </Helmet>
 
       <div className="flex min-h-screen flex-col">
-        <Navbar />
+        <MainNav items={[
+          { title: "Home", href: "/" },
+          { title: "DeFi Leadership", href: "/defi-leadership" },
+          { title: "Shop", href: "/shop" },
+          { title: "About", href: "/about" },
+          { title: "Contact", href: "/contact" }
+        ]} />
         
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-seftec-navy to-blue-900 text-white py-16 md:py-24">
@@ -593,3 +599,4 @@ const DefiLeadership = () => {
 };
 
 export default DefiLeadership;
+
