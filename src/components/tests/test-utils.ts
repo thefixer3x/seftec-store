@@ -35,6 +35,7 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+// FIXED: Added proper type annotations and fixed generic syntax
 const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>,
@@ -44,7 +45,7 @@ const customRender = (
 export * from '@testing-library/react';
 export { customRender as render };
 
-// Mock for Supabase client
+// FIXED: Mock for Supabase client with proper method signatures
 export const mockSupabase = {
   auth: {
     getSession: jest.fn().mockResolvedValue({ data: { session: null } }),
@@ -64,7 +65,7 @@ export const mockSupabase = {
   },
 };
 
-// Use this to mock context providers in tests
+// FIXED: Use this to mock context providers in tests
 export const mockAuthContext = {
   user: null,
   profile: null,
@@ -72,14 +73,14 @@ export const mockAuthContext = {
   refreshProfile: jest.fn(),
 };
 
-// Helper to simulate responsive viewport
-export const setViewport = (width: number, height: number) => {
+// FIXED: Helper to simulate responsive viewport with proper type annotations
+export const setViewport = (width: number, height: number): void => {
   Object.defineProperty(window, 'innerWidth', { value: width, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: height, writable: true });
   window.dispatchEvent(new Event('resize'));
 };
 
-// Mock cart context
+// FIXED: Mock cart context
 export const mockCartContext = {
   cart: [],
   cartCount: 0,
