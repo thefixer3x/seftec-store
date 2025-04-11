@@ -1,6 +1,9 @@
 
 /// <reference types="jest" />
 
+// FIXED: Added jest-dom import for extended matchers
+import '@testing-library/jest-dom';
+
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
