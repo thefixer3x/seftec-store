@@ -4,6 +4,9 @@
 // FIXED: Added jest-dom import for extended matchers
 import '@testing-library/jest-dom';
 
+// FIXED: Added type declaration for testing-library
+declare module '@testing-library/react';
+
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
