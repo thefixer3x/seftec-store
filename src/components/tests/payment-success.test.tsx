@@ -1,4 +1,6 @@
 
+/// <reference types="jest" />
+
 // Basic test file for PaymentSuccess component
 // This serves as a template for implementing more tests
 
