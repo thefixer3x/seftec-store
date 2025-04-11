@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, ExternalLink, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Shield, Lock, ExternalLink, Mail, Phone, MapPin, Clock, ShoppingCart, ShoppingBag, ListOrdered } from 'lucide-react';
 
 interface FooterProps {
   className?: string;
@@ -60,6 +60,32 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           </div>
           
           <div>
+            <h3 className="text-lg font-semibold text-seftec-navy dark:text-white mb-4">Shop</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/shop" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors flex items-center">
+                  <ShoppingBag className="h-4 w-4 mr-1" />
+                  <span>Browse Products</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/cart" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors flex items-center">
+                  <ShoppingCart className="h-4 w-4 mr-1" />
+                  <span>View Cart</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/orders" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors flex items-center">
+                  <ListOrdered className="h-4 w-4 mr-1" />
+                  <span>Track Orders</span>
+                </Link>
+              </li>
+              <li><a href="#" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Shipping Policy</a></li>
+              <li><a href="#" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Returns & Refunds</a></li>
+            </ul>
+          </div>
+          
+          <div>
             <h3 className="text-lg font-semibold text-seftec-navy dark:text-white mb-4">Company</h3>
             <ul className="space-y-3">
               <li><Link to="/about" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">About</Link></li>
@@ -98,26 +124,6 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
               </li>
             </ul>
           </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-seftec-navy dark:text-white mb-4">Business Hours</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <Clock size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
-                <div className="text-seftec-navy/70 dark:text-white/70">
-                  <p>Monday - Friday:</p>
-                  <p className="font-medium">9AM - 4PM (WAT)</p>
-                  <p className="mt-2">Saturday, Sunday:</p>
-                  <p className="font-medium">10AM - 2PM (WAT)</p>
-                </div>
-              </li>
-              <li>
-                <Link to="/contact" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors mt-4 inline-block">
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
         </div>
         
         <div className="border-t border-seftec-navy/10 dark:border-white/10 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
@@ -135,6 +141,6 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       </div>
     </footer>
   );
-};
+}
 
 export default Footer;

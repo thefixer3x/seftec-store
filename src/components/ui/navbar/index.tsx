@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { MainNavItem } from "@/types";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 import Logo from "./logo";
 import MobileToggle from "./mobile-toggle";
 import DesktopNav from "./desktop-nav";
@@ -9,6 +10,9 @@ import AuthSection from "./auth-section";
 import MobileMenu from "./mobile-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 
 interface MainNavProps {
   items?: MainNavItem[];
@@ -16,6 +20,7 @@ interface MainNavProps {
 
 export function MainNav({ items }: MainNavProps) {
   const { user } = useAuth();
+  const { cartCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
   
@@ -65,6 +70,14 @@ export function MainNav({ items }: MainNavProps) {
         <MobileToggle isOpen={mobileMenuOpen} onClick={toggleMobileMenu} />
         <DesktopNav items={items} />
         <div className="flex items-center gap-4">
+          <Link to="/cart" className="relative">
+            <ShoppingCart className="h-5 w-5 text-gray-600 dark:text-white/90 hover:text-seftec-navy dark:hover:text-white transition-colors" />
+            {cartCount > 0 && (
+              <Badge className="absolute -top-2 -right-2 px-1.5 h-5 min-w-5 flex items-center justify-center bg-seftec-gold dark:bg-seftec-teal text-white text-xs rounded-full">
+                {cartCount > 99 ? '99+' : cartCount}
+              </Badge>
+            )}
+          </Link>
           <ThemeToggle className="static bottom-auto right-auto" />
           <AuthSection user={user} />
         </div>

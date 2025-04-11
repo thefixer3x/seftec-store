@@ -1,12 +1,13 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Shield } from "lucide-react";
+import { Shield, ShoppingCart, ShoppingBag, ListOrdered } from "lucide-react";
 import { MainNavItem } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useCart } from "@/context/CartContext";
 
 interface MobileMenuProps {
   items?: MainNavItem[];
@@ -16,6 +17,8 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
+  const { cartCount } = useCart();
+  
   if (!isOpen) return null;
 
   return (
@@ -45,6 +48,43 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
             )}
           </div>
         ) : null}
+        
+        {/* Shop, Cart and Orders Links */}
+        <div className="flex flex-col items-center space-y-4 mb-6 w-full">
+          <Link
+            to="/shop"
+            className="flex items-center text-base font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors py-2"
+            onClick={onClose}
+          >
+            <ShoppingBag className="mr-2 h-5 w-5" />
+            <span>Shop</span>
+          </Link>
+          
+          <Link
+            to="/cart"
+            className="flex items-center text-base font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors py-2"
+            onClick={onClose}
+          >
+            <ShoppingCart className="mr-2 h-5 w-5" />
+            <span>Cart</span>
+            {cartCount > 0 && (
+              <span className="ml-2 bg-seftec-gold dark:bg-seftec-teal text-white text-xs rounded-full px-2 py-1">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+          
+          {user && (
+            <Link
+              to="/orders"
+              className="flex items-center text-base font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors py-2"
+              onClick={onClose}
+            >
+              <ListOrdered className="mr-2 h-5 w-5" />
+              <span>My Orders</span>
+            </Link>
+          )}
+        </div>
         
         {/* Secured by AI Badge (Mobile) */}
         <Link 

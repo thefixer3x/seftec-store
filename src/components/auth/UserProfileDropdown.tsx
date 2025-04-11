@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { User, Settings, LogOut, ShoppingCart, LayoutDashboard, CreditCard, Store, Users } from 'lucide-react';
+import { User, Settings, LogOut, ShoppingCart, LayoutDashboard, CreditCard, Store, Users, ShoppingBag, ListOrdered } from 'lucide-react';
 import { AuthModal } from './AuthModal';
 import { Link } from 'react-router-dom';
 
@@ -70,6 +70,29 @@ export function UserProfileDropdown() {
             <span>Dashboard</span>
           </Link>
         </DropdownMenuItem>
+        
+        {/* Shop-related menu items */}
+        <DropdownMenuItem asChild>
+          <Link to="/shop" className="cursor-pointer flex items-center w-full">
+            <ShoppingBag className="mr-2 h-4 w-4" />
+            <span>Shop</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/cart" className="cursor-pointer flex items-center w-full">
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            <span>My Cart</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/orders" className="cursor-pointer flex items-center w-full">
+            <ListOrdered className="mr-2 h-4 w-4" />
+            <span>My Orders</span>
+          </Link>
+        </DropdownMenuItem>
+        
+        <DropdownMenuSeparator />
+        
         <DropdownMenuItem asChild>
           <Link to="/profile/wallet" className="cursor-pointer flex items-center w-full">
             <CreditCard className="mr-2 h-4 w-4" />
