@@ -1,6 +1,13 @@
 
 import { useState, useEffect } from 'react';
 
+// FIXED: Added NetworkInformation interface
+interface NetworkInformation {
+  effectiveType: string;
+  addEventListener: (type: string, listener: EventListener) => void;
+  removeEventListener: (type: string, listener: EventListener) => void;
+}
+
 /**
  * Hook to detect and monitor network connectivity
  * Provides real-time updates on connection status
@@ -20,7 +27,8 @@ export function useOfflineDetection() {
 
     // Check for Network Information API support
     if ('connection' in navigator && navigator['connection']) {
-      const connection = navigator['connection'];
+      // FIXED: added type assertion for NetworkInformation
+      const connection = navigator['connection'] as NetworkInformation;
       
       // Get initial connection type
       setConnectionType(connection.effectiveType);
