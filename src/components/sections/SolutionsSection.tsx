@@ -30,7 +30,7 @@ const solutionsData = [
 
 const SolutionsSection: React.FC = () => {
   return (
-    <section id="solutions" className="py-20 bg-seftec-slate dark:bg-seftec-darkNavy/50">
+    <section id="solutions" className="py-20 bg-white dark:bg-seftec-darkNavy/50">
       <div className="container mx-auto px-6">
         <SectionHeading
           label="Our Solutions"
@@ -42,23 +42,20 @@ const SolutionsSection: React.FC = () => {
           {solutionsData.map((solution, index) => (
             <div 
               key={index} 
-              className="relative animate-fade-up" 
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="relative bg-white dark:bg-seftec-darkNavy/80 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 transition-all duration-300 hover:shadow-md" 
             >
-              <div className="bg-white dark:bg-seftec-darkNavy/80 p-8 rounded-2xl shadow-apple hover:shadow-apple-hover transition-all duration-500">
-                <div className="absolute -top-6 left-8 bg-seftec-navy dark:bg-gradient-to-br dark:from-seftec-teal dark:to-seftec-purple text-white p-3 rounded-lg shadow-lg">
-                  {solution.icon}
-                </div>
-                <div className="mt-8">
-                  <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">{solution.title}</h3>
-                  <p className="text-seftec-navy/70 dark:text-white/70 mb-6">{solution.description}</p>
-                  <Button 
-                    variant="outline" 
-                    className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300 custom-btn"
-                  >
-                    Learn More
-                  </Button>
-                </div>
+              <div className="absolute -top-6 left-8 bg-seftec-navy dark:bg-gradient-to-br dark:from-seftec-teal dark:to-seftec-purple text-white p-3 rounded-lg shadow-lg">
+                {solution.icon}
+              </div>
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">{solution.title}</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70 mb-6">{solution.description}</p>
+                <Button 
+                  variant="outline" 
+                  className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300"
+                >
+                  Learn More
+                </Button>
               </div>
             </div>
           ))}
