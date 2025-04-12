@@ -8,14 +8,16 @@ import {
   accountManagementFAQs,
   transactionsPaymentsFAQs,
   securityComplianceFAQs,
-  supportIntegrationFAQs
+  supportIntegrationFAQs,
+  defiFAQs
 } from './FAQData';
 
 interface FAQSectionProps {
   compact?: boolean;
+  showDeFi?: boolean;
 }
 
-const FAQSection = ({ compact = false }: FAQSectionProps) => {
+const FAQSection = ({ compact = false, showDeFi = true }: FAQSectionProps) => {
   return (
     <div className={compact ? "py-6" : "py-12"}>
       <div className="container mx-auto px-4">
@@ -30,6 +32,12 @@ const FAQSection = ({ compact = false }: FAQSectionProps) => {
               title="Platform Overview" 
               items={platformOverviewFAQs.slice(0, 2)} 
             />
+            {showDeFi && (
+              <FAQCategory
+                title="Decentralized Finance (DeFi)"
+                items={defiFAQs.slice(0, 2)}
+              />
+            )}
             <FAQCategory 
               title="Security & Compliance" 
               items={securityComplianceFAQs.slice(0, 2)} 
@@ -41,6 +49,9 @@ const FAQSection = ({ compact = false }: FAQSectionProps) => {
             <FAQCategory title="Platform Overview" items={platformOverviewFAQs} />
             <FAQCategory title="Account Management" items={accountManagementFAQs} />
             <FAQCategory title="Transactions & Payments" items={transactionsPaymentsFAQs} />
+            {showDeFi && (
+              <FAQCategory title="Decentralized Finance (DeFi)" items={defiFAQs} />
+            )}
             <FAQCategory title="Security & Compliance" items={securityComplianceFAQs} />
             <FAQCategory title="Support & Integration" items={supportIntegrationFAQs} />
             <FAQCTA />

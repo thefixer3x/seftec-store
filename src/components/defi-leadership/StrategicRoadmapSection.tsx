@@ -1,225 +1,383 @@
 
 import React from 'react';
-import { ArrowRight, Calendar, Target, Globe, Zap, Gift, Users } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import SectionHeading from '@/components/ui/section-heading';
-import CallToAction from '@/components/ui/call-to-action';
+import { Calendar, Users, Globe, Rocket, Lightbulb, ArrowRight } from 'lucide-react';
 
-const StrategicRoadmapSection = () => {
+export const StrategicRoadmapSection = () => {
   return (
-    <section id="strategic-roadmap" className="py-24 bg-gradient-to-b from-white to-indigo-50 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4">
-        <SectionHeading
-          title="Strategic Roadmap"
-          subtitle="Our vision for the future of enterprise DeFi"
-          label="Future Vision"
-          align="center"
-          className="mb-16"
-          labelClassName="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
-        />
+    <div className="space-y-8">
+      <div className="max-w-4xl">
+        <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-4">Strategic Roadmap</h2>
+        <p className="text-lg text-seftec-navy/70 dark:text-white/70 mb-8">
+          Our comprehensive product development timeline outlines Seftec's vision for the future of enterprise DeFi solutions over the next 24 months.
+        </p>
+      </div>
+      
+      {/* Product Development Timeline */}
+      <div className="relative">
+        <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-700 transform -translate-x-1/2"></div>
         
-        <div className="max-w-5xl mx-auto">
-          {/* Timeline */}
+        <div className="space-y-12">
+          {/* Q2 2023 */}
           <div className="relative">
-            <div className="absolute left-8 md:left-1/2 top-0 h-full w-1 bg-gradient-to-b from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-500 rounded-full"></div>
-            
-            {/* Q3 2025 */}
-            <div className="relative mb-20">
-              <div className="flex flex-col md:flex-row items-start">
-                <div className="flex items-center md:w-1/2 mb-8 md:mb-0 md:pr-12">
-                  <div className="relative z-10 h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-white dark:bg-gray-900 shadow-md border-4 border-blue-600 dark:border-blue-500 flex items-center justify-center">
-                    <Calendar className="h-8 w-8 text-blue-600 dark:text-blue-500" />
-                    <div className="absolute -bottom-1 left-0 w-full text-[10px] font-bold text-blue-600 dark:text-blue-500 text-center">Q3</div>
-                  </div>
-                  <div className="ml-6">
-                    <h3 className="text-3xl font-bold text-blue-900 dark:text-blue-300">2025</h3>
-                  </div>
-                </div>
-                <div className="md:w-1/2 md:pl-12 md:translate-y-10">
-                  <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-800/80 overflow-hidden rounded-xl hover:shadow-xl transition-all duration-300 animate-fade-up">
-                    <div className="h-2 bg-blue-600 dark:bg-blue-500"></div>
-                    <CardContent className="p-8">
-                      <div className="flex items-center mb-4">
-                        <Zap className="h-6 w-6 text-blue-600 dark:text-blue-400 mr-3" />
-                        <h4 className="text-xl font-bold text-blue-900 dark:text-blue-300">Cross-Chain Settlement Protocol</h4>
-                      </div>
-                      <p className="text-gray-600 dark:text-gray-300 mb-6">
-                        Launch of our proprietary cross-chain settlement protocol enabling instant finality 
-                        across multiple blockchain networks while maintaining full regulatory compliance.
-                      </p>
-                      <ul className="space-y-3">
-                        <li className="flex items-start">
-                          <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3 shrink-0 mt-0.5" />
-                          <span className="text-gray-600 dark:text-gray-300">Atomic cross-chain settlement with regulatory compliance</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3 shrink-0 mt-0.5" />
-                          <span className="text-gray-600 dark:text-gray-300">Support for 12+ major blockchain networks</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ArrowRight className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3 shrink-0 mt-0.5" />
-                          <span className="text-gray-600 dark:text-gray-300">Institutional-grade security and auditability</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-4 border-white dark:border-seftec-darkNavy bg-seftec-gold dark:bg-seftec-teal z-10">
+              <Calendar className="h-5 w-5 text-white" />
             </div>
             
-            {/* Q4 2025 */}
-            <div className="relative mb-20">
-              <div className="flex flex-col md:flex-row items-start">
-                <div className="md:order-2 flex items-center md:w-1/2 mb-8 md:mb-0 md:pl-12">
-                  <div className="relative z-10 h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-white dark:bg-gray-900 shadow-md border-4 border-indigo-600 dark:border-indigo-500 flex items-center justify-center">
-                    <Target className="h-8 w-8 text-indigo-600 dark:text-indigo-500" />
-                    <div className="absolute -bottom-1 left-0 w-full text-[10px] font-bold text-indigo-600 dark:text-indigo-500 text-center">Q4</div>
-                  </div>
-                  <div className="ml-6">
-                    <h3 className="text-3xl font-bold text-indigo-900 dark:text-indigo-300">2025</h3>
-                  </div>
+            <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+              <div className="mb-6 md:mb-0 md:text-right">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 inline-block px-3 py-1 rounded-full text-seftec-gold dark:text-seftec-teal text-sm font-medium mb-2">
+                  Q2 2023 (Completed)
                 </div>
-                <div className="md:order-1 md:w-1/2 md:pr-12 md:text-right md:translate-y-10">
-                  <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-indigo-50 dark:from-gray-800 dark:to-gray-800/80 overflow-hidden rounded-xl hover:shadow-xl transition-all duration-300 animate-fade-up">
-                    <div className="h-2 bg-indigo-600 dark:bg-indigo-500"></div>
-                    <CardContent className="p-8">
-                      <div className="flex items-center mb-4 md:justify-end">
-                        <Gift className="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-3 md:order-2 md:ml-3 md:mr-0" />
-                        <h4 className="text-xl font-bold text-indigo-900 dark:text-indigo-300">Enterprise DeFi Marketplace</h4>
-                      </div>
-                      <p className="text-gray-600 dark:text-gray-300 mb-6">
-                        Introduction of the first regulated enterprise DeFi marketplace, allowing institutional 
-                        participants to access yield-generating opportunities with built-in risk assessment.
-                      </p>
-                      <ul className="space-y-3">
-                        <li className="flex items-start md:justify-end">
-                          <span className="text-gray-600 dark:text-gray-300 md:order-1">Curated DeFi protocols with institutional-grade risk ratings</span>
-                          <ArrowRight className="h-5 w-5 text-indigo-600 dark:text-indigo-400 mr-3 md:ml-3 md:mr-0 shrink-0 mt-0.5 md:order-2" />
-                        </li>
-                        <li className="flex items-start md:justify-end">
-                          <span className="text-gray-600 dark:text-gray-300 md:order-1">Automated compliance monitoring and reporting</span>
-                          <ArrowRight className="h-5 w-5 text-indigo-600 dark:text-indigo-400 mr-3 md:ml-3 md:mr-0 shrink-0 mt-0.5 md:order-2" />
-                        </li>
-                        <li className="flex items-start md:justify-end">
-                          <span className="text-gray-600 dark:text-gray-300 md:order-1">Treasury management optimization tools</span>
-                          <ArrowRight className="h-5 w-5 text-indigo-600 dark:text-indigo-400 mr-3 md:ml-3 md:mr-0 shrink-0 mt-0.5 md:order-2" />
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
+                <h3 className="text-xl font-bold text-seftec-navy dark:text-white mb-2">Foundation Phase</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Core infrastructure development and initial enterprise partnerships established.
+                </p>
               </div>
+              
+              <Card className="md:ml-8">
+                <CardContent className="p-6">
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">ISO 20022 compliant messaging framework</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Core security infrastructure</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Strategic banking partnerships</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          
+          {/* Q4 2023 */}
+          <div className="relative">
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-4 border-white dark:border-seftec-darkNavy bg-seftec-gold dark:bg-seftec-teal z-10">
+              <Calendar className="h-5 w-5 text-white" />
             </div>
             
-            {/* Q1 2026 */}
-            <div className="relative">
-              <div className="flex flex-col md:flex-row items-start">
-                <div className="flex items-center md:w-1/2 mb-8 md:mb-0 md:pr-12">
-                  <div className="relative z-10 h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-white dark:bg-gray-900 shadow-md border-4 border-purple-600 dark:border-purple-500 flex items-center justify-center">
-                    <Globe className="h-8 w-8 text-purple-600 dark:text-purple-500" />
-                    <div className="absolute -bottom-1 left-0 w-full text-[10px] font-bold text-purple-600 dark:text-purple-500 text-center">Q1</div>
-                  </div>
-                  <div className="ml-6">
-                    <h3 className="text-3xl font-bold text-purple-900 dark:text-purple-300">2026</h3>
-                  </div>
-                </div>
-                <div className="md:w-1/2 md:pl-12 md:translate-y-10">
-                  <Card className="shadow-lg border-0 bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-800/80 overflow-hidden rounded-xl hover:shadow-xl transition-all duration-300 animate-fade-up">
-                    <div className="h-2 bg-purple-600 dark:bg-purple-500"></div>
-                    <CardContent className="p-8">
-                      <div className="flex items-center mb-4">
-                        <Users className="h-6 w-6 text-purple-600 dark:text-purple-400 mr-3" />
-                        <h4 className="text-xl font-bold text-purple-900 dark:text-purple-300">Global Expansion</h4>
+            <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+              <Card className="mb-6 md:mb-0 md:mr-8">
+                <CardContent className="p-6">
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-300 mb-6">
-                        Expansion of regulatory coverage to include APAC markets with local presence in 
-                        Singapore, Tokyo, and Sydney, complementing our existing operations.
-                      </p>
-                      <ul className="space-y-3">
-                        <li className="flex items-start">
-                          <ArrowRight className="h-5 w-5 text-purple-600 dark:text-purple-400 mr-3 shrink-0 mt-0.5" />
-                          <span className="text-gray-600 dark:text-gray-300">Compliance with MAS, JFSA, and ASIC regulatory frameworks</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ArrowRight className="h-5 w-5 text-purple-600 dark:text-purple-400 mr-3 shrink-0 mt-0.5" />
-                          <span className="text-gray-600 dark:text-gray-300">Regional infrastructure for enhanced performance</span>
-                        </li>
-                        <li className="flex items-start">
-                          <ArrowRight className="h-5 w-5 text-purple-600 dark:text-purple-400 mr-3 shrink-0 mt-0.5" />
-                          <span className="text-gray-600 dark:text-gray-300">Strategic partnerships with regional financial institutions</span>
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Beta launch of enterprise DeFi platform</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Initial cross-border payment solution</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-green-50 dark:bg-green-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Regulatory compliance framework</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+              
+              <div className="md:text-left">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 inline-block px-3 py-1 rounded-full text-seftec-gold dark:text-seftec-teal text-sm font-medium mb-2">
+                  Q4 2023 (Completed)
                 </div>
+                <h3 className="text-xl font-bold text-seftec-navy dark:text-white mb-2">Beta Release</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Initial platform launch with core features and select enterprise partners.
+                </p>
               </div>
             </div>
           </div>
           
-          <div className="mt-24">
-            <h3 className="text-2xl font-bold mb-10 text-center text-gray-900 dark:text-white">Future Benefits for Enterprise Clients</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-800 dark:to-gray-800/80 overflow-hidden rounded-xl border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-up">
-                <div className="h-2 bg-blue-600 dark:bg-blue-500"></div>
+          {/* Q2 2024 */}
+          <div className="relative">
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-4 border-white dark:border-seftec-darkNavy bg-seftec-gold dark:bg-seftec-teal z-10">
+              <Calendar className="h-5 w-5 text-white" />
+            </div>
+            
+            <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+              <div className="mb-6 md:mb-0 md:text-right">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 inline-block px-3 py-1 rounded-full text-seftec-gold dark:text-seftec-teal text-sm font-medium mb-2">
+                  Q2 2024 (Current)
+                </div>
+                <h3 className="text-xl font-bold text-seftec-navy dark:text-white mb-2">Market Expansion</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Global rollout and enhanced feature set with expanded partnerships.
+                </p>
+              </div>
+              
+              <Card className="md:ml-8">
                 <CardContent className="p-6">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h4 className="text-lg font-semibold mb-3 text-blue-900 dark:text-blue-300">Enhanced Liquidity Access</h4>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Unlock access to global liquidity pools with institutional safeguards and compliance controls
-                  </p>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <div className="bg-amber-50 dark:bg-amber-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Full-scale platform launch in major markets</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-amber-50 dark:bg-amber-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Advanced tokenization capabilities</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-amber-50 dark:bg-amber-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <svg className="w-4 h-4 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Supply chain financing solution</span>
+                    </li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          
+          {/* Q4 2024 */}
+          <div className="relative">
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-4 border-white dark:border-seftec-darkNavy bg-seftec-gold dark:bg-seftec-teal z-10">
+              <Calendar className="h-5 w-5 text-white" />
+            </div>
+            
+            <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+              <Card className="mb-6 md:mb-0 md:mr-8">
+                <CardContent className="p-6">
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <div className="bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <Rocket className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Enterprise liquidity pools</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <Rocket className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Advanced trade finance solutions</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <Rocket className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Inter-bank settlement platform</span>
+                    </li>
+                  </ul>
                 </CardContent>
               </Card>
               
-              <Card className="bg-gradient-to-br from-white to-indigo-50 dark:from-gray-800 dark:to-gray-800/80 overflow-hidden rounded-xl border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-up animate-delay-100">
-                <div className="h-2 bg-indigo-600 dark:bg-indigo-500"></div>
-                <CardContent className="p-6">
-                  <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <h4 className="text-lg font-semibold mb-3 text-indigo-900 dark:text-indigo-300">Operational Efficiency</h4>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Reduce settlement times and operational costs while maintaining enterprise-grade security
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="md:text-left">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 inline-block px-3 py-1 rounded-full text-seftec-gold dark:text-seftec-teal text-sm font-medium mb-2">
+                  Q4 2024 (Planned)
+                </div>
+                <h3 className="text-xl font-bold text-seftec-navy dark:text-white mb-2">Advanced Features Release</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Launch of sophisticated DeFi products for enterprise finance transformation.
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Q2 2025 */}
+          <div className="relative">
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 top-0 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-4 border-white dark:border-seftec-darkNavy bg-seftec-gold dark:bg-seftec-teal z-10">
+              <Calendar className="h-5 w-5 text-white" />
+            </div>
+            
+            <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+              <div className="mb-6 md:mb-0 md:text-right">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 inline-block px-3 py-1 rounded-full text-seftec-gold dark:text-seftec-teal text-sm font-medium mb-2">
+                  Q2 2025 (Planned)
+                </div>
+                <h3 className="text-xl font-bold text-seftec-navy dark:text-white mb-2">Ecosystem Integration</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Full ecosystem development with third-party integration capabilities.
+                </p>
+              </div>
               
-              <Card className="bg-gradient-to-br from-white to-purple-50 dark:from-gray-800 dark:to-gray-800/80 overflow-hidden rounded-xl border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-up animate-delay-200">
-                <div className="h-2 bg-purple-600 dark:bg-purple-500"></div>
+              <Card className="md:ml-8">
                 <CardContent className="p-6">
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-full w-12 h-12 flex items-center justify-center mb-4">
-                    <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                  <h4 className="text-lg font-semibold mb-3 text-purple-900 dark:text-purple-300">Competitive Advantage</h4>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    Stay ahead of the digital finance transformation with cutting-edge DeFi capabilities
-                  </p>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <div className="bg-purple-50 dark:bg-purple-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <Lightbulb className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Developer API ecosystem</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-purple-50 dark:bg-purple-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <Lightbulb className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">Cross-chain interoperability framework</span>
+                    </li>
+                    <li className="flex items-start">
+                      <div className="bg-purple-50 dark:bg-purple-900/20 p-1.5 rounded-full mr-3 mt-0.5">
+                        <Lightbulb className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                      </div>
+                      <span className="text-seftec-navy/70 dark:text-white/70">AI-powered financial insights</span>
+                    </li>
+                  </ul>
                 </CardContent>
               </Card>
             </div>
           </div>
         </div>
+      </div>
+      
+      {/* Partnerships & Expansion */}
+      <div className="pt-10">
+        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Strategic Partnerships & Expansion</h3>
         
-        <div className="mt-24 max-w-6xl mx-auto">
-          <CallToAction
-            title="Ready to Transform Your Enterprise Finance?"
-            description="Schedule a demo to see how our DeFi solutions can revolutionize your financial operations while maintaining compliance and security."
-            primaryButtonText="Request a Demo"
-            secondaryButtonText="Contact Sales"
-            primaryButtonAction={() => window.location.href = '/contact'}
-            secondaryButtonAction={() => window.location.href = '/contact'}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full mr-4">
+                  <Users className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                </div>
+                <h4 className="text-xl font-semibold text-seftec-navy dark:text-white">Strategic Alliances</h4>
+              </div>
+              
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <ArrowRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2 mt-0.5 flex-shrink-0" />
+                  <p className="text-seftec-navy/70 dark:text-white/70">
+                    <span className="font-medium text-seftec-navy dark:text-white">Banking Consortium:</span> Expanding our network of banking partners across EMEA, APAC, and Americas regions.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <ArrowRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2 mt-0.5 flex-shrink-0" />
+                  <p className="text-seftec-navy/70 dark:text-white/70">
+                    <span className="font-medium text-seftec-navy dark:text-white">Technology Integration:</span> Partnerships with major ERP providers to streamline enterprise adoption.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <ArrowRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2 mt-0.5 flex-shrink-0" />
+                  <p className="text-seftec-navy/70 dark:text-white/70">
+                    <span className="font-medium text-seftec-navy dark:text-white">Regulatory Collaboration:</span> Working with financial regulators to develop compliant DeFi frameworks.
+                  </p>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full mr-4">
+                  <Globe className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                </div>
+                <h4 className="text-xl font-semibold text-seftec-navy dark:text-white">Market Expansion</h4>
+              </div>
+              
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <ArrowRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2 mt-0.5 flex-shrink-0" />
+                  <p className="text-seftec-navy/70 dark:text-white/70">
+                    <span className="font-medium text-seftec-navy dark:text-white">Regional Hubs:</span> Establishing operational centers in London, Singapore, and Dubai to support global clients.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <ArrowRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2 mt-0.5 flex-shrink-0" />
+                  <p className="text-seftec-navy/70 dark:text-white/70">
+                    <span className="font-medium text-seftec-navy dark:text-white">Industry Verticals:</span> Targeted solutions for manufacturing, healthcare, and commodities sectors.
+                  </p>
+                </li>
+                <li className="flex items-start">
+                  <ArrowRight className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2 mt-0.5 flex-shrink-0" />
+                  <p className="text-seftec-navy/70 dark:text-white/70">
+                    <span className="font-medium text-seftec-navy dark:text-white">Emerging Markets:</span> Special focus on developing DeFi solutions for underserved markets in Africa and Southeast Asia.
+                  </p>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </section>
+      
+      {/* Upcoming DeFi Offerings */}
+      <div className="pt-10">
+        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Upcoming DeFi Offerings</h3>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full w-fit mb-4">
+                  <Rocket className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                </div>
+                <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">Enterprise Liquidity Pools</h4>
+                <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                  Custom-designed liquidity solutions for enterprises to optimize treasury operations and enhance working capital efficiency.
+                </p>
+                <p className="text-sm text-seftec-navy/60 dark:text-white/60 italic">
+                  Expected launch: Q4 2024
+                </p>
+              </div>
+              
+              <div>
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full w-fit mb-4">
+                  <Rocket className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                </div>
+                <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">Real-World Asset Tokenization</h4>
+                <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                  Platform for businesses to tokenize physical assets, enabling fractional ownership and enhanced liquidity for traditionally illiquid assets.
+                </p>
+                <p className="text-sm text-seftec-navy/60 dark:text-white/60 italic">
+                  Expected launch: Q1 2025
+                </p>
+              </div>
+              
+              <div>
+                <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full w-fit mb-4">
+                  <Rocket className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
+                </div>
+                <h4 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">Cross-Border Settlement Network</h4>
+                <p className="text-seftec-navy/70 dark:text-white/70 mb-3">
+                  Blockchain-based settlement system enabling near-instant cross-border transactions with minimal fees and complete regulatory compliance.
+                </p>
+                <p className="text-sm text-seftec-navy/60 dark:text-white/60 italic">
+                  Expected launch: Q2 2025
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
-
-export default StrategicRoadmapSection;
