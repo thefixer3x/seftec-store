@@ -9,6 +9,84 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_response_cache: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          hit_count: number | null
+          id: string
+          model_used: string
+          prompt: string
+          prompt_hash: string
+          response: string
+          tokens_used: number | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          hit_count?: number | null
+          id?: string
+          model_used: string
+          prompt: string
+          prompt_hash: string
+          response: string
+          tokens_used?: number | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          hit_count?: number | null
+          id?: string
+          model_used?: string
+          prompt?: string
+          prompt_hash?: string
+          response?: string
+          tokens_used?: number | null
+        }
+        Relationships: []
+      }
+      ai_usage_logs: {
+        Row: {
+          created_at: string
+          estimated_cost: number | null
+          feedback_text: string | null
+          id: string
+          model_used: string
+          prompt: string
+          query_complexity: string
+          response_time_ms: number | null
+          tokens_used: number | null
+          user_feedback: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          estimated_cost?: number | null
+          feedback_text?: string | null
+          id?: string
+          model_used: string
+          prompt: string
+          query_complexity: string
+          response_time_ms?: number | null
+          tokens_used?: number | null
+          user_feedback?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          estimated_cost?: number | null
+          feedback_text?: string | null
+          id?: string
+          model_used?: string
+          prompt?: string
+          query_complexity?: string
+          response_time_ms?: number | null
+          tokens_used?: number | null
+          user_feedback?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_settings: {
         Row: {
           created_at: string
@@ -329,6 +407,39 @@ export type Database = {
         }
         Relationships: []
       }
+      query_classifications: {
+        Row: {
+          actual_complexity: string | null
+          classified_complexity: string
+          created_at: string
+          feedback_score: number | null
+          id: string
+          prompt: string
+          tokens_used: number | null
+          was_escalated: boolean | null
+        }
+        Insert: {
+          actual_complexity?: string | null
+          classified_complexity: string
+          created_at?: string
+          feedback_score?: number | null
+          id?: string
+          prompt: string
+          tokens_used?: number | null
+          was_escalated?: boolean | null
+        }
+        Update: {
+          actual_complexity?: string | null
+          classified_complexity?: string
+          created_at?: string
+          feedback_score?: number | null
+          id?: string
+          prompt?: string
+          tokens_used?: number | null
+          was_escalated?: boolean | null
+        }
+        Relationships: []
+      }
       recommendations: {
         Row: {
           clicked: boolean | null
@@ -528,6 +639,39 @@ export type Database = {
           risk_tolerance?: string | null
           trade_frequency?: string | null
           trade_volume?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_tiers: {
+        Row: {
+          can_use_advanced_models: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          max_queries_per_day: number
+          tier_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          can_use_advanced_models?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_queries_per_day?: number
+          tier_name?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          can_use_advanced_models?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_queries_per_day?: number
+          tier_name?: string
           updated_at?: string
           user_id?: string
         }

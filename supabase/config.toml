@@ -22,5 +22,7 @@ verify_jwt = false
 [functions.stripe-webhook]
 verify_jwt = false
 
-# Keep any other existing function configurations
+[functions.bizgenie-router]
+verify_jwt = false
 
+# Keep any other existing function configurations
