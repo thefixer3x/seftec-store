@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import SectionHeading from "@/components/ui/section-heading";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import AIFeaturesList from "@/components/ai/AIFeaturesList";
-import AIChatInterface from "@/components/ai/AIChatInterface";
+import EnhancedBizGenieChat from "@/components/ai/EnhancedBizGenieChat";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ const AIAdvisorSection: React.FC = () => {
   const [hasNotification, setHasNotification] = useState(false);
   const [marketInsight, setMarketInsight] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [isPremium, setIsPremium] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -60,10 +62,6 @@ const AIAdvisorSection: React.FC = () => {
     return () => clearInterval(notificationInterval);
   }, [notificationsEnabled, toast, user]);
 
-  const handleClearNotification = () => {
-    setHasNotification(false);
-  };
-
   return (
     <section id="ai-advisor" className="py-20 dark:bg-seftec-darkNavy">
       <div className="container mx-auto px-6">
@@ -79,10 +77,9 @@ const AIAdvisorSection: React.FC = () => {
           </div>
           
           <div className="lg:col-span-7 animate-fade-up animate-delay-300">
-            <AIChatInterface 
+            <EnhancedBizGenieChat 
               marketInsight={marketInsight}
-              hasNotification={hasNotification}
-              onClearNotification={handleClearNotification}
+              isPremium={isPremium}
             />
             
             {!user && (
