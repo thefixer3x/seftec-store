@@ -7,7 +7,8 @@ import MarketLeadershipSection from '@/components/defi-leadership/MarketLeadersh
 import TechnicalSolutionSection from '@/components/defi-leadership/TechnicalSolutionSection';
 import StrategicRoadmapSection from '@/components/defi-leadership/StrategicRoadmapSection';
 import HomeFAQSection from '@/components/sections/HomeFAQSection';
-import { Badge, Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/context/AuthContext';
 import BizGenieChatInterface from '@/components/ai/BizGenieChatInterface';
 import BizGenieStats from '@/components/ai/BizGenieStats';
