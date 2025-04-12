@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BarChart3, Award, Trending, Building } from 'lucide-react';
+import { BarChart3, Award, TrendingUp, Building } from 'lucide-react';
 
 const MarketLeadershipSection = () => {
   return (
@@ -35,7 +35,7 @@ const MarketLeadershipSection = () => {
           </div>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <Trending className="h-12 w-12 text-blue-600 mb-4" />
+            <TrendingUp className="h-12 w-12 text-blue-600 mb-4" />
             <h3 className="text-xl font-bold mb-2">94% YoY</h3>
             <p className="text-gray-600 dark:text-gray-300">Growth in enterprise DeFi adoption through our platform</p>
           </div>
