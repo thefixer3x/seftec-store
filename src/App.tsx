@@ -23,6 +23,10 @@ import Orders from '@/pages/Orders';
 import BizGenie from '@/pages/BizGenie';
 import DefiLeadership from '@/pages/DefiLeadership';
 import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
+import Terms from '@/pages/Terms';
+import Privacy from '@/pages/Privacy';
+import Cookies from '@/pages/Cookies';
+import Security from '@/pages/Security';
 import { useAuth } from './context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,7 +43,9 @@ function App() {
         }
       } else {
         // Allow access to specific public routes
-        const publicRoutes = ['/', '/about', '/contact', '/login', '/register', '/reset-password', '/solutions', '/value-propositions', '/faq', '/shop', '/products', '/defi-leadership', '/edge-function-test'];
+        const publicRoutes = ['/', '/about', '/contact', '/login', '/register', '/reset-password', '/solutions', 
+          '/value-propositions', '/faq', '/shop', '/products', '/defi-leadership', '/edge-function-test',
+          '/terms', '/privacy', '/cookies', '/security'];
         if (!publicRoutes.includes(window.location.pathname)) {
           navigate('/login');
         }
@@ -67,9 +73,13 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/orders" element={<Orders />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/coming-soon" element={<ComingSoon />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/cookies" element={<Cookies />} />
+        <Route path="/security" element={<Security />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

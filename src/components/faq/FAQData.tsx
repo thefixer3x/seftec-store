@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FAQItem } from './FAQCategory';
 
@@ -429,3 +428,7 @@ export const supportIntegrationFAQs: FAQItem[] = [
     )
   }
 ];
+
+// Import DeFi FAQs
+import { defiFAQs } from './FAQData-DeFi';
+export { defiFAQs };
