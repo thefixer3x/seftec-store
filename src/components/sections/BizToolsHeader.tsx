@@ -7,7 +7,7 @@ const BizToolsHeader: React.FC = () => {
       <div className="container mx-auto px-6">
         <h1 className="text-3xl font-bold mb-4 text-seftec-navy dark:text-white">Business Tools</h1>
         <p className="text-gray-600 dark:text-gray-300 mb-8">
-          Discover how our platform creates unique value for your business through intelligent solutions.
+          Discover how our marketplace platform can transform your business operations.
         </p>
       </div>
     </div>
