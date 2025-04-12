@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
@@ -21,6 +22,7 @@ import Products from '@/pages/Products';
 import Orders from '@/pages/Orders';
 import BizGenie from '@/pages/BizGenie';
 import DefiLeadership from '@/pages/DefiLeadership';
+import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 import { useAuth } from './context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,7 +39,7 @@ function App() {
         }
       } else {
         // Allow access to specific public routes
-        const publicRoutes = ['/', '/about', '/contact', '/login', '/register', '/reset-password', '/solutions', '/value-propositions', '/faq', '/shop', '/products', '/defi-leadership'];
+        const publicRoutes = ['/', '/about', '/contact', '/login', '/register', '/reset-password', '/solutions', '/value-propositions', '/faq', '/shop', '/products', '/defi-leadership', '/edge-function-test'];
         if (!publicRoutes.includes(window.location.pathname)) {
           navigate('/login');
         }
@@ -61,6 +63,7 @@ function App() {
         <Route path="/biztools" element={<BizTools />} />
         <Route path="/bizgenie" element={<BizGenie />} />
         <Route path="/defi-leadership" element={<DefiLeadership />} />
+        <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
