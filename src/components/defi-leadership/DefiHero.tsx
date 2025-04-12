@@ -1,28 +1,36 @@
 
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import React from 'react';
 
 const DefiHero = () => {
   return (
-    <section className="bg-gradient-to-r from-seftec-navy to-blue-900 text-white py-16 md:py-24">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center text-center">
-          <Badge className="mb-4 bg-blue-600 hover:bg-blue-700" variant="default">DeFi Leadership</Badge>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 max-w-3xl">Pioneering Enterprise DeFi Solutions</h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl">Seftec is revolutionizing how businesses access and utilize decentralized finance with our secure, compliant, and scalable platform.</p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg">
-              <Link to="/contact">Request Demo</Link>
-            </Button>
-            <Button variant="outline" size="lg" className="bg-transparent border-white text-white hover:bg-white hover:text-blue-900">
-              <Link to="#roadmap">View Roadmap</Link>
-            </Button>
+    <div className="relative bg-gradient-to-r from-blue-800 to-indigo-900 py-24 sm:py-32">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[url('/placeholder.svg')] opacity-20 bg-cover bg-center" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-800 to-indigo-900 opacity-90" />
+      </div>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+            DeFi Leadership
+          </h1>
+          <p className="mt-6 text-lg leading-8 text-gray-300">
+            Seftec is leading the charge in enterprise decentralized finance, delivering secure, 
+            compliant DeFi solutions for forward-thinking businesses.
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <a
+              href="#market-leadership"
+              className="rounded-md bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            >
+              Explore Our Vision
+            </a>
+            <a href="#technical-solution" className="text-base font-semibold leading-6 text-white">
+              Technical Solutions <span aria-hidden="true">→</span>
+            </a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

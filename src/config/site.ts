@@ -1,29 +1,42 @@
 
-export type SiteConfig = typeof siteConfig
+export type SiteConfig = {
+  name: string;
+  description: string;
+  mainNav: { title: string; href: string }[];
+  links: {
+    twitter: string;
+    github: string;
+    docs: string;
+  };
+};
 
-export const siteConfig = {
+export const siteConfig: SiteConfig = {
   name: "Seftec",
-  description: "B2B Marketplace for Africa's Global Trade",
+  description: "Secure Enterprise DeFi Access Platform",
   mainNav: [
+    {
+      title: "Home",
+      href: "/",
+    },
     {
       title: "Solutions",
       href: "/solutions",
-    },
-    {
-      title: "Biz Tools",
-      href: "/value-propositions",
     },
     {
       title: "DeFi Leadership",
       href: "/defi-leadership",
     },
     {
-      title: "Shop",
-      href: "/shop",
-    },
-    {
       title: "About",
       href: "/about",
+    },
+    {
+      title: "BizTools",
+      href: "/biztools",
+    },
+    {
+      title: "BizGenie",
+      href: "/bizgenie",
     },
     {
       title: "Contact",
@@ -33,6 +46,6 @@ export const siteConfig = {
   links: {
     twitter: "https://twitter.com/seftec",
     github: "https://github.com/seftec",
-    docs: "https://seftec.com/docs",
+    docs: "https://docs.seftec.com",
   },
-}
+};
