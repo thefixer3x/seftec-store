@@ -35,6 +35,10 @@ export const siteConfig: SiteConfig = {
       href: "/bizgenie",
     },
     {
+      title: "API Tests",
+      href: "/edge-function-test",
+    },
+    {
       title: "Contact",
       href: "/contact",
     },
