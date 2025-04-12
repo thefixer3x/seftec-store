@@ -89,7 +89,7 @@ const MarketLeadershipSection = () => {
                   <ul className="list-disc pl-5 text-sm">
                     <li>On-demand liquidity</li>
                     <li>64% reduction in financing costs</li>
-                    <li>Digital onboarding in <2 days</li>
+                    <li>Digital onboarding in less than 2 days</li>
                   </ul>
                 </div>
               </div>
