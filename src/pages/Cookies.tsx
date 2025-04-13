@@ -18,58 +18,51 @@ const Cookies = () => {
             <p>Our website uses cookies to enhance your browsing experience. This Cookies Policy provides an overview of how we use cookies and your choices regarding them.</p>
             
             <h2>1. What Are Cookies?</h2>
-            <p>Cookies are small text files stored on your device that help us remember your preferences and actions on our site.</p>
+            <p>
+              Cookies are small text files stored on your device that help us remember your preferences and actions on our site. They are widely used to make websites work more efficiently and provide valuable information to website owners.
+            </p>
             
             <h2>2. How We Use Cookies</h2>
             <ul>
-              <li><strong>Essential cookies:</strong> Required for the functioning of our website (e.g., login authentication, session management).</li>
-              <li><strong>Analytical cookies:</strong> Help us understand user interactions and improve site performance.</li>
+              <li><strong>Essential cookies:</strong> Required for the functioning of our website (e.g., login authentication, session management, shopping cart).</li>
+              <li><strong>Analytical cookies:</strong> Help us understand user interactions and improve site performance through data collection about how you use our site.</li>
+              <li><strong>Functional cookies:</strong> Allow our website to remember choices you make and provide enhanced, personalized features.</li>
               <li><strong>Marketing cookies:</strong> May be used to personalize advertising content, though we do not sell your data to third parties.</li>
             </ul>
             
             <h2>3. Your Cookie Choices</h2>
+            <p>
+              You have several options for managing cookies:
+            </p>
             <ul>
-              <li>You can manage your cookie preferences through your browser settings.</li>
-              <li>Blocking cookies may affect your experience and some functionalities on our site.</li>
+              <li>Accept all cookies to enjoy the best experience on our site.</li>
+              <li>Modify your browser settings to alert you when cookies are being sent or to refuse cookies altogether.</li>
+              <li>Use our cookie preference tool (if available) to selectively accept categories of cookies.</li>
             </ul>
+            <p>
+              Please note that blocking some types of cookies may impact your experience on our site and the services we can offer.
+            </p>
             
             <h2>4. Third-Party Cookies</h2>
-            <p>Our platform may use third-party services that deploy their own cookies. Please review their respective privacy policies for more details.</p>
+            <p>
+              Our platform may use third-party services that deploy their own cookies. These may include:
+            </p>
+            <ul>
+              <li>Analytics providers (e.g., Google Analytics)</li>
+              <li>Social media platforms (when you share content)</li>
+              <li>Payment processors</li>
+              <li>Advertising networks</li>
+            </ul>
+            <p>
+              Please review their respective privacy policies for more details on how these third parties use your data.
+            </p>
             
-            <h3>Types of Cookies We Use</h3>
-            <table className="table-auto w-full">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 text-left">Category</th>
-                  <th className="px-4 py-2 text-left">Purpose</th>
-                  <th className="px-4 py-2 text-left">Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border px-4 py-2">Session Cookies</td>
-                  <td className="border px-4 py-2">Enable core functionality such as security, network management, and accessibility</td>
-                  <td className="border px-4 py-2">Expire when you close your browser</td>
-                </tr>
-                <tr>
-                  <td className="border px-4 py-2">Preference Cookies</td>
-                  <td className="border px-4 py-2">Store information about your preferences and personalize your experience</td>
-                  <td className="border px-4 py-2">1 year</td>
-                </tr>
-                <tr>
-                  <td className="border px-4 py-2">Analytics Cookies</td>
-                  <td className="border px-4 py-2">Help us understand how visitors interact with our website</td>
-                  <td className="border px-4 py-2">2 years</td>
-                </tr>
-                <tr>
-                  <td className="border px-4 py-2">Marketing Cookies</td>
-                  <td className="border px-4 py-2">Track your browsing habits to deliver targeted advertising</td>
-                  <td className="border px-4 py-2">90 days</td>
-                </tr>
-              </tbody>
-            </table>
+            <h2>5. Updates to This Policy</h2>
+            <p>
+              We may update this Cookie Policy from time to time to reflect changes in technology, regulation, or our business practices. Any changes will be posted on this page, and if the changes are significant, we will provide a more prominent notice.
+            </p>
             
-            <p className="mt-8">For more information about cookies or if you have any questions, please contact our support team at cookies@seftec.store.</p>
+            <p className="mt-8">For more information about how we use cookies or if you have any questions about this Cookie Policy, please contact our support team at cookies@seftec.store.</p>
             
             <p className="italic mt-4">Last updated: April 12, 2023</p>
           </div>
