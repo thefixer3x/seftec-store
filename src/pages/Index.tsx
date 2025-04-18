@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { MainNav } from "@/components/ui/navbar";
 import HeroSection from "@/components/ui/hero-section";
@@ -12,7 +11,7 @@ import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import PersonalizedAIAdvisorSection from "@/components/sections/PersonalizedAIAdvisorSection";
 import BusinessCounterSection from "@/components/sections/BusinessCounterSection";
 import PaymentSection from "@/components/sections/PaymentSection";
-import HomeFAQSection from "@/components/sections/HomeFAQSection";
+import { HomeFAQSection } from "@/components/sections/HomeFAQSection";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/config/site";
@@ -31,7 +30,6 @@ const Index = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   
-  // Handle successful payment completion
   const handlePaymentComplete = (paymentData: any) => {
     toast({
       title: "Payment Processed",
@@ -41,7 +39,6 @@ const Index = () => {
     console.log("Payment complete:", paymentData);
   };
 
-  // Add scroll reveal effect
   useEffect(() => {
     const revealElements = document.querySelectorAll('.reveal');
     
@@ -66,10 +63,8 @@ const Index = () => {
     <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden pt-[56px]">
       <MainNav items={siteConfig.mainNav} />
       
-      {/* Hero section with DeFi leadership highlight */}
       <HeroSection />
       
-      {/* DeFi Leadership Banner */}
       <div className="bg-gradient-to-r from-seftec-navy/5 to-seftec-navy/0 dark:from-seftec-purple/10 dark:to-seftec-teal/0 py-4">
         <div className="container mx-auto px-4 sm:px-6">
           <Card className="bg-white/80 dark:bg-white/5 border-seftec-navy/10 dark:border-white/10">
@@ -101,11 +96,9 @@ const Index = () => {
         </div>
       </div>
       
-      {/* Main content sections */}
       <ProblemsSection />
       <FeaturesSection />
       
-      {/* DeFi Highlights Section */}
       <section className="py-12 bg-gradient-to-r from-seftec-slate to-white dark:from-seftec-darkNavy dark:to-seftec-darkNavy/90">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-10">
@@ -181,11 +174,9 @@ const Index = () => {
       
       <PersonalizedAIAdvisorSection />
       
-      {/* Side-by-side sections on desktop, stacked on mobile */}
       <div className="py-12">
         <div className="container mx-auto px-6">
           {isMobile ? (
-            /* Mobile: Stacked view */
             <>
               <BusinessCounterSection />
               <div className="mt-12">
@@ -196,7 +187,6 @@ const Index = () => {
               </div>
             </>
           ) : (
-            /* Desktop: Side-by-side view */
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <BusinessCounterSection />
               <PaymentSection 
@@ -212,7 +202,6 @@ const Index = () => {
       <RegionsCoveredSection />
       <AdvantagesSection />
       
-      {/* FAQ Section */}
       <HomeFAQSection />
       
       <CTASection />

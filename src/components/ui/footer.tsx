@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, ExternalLink, Mail, Phone, MapPin, Clock, ShoppingCart, ShoppingBag, ListOrdered } from 'lucide-react';
+import { Shield, Lock, Mail, Phone, MapPin, ShoppingCart, ShoppingBag, ListOrdered } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface FooterProps {
   className?: string;
@@ -13,12 +13,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer
-      className={cn(
-        'py-12 bg-seftec-slate dark:bg-seftec-darkNavy border-t border-seftec-navy/10 dark:border-white/10',
-        className
-      )}
-    >
+    <footer className={cn('py-12 bg-seftec-slate dark:bg-seftec-darkNavy border-t border-seftec-navy/10 dark:border-white/10', className)}>
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           <div className="md:col-span-1">
@@ -35,7 +30,6 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
               A secure, AI-driven B2B marketplace that enables businesses to connect with verified partners worldwide.
             </p>
             
-            {/* Security badges */}
             <div className="flex flex-col space-y-2 mb-4">
               <div className="flex items-center space-x-2 text-xs text-seftec-navy/80 dark:text-white/80">
                 <Shield size={14} className="text-green-600" />
@@ -131,7 +125,8 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
             &copy; {currentYear} Seftec Dynamics. All rights reserved.
           </div>
           
-          <div className="flex flex-wrap space-x-6">
+          <div className="flex items-center space-x-6">
+            <ThemeToggle />
             <Link to="/terms" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors text-sm">Terms</Link>
             <Link to="/privacy" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors text-sm">Privacy</Link>
             <Link to="/cookies" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors text-sm">Cookies</Link>
@@ -141,6 +136,6 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

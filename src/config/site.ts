@@ -31,16 +31,8 @@ export const siteConfig: SiteConfig = {
       href: "/biztools",
     },
     {
-      title: "BizGenie",
-      href: "/bizgenie",
-    },
-    {
-      title: "API Tests",
-      href: "/edge-function-test",
-    },
-    {
-      title: "Contact",
-      href: "/contact",
+      title: "Shop",
+      href: "/shop",
     },
   ],
   links: {
