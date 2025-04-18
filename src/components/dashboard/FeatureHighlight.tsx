@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Sparkle, Star, Zap } from 'lucide-react';
+import { Shield, Star, Zap } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
-type HighlightIconType = 'sparkle' | 'star' | 'zap';
+type HighlightIconType = 'shield' | 'star' | 'zap';
 
 interface FeatureHighlightProps {
   title: string;
@@ -17,16 +16,16 @@ interface FeatureHighlightProps {
 const FeatureHighlight: React.FC<FeatureHighlightProps> = ({ 
   title, 
   description, 
-  icon = 'sparkle',
+  icon = 'shield',
   variant = 'default',
   className 
 }) => {
   const getIcon = () => {
     switch (icon) {
-      case 'sparkle': return <Sparkle className="h-5 w-5" />;
+      case 'shield': return <Shield className="h-5 w-5" />;
       case 'star': return <Star className="h-5 w-5" />;
       case 'zap': return <Zap className="h-5 w-5" />;
-      default: return <Sparkle className="h-5 w-5" />;
+      default: return <Shield className="h-5 w-5" />;
     }
   };
 

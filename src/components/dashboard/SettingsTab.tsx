@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +12,7 @@ import RoutingDiagram from './RoutingDiagram';
 
 const SettingsTab = () => {
   const [currentTab, setCurrentTab] = useState('personal');
-  const [verificationStatus, setVerificationStatus] = useState('pending');
+  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('pending');
   const isMobile = useIsMobile();
   const [showRoutes, setShowRoutes] = useState(false);
 

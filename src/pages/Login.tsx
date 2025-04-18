@@ -1,9 +1,8 @@
-
 import React, { useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/context/AuthContext';
-import { Sparkle } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
@@ -12,17 +11,14 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Get the intended destination from state, or default to dashboard
   const from = location.state?.from || '/profile/dashboard';
 
-  // Redirect to dashboard if already logged in
   useEffect(() => {
     if (!loading && user) {
       navigate(from, { replace: true });
     }
   }, [user, loading, navigate, from]);
 
-  // Don't render the login page while checking auth status
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy">
@@ -31,7 +27,6 @@ const Login = () => {
     );
   }
 
-  // Only show login if not authenticated
   return (
     <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy p-4">
       <div className="w-full max-w-md">
@@ -42,7 +37,7 @@ const Login = () => {
           
           <div className="mb-6 text-center">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate/50 border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90 mx-auto">
-              <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+              <Shield size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal" />
               Welcome Back
             </span>
           </div>
