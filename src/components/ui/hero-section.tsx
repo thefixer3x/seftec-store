@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -18,7 +17,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   const [isInteractionBlocked, setIsInteractionBlocked] = useState(false);
   const { toast } = useToast();
   
-  // Debounce function to prevent rapid calls
   const debounce = (func: Function, wait: number) => {
     let timeout: ReturnType<typeof setTimeout>;
     return function executedFunction(...args: any[]) {
@@ -32,7 +30,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   };
   
   useEffect(() => {
-    // Optimized mouse move handler with rate limiting
     const handleMouseMove = debounce((e: MouseEvent) => {
       if (!heroRef.current || isInteractionBlocked) return;
       
@@ -51,7 +48,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         const translateY = y * depth;
         (el as HTMLElement).style.transform = `translate(${translateX}px, ${translateY}px)`;
       });
-    }, 10); // 10ms debounce for smoother performance
+    }, 10);
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
@@ -59,9 +56,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     };
   }, [isInteractionBlocked]);
   
-  // Handle cases where user's device may struggle with animations
   useEffect(() => {
-    // Detect slow devices or reduced motion preferences
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isLowPowerMode = 'connection' in navigator && (navigator as any).connection?.saveData;
     
@@ -104,7 +99,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         className
       )}
     >
-      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-10 w-64 h-64 bg-seftec-gold/10 dark:bg-seftec-teal/10 rounded-full blur-3xl opacity-60 parallax"></div>
         <div className="absolute bottom-20 left-10 w-80 h-80 bg-seftec-navy/10 dark:bg-seftec-purple/10 rounded-full blur-3xl opacity-60 parallax"></div>
@@ -113,10 +107,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
-          {/* New DeFi Leadership Badge */}
           <div className="mb-6 inline-flex gap-3 flex-wrap justify-center animate-fade-in">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90">
-              <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+              <Shield size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal" />
               The Future of Secure B2B Trade & Vendor Payments
             </span>
             
@@ -161,7 +154,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
         
-        {/* DeFi Leadership Highlight */}
         <div className="mt-12 max-w-4xl mx-auto bg-white/70 dark:bg-white/5 rounded-lg shadow-sm p-4 border border-seftec-navy/10 dark:border-white/10 animate-fade-up animate-delay-400">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
