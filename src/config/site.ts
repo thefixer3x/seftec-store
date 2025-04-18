@@ -1,22 +1,23 @@
 
+import { MainNavItem } from "@/types";
+
 export type SiteConfig = {
   name: string;
   description: string;
-  mainNav: { title: string; href: string }[];
-  links: {
-    twitter: string;
-    github: string;
-    docs: string;
-  };
+  mainNav: MainNavItem[];
 };
 
 export const siteConfig: SiteConfig = {
-  name: "Seftec",
-  description: "Secure Enterprise DeFi Access Platform",
+  name: "SEFTEC",
+  description: "Leading enterprise DeFi access platform with ISO 20022 compliant solutions for secure, regulated blockchain integration.",
   mainNav: [
     {
       title: "Home",
       href: "/",
+    },
+    {
+      title: "Solutions",
+      href: "/solutions",
     },
     {
       title: "DeFi Leadership",
@@ -27,17 +28,8 @@ export const siteConfig: SiteConfig = {
       href: "/about",
     },
     {
-      title: "BizTools",
-      href: "/biztools",
-    },
-    {
-      title: "Shop",
-      href: "/shop",
+      title: "Contact",
+      href: "/contact",
     },
   ],
-  links: {
-    twitter: "https://twitter.com/seftec",
-    github: "https://github.com/seftec",
-    docs: "https://docs.seftec.com",
-  },
 };
