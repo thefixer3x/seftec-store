@@ -1,0 +1,37 @@
+
+import React from 'react';
+import BusinessCounterSection from './BusinessCounterSection';
+import PaymentSection from './PaymentSection';
+import { useIsMobile } from '@/hooks/use-mobile';
+
+const PaymentCounterSection = ({ onPaymentComplete }: { onPaymentComplete: (paymentData: any) => void }) => {
+  const isMobile = useIsMobile();
+
+  return (
+    <div className="py-12">
+      <div className="container mx-auto px-6">
+        {isMobile ? (
+          <>
+            <BusinessCounterSection />
+            <div className="mt-12">
+              <PaymentSection 
+                apiMode="sandbox"
+                onPaymentComplete={onPaymentComplete}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <BusinessCounterSection />
+            <PaymentSection 
+              apiMode="live"
+              onPaymentComplete={onPaymentComplete}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default PaymentCounterSection;
