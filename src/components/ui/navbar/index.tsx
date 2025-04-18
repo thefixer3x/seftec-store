@@ -11,7 +11,7 @@ import MobileMenu from "./mobile-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ShoppingCart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
 interface MainNavProps {
@@ -23,6 +23,7 @@ export function MainNav({ items }: MainNavProps) {
   const { cartCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const location = useLocation();
   
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -45,23 +46,12 @@ export function MainNav({ items }: MainNavProps) {
   
   useEffect(() => {
     const checkPathAndUpdateState = () => {
-      setIsProfilePage(window.location.pathname.includes('/profile'));
+      setIsProfilePage(location.pathname.includes('/profile'));
     };
     
-    // Check on initial load
+    // Check on initial load and when location changes
     checkPathAndUpdateState();
-    
-    // Set up a listener for path changes if using client-side routing
-    const handleRouteChange = () => {
-      checkPathAndUpdateState();
-    };
-    
-    window.addEventListener('popstate', handleRouteChange);
-    
-    return () => {
-      window.removeEventListener('popstate', handleRouteChange);
-    };
-  }, []);
+  }, [location.pathname]);
   
   return (
     <div className="w-full bg-white dark:bg-seftec-darkNavy py-3 border-b border-gray-100 dark:border-gray-800 fixed top-0 left-0 right-0 z-50">

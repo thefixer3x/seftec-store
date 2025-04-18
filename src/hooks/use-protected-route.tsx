@@ -1,6 +1,6 @@
 
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,18 +33,24 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}): Prote
   
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
     if (!loading && !user) {
-      navigate(redirectTo);
+      // Store the current location so we can redirect back after login
+      navigate(redirectTo, { 
+        state: { from: location.pathname },
+        replace: true 
+      });
+      
       toast({
         title: message.title,
         description: message.description,
         variant: "destructive",
       });
     }
-  }, [user, loading, navigate, toast, redirectTo, message.title, message.description]);
+  }, [user, loading, navigate, toast, redirectTo, message.title, message.description, location.pathname]);
 
   return {
     isAuthenticated: !!user,

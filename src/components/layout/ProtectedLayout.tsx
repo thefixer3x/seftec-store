@@ -1,6 +1,6 @@
 
-import React, { ReactNode } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React, { ReactNode, useEffect } from 'react';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useProtectedRoute } from '@/hooks/use-protected-route';
 
 export interface ProtectedLayoutProps {
@@ -21,6 +21,13 @@ export const ProtectedLayout = ({
   const { isAuthenticated, isLoading } = useProtectedRoute({
     redirectTo
   });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate(redirectTo);
+    }
+  }, [isLoading, isAuthenticated, navigate, redirectTo]);
 
   if (isLoading) {
     return loadingComponent ? (
@@ -32,7 +39,7 @@ export const ProtectedLayout = ({
     );
   }
 
-  // We return null during loading because the redirect happens in the hook
+  // Only render children or Outlet if authenticated
   if (!isAuthenticated) return null;
 
   return children ? <>{children}</> : <Outlet />;
