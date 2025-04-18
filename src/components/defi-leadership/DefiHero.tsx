@@ -1,61 +1,54 @@
 
 import React from 'react';
 import { Shield, TrendingUp, Lock } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
-export const DefiHero = () => {
+const DefiHero = () => {
   return (
-    <div className="relative py-16 sm:py-24 bg-gradient-to-r from-seftec-slate to-white dark:from-seftec-navy/30 dark:to-seftec-darkNavy">
+    <section className="pt-20 pb-16 bg-gradient-to-b from-seftec-navy/5 to-transparent dark:from-seftec-purple/10">
       <div className="container mx-auto px-6">
-        <div className="max-w-4xl">
-          <div className="flex items-center mb-6">
-            <Badge variant="outline" className="bg-seftec-gold/10 dark:bg-seftec-teal/10 text-seftec-gold dark:text-seftec-teal border-seftec-gold/20 dark:border-seftec-teal/20 px-3 py-1">
-              <TrendingUp className="w-4 h-4 mr-2" />
-              <span className="font-medium">DeFi Leadership</span>
-            </Badge>
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-seftec-gold/10 dark:bg-seftec-teal/10 border border-seftec-gold/20 dark:border-seftec-teal/20 mb-6">
+            <Shield className="h-4 w-4 text-seftec-gold dark:text-seftec-teal" />
+            <span className="text-sm font-medium text-seftec-navy dark:text-white">ISO 20022 Compliant</span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-seftec-navy dark:text-white mb-6">
-            Pioneering <span className="text-seftec-gold dark:text-seftec-teal">Enterprise DeFi</span> Solutions
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-seftec-navy dark:text-white">
+            Pioneering Enterprise DeFi Solutions
           </h1>
           
-          <p className="text-xl text-seftec-navy/70 dark:text-white/70 mb-8 max-w-3xl">
-            Seftec is leading the transformation of enterprise finance through ISO 20022 compliant decentralized financial solutions that bridge traditional banking with blockchain innovation.
+          <p className="text-xl text-seftec-navy/70 dark:text-white/70 mb-12 max-w-2xl mx-auto">
+            Seftec is transforming enterprise finance with secure, compliant DeFi solutions that bridge traditional banking and blockchain innovation.
           </p>
           
-          <div className="flex flex-wrap gap-6 mt-10">
-            <div className="flex items-center">
-              <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full mr-4">
-                <Shield className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
-              </div>
-              <div>
-                <h3 className="font-medium text-seftec-navy dark:text-white">ISO 20022 Compliant</h3>
-                <p className="text-sm text-seftec-navy/70 dark:text-white/70">Global standard compatibility</p>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="p-6 rounded-xl bg-white/50 dark:bg-white/5 border border-seftec-navy/10 dark:border-white/10">
+              <TrendingUp className="h-8 w-8 text-seftec-gold dark:text-seftec-teal mb-4 mx-auto" />
+              <h3 className="font-semibold text-seftec-navy dark:text-white mb-2">$2.5B+</h3>
+              <p className="text-sm text-seftec-navy/70 dark:text-white/70">Transaction Volume</p>
             </div>
-            
-            <div className="flex items-center">
-              <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full mr-4">
-                <Lock className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
-              </div>
-              <div>
-                <h3 className="font-medium text-seftec-navy dark:text-white">Enterprise-Grade Security</h3>
-                <p className="text-sm text-seftec-navy/70 dark:text-white/70">Bank-level protection</p>
-              </div>
+            <div className="p-6 rounded-xl bg-white/50 dark:bg-white/5 border border-seftec-navy/10 dark:border-white/10">
+              <Lock className="h-8 w-8 text-seftec-gold dark:text-seftec-teal mb-4 mx-auto" />
+              <h3 className="font-semibold text-seftec-navy dark:text-white mb-2">100%</h3>
+              <p className="text-sm text-seftec-navy/70 dark:text-white/70">Regulatory Compliance</p>
             </div>
-            
-            <div className="flex items-center">
-              <div className="bg-seftec-gold/10 dark:bg-seftec-teal/10 p-3 rounded-full mr-4">
-                <TrendingUp className="h-6 w-6 text-seftec-gold dark:text-seftec-teal" />
-              </div>
-              <div>
-                <h3 className="font-medium text-seftec-navy dark:text-white">Future-Ready Architecture</h3>
-                <p className="text-sm text-seftec-navy/70 dark:text-white/70">Adaptable to evolving DeFi landscape</p>
-              </div>
+            <div className="p-6 rounded-xl bg-white/50 dark:bg-white/5 border border-seftec-navy/10 dark:border-white/10">
+              <Shield className="h-8 w-8 text-seftec-gold dark:text-seftec-teal mb-4 mx-auto" />
+              <h3 className="font-semibold text-seftec-navy dark:text-white mb-2">500+</h3>
+              <p className="text-sm text-seftec-navy/70 dark:text-white/70">Enterprise Clients</p>
             </div>
           </div>
+          
+          <Button 
+            size="lg"
+            className="bg-seftec-navy dark:bg-gradient-to-r dark:from-seftec-teal dark:to-seftec-purple text-white"
+          >
+            Explore Our Solutions
+          </Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
+
+export default DefiHero;
