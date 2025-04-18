@@ -1,36 +1,60 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import SectionHeading from '@/components/ui/section-heading';
-import FAQSection from '@/components/faq/FAQSection';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 
-const HomeFAQSection = () => {
+const faqs = [
+  {
+    question: "What is Seftec.Store's B2B marketplace?",
+    answer: "Seftec.Store is a secure enterprise DeFi access platform that enables businesses to connect and trade with verified partners worldwide. We provide ISO 20022 compliant solutions for seamless integration with traditional banking systems."
+  },
+  {
+    question: "How does the platform ensure security?",
+    answer: "We implement multiple layers of security including hardware security modules, MPC cryptography, and comprehensive compliance frameworks to protect all transactions and data."
+  },
+  {
+    question: "What makes Seftec different from other platforms?",
+    answer: "Our unique combination of ISO 20022 compliance, enterprise-grade security, and AI-powered business tools creates an unparalleled B2B marketplace experience focused on trust and efficiency."
+  },
+  {
+    question: "How can I get started?",
+    answer: "Simply register for an account, complete our streamlined verification process, and start connecting with verified business partners. Our AI assistant will guide you through the onboarding process."
+  }
+];
+
+export function HomeFAQSection({ className }: { className?: string }) {
   return (
-    <section className="py-16 bg-slate-50 dark:bg-seftec-navy/20">
-      <div className="container mx-auto px-6">
-        <SectionHeading
-          title="Frequently Asked Questions"
-          subtitle="Get answers to common questions about our B2B marketplace platform"
-          align="center"
-          className="mb-8"
-        />
-        
-        <div className="max-w-4xl mx-auto">
-          <FAQSection compact />
+    <section className={cn("py-12 bg-white dark:bg-seftec-darkNavy", className)}>
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-seftec-navy dark:text-white mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-seftec-navy/70 dark:text-white/70 max-w-2xl mx-auto">
+            Find quick answers to common questions about our platform
+          </p>
         </div>
         
-        <div className="text-center mt-10">
-          <Button variant="outline" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/5 dark:border-white/20 dark:text-white dark:hover:bg-white/10">
-            <Link to="/faq">
-              View All FAQs <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+        <div className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-seftec-navy dark:text-white">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-seftec-navy/70 dark:text-white/70">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>
   );
-};
-
-export default HomeFAQSection;
+}

@@ -5,7 +5,7 @@ import Footer from "@/components/ui/footer";
 import SectionHeading from "@/components/ui/section-heading";
 import { siteConfig } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
-import FAQSection from '@/components/faq/FAQSection';
+import { HomeFAQSection } from '@/components/sections/HomeFAQSection';
 
 const FAQ = () => {
   return (
@@ -21,7 +21,7 @@ const FAQ = () => {
         />
 
         <div className="max-w-4xl mx-auto">
-          <FAQSection />
+          <HomeFAQSection />
         </div>
       </div>
 
