@@ -1,109 +1,87 @@
 
-import React, { useState, useEffect } from 'react';
-import { FileText } from 'lucide-react';
-import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
-import SettingsSidebar from './settings/SettingsSidebar';
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useIsMobile } from '@/hooks/use-mobile';
 import BusinessProfileTab from './settings/BusinessProfileTab';
 import PersonalProfileTab from './settings/PersonalProfileTab';
 import PasswordTab from './settings/PasswordTab';
 import PinTab from './settings/PinTab';
-import VerificationStatus from './settings/VerificationStatus';
-import { useIsMobile } from '@/hooks/use-mobile';
-
-// Import components to be replicated within business sub-tabs
-import { ProfileForm } from '@/components/profile/ProfileForm';
-import { AccountDetails } from '@/components/profile/AccountDetails';
-import { CreateNotificationForm } from '@/components/notifications/CreateNotificationForm';
+import SettingsSidebar from './settings/SettingsSidebar';
+import RoutingDiagram from './RoutingDiagram';
 
 const SettingsTab = () => {
-  const [activeTab, setActiveTab] = useState("business");
-  const [activeSubTab, setActiveSubTab] = useState("business-profile");
-  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
+  const [currentTab, setCurrentTab] = useState('personal');
   const isMobile = useIsMobile();
-  
-  // When active tab changes away from business, reset sub-tab
-  useEffect(() => {
-    if (activeTab !== 'business') {
-      setActiveSubTab('business-profile');
-    }
-  }, [activeTab]);
+  const [showRoutes, setShowRoutes] = useState(false);
+
+  const toggleRoutes = () => {
+    setShowRoutes(!showRoutes);
+  };
 
   return (
-    <div className="w-full space-y-8">
-      <div className="flex items-center space-x-4">
-        <h1 className="text-3xl font-bold">Settings</h1>
-        <VerificationStatus status={verificationStatus} />
-      </div>
-
-      <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-4'} gap-8`}>
-        <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-1'}`}>
-          <Tabs 
-            defaultValue="business" 
-            value={activeTab} 
-            onValueChange={setActiveTab}
-            className="border rounded-lg overflow-hidden shadow-sm"
-          >
-            <TabsList className="flex flex-col w-full justify-start rounded-none bg-gray-50 p-0">
-              <SettingsSidebar 
-                activeTab={activeTab} 
-                setActiveSubTab={setActiveSubTab}
-                activeSubTab={activeSubTab}
-              />
-            </TabsList>
-            
-            {/* TabsContent must be inside the Tabs component */}
-            <TabsContent value="business" className="mt-0 p-0 hidden" />
-            <TabsContent value="personal" className="mt-0 p-0 hidden" />
-            <TabsContent value="password" className="mt-0 p-0 hidden" />
-            <TabsContent value="pin" className="mt-0 p-0 hidden" />
-          </Tabs>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-seftec-navy dark:text-white">Settings</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage your account settings and preferences
+          </p>
         </div>
+        <button 
+          onClick={toggleRoutes}
+          className="px-4 py-2 text-sm bg-seftec-slate dark:bg-seftec-navy/50 hover:bg-seftec-slate/80 dark:hover:bg-seftec-navy/70 text-seftec-navy dark:text-white rounded-md transition-colors"
+        >
+          {showRoutes ? 'Hide Routes' : 'Show Routes'}
+        </button>
+      </div>
+      
+      {showRoutes && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Application Routes Overview</CardTitle>
+            <CardDescription>All available routes in the application</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RoutingDiagram />
+          </CardContent>
+        </Card>
+      )}
 
-        <div className={`${isMobile ? 'col-span-1' : 'lg:col-span-3'}`}>
-          {activeTab === "business" && (
-            <>
-              {activeSubTab === "business-profile" && (
-                <BusinessProfileTab 
-                  verificationStatus={verificationStatus} 
-                  setVerificationStatus={setVerificationStatus} 
-                />
-              )}
-              
-              {activeSubTab === "business-account" && (
-                <div className="space-y-6">
-                  <div className="border-l-4 border-blue-500 pl-4 mb-6 py-2 bg-blue-50 rounded-r">
-                    <h2 className="text-2xl font-bold text-gray-800">Business Account</h2>
-                    <p className="text-gray-600 mt-1">Manage your business account settings</p>
-                  </div>
-                  <AccountDetails />
-                </div>
-              )}
-              
-              {activeSubTab === "business-notifications" && (
-                <div className="space-y-6">
-                  <div className="border-l-4 border-blue-500 pl-4 mb-6 py-2 bg-blue-50 rounded-r">
-                    <h2 className="text-2xl font-bold text-gray-800">Business Notifications</h2>
-                    <p className="text-gray-600 mt-1">Configure your business notification preferences</p>
-                  </div>
-                  <CreateNotificationForm />
-                </div>
-              )}
-            </>
-          )}
-
-          {activeTab === "personal" && (
+      {isMobile ? (
+        <Tabs defaultValue="personal" onValueChange={setCurrentTab}>
+          <TabsList className="grid grid-cols-4 mb-6">
+            <TabsTrigger value="personal">Personal</TabsTrigger>
+            <TabsTrigger value="business">Business</TabsTrigger>
+            <TabsTrigger value="password">Password</TabsTrigger>
+            <TabsTrigger value="pin">PIN</TabsTrigger>
+          </TabsList>
+          <TabsContent value="personal">
             <PersonalProfileTab />
-          )}
-
-          {activeTab === "password" && (
+          </TabsContent>
+          <TabsContent value="business">
+            <BusinessProfileTab />
+          </TabsContent>
+          <TabsContent value="password">
             <PasswordTab />
-          )}
-
-          {activeTab === "pin" && (
+          </TabsContent>
+          <TabsContent value="pin">
             <PinTab />
-          )}
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <div className="grid grid-cols-4 gap-6">
+          <div className="col-span-1">
+            <SettingsSidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+          </div>
+          <div className="col-span-3">
+            {currentTab === 'personal' && <PersonalProfileTab />}
+            {currentTab === 'business' && <BusinessProfileTab />}
+            {currentTab === 'password' && <PasswordTab />}
+            {currentTab === 'pin' && <PinTab />}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

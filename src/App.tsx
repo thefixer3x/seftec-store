@@ -2,14 +2,14 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
+
+// Public pages
 import Index from '@/pages/Index';
 import About from '@/pages/About';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Contact from '@/pages/Contact';
 import NotFound from '@/pages/NotFound';
-import Dashboard from '@/pages/Dashboard';
-import Profile from '@/pages/Profile';
 import Solutions from '@/pages/Solutions';
 import ValuePropositions from '@/pages/ValuePropositions';
 import ResetPassword from '@/pages/ResetPassword';
@@ -27,6 +27,11 @@ import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Cookies from '@/pages/Cookies';
 import Security from '@/pages/Security';
+
+// Protected pages
+import Dashboard from '@/pages/Dashboard';
+import Profile from '@/pages/Profile';
+
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
 
@@ -70,37 +75,47 @@ function App() {
   return (
     <>
       <Routes>
-        {/* Public routes */}
+        {/* ===== PUBLIC ROUTES ===== */}
+        {/* Main marketing and information pages */}
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/value-propositions" element={<ValuePropositions />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/defi-leadership" element={<DefiLeadership />} />
         <Route path="/biztools" element={<BizTools />} />
         <Route path="/bizgenie" element={<BizGenie />} />
-        <Route path="/defi-leadership" element={<DefiLeadership />} />
-        <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/coming-soon" element={<ComingSoon />} />
+        
+        {/* E-commerce public pages */}
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/products" element={<Products />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/coming-soon" element={<ComingSoon />} />
+        
+        {/* Authentication pages */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        
+        {/* Legal and policy pages */}
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/cookies" element={<Cookies />} />
         <Route path="/security" element={<Security />} />
         
-        {/* Protected routes */}
+        {/* Testing and development pages */}
+        <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
+        
+        {/* ===== PROTECTED ROUTES ===== */}
+        {/* Dashboard routes */}
         <Route path="/dashboard/*" element={<Dashboard />} />
         
-        {/* Profile routes from profileRoutes.tsx */}
+        {/* Profile routes imported from profileRoutes.tsx */}
         {profileRoutes}
         
-        {/* Fallback route */}
+        {/* Fallback route for 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
