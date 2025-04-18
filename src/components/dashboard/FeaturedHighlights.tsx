@@ -15,7 +15,7 @@ const FeaturedHighlights: React.FC = () => {
       <FeatureHighlight 
         title="AI-Powered Recommendations" 
         description="Receive personalized suggestions to optimize your business"
-        icon="sparkle"
+        icon="shield"  // Changed from "sparkle" to "shield"
         variant="blue"
       />
       
