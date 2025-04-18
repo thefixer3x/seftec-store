@@ -27,7 +27,7 @@ const ProfileContent: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashbo
   );
 
   return (
-    <ProtectedLayout loadingComponent={loadingComponent} redirectTo="/">
+    <ProtectedLayout loadingComponent={loadingComponent} redirectTo="/login">
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
         <DashboardSidebar />
         <div className="p-3 md:p-4 lg:p-6 flex-1 overflow-y-auto bg-white dark:bg-seftec-darkNavy">

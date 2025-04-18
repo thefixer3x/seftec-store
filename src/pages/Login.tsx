@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthForm } from '@/components/auth/AuthForm';
 import { useAuth } from '@/context/AuthContext';
 import { Sparkle } from 'lucide-react';
@@ -8,16 +8,30 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
 const Login = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the intended destination from state, or default to dashboard
+  const from = location.state?.from || '/profile/dashboard';
 
   // Redirect to dashboard if already logged in
   useEffect(() => {
-    if (user) {
-      navigate('/profile?tab=dashboard');
+    if (!loading && user) {
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate, from]);
 
+  // Don't render the login page while checking auth status
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy">
+        <div className="animate-pulse text-lg text-seftec-navy dark:text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  // Only show login if not authenticated
   return (
     <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy p-4">
       <div className="w-full max-w-md">

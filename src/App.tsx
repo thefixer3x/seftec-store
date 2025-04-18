@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import Index from '@/pages/Index';
 import About from '@/pages/About';
@@ -28,41 +28,54 @@ import Privacy from '@/pages/Privacy';
 import Cookies from '@/pages/Cookies';
 import Security from '@/pages/Security';
 import { useAuth } from './context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { profileRoutes } from './routes/profileRoutes';
 
 function App() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!loading) {
+      // Define public routes that don't require authentication
+      const publicRoutes = [
+        '/', '/about', '/contact', '/login', '/register', '/reset-password', 
+        '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
+        '/defi-leadership', '/edge-function-test', '/terms', '/privacy', 
+        '/cookies', '/security', '/social-login-test'
+      ];
+      
+      const isPublicRoute = publicRoutes.some(route => 
+        location.pathname === route || location.pathname.startsWith(`${route}/`)
+      );
+      
+      // Handle authentication redirects
       if (user) {
-        // Redirect to dashboard if user is logged in
-        if (window.location.pathname === '/login' || window.location.pathname === '/register') {
-          navigate('/dashboard');
+        // If user is logged in and tries to access login/register, redirect to dashboard
+        if (location.pathname === '/login' || location.pathname === '/register') {
+          navigate('/profile/dashboard');
         }
       } else {
-        // Allow access to specific public routes
-        const publicRoutes = ['/', '/about', '/contact', '/login', '/register', '/reset-password', '/solutions', 
-          '/value-propositions', '/faq', '/shop', '/products', '/defi-leadership', '/edge-function-test',
-          '/terms', '/privacy', '/cookies', '/security'];
-        if (!publicRoutes.includes(window.location.pathname)) {
-          navigate('/login');
+        // If user is not logged in and tries to access protected route, redirect to login
+        if (!isPublicRoute) {
+          navigate('/login', { 
+            state: { from: location.pathname },
+            replace: true 
+          });
         }
       }
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, location.pathname]);
 
   return (
     <>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/dashboard/*" element={<Dashboard />} />
-        <Route path="/profile/*" element={<Profile />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/value-propositions" element={<ValuePropositions />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -80,6 +93,14 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/cookies" element={<Cookies />} />
         <Route path="/security" element={<Security />} />
+        
+        {/* Protected routes */}
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        
+        {/* Profile routes from profileRoutes.tsx */}
+        {profileRoutes}
+        
+        {/* Fallback route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
