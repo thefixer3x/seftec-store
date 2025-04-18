@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import AIFeaturesList from '@/components/ai/AIFeaturesList';
 import { Link } from 'react-router-dom';
-import { Sparkle } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import AIDemoPromptBox from '@/components/ai/AIDemoPromptBox';
 
 const PersonalizedAIAdvisorSection = () => {
@@ -15,7 +15,7 @@ const PersonalizedAIAdvisorSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-slate border border-seftec-navy/10 text-seftec-navy/90 font-medium text-sm dark:bg-white/10 dark:border-white/10 dark:text-white/90 mb-4">
-            <Sparkle size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal animate-sparkle" />
+            <Shield className="mr-2 text-seftec-gold dark:text-seftec-teal" />
             AI-Powered Insights
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-seftec-navy dark:text-white mb-4">Meet Your Personal AI Business Advisor</h2>

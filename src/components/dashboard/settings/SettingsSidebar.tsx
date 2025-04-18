@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { TabsTrigger } from '@/components/ui/tabs';
 import { Building, User, Lock, Key, Mail, Shield, Bell, ChevronRight, ChevronDown } from 'lucide-react';
@@ -7,11 +6,12 @@ import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 
 interface SettingsSidebarProps {
   activeTab: string;
+  setActiveTab: (tab: string) => void;
   setActiveSubTab?: (subTab: string) => void;
   activeSubTab?: string;
 }
 
-const SettingsSidebar = ({ activeTab, setActiveSubTab, activeSubTab }: SettingsSidebarProps) => {
+const SettingsSidebar = ({ activeTab, setActiveTab, setActiveSubTab, activeSubTab }: SettingsSidebarProps) => {
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(true);
 

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +11,7 @@ import RoutingDiagram from './RoutingDiagram';
 
 const SettingsTab = () => {
   const [currentTab, setCurrentTab] = useState('personal');
+  const [verificationStatus, setVerificationStatus] = useState('pending');
   const isMobile = useIsMobile();
   const [showRoutes, setShowRoutes] = useState(false);
 
@@ -60,7 +60,10 @@ const SettingsTab = () => {
             <PersonalProfileTab />
           </TabsContent>
           <TabsContent value="business">
-            <BusinessProfileTab />
+            <BusinessProfileTab 
+              verificationStatus={verificationStatus}
+              setVerificationStatus={setVerificationStatus}
+            />
           </TabsContent>
           <TabsContent value="password">
             <PasswordTab />
@@ -72,11 +75,19 @@ const SettingsTab = () => {
       ) : (
         <div className="grid grid-cols-4 gap-6">
           <div className="col-span-1">
-            <SettingsSidebar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+            <SettingsSidebar 
+              activeTab={currentTab} 
+              setActiveTab={setCurrentTab}
+            />
           </div>
           <div className="col-span-3">
             {currentTab === 'personal' && <PersonalProfileTab />}
-            {currentTab === 'business' && <BusinessProfileTab />}
+            {currentTab === 'business' && (
+              <BusinessProfileTab 
+                verificationStatus={verificationStatus}
+                setVerificationStatus={setVerificationStatus}
+              />
+            )}
             {currentTab === 'password' && <PasswordTab />}
             {currentTab === 'pin' && <PinTab />}
           </div>
