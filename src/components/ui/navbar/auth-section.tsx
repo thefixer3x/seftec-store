@@ -39,7 +39,7 @@ const AuthSection = ({ user }: AuthSectionProps) => {
       )}
       
       {/* Secured by AI Badge */}
-      <Link to="/value-propositions/bizgenie" className="group relative overflow-hidden hidden md:flex">
+      <Link to="/bizgenie" className="group relative overflow-hidden hidden md:flex">
         <div className="hidden md:flex items-center bg-gradient-to-r from-seftec-teal to-seftec-purple rounded-full px-2 sm:px-3 py-1 relative z-10">
           <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-white" />
           <span className="text-xs sm:text-sm text-white font-medium">Secured by AI</span>
