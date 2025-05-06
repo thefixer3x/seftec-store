@@ -3,14 +3,8 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Send, FileText } from 'lucide-react';
-import { AlertCircle } from 'lucide-react';
-
-interface BusinessPlanFormProps {
-  onSubmit: (planData: PlanFormData) => Promise<void>;
-  isLoading: boolean;
-}
+import { Switch } from '@/components/ui/switch';
+import { FileText, Send } from 'lucide-react';
 
 export interface PlanFormData {
   idea: string;
@@ -22,161 +16,142 @@ export interface PlanFormData {
   saveData: boolean;
 }
 
+interface BusinessPlanFormProps {
+  onSubmit: (data: PlanFormData) => void;
+  isLoading: boolean;
+}
+
 const BusinessPlanForm: React.FC<BusinessPlanFormProps> = ({ onSubmit, isLoading }) => {
-  const [formData, setFormData] = useState<PlanFormData>({
-    idea: '',
-    customers: '',
-    revenue: '',
-    competition: '',
-    advantages: '',
-    funding: '',
-    saveData: true
-  });
-  
-  const [error, setError] = useState<string | null>(null);
+  const [idea, setIdea] = useState<string>('');
+  const [customers, setCustomers] = useState<string>('');
+  const [revenue, setRevenue] = useState<string>('');
+  const [competition, setCompetition] = useState<string>('');
+  const [advantages, setAdvantages] = useState<string>('');
+  const [funding, setFunding] = useState<string>('');
+  const [saveData, setSaveData] = useState<boolean>(false);
 
-  const handleChange = (field: keyof Omit<PlanFormData, 'saveData'>, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.idea.trim()) {
-      setError('Please provide a business idea to generate a plan');
-      return;
-    }
+    if (!idea.trim()) return;
     
-    setError(null);
-    
-    try {
-      await onSubmit(formData);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate business plan');
-    }
+    onSubmit({
+      idea,
+      customers,
+      revenue,
+      competition,
+      advantages,
+      funding,
+      saveData
+    });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="input-idea" className="text-sm font-medium mb-1.5 block">
-            Describe your business idea*
-          </Label>
-          <Textarea 
-            id="input-idea" 
-            value={formData.idea}
-            onChange={(e) => handleChange('idea', e.target.value)}
-            placeholder="A mobile app that helps people find local fitness classes..."
-            className="resize-none min-h-[80px]"
-            required
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="input-customers" className="text-sm font-medium mb-1.5 block">
-            Who are your target customers?
-          </Label>
-          <Textarea 
-            id="input-customers"
-            value={formData.customers}
-            onChange={(e) => handleChange('customers', e.target.value)}
-            placeholder="People aged 25-45 who are interested in fitness but have busy schedules..."
-            className="resize-none min-h-[60px]"
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="input-revenue" className="text-sm font-medium mb-1.5 block">
-            How will you generate revenue?
-          </Label>
-          <Textarea 
-            id="input-revenue"
-            value={formData.revenue}
-            onChange={(e) => handleChange('revenue', e.target.value)}
-            placeholder="Subscription model with tiered pricing, plus commission from class bookings..."
-            className="resize-none min-h-[60px]"
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="input-competition" className="text-sm font-medium mb-1.5 block">
-            Who are your competitors?
-          </Label>
-          <Textarea 
-            id="input-competition"
-            value={formData.competition}
-            onChange={(e) => handleChange('competition', e.target.value)}
-            placeholder="ClassPass, MindBody, local gym apps..."
-            className="resize-none min-h-[60px]"
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="input-advantages" className="text-sm font-medium mb-1.5 block">
-            What are your competitive advantages?
-          </Label>
-          <Textarea 
-            id="input-advantages"
-            value={formData.advantages}
-            onChange={(e) => handleChange('advantages', e.target.value)}
-            placeholder="Unique AI matching algorithm, seamless payment processing..."
-            className="resize-none min-h-[60px]"
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="input-funding" className="text-sm font-medium mb-1.5 block">
-            What funding do you need?
-          </Label>
-          <Textarea 
-            id="input-funding"
-            value={formData.funding}
-            onChange={(e) => handleChange('funding', e.target.value)}
-            placeholder="$500,000 seed funding for initial development and marketing..."
-            className="resize-none min-h-[60px]"
-          />
-        </div>
-        
-        <div className="flex items-center space-x-2 pt-2">
-          <Checkbox 
-            id="save-data-consent"
-            checked={formData.saveData}
-            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, saveData: !!checked }))}
-          />
-          <Label htmlFor="save-data-consent" className="text-sm cursor-pointer">
-            Allow BizGenie to learn from my inputs (stored securely)
-          </Label>
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="business-idea" className="text-sm font-medium">
+          Business Idea <span className="text-red-500">*</span>
+        </Label>
+        <Textarea
+          id="business-idea"
+          placeholder="Describe your business idea in detail..."
+          value={idea}
+          onChange={(e) => setIdea(e.target.value)}
+          className="resize-none min-h-[80px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+          required
+          disabled={isLoading}
+        />
       </div>
-
-      {error && (
-        <div className="flex items-start space-x-2 text-red-500 dark:text-red-400 text-sm bg-red-50 dark:bg-red-900/10 p-2 rounded">
-          <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-          <p>{error}</p>
-        </div>
-      )}
+      
+      <div className="space-y-2">
+        <Label htmlFor="target-customers" className="text-sm font-medium">
+          Target Customers
+        </Label>
+        <Textarea
+          id="target-customers"
+          placeholder="Who are your target customers?"
+          value={customers}
+          onChange={(e) => setCustomers(e.target.value)}
+          className="resize-none min-h-[60px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+          disabled={isLoading}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="revenue-model" className="text-sm font-medium">
+          Revenue Model
+        </Label>
+        <Textarea
+          id="revenue-model"
+          placeholder="How will your business make money?"
+          value={revenue}
+          onChange={(e) => setRevenue(e.target.value)}
+          className="resize-none min-h-[60px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+          disabled={isLoading}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="competition" className="text-sm font-medium">
+          Competition
+        </Label>
+        <Textarea
+          id="competition"
+          placeholder="Who are your main competitors?"
+          value={competition}
+          onChange={(e) => setCompetition(e.target.value)}
+          className="resize-none min-h-[60px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+          disabled={isLoading}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="advantages" className="text-sm font-medium">
+          Competitive Advantages
+        </Label>
+        <Textarea
+          id="advantages"
+          placeholder="What are your competitive advantages?"
+          value={advantages}
+          onChange={(e) => setAdvantages(e.target.value)}
+          className="resize-none min-h-[60px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+          disabled={isLoading}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="funding" className="text-sm font-medium">
+          Funding Needs
+        </Label>
+        <Textarea
+          id="funding"
+          placeholder="What are your funding requirements?"
+          value={funding}
+          onChange={(e) => setFunding(e.target.value)}
+          className="resize-none min-h-[60px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+          disabled={isLoading}
+        />
+      </div>
+      
+      <div className="flex items-center space-x-2">
+        <Switch 
+          id="save-data"
+          checked={saveData}
+          onCheckedChange={setSaveData}
+          disabled={isLoading}
+        />
+        <Label htmlFor="save-data" className="text-sm cursor-pointer">
+          Save my data for future reference and improvements
+        </Label>
+      </div>
       
       <Button 
         type="submit" 
-        disabled={isLoading}
-        className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white w-full"
+        disabled={!idea.trim() || isLoading} 
+        className="w-full bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white"
       >
-        {isLoading ? (
-          <span className="flex items-center">
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Generating...
-          </span>
-        ) : (
-          <span className="flex items-center">
-            <FileText className="h-4 w-4 mr-2" />
-            🧠 Generate Business Plan
-          </span>
-        )}
+        <FileText className="h-4 w-4 mr-2" />
+        {isLoading ? "Generating Plan..." : "Generate Business Plan"}
       </Button>
     </form>
   );

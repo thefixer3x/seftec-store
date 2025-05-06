@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
 import { AlertCircle } from 'lucide-react';
+import { sanitizeHTML } from '@/utils/sanitize';
 
 interface BusinessPlanDisplayProps {
   planHtml: string;
@@ -66,9 +67,6 @@ const BusinessPlanDisplay: React.FC<BusinessPlanDisplayProps> = ({ planHtml, isL
     );
   }
   
-  // Sanitize HTML output
-  const sanitizedHtml = DOMPurify.sanitize(planHtml);
-  
   return (
     <div 
       ref={planRef}
@@ -80,7 +78,7 @@ const BusinessPlanDisplay: React.FC<BusinessPlanDisplayProps> = ({ planHtml, isL
       </div>
       <div 
         className="prose prose-sm dark:prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: sanitizedHtml }} 
+        dangerouslySetInnerHTML={sanitizeHTML(planHtml)} 
       />
     </div>
   );
