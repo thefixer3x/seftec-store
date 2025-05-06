@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +13,7 @@ import MarketInsightAlert from '@/components/ai/MarketInsightAlert';
 import ModeTabs from '@/components/ai/ModeTabs';
 import BusinessPlanForm, { PlanFormData } from '@/components/ai/BusinessPlanForm';
 import BusinessPlanDisplay from '@/components/ai/BusinessPlanDisplay';
+import { supabase } from '@/integrations/supabase/client';
 
 interface BizGenieDashboardProps {
   userId?: string; // Optional: Can be passed directly or obtained from auth context
