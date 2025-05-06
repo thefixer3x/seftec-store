@@ -11,6 +11,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import MarketInsightAlert from '@/components/ai/MarketInsightAlert';
+import ModeTabs from '@/components/ai/ModeTabs';
+import BusinessPlanForm, { PlanFormData } from '@/components/ai/BusinessPlanForm';
+import BusinessPlanDisplay from '@/components/ai/BusinessPlanDisplay';
 
 interface BizGenieDashboardProps {
   userId?: string; // Optional: Can be passed directly or obtained from auth context
@@ -27,6 +30,11 @@ const BizGenieDashboard: React.FC<BizGenieDashboardProps> = ({ userId }) => {
   const [generateReport, setGenerateReport] = useState<boolean>(false);
   const [marketInsight, setMarketInsight] = useState<string>('');
   const responseRef = useRef<HTMLDivElement>(null);
+  
+  // New state for business plan mode
+  const [activeMode, setActiveMode] = useState<'chat' | 'plan'>('chat');
+  const [businessPlan, setBusinessPlan] = useState<string>('');
+  const [planError, setPlanError] = useState<string | null>(null);
   
   // Use userId from props or from auth context
   const actualUserId = userId || user?.id;
@@ -100,6 +108,56 @@ const BizGenieDashboard: React.FC<BizGenieDashboardProps> = ({ userId }) => {
     }
   };
 
+  // Handle business plan form submission
+  const handlePlanSubmit = async (planData: PlanFormData) => {
+    if (!actualUserId) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to use this feature",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      setIsLoading(true);
+      setPlanError(null);
+      
+      // Call the Supabase edge function for business plan generation
+      const { data, error } = await supabase.functions.invoke('bizgenie-router', {
+        body: { 
+          mode: 'business-plan',
+          planData,
+          userId: actualUserId
+        }
+      });
+      
+      if (error) throw new Error(error.message);
+      if (!data || !data.planHtml) {
+        throw new Error('Failed to generate business plan. Please try again.');
+      }
+      
+      // Set the generated business plan
+      setBusinessPlan(data.planHtml);
+      
+      // Show success toast
+      toast({
+        title: "Business Plan Generated",
+        description: "Your personalized business plan is ready to view",
+      });
+      
+    } catch (err) {
+      setPlanError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      toast({
+        title: "Error",
+        description: err instanceof Error ? err.message : 'An unexpected error occurred',
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Card className="shadow-md bg-white dark:bg-seftec-darkNavy/30 border-seftec-slate dark:border-seftec-charcoal overflow-hidden">
       <CardHeader className="pb-3 bg-gradient-to-r from-seftec-navy to-seftec-navy/80 dark:from-seftec-teal dark:to-seftec-purple text-white">
@@ -116,83 +174,102 @@ const BizGenieDashboard: React.FC<BizGenieDashboardProps> = ({ userId }) => {
       <CardContent className="p-5 space-y-5">
         {marketInsight && <MarketInsightAlert marketInsight={marketInsight} />}
         
-        {response && (
-          <div 
-            ref={responseRef}
-            className={cn(
-              "bg-seftec-slate/30 dark:bg-white/5 p-4 rounded-lg text-seftec-navy dark:text-white/90 overflow-y-auto",
-              generateReport ? "min-h-[300px] max-h-[400px]" : "min-h-[100px] max-h-[250px]"
+        <ModeTabs activeMode={activeMode} onModeChange={setActiveMode} />
+        
+        {activeMode === 'chat' ? (
+          <>
+            {response && (
+              <div 
+                ref={responseRef}
+                className={cn(
+                  "bg-seftec-slate/30 dark:bg-white/5 p-4 rounded-lg text-seftec-navy dark:text-white/90 overflow-y-auto",
+                  generateReport ? "min-h-[300px] max-h-[400px]" : "min-h-[100px] max-h-[250px]"
+                )}
+              >
+                <div className="flex items-center gap-2 text-xs text-seftec-navy/60 dark:text-white/60 mb-2">
+                  <span>BizGenie{generateReport ? " Report" : ""}:</span>
+                  {generateReport && <FileText size={14} className="text-seftec-teal" />}
+                </div>
+                <div className={generateReport ? 'whitespace-pre-line report-content' : 'whitespace-pre-line'}>
+                  {response}
+                </div>
+              </div>
             )}
-          >
-            <div className="flex items-center gap-2 text-xs text-seftec-navy/60 dark:text-white/60 mb-2">
-              <span>BizGenie{generateReport ? " Report" : ""}:</span>
-              {generateReport && <FileText size={14} className="text-seftec-teal" />}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="relative">
+                <Textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder={generateReport 
+                    ? "Describe your business challenge for a comprehensive analysis..." 
+                    : "Ask about business strategies, market trends, financial advice..."}
+                  className="resize-none min-h-[100px] focus:border-seftec-gold dark:focus:border-seftec-teal"
+                  disabled={isLoading}
+                  aria-label="AI prompt input"
+                />
+              </div>
+              
+              {error && (
+                <div className="flex items-start space-x-2 text-red-500 dark:text-red-400 text-sm bg-red-50 dark:bg-red-900/10 p-2 rounded">
+                  <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <p>{error}</p>
+                </div>
+              )}
+              
+              <div className="flex flex-wrap gap-4 justify-between items-center">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch 
+                      id="learning-toggle"
+                      checked={allowLearning}
+                      onCheckedChange={setAllowLearning}
+                      aria-label="Allow BizGenie to learn from my queries"
+                    />
+                    <Label htmlFor="learning-toggle" className="text-sm cursor-pointer">
+                      Learn from queries
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="report-toggle"
+                      checked={generateReport}
+                      onCheckedChange={(checked) => setGenerateReport(checked as boolean)}
+                      aria-label="Generate detailed business report"
+                    />
+                    <Label htmlFor="report-toggle" className="text-sm cursor-pointer">
+                      Generate Report
+                    </Label>
+                  </div>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  disabled={!prompt.trim() || isLoading}
+                  className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white"
+                  aria-label="Submit prompt"
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  {isLoading ? "Processing..." : generateReport ? "Generate Report" : "Ask BizGenie"}
+                </Button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <BusinessPlanForm onSubmit={handlePlanSubmit} isLoading={isLoading} />
             </div>
-            <div className={generateReport ? 'whitespace-pre-line report-content' : 'whitespace-pre-line'}>
-              {response}
+            <div>
+              <BusinessPlanDisplay 
+                planHtml={businessPlan}
+                isLoading={isLoading}
+                error={planError}
+              />
             </div>
           </div>
         )}
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative">
-            <Textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder={generateReport 
-                ? "Describe your business challenge for a comprehensive analysis..." 
-                : "Ask about business strategies, market trends, financial advice..."}
-              className="resize-none min-h-[100px] focus:border-seftec-gold dark:focus:border-seftec-teal"
-              disabled={isLoading}
-              aria-label="AI prompt input"
-            />
-          </div>
-          
-          {error && (
-            <div className="flex items-start space-x-2 text-red-500 dark:text-red-400 text-sm bg-red-50 dark:bg-red-900/10 p-2 rounded">
-              <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <p>{error}</p>
-            </div>
-          )}
-          
-          <div className="flex flex-wrap gap-4 justify-between items-center">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex items-center space-x-2">
-                <Switch 
-                  id="learning-toggle"
-                  checked={allowLearning}
-                  onCheckedChange={setAllowLearning}
-                  aria-label="Allow BizGenie to learn from my queries"
-                />
-                <Label htmlFor="learning-toggle" className="text-sm cursor-pointer">
-                  Learn from queries
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="report-toggle"
-                  checked={generateReport}
-                  onCheckedChange={(checked) => setGenerateReport(checked as boolean)}
-                  aria-label="Generate detailed business report"
-                />
-                <Label htmlFor="report-toggle" className="text-sm cursor-pointer">
-                  Generate Report
-                </Label>
-              </div>
-            </div>
-            
-            <Button 
-              type="submit" 
-              disabled={!prompt.trim() || isLoading}
-              className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 text-white"
-              aria-label="Submit prompt"
-            >
-              <Send className="h-4 w-4 mr-2" />
-              {isLoading ? "Processing..." : generateReport ? "Generate Report" : "Ask BizGenie"}
-            </Button>
-          </div>
-        </form>
       </CardContent>
     </Card>
   );
