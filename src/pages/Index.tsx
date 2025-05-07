@@ -17,13 +17,23 @@ import PersonalizedAIAdvisorSection from '@/components/sections/PersonalizedAIAd
 import AIAdvisorSection from '@/components/sections/AIAdvisorSection';
 
 const Home = () => {
+  // Add the handlePaymentComplete function to pass to PaymentCounterSection
+  const handlePaymentComplete = (paymentData: any) => {
+    console.log('Payment completed:', paymentData);
+    // Here you could add additional logic like showing a notification
+  };
+
   const homeSections = [
     { id: 'problems', Component: ProblemsSection },
     { id: 'solutions', Component: SolutionsSection },
     { id: 'advantages', Component: AdvantagesSection },
     { id: 'bizCounter', Component: BusinessCounterSection },
     { id: 'defi', Component: DefiHighlightSection },
-    { id: 'paymentCounter', Component: PaymentCounterSection },
+    { 
+      id: 'paymentCounter', 
+      Component: PaymentCounterSection,
+      props: { onPaymentComplete: handlePaymentComplete }
+    },
     { id: 'payment', Component: PaymentSection },
     { id: 'aiAdvisor', Component: AIAdvisorSection },
     { id: 'regions', Component: RegionsCoveredSection },
@@ -37,8 +47,8 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <main className="flex-1">
-        {homeSections.map(({ id, Component }) => (
-          <Component key={id} />
+        {homeSections.map(({ id, Component, props }) => (
+          <Component key={id} {...(props || {})} />
         ))}
       </main>
     </div>

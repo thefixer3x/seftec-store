@@ -4,7 +4,11 @@ import BusinessCounterSection from './BusinessCounterSection';
 import PaymentSection from './PaymentSection';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const PaymentCounterSection = ({ onPaymentComplete }: { onPaymentComplete: (paymentData: any) => void }) => {
+interface PaymentCounterSectionProps {
+  onPaymentComplete?: (paymentData: any) => void;
+}
+
+const PaymentCounterSection = ({ onPaymentComplete }: PaymentCounterSectionProps) => {
   const isMobile = useIsMobile();
 
   return (
