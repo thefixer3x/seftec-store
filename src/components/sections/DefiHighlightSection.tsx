@@ -1,40 +1,93 @@
 
 import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
+import { ExternalLink, Shield, Wallet, Building } from 'lucide-react';
 
-interface DefiHighlightSectionProps {
-  extraContent?: React.ReactNode;
-}
-
-const DefiHighlightSection = ({ extraContent }: DefiHighlightSectionProps) => {
+const DefiHighlightSection = () => {
   return (
-    <section className="py-16 bg-gradient-to-r from-blue-900 to-indigo-900 text-white">
-      <div className="container mx-auto px-6">
+    <section className="py-16 px-4 bg-gray-50 dark:bg-seftec-navy/30">
+      <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Enterprise DeFi Leadership</h2>
-          <p className="text-lg md:text-xl opacity-90 max-w-3xl mx-auto">
-            Seftec is pioneering secure, compliant access to decentralized finance for enterprise clients
+          <Badge className="mb-2 bg-seftec-teal/10 text-seftec-teal dark:bg-seftec-teal/20 border-0 rounded-full px-3 py-1">
+            DeFi Leadership
+          </Badge>
+          <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-3">
+            Enterprise-Grade DeFi Solutions
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Seftec is pioneering the integration of DeFi technologies with traditional enterprise systems through ISO 20022-compliant infrastructure.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div className="p-6 bg-blue-800/40 rounded-xl hover:bg-blue-800/60 transition-colors">
-            <div className="font-bold text-xl mb-3">ISO 20022 Compliant</div>
-            <p className="opacity-90">Seamlessly integrating traditional banking systems with blockchain-based solutions through industry-standard protocols.</p>
-          </div>
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <Card className="border-t-4 border-t-seftec-teal">
+            <CardContent className="p-6">
+              <div className="mb-4">
+                <Shield className="h-10 w-10 text-seftec-teal" />
+              </div>
+              <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                ISO 20022 Compliance
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Our platform fully implements ISO 20022 messaging standards, enabling seamless integration between traditional banking systems and decentralized finance protocols.
+              </p>
+              <Link to="/defi-leadership" className="inline-flex items-center text-seftec-teal hover:text-seftec-teal/80 font-medium">
+                Learn more about compliance
+                <ExternalLink className="h-4 w-4 ml-1" />
+              </Link>
+            </CardContent>
+          </Card>
           
-          <div className="p-6 bg-blue-800/40 rounded-xl hover:bg-blue-800/60 transition-colors">
-            <div className="font-bold text-xl mb-3">Enterprise Security</div>
-            <p className="opacity-90">Bank-grade security protocols with multi-layer protection and comprehensive risk management for institutional clients.</p>
-          </div>
+          <Card className="border-t-4 border-t-seftec-purple">
+            <CardContent className="p-6">
+              <div className="mb-4">
+                <Wallet className="h-10 w-10 text-seftec-purple" />
+              </div>
+              <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                Financial Integration
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Complete financial infrastructure with marketplace payments, subscription billing, and virtual cards powered by Stripe for seamless transactions.
+              </p>
+              <Link to="/profile/finance" className="inline-flex items-center text-seftec-purple hover:text-seftec-purple/80 font-medium">
+                Explore financial services
+                <ExternalLink className="h-4 w-4 ml-1" />
+              </Link>
+            </CardContent>
+          </Card>
           
-          <div className="p-6 bg-blue-800/40 rounded-xl hover:bg-blue-800/60 transition-colors">
-            <div className="font-bold text-xl mb-3">Global Partnerships</div>
-            <p className="opacity-90">Strategic alliances with leading financial institutions and blockchain networks to deliver unparalleled access and liquidity.</p>
-          </div>
+          <Card className="border-t-4 border-t-amber-500">
+            <CardContent className="p-6">
+              <div className="mb-4">
+                <Building className="h-10 w-10 text-amber-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">
+                Enterprise Solutions
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Purpose-built for institutions, our platform offers treasury management, cross-border settlement, and regulatory compliance with enterprise-grade security.
+              </p>
+              <Link to="/defi-leadership" className="inline-flex items-center text-amber-500 hover:text-amber-600 font-medium">
+                View case studies
+                <ExternalLink className="h-4 w-4 ml-1" />
+              </Link>
+            </CardContent>
+          </Card>
         </div>
         
-        {/* Display extra content if provided */}
-        {extraContent}
+        <div className="text-center">
+          <Button
+            asChild
+            className="bg-gradient-to-r from-seftec-navy to-seftec-teal text-white hover:opacity-90"
+          >
+            <Link to="/defi-leadership">
+              Explore Our DeFi Leadership
+            </Link>
+          </Button>
+        </div>
       </div>
     </section>
   );
