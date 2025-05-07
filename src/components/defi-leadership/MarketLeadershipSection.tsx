@@ -1,85 +1,119 @@
 
 import React from 'react';
-import { Shield, Trophy, Briefcase } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Check, Trophy, BarChart3, Users, Building, ArrowRight } from 'lucide-react';
 
 const MarketLeadershipSection = () => {
+  const metrics = [
+    { label: 'Enterprise Clients', value: '300+', icon: <Building className="h-6 w-6 text-seftec-teal" /> },
+    { label: 'Active Users', value: '25,000+', icon: <Users className="h-6 w-6 text-seftec-purple" /> },
+    { label: 'Transaction Volume', value: '$2.3B', icon: <BarChart3 className="h-6 w-6 text-seftec-gold" /> },
+    { label: 'Industry Awards', value: '12', icon: <Trophy className="h-6 w-6 text-amber-500" /> }
+  ];
+
   const caseStudies = [
     {
-      client: "Global Bank Corp",
-      result: "60% reduction in cross-border transaction costs",
-      description: "Implemented DeFi-powered international settlements system"
+      company: 'Global Bank Inc.',
+      description: 'Reduced cross-border settlement times from 3 days to 30 minutes while maintaining full ISO 20022 compliance.',
+      results: '87% cost reduction in transaction fees'
     },
     {
-      client: "Enterprise Solutions Ltd",
-      result: "89% faster payment processing",
-      description: "Automated trade finance with smart contracts"
+      company: 'Enterprise Solutions Ltd.',
+      description: 'Integrated DeFi liquidity pools with traditional treasury operations for improved capital efficiency.',
+      results: '40% increase in working capital utilization'
     }
   ];
 
+  const advantages = [
+    'ISO 20022 Compliance: Full compatibility with global banking standards',
+    'Enterprise-Grade Security: SOC 2 Type II and ISO 27001 certified platform',
+    'Regulatory Alignment: Built-in compliance with global financial regulations',
+    'Seamless Integration: Connects with existing ERP and banking systems'
+  ];
+
   return (
-    <section className="py-20 bg-white dark:bg-seftec-darkNavy">
-      <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-seftec-navy dark:text-white mb-12">Market Leadership Position</h2>
-          
-          <div className="space-y-8">
-            <Card className="p-6 bg-white/50 dark:bg-white/5">
-              <h3 className="flex items-center text-xl font-semibold text-seftec-navy dark:text-white mb-4">
-                <Trophy className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2" />
-                Industry Recognition
-              </h3>
-              <ul className="space-y-3 text-seftec-navy/70 dark:text-white/70">
-                <li>• Top DeFi Innovation Award 2024 - Enterprise Blockchain Awards</li>
-                <li>• ISO 20022 Certified Implementation Partner</li>
-                <li>• Recognized by Gartner as DeFi Market Leader</li>
-              </ul>
+    <div className="space-y-12 max-w-4xl mx-auto">
+      {/* Key Metrics */}
+      <section>
+        <h2 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Market Leadership Metrics</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {metrics.map((metric, index) => (
+            <Card key={index} className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-3">{metric.icon}</div>
+                <div className="text-3xl font-bold text-seftec-navy dark:text-white mb-1">{metric.value}</div>
+                <div className="text-gray-600 dark:text-gray-400 text-sm">{metric.label}</div>
+              </CardContent>
             </Card>
-            
-            <Card className="p-6 bg-white/50 dark:bg-white/5">
-              <h3 className="flex items-center text-xl font-semibold text-seftec-navy dark:text-white mb-4">
-                <Briefcase className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2" />
-                Enterprise Case Studies
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {caseStudies.map((study, index) => (
-                  <div key={index} className="p-4 rounded-lg bg-seftec-slate/50 dark:bg-white/5">
-                    <h4 className="font-medium text-seftec-navy dark:text-white mb-2">{study.client}</h4>
-                    <p className="text-seftec-gold dark:text-seftec-teal font-medium mb-2">{study.result}</p>
-                    <p className="text-sm text-seftec-navy/70 dark:text-white/70">{study.description}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-            
-            <Card className="p-6 bg-white/50 dark:bg-white/5">
-              <h3 className="flex items-center text-xl font-semibold text-seftec-navy dark:text-white mb-4">
-                <Shield className="h-5 w-5 text-seftec-gold dark:text-seftec-teal mr-2" />
-                Competitive Advantages
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-medium text-seftec-navy dark:text-white mb-2">Security & Compliance</h4>
-                  <ul className="space-y-2 text-sm text-seftec-navy/70 dark:text-white/70">
-                    <li>• ISO 20022 compliant infrastructure</li>
-                    <li>• Multi-layer security protocols</li>
-                    <li>• Real-time compliance monitoring</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-medium text-seftec-navy dark:text-white mb-2">Technology Edge</h4>
-                  <ul className="space-y-2 text-sm text-seftec-navy/70 dark:text-white/70">
-                    <li>• AI-powered risk management</li>
-                    <li>• Hybrid blockchain architecture</li>
-                    <li>• Enterprise-grade scalability</li>
-                  </ul>
-                </div>
-              </div>
-            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Market Share */}
+      <section>
+        <h2 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Market Penetration</h2>
+        <div className="space-y-4">
+          <div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-700 dark:text-gray-300">Enterprise DeFi Solutions</span>
+              <span className="font-medium text-seftec-navy dark:text-white">45%</span>
+            </div>
+            <Progress value={45} className="h-2" />
+          </div>
+          <div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-700 dark:text-gray-300">ISO 20022 Compliant Providers</span>
+              <span className="font-medium text-seftec-navy dark:text-white">62%</span>
+            </div>
+            <Progress value={62} className="h-2" />
+          </div>
+          <div>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-700 dark:text-gray-300">DeFi Settlement Solutions</span>
+              <span className="font-medium text-seftec-navy dark:text-white">38%</span>
+            </div>
+            <Progress value={38} className="h-2" />
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* Case Studies */}
+      <section>
+        <h2 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Enterprise Case Studies</h2>
+        <div className="space-y-6">
+          {caseStudies.map((study, index) => (
+            <Card key={index} className="border-l-4 border-l-seftec-teal">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-2">{study.company}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{study.description}</p>
+                <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 p-2 rounded flex items-center">
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  <span>{study.results}</span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Competitive Advantages */}
+      <section>
+        <h2 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Competitive Advantages</h2>
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+          <ul className="space-y-4">
+            {advantages.map((advantage, index) => (
+              <li key={index} className="flex items-start">
+                <span className="mr-3 mt-1">
+                  <Check className="h-5 w-5 text-seftec-teal" />
+                </span>
+                <span className="text-gray-700 dark:text-gray-200">{advantage}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </div>
   );
 };
 

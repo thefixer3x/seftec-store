@@ -1,6 +1,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@12.6.0?target=deno";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.31.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -23,7 +24,7 @@ serve(async (req) => {
   }
   
   // Get the Stripe secret key from environment variables
-  const stripeSecretKey = Deno.env.get("Stripe_test_SK");
+  const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
   const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
   
   if (!stripeSecretKey || !webhookSecret) {
@@ -32,6 +33,13 @@ serve(async (req) => {
   }
   
   const stripe = new Stripe(stripeSecretKey, { apiVersion: "2023-10-16" });
+  
+  // Create Supabase client using service role key
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    { auth: { persistSession: false } }
+  );
   
   try {
     // Get the signature from the headers
@@ -61,21 +69,90 @@ serve(async (req) => {
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         console.log(`PaymentIntent success: ${paymentIntent.id}`);
-        // TODO: Store transaction in database
-        // await storeTransaction(paymentIntent);
+        
+        // Update marketplace transaction if this is a marketplace payment
+        if (paymentIntent.metadata.order_id && paymentIntent.metadata.seller_id) {
+          await supabase
+            .from('marketplace_transactions')
+            .update({ status: 'succeeded' })
+            .eq('stripe_charge_id', paymentIntent.id);
+        }
         break;
         
       case 'checkout.session.completed':
         const session = event.data.object;
         console.log(`Checkout session completed: ${session.id}`);
-        // TODO: Fulfill order based on session data
+        
+        // Handle subscription checkout completion
+        if (session.mode === 'subscription' && session.subscription) {
+          // Get subscription details
+          const subscription = await stripe.subscriptions.retrieve(session.subscription);
+          
+          // Get plan name from the price
+          let planName = 'basic';
+          if (subscription.items.data[0]?.price.unit_amount === 2700) {
+            planName = 'premium';
+          }
+          
+          // Update subscription record
+          await supabase
+            .from('subscriptions')
+            .update({
+              stripe_subscription_id: session.subscription,
+              plan_name: planName,
+              status: 'active',
+              current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+              current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+            })
+            .eq('stripe_customer_id', session.customer);
+        }
         break;
         
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-        const subscription = event.data.object;
-        console.log(`Subscription ${event.type}: ${subscription.id}`);
-        // TODO: Update user subscription status
+        const subscriptionEvent = event.data.object;
+        console.log(`Subscription ${event.type}: ${subscriptionEvent.id}`);
+        
+        // Get plan name from the price
+        let planName = 'basic';
+        if (subscriptionEvent.items.data[0]?.price.unit_amount === 2700) {
+          planName = 'premium';
+        }
+        
+        // Update subscription status
+        await supabase
+          .from('subscriptions')
+          .update({
+            status: subscriptionEvent.status,
+            plan_name: planName,
+            current_period_start: new Date(subscriptionEvent.current_period_start * 1000).toISOString(),
+            current_period_end: new Date(subscriptionEvent.current_period_end * 1000).toISOString(),
+          })
+          .eq('stripe_subscription_id', subscriptionEvent.id);
+        break;
+        
+      case 'customer.subscription.deleted':
+        const deletedSubscription = event.data.object;
+        console.log(`Subscription deleted: ${deletedSubscription.id}`);
+        
+        // Find the customer's user ID
+        const { data: subData } = await supabase
+          .from('subscriptions')
+          .select('user_id')
+          .eq('stripe_subscription_id', deletedSubscription.id)
+          .maybeSingle();
+          
+        if (subData?.user_id) {
+          // Reset to free plan
+          await supabase
+            .from('subscriptions')
+            .update({
+              status: 'canceled',
+              plan_name: 'free',
+              stripe_subscription_id: null
+            })
+            .eq('user_id', subData.user_id);
+        }
         break;
         
       default:

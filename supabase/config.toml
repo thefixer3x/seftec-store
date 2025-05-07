@@ -36,6 +36,24 @@ verify_jwt = false
 # Specifies the maximum amount of time (in seconds) that the function can run.
 timeout_seconds = 60
 
+[functions.stripe-subscription]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-connect]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-issuing]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-webhook]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+# Disable JWT authentication for this function since it will be called by Stripe
+verify_jwt = false
+
 [api]
 # Port to use for the local API URL.
 port = 54321
