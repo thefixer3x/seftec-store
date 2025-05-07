@@ -12,7 +12,6 @@ import PaymentSection from '@/components/sections/PaymentSection';
 import PaymentCounterSection from '@/components/sections/PaymentCounterSection';
 import AdvantagesSection from '@/components/sections/AdvantagesSection';
 import BusinessCounterSection from '@/components/sections/BusinessCounterSection';
-import DefiHighlightSection from '@/components/sections/DefiHighlightSection';
 import PersonalizedAIAdvisorSection from '@/components/sections/PersonalizedAIAdvisorSection';
 import AIAdvisorSection from '@/components/sections/AIAdvisorSection';
 
@@ -28,7 +27,6 @@ const Home = () => {
     { id: 'solutions', Component: SolutionsSection },
     { id: 'advantages', Component: AdvantagesSection },
     { id: 'bizCounter', Component: BusinessCounterSection },
-    { id: 'defi', Component: DefiHighlightSection },
     { 
       id: 'paymentCounter', 
       Component: PaymentCounterSection,

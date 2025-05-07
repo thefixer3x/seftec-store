@@ -1,10 +1,10 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Sparkle, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { Link } from 'react-router-dom';
 
 interface HeroSectionProps {
   className?: string;
@@ -112,13 +112,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               <Shield size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal" />
               The Future of Secure B2B Trade & Vendor Payments
             </span>
-            
-            <Link to="/defi-leadership">
-              <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-seftec-gold/10 border border-seftec-gold/20 text-seftec-navy/90 font-medium text-sm dark:bg-seftec-teal/10 dark:border-seftec-teal/20 dark:text-white/90 hover:bg-seftec-gold/20 dark:hover:bg-seftec-teal/20 transition-colors">
-                <Shield size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal" />
-                ISO 20022 Compliant DeFi Leadership
-              </span>
-            </Link>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 animate-fade-up text-balance leading-tight text-seftec-navy dark:text-white">
@@ -151,25 +144,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             >
               Book a Demo
             </Button>
-          </div>
-        </div>
-        
-        <div className="mt-12 max-w-4xl mx-auto bg-white/70 dark:bg-white/5 rounded-lg shadow-sm p-4 border border-seftec-navy/10 dark:border-white/10 animate-fade-up animate-delay-400">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-seftec-gold dark:bg-seftec-teal rounded-full p-2">
-                <Shield className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h3 className="font-medium text-seftec-navy dark:text-white">Enterprise DeFi Leadership</h3>
-                <p className="text-sm text-seftec-navy/70 dark:text-white/70">Pioneering decentralized finance solutions with ISO 20022 compliance</p>
-              </div>
-            </div>
-            <Link to="/defi-leadership">
-              <Button size="sm" variant="ghost" className="text-seftec-navy hover:text-seftec-navy/80 dark:text-white dark:hover:text-white/80">
-                Explore Our Vision
-              </Button>
-            </Link>
           </div>
         </div>
         
