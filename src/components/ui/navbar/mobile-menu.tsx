@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { MainNavItem } from "@/types";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { User } from "@/types/auth";
-import UserProfileDropdown from "@/components/auth/UserProfileDropdown";
+import { User } from "@supabase/supabase-js";
+import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface MobileMenuProps {
