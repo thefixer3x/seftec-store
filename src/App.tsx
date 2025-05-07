@@ -21,6 +21,7 @@ import Cart from '@/pages/Cart';
 import Products from '@/pages/Products';
 import Orders from '@/pages/Orders';
 import BizGenie from '@/pages/BizGenie';
+import DefiLeadership from '@/pages/DefiLeadership';
 import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
@@ -45,19 +46,13 @@ function App() {
       const publicRoutes = [
         '/', '/about', '/contact', '/login', '/register', '/reset-password', 
         '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
-        '/edge-function-test', '/terms', '/privacy', 
+        '/defi-leadership', '/edge-function-test', '/terms', '/privacy', 
         '/cookies', '/security', '/social-login-test'
       ];
       
       const isPublicRoute = publicRoutes.some(route => 
         location.pathname === route || location.pathname.startsWith(`${route}/`)
       );
-      
-      // If user is on /defi-leadership route, redirect to home
-      if (location.pathname === '/defi-leadership') {
-        navigate('/', { replace: true });
-        return;
-      }
       
       // Handle authentication redirects
       if (user) {
@@ -87,6 +82,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/value-propositions" element={<ValuePropositions />} />
+        <Route path="/defi-leadership" element={<DefiLeadership />} />
         <Route path="/biztools" element={<BizTools />} />
         <Route path="/bizgenie" element={<BizGenie />} />
         <Route path="/faq" element={<FAQ />} />
