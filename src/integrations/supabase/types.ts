@@ -87,6 +87,56 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_transactions: {
+        Row: {
+          amount: number
+          buyer_id: string | null
+          created_at: string
+          id: string
+          order_id: string | null
+          platform_fee: number
+          seller_amount: number
+          seller_id: string | null
+          status: string
+          stripe_charge_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          buyer_id?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          platform_fee: number
+          seller_amount: number
+          seller_id?: string | null
+          status?: string
+          stripe_charge_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          buyer_id?: string | null
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          platform_fee?: number
+          seller_amount?: number
+          seller_id?: string | null
+          status?: string
+          stripe_charge_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_transactions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_settings: {
         Row: {
           created_at: string
@@ -599,6 +649,75 @@ export type Database = {
           },
         ]
       }
+      stripe_connect_accounts: {
+        Row: {
+          created_at: string
+          id: string
+          onboarding_complete: boolean
+          stripe_account_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          onboarding_complete?: boolean
+          stripe_account_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          onboarding_complete?: boolean
+          stripe_account_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan_name: string
+          status: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          trial_end: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_name?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan_name?: string
+          status?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_end?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           business_size: string | null
@@ -674,6 +793,42 @@ export type Database = {
           tier_name?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      virtual_cards: {
+        Row: {
+          card_id: string | null
+          cardholder_id: string | null
+          created_at: string
+          id: string
+          is_locked: boolean
+          last4: string | null
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          card_id?: string | null
+          cardholder_id?: string | null
+          created_at?: string
+          id?: string
+          is_locked?: boolean
+          last4?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          card_id?: string | null
+          cardholder_id?: string | null
+          created_at?: string
+          id?: string
+          is_locked?: boolean
+          last4?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }

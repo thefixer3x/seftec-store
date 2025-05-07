@@ -16,6 +16,8 @@ import MarketplacePage from '@/pages/MarketplacePage';
 import InvoicesPage from '@/pages/InvoicesPage';
 import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
+import FinancialPage from '@/pages/FinancialPage';
+import DefiLeadership from '@/pages/DefiLeadership';
 import { ProfileSettings } from '@/components/account/ProfileSettings';
 // Fix the imports by using default imports instead of named imports
 import PasswordSettings from '@/components/account/PasswordSettings';
@@ -38,6 +40,7 @@ export const profileRoutes = (
       <Route index element={<Navigate to="/profile/dashboard" />} />
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="wallet" element={<WalletPage />} />
+      <Route path="finance" element={<FinancialPage />} />
       <Route path="settings" element={<SettingsPage />} />
       
       {/* Account settings nested routes */}
@@ -59,5 +62,8 @@ export const profileRoutes = (
       <Route path="customers" element={<CustomersPage />} />
       <Route path="transaction" element={<TransactionPage />} />
     </Route>
+
+    {/* DeFi Leadership page */}
+    <Route path="/defi-leadership" element={<DefiLeadership />} />
   </>
 );
