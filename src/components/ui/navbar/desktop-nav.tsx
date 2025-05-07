@@ -11,13 +11,10 @@ interface DesktopNavProps {
 const DesktopNav = ({ items }: DesktopNavProps) => {
   if (!items?.length) return null;
   
-  // Filter out the DeFi Leadership link if it exists
-  const filteredItems = items.filter(item => item.href !== '/defi-leadership');
-  
   return (
     <nav className="hidden md:flex items-center justify-center flex-1 mx-4">
       <div className="flex items-center space-x-8">
-        {filteredItems.map(
+        {items.map(
           (item, index) =>
             item.href && (
               <Link
