@@ -53,6 +53,12 @@ function App() {
         location.pathname === route || location.pathname.startsWith(`${route}/`)
       );
       
+      // If user is on /defi-leadership route, redirect to home
+      if (location.pathname === '/defi-leadership') {
+        navigate('/', { replace: true });
+        return;
+      }
+      
       // Handle authentication redirects
       if (user) {
         // If user is logged in and tries to access login/register, redirect to dashboard
