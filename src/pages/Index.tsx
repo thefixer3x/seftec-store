@@ -15,6 +15,8 @@ import BusinessCounterSection from '@/components/sections/BusinessCounterSection
 import DefiHighlightSection from '@/components/sections/DefiHighlightSection';
 import PersonalizedAIAdvisorSection from '@/components/sections/PersonalizedAIAdvisorSection';
 import AIAdvisorSection from '@/components/sections/AIAdvisorSection';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   // Add the handlePaymentComplete function to pass to PaymentCounterSection
@@ -28,7 +30,19 @@ const Home = () => {
     { id: 'solutions', Component: SolutionsSection },
     { id: 'advantages', Component: AdvantagesSection },
     { id: 'bizCounter', Component: BusinessCounterSection },
-    { id: 'defi', Component: DefiHighlightSection },
+    { 
+      id: 'defi', 
+      Component: DefiHighlightSection,
+      props: {
+        extraContent: (
+          <div className="mt-6 text-center">
+            <Button asChild className="bg-primary hover:bg-primary/90 text-white">
+              <Link to="/defi-leadership">Learn About Our DeFi Leadership</Link>
+            </Button>
+          </div>
+        )
+      }
+    },
     { 
       id: 'paymentCounter', 
       Component: PaymentCounterSection,
