@@ -1,6 +1,6 @@
 
 import React from 'react';
-import HomeFAQSection from '@/components/sections/HomeFAQSection';
+import { HomeFAQSection } from '@/components/sections/HomeFAQSection';
 import FeaturesSection from '@/components/sections/FeaturesSection';
 import ValuePropositionsSection from '@/components/sections/ValuePropositionsSection';
 import TestimonialsSection from '@/components/sections/TestimonialsSection';

@@ -4,7 +4,7 @@ import BusinessCounterSection from './BusinessCounterSection';
 import PaymentSection from './PaymentSection';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-const PaymentCounterSection = ({ onPaymentComplete }: { onPaymentComplete: (paymentData: any) => void }) => {
+const PaymentCounterSection = () => {
   const isMobile = useIsMobile();
 
   return (
@@ -16,7 +16,6 @@ const PaymentCounterSection = ({ onPaymentComplete }: { onPaymentComplete: (paym
             <div className="mt-12">
               <PaymentSection 
                 apiMode="sandbox"
-                onPaymentComplete={onPaymentComplete}
               />
             </div>
           </>
@@ -25,7 +24,6 @@ const PaymentCounterSection = ({ onPaymentComplete }: { onPaymentComplete: (paym
             <BusinessCounterSection />
             <PaymentSection 
               apiMode="live"
-              onPaymentComplete={onPaymentComplete}
             />
           </div>
         )}

@@ -21,7 +21,6 @@ import Cart from '@/pages/Cart';
 import Products from '@/pages/Products';
 import Orders from '@/pages/Orders';
 import BizGenie from '@/pages/BizGenie';
-import DefiLeadership from '@/pages/DefiLeadership';
 import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
@@ -46,7 +45,7 @@ function App() {
       const publicRoutes = [
         '/', '/about', '/contact', '/login', '/register', '/reset-password', 
         '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
-        '/defi-leadership', '/edge-function-test', '/terms', '/privacy', 
+        '/edge-function-test', '/terms', '/privacy', 
         '/cookies', '/security', '/social-login-test'
       ];
       
@@ -82,7 +81,6 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/solutions" element={<Solutions />} />
         <Route path="/value-propositions" element={<ValuePropositions />} />
-        <Route path="/defi-leadership" element={<DefiLeadership />} />
         <Route path="/biztools" element={<BizTools />} />
         <Route path="/bizgenie" element={<BizGenie />} />
         <Route path="/faq" element={<FAQ />} />
