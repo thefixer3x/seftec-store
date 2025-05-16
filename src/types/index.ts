@@ -1,3 +1,4 @@
+
 export interface Milestone {
   quarter: string;
   title: string;
@@ -9,4 +10,13 @@ export interface RoadmapEvent {
   title: string;
   description: string;
   timeline: string;
+}
+
+export interface MainNavItem {
+  title: string;
+  href?: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: string;
+  label?: string;
 }
