@@ -26,6 +26,7 @@ import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Cookies from '@/pages/Cookies';
 import Security from '@/pages/Security';
+import DefiLeadership from '@/pages/DefiLeadership';
 
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
@@ -46,7 +47,7 @@ function App() {
         '/', '/about', '/contact', '/login', '/register', '/reset-password', 
         '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
         '/edge-function-test', '/terms', '/privacy', 
-        '/cookies', '/security', '/social-login-test'
+        '/cookies', '/security', '/social-login-test', '/defi-leadership'
       ];
       
       const isPublicRoute = publicRoutes.some(route => 
@@ -85,6 +86,7 @@ function App() {
         <Route path="/bizgenie" element={<BizGenie />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/coming-soon" element={<ComingSoon />} />
+        <Route path="/defi-leadership" element={<DefiLeadership />} />
         
         {/* E-commerce public pages */}
         <Route path="/shop" element={<Shop />} />

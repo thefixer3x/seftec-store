@@ -17,7 +17,7 @@ import InvoicesPage from '@/pages/InvoicesPage';
 import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
 import FinancialPage from '@/pages/FinancialPage';
-import DefiLeadership from '@/pages/DefiLeadership';
+// Import the ProfileSettings component
 import { ProfileSettings } from '@/components/account/ProfileSettings';
 // Fix the imports by using default imports instead of named imports
 import PasswordSettings from '@/components/account/PasswordSettings';
@@ -62,8 +62,5 @@ export const profileRoutes = (
       <Route path="customers" element={<CustomersPage />} />
       <Route path="transaction" element={<TransactionPage />} />
     </Route>
-
-    {/* DeFi Leadership page */}
-    <Route path="/defi-leadership" element={<DefiLeadership />} />
   </>
 );
