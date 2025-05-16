@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Milestone, RoadmapEvent } from '@/types';
-import { CalendarClock, Cpu, Network, Handshake } from 'lucide-react';
+import { CalendarClock, Cpu, Network, Handshake, Shield } from 'lucide-react';
 
 interface StrategicRoadmapSectionProps {
   isActive: boolean;
