@@ -5,30 +5,27 @@ import { useAuth } from '@/context/AuthContext';
 import { Shield } from 'lucide-react';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-
 const Login = () => {
-  const { user, loading } = useAuth();
+  const {
+    user,
+    loading
+  } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from || '/profile/dashboard';
-
   useEffect(() => {
     if (!loading && user) {
-      navigate(from, { replace: true });
+      navigate(from, {
+        replace: true
+      });
     }
   }, [user, loading, navigate, from]);
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy">
+    return <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy">
         <div className="animate-pulse text-lg text-seftec-navy dark:text-white">Loading...</div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy p-4">
+  return <div className="min-h-screen flex items-center justify-center bg-seftec-slate dark:bg-seftec-darkNavy p-4">
       <div className="w-full max-w-md">
         <div className="bg-white/70 dark:bg-white/5 shadow-lg rounded-lg p-8 border border-seftec-navy/10 dark:border-white/10 backdrop-blur-sm">
           <div className="flex justify-center mb-6">
@@ -51,15 +48,11 @@ const Login = () => {
           
           <div className="mt-6 text-center">
             <Link to="/social-login-test">
-              <Button variant="link" className="text-sm">
-                Test Social Login Options
-              </Button>
+              
             </Link>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Login;
