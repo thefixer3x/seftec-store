@@ -1,12 +1,10 @@
 
 /// <reference types="jest" />
 
-// FIXED: Added jest-dom import for extended matchers
+// Import jest-dom for extended matchers
 import '@testing-library/jest-dom';
 
-// FIXED: Added type declaration for testing-library
-declare module '@testing-library/react';
-
+// Import directly from testing-library without type declaration module augmentation
 import React, { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -43,7 +41,7 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// FIXED: Added proper type annotations and fixed generic syntax
+// Added proper type annotations and fixed generic syntax
 const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>,
@@ -53,7 +51,7 @@ const customRender = (
 export * from '@testing-library/react';
 export { customRender as render };
 
-// FIXED: Mock for Supabase client with proper method signatures
+// Mock for Supabase client with proper method signatures
 export const mockSupabase = {
   auth: {
     getSession: jest.fn().mockResolvedValue({ data: { session: null } }),
@@ -73,7 +71,7 @@ export const mockSupabase = {
   },
 };
 
-// FIXED: Use this to mock context providers in tests
+// Use this to mock context providers in tests
 export const mockAuthContext = {
   user: null,
   profile: null,
@@ -81,14 +79,14 @@ export const mockAuthContext = {
   refreshProfile: jest.fn(),
 };
 
-// FIXED: Helper to simulate responsive viewport with proper type annotations
+// Helper to simulate responsive viewport with proper type annotations
 export const setViewport = (width: number, height: number): void => {
   Object.defineProperty(window, 'innerWidth', { value: width, writable: true });
   Object.defineProperty(window, 'innerHeight', { value: height, writable: true });
   window.dispatchEvent(new Event('resize'));
 };
 
-// FIXED: Mock cart context
+// Mock cart context
 export const mockCartContext = {
   cart: [],
   cartCount: 0,

@@ -1,15 +1,10 @@
 
 /// <reference types="jest" />
 
-// FIXED: Added jest-dom import for extended matchers
+// Import jest-dom for extended matchers
 import '@testing-library/jest-dom';
 
-// FIXED: Added type declaration for testing-library
-declare module '@testing-library/react';
-
-// Basic test file for PaymentSuccess component
-// This serves as a template for implementing more tests
-
+// Import testing library with proper type support
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import PaymentSuccess from '@/pages/PaymentSuccess';
