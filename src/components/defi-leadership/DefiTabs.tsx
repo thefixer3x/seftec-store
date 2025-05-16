@@ -17,15 +17,21 @@ export const DefiTabs = () => {
       </TabsList>
       
       <TabsContent value="market" className="mt-6">
-        <MarketLeadershipSection isActive={activeTab === 'market'} />
+        <div className="animate-in fade-in">
+          <MarketLeadershipSection isActive={activeTab === 'market'} />
+        </div>
       </TabsContent>
       
       <TabsContent value="technical" className="mt-6">
-        <TechnicalSolutionSection isActive={activeTab === 'technical'} />
+        <div className="animate-in fade-in">
+          <TechnicalSolutionSection isActive={activeTab === 'technical'} />
+        </div>
       </TabsContent>
       
       <TabsContent value="roadmap" className="mt-6">
-        <StrategicRoadmapSection isActive={activeTab === 'roadmap'} />
+        <div className="animate-in fade-in">
+          <StrategicRoadmapSection isActive={activeTab === 'roadmap'} />
+        </div>
       </TabsContent>
     </Tabs>
   );

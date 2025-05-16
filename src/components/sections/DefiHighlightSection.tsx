@@ -84,7 +84,7 @@ const DefiHighlightSection = () => {
                       <p className="text-2xl font-bold text-seftec-teal mt-1">$2.8B+</p>
                     </div>
                     <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
-                      <TrendingUpIcon className="h-6 w-6 text-green-600 dark:text-green-400" />
+                      <TrendingUpIcon />
                     </div>
                   </div>
                   
@@ -94,7 +94,7 @@ const DefiHighlightSection = () => {
                       <p className="text-2xl font-bold text-seftec-teal mt-1">150+</p>
                     </div>
                     <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full">
-                      <BuildingIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                      <BuildingIcon />
                     </div>
                   </div>
                   
@@ -104,7 +104,7 @@ const DefiHighlightSection = () => {
                       <p className="text-2xl font-bold text-seftec-teal mt-1">35+</p>
                     </div>
                     <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-full">
-                      <GlobeIcon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                      <GlobeIcon />
                     </div>
                   </div>
                 </div>
