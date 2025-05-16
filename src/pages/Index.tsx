@@ -15,6 +15,7 @@ import BusinessCounterSection from '@/components/sections/BusinessCounterSection
 import DefiHighlightSection from '@/components/sections/DefiHighlightSection';
 import PersonalizedAIAdvisorSection from '@/components/sections/PersonalizedAIAdvisorSection';
 import AIAdvisorSection from '@/components/sections/AIAdvisorSection';
+import MainLayout from '@/components/layout/MainLayout';
 
 const Home = () => {
   const homeSections = [
@@ -35,13 +36,15 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      <main className="flex-1">
-        {homeSections.map(({ id, Component }) => (
-          <Component key={id} />
-        ))}
-      </main>
-    </div>
+    <MainLayout>
+      <div className="min-h-screen">
+        <main className="flex-1">
+          {homeSections.map(({ id, Component }) => (
+            <Component key={id} />
+          ))}
+        </main>
+      </div>
+    </MainLayout>
   );
 };
 

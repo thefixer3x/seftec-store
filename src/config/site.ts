@@ -1,4 +1,3 @@
-
 import { MainNavItem } from "@/types";
 
 export type SiteConfig = {
@@ -7,9 +6,9 @@ export type SiteConfig = {
   mainNav: MainNavItem[];
 };
 
-export const siteConfig: SiteConfig = {
-  name: "SEFTEC",
-  description: "Leading enterprise DeFi access platform with ISO 20022 compliant solutions for secure, regulated blockchain integration.",
+export const siteConfig = {
+  name: "Seftec",
+  description: "Disrupting B2B Commerce",
   mainNav: [
     {
       title: "Home",
