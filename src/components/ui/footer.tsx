@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
@@ -95,20 +96,23 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
               <li className="flex items-start">
                 <Mail size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
                 <div>
-                  <a href="mailto:info@seftec.tech" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">info@seftec.tech</a>
-                  <a href="mailto:support@seftec.tech" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">support@seftec.tech</a>
+                  <a href="mailto:support@seftechub.com" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">support@seftechub.com</a>
+                  <a href="mailto:info@seftechub.com" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">info@seftechub.com</a>
+                  <a href="mailto:partnerships@seftechub.com" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors block">partnerships@seftechub.com</a>
                 </div>
               </li>
               <li className="flex items-start">
                 <Phone size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
                 <div>
-                  <span className="text-seftec-navy/70 dark:text-white/70 block">+44 (079) 5607-0021</span>
-                  <span className="text-seftec-navy/70 dark:text-white/70 block">+234 (803) 803-0696</span>
+                  <span className="text-seftec-navy/70 dark:text-white/70 block">+1 (917) 730-4021</span>
+                  <span className="text-seftec-navy/70 dark:text-white/70 block">+234 (803) 999-1110</span>
+                  <span className="text-seftec-navy/70 dark:text-white/70 block">+44 (079) 560-70021</span>
                 </div>
               </li>
               <li className="flex items-start">
                 <MapPin size={16} className="mt-1 mr-2 text-seftec-gold dark:text-seftec-teal" />
                 <div className="text-seftec-navy/70 dark:text-white/70">
+                  <p>Houston TX, USA</p>
                   <p>Lagos, Nigeria</p>
                   <p>London, United Kingdom</p>
                   <p>Dubai, U.A.E.</p>
