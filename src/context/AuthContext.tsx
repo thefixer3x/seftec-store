@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { AuthContextType, Profile } from '@/types/auth';
@@ -8,7 +9,8 @@ import {
   handleSignOut,
   handleSendVerificationEmail,
   handleResetPassword,
-  handleUpdateProfile
+  handleUpdateProfile,
+  handleSignInWithBiometric
 } from '@/utils/auth-utils';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +31,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         variant: "destructive",
         title: "Sign in failed",
         description: error.message || "An error occurred during sign in",
+      });
+      throw error;
+    }
+  };
+
+  const signInWithBiometric = async () => {
+    try {
+      await handleSignInWithBiometric();
+      toast({
+        title: "Biometric authentication successful",
+        description: "Welcome back to seftechub.com",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Biometric authentication failed",
+        description: error.message || "Failed to authenticate with biometrics",
       });
       throw error;
     }
@@ -132,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sendVerificationEmail,
     resetPassword,
     updateProfile,
+    signInWithBiometric,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

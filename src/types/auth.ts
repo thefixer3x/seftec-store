@@ -24,4 +24,5 @@ export interface AuthContextType {
   sendVerificationEmail: (email: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updateProfile: (data: { fullName: string; email: string; phone?: string }) => Promise<void>;
+  signInWithBiometric: () => Promise<void>;
 }
