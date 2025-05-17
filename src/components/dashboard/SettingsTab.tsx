@@ -8,12 +8,18 @@ import PersonalProfileTab from './settings/PersonalProfileTab';
 import PasswordTab from './settings/PasswordTab';
 import PinTab from './settings/PinTab';
 import SettingsSidebar from './settings/SettingsSidebar';
+import RoutingDiagram from './RoutingDiagram';
 
 const SettingsTab = () => {
   const [currentTab, setCurrentTab] = useState('personal');
   const [currentSubTab, setCurrentSubTab] = useState('business-profile');
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('pending');
   const isMobile = useIsMobile();
+  const [showRoutes, setShowRoutes] = useState(false);
+
+  const toggleRoutes = () => {
+    setShowRoutes(!showRoutes);
+  };
 
   return (
     <div className="space-y-6">
@@ -24,7 +30,25 @@ const SettingsTab = () => {
             Manage your account settings and preferences
           </p>
         </div>
+        <button 
+          onClick={toggleRoutes}
+          className="px-4 py-2 text-sm bg-seftec-slate dark:bg-seftec-navy/50 hover:bg-seftec-slate/80 dark:hover:bg-seftec-navy/70 text-seftec-navy dark:text-white rounded-md transition-colors"
+        >
+          {showRoutes ? 'Hide Routes' : 'Show Routes'}
+        </button>
       </div>
+      
+      {showRoutes && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Application Routes Overview</CardTitle>
+            <CardDescription>All available routes in the application</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RoutingDiagram />
+          </CardContent>
+        </Card>
+      )}
 
       {isMobile ? (
         <Tabs defaultValue="personal" onValueChange={setCurrentTab} value={currentTab}>
