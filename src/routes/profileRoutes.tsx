@@ -19,7 +19,7 @@ import TransactionPage from '@/pages/TransactionPage';
 import FinancialPage from '@/pages/FinancialPage';
 // Import the ProfileSettings component
 import { ProfileSettings } from '@/components/account/ProfileSettings';
-// Fix the imports by using default imports instead of named imports
+// Import components using default imports
 import PasswordSettings from '@/components/account/PasswordSettings';
 import PinSettings from '@/components/account/PinSettings'; 
 import NotificationSettings from '@/components/account/NotificationSettings';
