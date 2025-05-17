@@ -26,7 +26,7 @@ const AccountPageLayout = ({ title, description, children }: AccountPageLayoutPr
   );
 
   return (
-    <ProtectedLayout loadingComponent={loadingComponent}>
+    <ProtectedLayout loadingComponent={loadingComponent} redirectTo="/login">
       <div className="space-y-6 animate-fade-up">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-seftec-navy dark:text-white">{title}</h1>
