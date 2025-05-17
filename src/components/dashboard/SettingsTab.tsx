@@ -12,6 +12,7 @@ import RoutingDiagram from './RoutingDiagram';
 
 const SettingsTab = () => {
   const [currentTab, setCurrentTab] = useState('personal');
+  const [currentSubTab, setCurrentSubTab] = useState('business-profile');
   const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('pending');
   const isMobile = useIsMobile();
   const [showRoutes, setShowRoutes] = useState(false);
@@ -50,7 +51,7 @@ const SettingsTab = () => {
       )}
 
       {isMobile ? (
-        <Tabs defaultValue="personal" onValueChange={setCurrentTab}>
+        <Tabs defaultValue="personal" onValueChange={setCurrentTab} value={currentTab}>
           <TabsList className="grid grid-cols-4 mb-6">
             <TabsTrigger value="personal">Personal</TabsTrigger>
             <TabsTrigger value="business">Business</TabsTrigger>
@@ -79,6 +80,8 @@ const SettingsTab = () => {
             <SettingsSidebar 
               activeTab={currentTab} 
               setActiveTab={setCurrentTab}
+              activeSubTab={currentSubTab}
+              setActiveSubTab={setCurrentSubTab}
             />
           </div>
           <div className="col-span-3">
