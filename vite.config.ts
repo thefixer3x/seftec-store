@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  base: '/seftec-store/',
   plugins: [
     react(),
     mode === 'development' &&
