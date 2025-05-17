@@ -1,20 +1,19 @@
 
 import React from 'react';
-import Navbar from '@/components/ui/navbar';
-import Footer from '@/components/ui/footer';
 import SolutionsSection from '@/components/sections/SolutionsSection';
 import ValuePropositionsDashboard from '@/components/sections/ValuePropositionsDashboard';
+import MainLayout from '@/components/layout/MainLayout';
 
 const ValuePropositions = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow pt-20">
-        <SolutionsSection />
-        <ValuePropositionsDashboard />
-      </main>
-      <Footer />
-    </div>
+    <MainLayout>
+      <div className="min-h-screen">
+        <main className="flex-1">
+          <SolutionsSection />
+          <ValuePropositionsDashboard />
+        </main>
+      </div>
+    </MainLayout>
   );
 };
 

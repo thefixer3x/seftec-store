@@ -1,8 +1,5 @@
 
 import React, { useEffect } from "react";
-import Navbar from "@/components/ui/navbar";
-import HeroSection from "@/components/ui/hero-section";
-import Footer from "@/components/ui/footer";
 import ProblemsSection from "@/components/sections/ProblemsSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
 import ValuePropositionsSection from "@/components/sections/ValuePropositionsSection";
@@ -11,7 +8,8 @@ import CTASection from "@/components/sections/CTASection";
 import TestimonialsSection from "@/components/sections/TestimonialsSection";
 import RegionsCoveredSection from "@/components/sections/RegionsCoveredSection";
 import AIAdvisorSection from "@/components/sections/AIAdvisorSection";
-import { Toaster } from "@/components/ui/toaster";
+import HomeHeroSection from "@/components/sections/HomeHeroSection";
+import MainLayout from "@/components/layout/MainLayout";
 
 const Index = () => {
   // Add scroll reveal effect
@@ -35,23 +33,28 @@ const Index = () => {
     return () => window.removeEventListener('scroll', reveal);
   }, []);
 
+  const homeSections = [
+    { id: 'hero', Component: HomeHeroSection },
+    { id: 'problems', Component: ProblemsSection },
+    { id: 'features', Component: FeaturesSection },
+    { id: 'valueProps', Component: ValuePropositionsSection },
+    { id: 'aiAdvisor', Component: AIAdvisorSection },
+    { id: 'testimonials', Component: TestimonialsSection },
+    { id: 'regions', Component: RegionsCoveredSection },
+    { id: 'advantages', Component: AdvantagesSection },
+    { id: 'cta', Component: CTASection },
+  ];
+
   return (
-    <div className="min-h-screen bg-white dark:bg-seftec-darkNavy overflow-hidden">
-      <Navbar />
-      <HeroSection />
-      <ProblemsSection />
-      <FeaturesSection />
-      <div id="value-props">
-        <ValuePropositionsSection />
+    <MainLayout>
+      <div className="min-h-screen overflow-hidden">
+        <main className="flex-1">
+          {homeSections.map(({ id, Component }) => (
+            <Component key={id} />
+          ))}
+        </main>
       </div>
-      <AIAdvisorSection />
-      <TestimonialsSection />
-      <RegionsCoveredSection />
-      <AdvantagesSection />
-      <CTASection />
-      <Footer />
-      <Toaster />
-    </div>
+    </MainLayout>
   );
 };
 

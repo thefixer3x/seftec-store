@@ -11,7 +11,7 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+function App() {
   useEffect(() => {
     // Check for user's preference in localStorage or use system preference
     const isDark = localStorage.getItem('darkMode') === 'true' || 
@@ -41,6 +41,6 @@ const App = () => {
       </TooltipProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
