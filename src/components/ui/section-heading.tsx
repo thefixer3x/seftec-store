@@ -11,6 +11,7 @@ interface SectionHeadingProps {
   titleClassName?: string;
   subtitleClassName?: string;
   labelClassName?: string;
+  useDefaultFont?: boolean;
 }
 
 const SectionHeading: React.FC<SectionHeadingProps> = ({
@@ -21,7 +22,8 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
   className,
   titleClassName,
   subtitleClassName,
-  labelClassName
+  labelClassName,
+  useDefaultFont = false
 }) => {
   return (
     <div 
@@ -31,6 +33,7 @@ const SectionHeading: React.FC<SectionHeadingProps> = ({
           'text-left': align === 'left',
           'text-center': align === 'center',
           'text-right': align === 'right',
+          'font-sans': useDefaultFont
         },
         className
       )}

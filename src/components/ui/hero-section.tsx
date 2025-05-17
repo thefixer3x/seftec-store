@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -94,7 +95,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     <section 
       ref={heroRef} 
       className={cn(
-        'relative min-h-screen flex items-center overflow-hidden', 
+        'relative min-h-screen flex items-center overflow-hidden hero-section', 
         'dark:bg-gradient-navy', 
         className
       )}

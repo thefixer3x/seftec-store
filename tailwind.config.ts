@@ -76,6 +76,12 @@ export default {
 					highlight: '#6EE7B7',
 				}
 			},
+			fontFamily: {
+				sans: ['"SF Pro Display"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+				serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+				handwritten: ['"Caveat"', 'cursive'],
+				gabriela: ['"Gabriela"', 'serif'],
+			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
