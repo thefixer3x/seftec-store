@@ -71,8 +71,9 @@ const Contact = () => {
                       <Mail className="h-5 w-5 text-seftec-gold mt-0.5" />
                       <div>
                         <h3 className="font-medium text-seftec-navy dark:text-white">Email</h3>
-                        <p className="text-seftec-navy/70 dark:text-white/70">hello@seftec.store</p>
-                        <p className="text-seftec-navy/70 dark:text-white/70">support@seftec.store</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">support@seftechub.com</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">info@seftechub.com</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">partnerships@seftechub.com</p>
                       </div>
                     </div>
                     
@@ -80,8 +81,9 @@ const Contact = () => {
                       <Phone className="h-5 w-5 text-seftec-purple mt-0.5" />
                       <div>
                         <h3 className="font-medium text-seftec-navy dark:text-white">Phone</h3>
-                        <p className="text-seftec-navy/70 dark:text-white/70">+1 (234) 567-8901</p>
-                        <p className="text-seftec-navy/70 dark:text-white/70">+234 (801) 234-5678</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">+1 (917) 730-4021</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">+234 (803) 999-1110</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">+44 (079) 560-70021</p>
                       </div>
                     </div>
                     
@@ -89,7 +91,10 @@ const Contact = () => {
                       <MapPin className="h-5 w-5 text-seftec-teal mt-0.5" />
                       <div>
                         <h3 className="font-medium text-seftec-navy dark:text-white">Office Locations</h3>
+                        <p className="text-seftec-navy/70 dark:text-white/70">Houston TX, USA</p>
                         <p className="text-seftec-navy/70 dark:text-white/70">Lagos, Nigeria</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">London, United Kingdom</p>
+                        <p className="text-seftec-navy/70 dark:text-white/70">Dubai, U.A.E.</p>
                         <p className="text-seftec-navy/70 dark:text-white/70">Nairobi, Kenya</p>
                         <p className="text-seftec-navy/70 dark:text-white/70">Cape Town, South Africa</p>
                       </div>
