@@ -1,126 +1,112 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Users, CheckCircle, TrendingUp } from 'lucide-react';
+import { CheckCircle, User, Building, Award } from 'lucide-react';
 
-interface MarketLeadershipSectionProps {
-  isActive: boolean;
-}
-
-export const MarketLeadershipSection: React.FC<MarketLeadershipSectionProps> = ({ isActive }) => {
-  const metricsData = [
-    { value: '500K+', label: 'Enterprise Users' },
-    { value: '35+', label: 'Countries Served' },
-    { value: '$2.8B', label: 'Monthly Transaction Volume' },
-  ];
-
-  const advantages = [
-    'ISO 20022 compliant DeFi integrations',
-    'Enterprise-grade security with multi-layer protection',
-    'Real-time cross-border settlements',
-    'AI-powered risk management'
-  ];
-
-  const caseStudies = [
-    {
-      company: 'Global Finance Corp',
-      result: 'Reduced settlement times by 94% and lowered transaction costs by 71%',
-    },
-    {
-      company: 'TransNational Holdings',
-      result: 'Automated compliance reporting saved 2,500+ staff hours per quarter',
-    }
-  ];
-
+export const MarketLeadershipSection: React.FC = () => {
   return (
-    <div className="space-y-10 animate-fade-in" style={{ opacity: isActive ? 1 : 0, transition: 'opacity 0.3s' }}>
-      {/* Key Metrics */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Key Metrics</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {metricsData.map((metric, index) => (
-            <Card key={index} className="text-center">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-3xl font-bold text-seftec-teal">{metric.value}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">{metric.label}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Case Studies */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Enterprise Success Stories</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {caseStudies.map((study, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl font-semibold">{study.company}</CardTitle>
-                  <Badge className="bg-green-500 text-white">Success Story</Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-start gap-3">
-                  <TrendingUp className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                  <p className="text-gray-600 dark:text-gray-300">{study.result}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Competitive Advantages */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Competitive Advantages</h3>
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {advantages.map((advantage, index) => (
-            <li key={index} className="flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-seftec-teal flex-shrink-0" />
-              <span className="text-gray-700 dark:text-gray-200">{advantage}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Industry Recognition */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Industry Recognition</h3>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex flex-col space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-blue-500">2024</Badge>
-                  <span className="font-medium">DeFi Excellence Award</span>
-                </div>
-                <span className="text-gray-500 dark:text-gray-400">FinTech Global</span>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-purple-500">2023</Badge>
-                  <span className="font-medium">Enterprise Blockchain Innovation</span>
-                </div>
-                <span className="text-gray-500 dark:text-gray-400">World Economic Forum</span>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-amber-500">2023</Badge>
-                  <span className="font-medium">Top 10 DeFi Solutions</span>
-                </div>
-                <span className="text-gray-500 dark:text-gray-400">Forbes Fintech</span>
-              </div>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div>
+        <h3 className="text-2xl font-bold mb-4 text-seftec-navy dark:text-white">Market Position & Recognition</h3>
+        
+        <div className="bg-white dark:bg-seftec-navy/30 rounded-lg p-6 shadow-sm mb-6">
+          <div className="grid grid-cols-2 gap-6 mb-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">250+</div>
+              <div className="text-sm text-seftec-navy/70 dark:text-white/70">Enterprise Clients</div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">$4.2B</div>
+              <div className="text-sm text-seftec-navy/70 dark:text-white/70">Transaction Volume</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">32</div>
+              <div className="text-sm text-seftec-navy/70 dark:text-white/70">Countries Served</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">99.9%</div>
+              <div className="text-sm text-seftec-navy/70 dark:text-white/70">Platform Uptime</div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+            <h4 className="font-medium mb-2 text-seftec-navy dark:text-white">Industry Recognition</h4>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <Award className="h-5 w-5 mr-2 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+                <span className="text-seftec-navy/80 dark:text-white/80">2024 FinTech Breakthrough Award for Best Enterprise DeFi Platform</span>
+              </li>
+              <li className="flex items-start">
+                <Award className="h-5 w-5 mr-2 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+                <span className="text-seftec-navy/80 dark:text-white/80">Recognized by Gartner as a DeFi Leader for Enterprise Solutions</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          <h4 className="font-semibold text-seftec-navy dark:text-white">Competitive Advantages</h4>
+          <ul className="space-y-2">
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 mr-2 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+              <span className="text-seftec-navy/80 dark:text-white/80">ISO 20022 compliance integration with traditional banking systems</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 mr-2 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+              <span className="text-seftec-navy/80 dark:text-white/80">Enterprise-grade security with multi-signature authorization</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 mr-2 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+              <span className="text-seftec-navy/80 dark:text-white/80">Regulatory compliance across 30+ jurisdictions</span>
+            </li>
+            <li className="flex items-start">
+              <CheckCircle className="h-5 w-5 mr-2 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+              <span className="text-seftec-navy/80 dark:text-white/80">Seamless API integration with existing enterprise systems</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div className="space-y-8">
+        <h3 className="text-2xl font-bold mb-4 text-seftec-navy dark:text-white">Enterprise Success Stories</h3>
+        
+        <div className="bg-white dark:bg-seftec-navy/30 rounded-lg p-6 shadow-sm">
+          <div className="flex items-center mb-4">
+            <div className="bg-seftec-navy/10 dark:bg-white/10 p-3 rounded-full mr-4">
+              <Building className="h-6 w-6 text-seftec-navy dark:text-white" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-seftec-navy dark:text-white">Global Logistics Corporation</h4>
+              <p className="text-sm text-seftec-navy/60 dark:text-white/60">Fortune 500 Shipping & Logistics</p>
+            </div>
+          </div>
+          <p className="text-seftec-navy/80 dark:text-white/80 mb-4">
+            Reduced cross-border payment settlement times from 3-5 days to under 1 hour while 
+            cutting transaction costs by 63% through our DeFi payment infrastructure.
+          </p>
+          <div className="text-sm font-medium text-seftec-gold dark:text-seftec-teal">
+            $1.2B annual transaction volume
+          </div>
+        </div>
+        
+        <div className="bg-white dark:bg-seftec-navy/30 rounded-lg p-6 shadow-sm">
+          <div className="flex items-center mb-4">
+            <div className="bg-seftec-navy/10 dark:bg-white/10 p-3 rounded-full mr-4">
+              <Building className="h-6 w-6 text-seftec-navy dark:text-white" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-seftec-navy dark:text-white">International Banking Group</h4>
+              <p className="text-sm text-seftec-navy/60 dark:text-white/60">Top 10 European Financial Institution</p>
+            </div>
+          </div>
+          <p className="text-seftec-navy/80 dark:text-white/80 mb-4">
+            Implemented our secure DeFi bridge to offer corporate clients access to blockchain-based 
+            financial products while maintaining full regulatory compliance.
+          </p>
+          <div className="text-sm font-medium text-seftec-gold dark:text-seftec-teal">
+            Serving 120+ corporate clients
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

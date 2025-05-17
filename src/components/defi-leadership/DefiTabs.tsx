@@ -5,34 +5,34 @@ import { MarketLeadershipSection } from './MarketLeadershipSection';
 import { TechnicalSolutionSection } from './TechnicalSolutionSection';
 import { StrategicRoadmapSection } from './StrategicRoadmapSection';
 
-export const DefiTabs = () => {
-  const [activeTab, setActiveTab] = useState('market');
-  
+export const DefiTabs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("leadership");
+
   return (
-    <Tabs defaultValue="market" className="w-full mt-8" onValueChange={setActiveTab}>
-      <TabsList className="grid grid-cols-3 mb-8">
-        <TabsTrigger value="market">Market Leadership</TabsTrigger>
-        <TabsTrigger value="technical">Technical Solution</TabsTrigger>
-        <TabsTrigger value="roadmap">Strategic Roadmap</TabsTrigger>
-      </TabsList>
-      
-      <TabsContent value="market" className="mt-6">
-        <div className="animate-in fade-in">
-          <MarketLeadershipSection isActive={activeTab === 'market'} />
-        </div>
-      </TabsContent>
-      
-      <TabsContent value="technical" className="mt-6">
-        <div className="animate-in fade-in">
-          <TechnicalSolutionSection isActive={activeTab === 'technical'} />
-        </div>
-      </TabsContent>
-      
-      <TabsContent value="roadmap" className="mt-6">
-        <div className="animate-in fade-in">
-          <StrategicRoadmapSection isActive={activeTab === 'roadmap'} />
-        </div>
-      </TabsContent>
-    </Tabs>
+    <section className="py-12 bg-white dark:bg-seftec-darkNavy">
+      <div className="container mx-auto px-6">
+        <Tabs defaultValue="leadership" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-center mb-8">
+            <TabsList className="bg-seftec-slate dark:bg-seftec-navy/30">
+              <TabsTrigger value="leadership" className="text-sm md:text-base">Market Leadership</TabsTrigger>
+              <TabsTrigger value="technical" className="text-sm md:text-base">Technical Solution</TabsTrigger>
+              <TabsTrigger value="roadmap" className="text-sm md:text-base">Strategic Roadmap</TabsTrigger>
+            </TabsList>
+          </div>
+          
+          <TabsContent value="leadership">
+            <MarketLeadershipSection />
+          </TabsContent>
+          
+          <TabsContent value="technical">
+            <TechnicalSolutionSection />
+          </TabsContent>
+          
+          <TabsContent value="roadmap">
+            <StrategicRoadmapSection />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </section>
   );
 };
