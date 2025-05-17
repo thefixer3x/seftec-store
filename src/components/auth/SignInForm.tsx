@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Icons } from "@/components/icons";
 import { useAuth } from '@/context/AuthContext';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -60,7 +60,8 @@ export function SignInForm({
       });
       
       console.log("Login successful, redirecting to:", from);
-      // Redirect to the intended destination or dashboard
+      
+      // Always redirect to paths on the main domain, not subdomains
       navigate(from, { replace: true });
       
       // Still call onSuccess if provided (for potential modal closing, etc.)

@@ -40,6 +40,8 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}): Prote
     if (!loading && !user) {
       // Store the current location so we can redirect back after login
       console.log("Redirecting to login from:", location.pathname);
+      
+      // Ensure we're redirecting within the main domain, not to a subdomain
       navigate(redirectTo, { 
         state: { from: location.pathname },
         replace: true 

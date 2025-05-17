@@ -44,6 +44,8 @@ const Login = () => {
   useEffect(() => {
     if (!loading && user) {
       console.log("User authenticated, redirecting to:", from);
+      // Ensure we're using the correct domain pattern for redirection
+      // No subdomain redirection, just path-based
       navigate(from, {
         replace: true
       });

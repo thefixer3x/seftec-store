@@ -29,7 +29,8 @@ export const ProtectedLayout = ({
     
     if (!isLoading && !isAuthenticated) {
       console.log("ProtectedLayout - Redirecting to:", redirectTo);
-      navigate(redirectTo);
+      // Ensure we're redirecting to paths on the main domain, not subdomains
+      navigate(redirectTo, { replace: true });
     }
   }, [isLoading, isAuthenticated, navigate, redirectTo]);
 

@@ -16,6 +16,7 @@ const ProfileContent: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashbo
   const { isMobile } = useResponsive();
   
   // If at /profile root, redirect to /profile/dashboard
+  // Ensure we're using path-based redirects, not subdomains
   if (location.pathname === '/profile') {
     return <Navigate to={defaultPath} replace />;
   }

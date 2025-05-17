@@ -33,8 +33,8 @@ const AuthCallback = () => {
               description: `You have been successfully signed in with ${provider}.`,
             });
             
-            // Redirect to the social login test page or profile
-            navigate('/social-login-test');
+            // Always redirect to paths on the main domain, not subdomains
+            navigate('/social-login-test', { replace: true });
           } else {
             // If no user is found after the redirect, something went wrong
             toast({
@@ -42,7 +42,7 @@ const AuthCallback = () => {
               title: "Authentication failed",
               description: "There was a problem signing you in. Please try again.",
             });
-            navigate('/login');
+            navigate('/login', { replace: true });
           }
           
           setIsProcessing(false);
@@ -55,7 +55,7 @@ const AuthCallback = () => {
           description: "There was a problem signing you in. Please try again.",
         });
         setIsProcessing(false);
-        navigate('/login');
+        navigate('/login', { replace: true });
       }
     };
 

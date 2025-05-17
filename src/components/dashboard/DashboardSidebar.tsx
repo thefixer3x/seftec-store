@@ -54,7 +54,7 @@ const DashboardSidebar = () => {
       <div className="px-3 py-2">
         <div className="flex items-center mb-4 sm:mb-6 px-3">
           <Icons.logo className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
-          <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
+          <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftechub.com</h2>
         </div>
       </div>
       <ScrollArea className="flex-grow px-3 h-[calc(100vh-120px)]">
@@ -107,7 +107,7 @@ const DashboardSidebar = () => {
           </Sheet>
           <div className="flex items-center ml-2">
             <Icons.logo className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
-            <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftec.store</h2>
+            <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftechub.com</h2>
           </div>
         </div>
       </>
