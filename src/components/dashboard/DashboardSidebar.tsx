@@ -101,7 +101,7 @@ const DashboardSidebar = () => {
           </Sheet>
           <div className="flex items-center ml-2">
             <Icons.logo className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
-            <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">seftechub.com</h2>
+            <h2 className="text-base sm:text-lg font-semibold text-seftec-navy dark:text-white">SEFTECHUB</h2>
           </div>
         </div>
       </>;
