@@ -1,6 +1,6 @@
 
 import React, { ReactNode, useEffect } from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useProtectedRoute } from '@/hooks/use-protected-route';
 
 export interface ProtectedLayoutProps {
@@ -22,17 +22,21 @@ export const ProtectedLayout = ({
     redirectTo
   });
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Add console log to track authentication status changes
-    console.log("ProtectedLayout - Auth status:", { isAuthenticated, isLoading });
+    console.log("ProtectedLayout - Auth status:", { isAuthenticated, isLoading, path: location.pathname });
     
     if (!isLoading && !isAuthenticated) {
-      console.log("ProtectedLayout - Redirecting to:", redirectTo);
+      console.log("ProtectedLayout - Redirecting to:", redirectTo, "from:", location.pathname);
       // Ensure we're redirecting to paths on the main domain, not subdomains
-      navigate(redirectTo, { replace: true });
+      navigate(redirectTo, { 
+        state: { from: location.pathname },
+        replace: true 
+      });
     }
-  }, [isLoading, isAuthenticated, navigate, redirectTo]);
+  }, [isLoading, isAuthenticated, navigate, redirectTo, location.pathname]);
 
   if (isLoading) {
     return loadingComponent ? (
@@ -45,7 +49,11 @@ export const ProtectedLayout = ({
   }
 
   // Only render children or Outlet if authenticated
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated) {
+    console.log("ProtectedLayout - Not authenticated, returning null");
+    return null;
+  }
 
+  console.log("ProtectedLayout - Authenticated, rendering content");
   return children ? <>{children}</> : <Outlet />;
 };
