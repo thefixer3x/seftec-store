@@ -41,6 +41,9 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
+    // Log authentication status changes for debugging
+    console.log("App - Auth status:", { user: !!user, loading, path: location.pathname });
+    
     if (!loading) {
       // Define public routes that don't require authentication
       const publicRoutes = [
@@ -58,16 +61,16 @@ function App() {
       if (user) {
         // If user is logged in and tries to access login/register, redirect to dashboard
         if (location.pathname === '/login' || location.pathname === '/register') {
-          navigate('/profile/dashboard');
+          console.log("App - User already logged in, redirecting to dashboard");
+          navigate('/profile/dashboard', { replace: true });
         }
-      } else {
+      } else if (!isPublicRoute) {
         // If user is not logged in and tries to access protected route, redirect to login
-        if (!isPublicRoute) {
-          navigate('/login', { 
-            state: { from: location.pathname },
-            replace: true 
-          });
-        }
+        console.log("App - User not logged in, redirecting to login with state:", location.pathname);
+        navigate('/login', { 
+          state: { from: location.pathname },
+          replace: true 
+        });
       }
     }
   }, [user, loading, navigate, location.pathname]);

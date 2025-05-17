@@ -18,6 +18,8 @@ const Login = () => {
   const location = useLocation();
   const { toast } = useToast();
   const [biometricSupported, setBiometricSupported] = useState(false);
+  
+  // Get the intended destination from state, or default to dashboard
   const from = location.state?.from || '/profile/dashboard';
 
   useEffect(() => {
@@ -41,6 +43,7 @@ const Login = () => {
 
   useEffect(() => {
     if (!loading && user) {
+      console.log("User authenticated, redirecting to:", from);
       navigate(from, {
         replace: true
       });
@@ -54,6 +57,7 @@ const Login = () => {
         title: "Biometric authentication successful",
         description: "Welcome back to seftechub.com",
       });
+      // Note: redirection is handled by the useEffect above
     } catch (error: any) {
       toast({
         variant: "destructive",
