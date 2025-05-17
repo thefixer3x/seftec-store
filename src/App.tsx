@@ -21,6 +21,7 @@ import Cart from '@/pages/Cart';
 import Products from '@/pages/Products';
 import Orders from '@/pages/Orders';
 import BizGenie from '@/pages/BizGenie';
+import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Cookies from '@/pages/Cookies';
@@ -30,13 +31,6 @@ import DefiLeadership from '@/pages/DefiLeadership';
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
 import Profile from '@/pages/Profile';
-
-// Dev portal pages
-import DevLayout from '@/components/layout/DevLayout';
-import DevRoutes from '@/pages/dev/DevRoutes';
-import DevAuthTest from '@/pages/dev/DevAuthTest';
-import DevSocialLoginTest from '@/pages/dev/DevSocialLoginTest';
-import DevEdgeFunctionTest from '@/pages/dev/DevEdgeFunctionTest';
 
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
@@ -114,18 +108,12 @@ function App() {
         <Route path="/cookies" element={<Cookies />} />
         <Route path="/security" element={<Security />} />
         
+        {/* Testing and development pages */}
+        <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
+        
         {/* ===== PROTECTED ROUTES ===== */}
         {/* Dashboard routes */}
         <Route path="/dashboard/*" element={<Dashboard />} />
-        
-        {/* Dev Portal (Admin Protected) */}
-        <Route path="/dev" element={<DevLayout />}>
-          <Route index element={<DevRoutes />} />
-          <Route path="routes" element={<DevRoutes />} />
-          <Route path="auth-test" element={<DevAuthTest />} />
-          <Route path="social-login" element={<DevSocialLoginTest />} />
-          <Route path="edge-function" element={<DevEdgeFunctionTest />} />
-        </Route>
         
         {/* Profile routes imported from profileRoutes.tsx */}
         {profileRoutes}
