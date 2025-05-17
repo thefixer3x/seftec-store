@@ -40,6 +40,8 @@ export function SignInForm({
   // Get the intended destination from state, or default to dashboard
   const from = location.state?.from || '/profile/dashboard';
 
+  console.log("SignInForm - Redirect destination:", from);
+
   const form = useForm<z.infer<typeof SignInAuthFormSchema>>({
     resolver: zodResolver(SignInAuthFormSchema),
     defaultValues: {
@@ -57,6 +59,7 @@ export function SignInForm({
         title: "Successfully signed in",
       });
       
+      console.log("Login successful, redirecting to:", from);
       // Redirect to the intended destination or dashboard
       navigate(from, { replace: true });
       

@@ -39,6 +39,7 @@ export const useProtectedRoute = (options: UseProtectedRouteOptions = {}): Prote
   useEffect(() => {
     if (!loading && !user) {
       // Store the current location so we can redirect back after login
+      console.log("Redirecting to login from:", location.pathname);
       navigate(redirectTo, { 
         state: { from: location.pathname },
         replace: true 

@@ -24,7 +24,11 @@ export const ProtectedLayout = ({
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Add console log to track authentication status changes
+    console.log("ProtectedLayout - Auth status:", { isAuthenticated, isLoading });
+    
     if (!isLoading && !isAuthenticated) {
+      console.log("ProtectedLayout - Redirecting to:", redirectTo);
       navigate(redirectTo);
     }
   }, [isLoading, isAuthenticated, navigate, redirectTo]);
