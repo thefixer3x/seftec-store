@@ -26,20 +26,12 @@ export const siteConfig: SiteConfig = {
       href: "/solutions",
     },
     {
-      title: "DeFi Leadership",
+      title: "Enterprise DeFi",
       href: "/defi-leadership",
     },
     {
-      title: "About",
+      title: "About Us",
       href: "/about",
-    },
-    {
-      title: "Contact",
-      href: "/contact",
-    },
-    {
-      title: "FAQ",
-      href: "/faq",
     },
   ],
   links: {
