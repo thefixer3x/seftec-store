@@ -1,182 +1,85 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Building, CheckCircle2, Globe, Shield } from "lucide-react";
+import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { ArrowRight, Shield } from 'lucide-react';
 
-const DefiHighlightSection = () => {
+const DefiHighlightSection: React.FC = () => {
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-gray-50 dark:from-seftec-darkNavy dark:to-seftec-navy/90">
+    <section className="py-16 bg-white dark:bg-seftec-navy/20">
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-7 space-y-6">
-            <div className="flex items-center space-x-2 mb-2">
-              <Badge variant="outline" className="bg-seftec-teal/10 text-seftec-teal border-seftec-teal/30">
-                DeFi Leadership
-              </Badge>
-              <Badge variant="outline" className="bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-400/30">
-                ISO 20022 Compliant
-              </Badge>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <div className="inline-flex items-center px-4 py-1.5 mb-6 rounded-full bg-seftec-gold/10 border border-seftec-gold/20 text-seftec-navy/90 font-medium text-sm dark:bg-seftec-teal/10 dark:border-seftec-teal/20 dark:text-white/90">
+              <Shield size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal" />
+              Enterprise DeFi Leadership
             </div>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-seftec-navy dark:text-white">
-              Enterprise DeFi Solutions <span className="text-seftec-teal">Reimagined</span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-seftec-navy dark:text-white">
+              Pioneering Secure DeFi Access for Enterprises
             </h2>
             
-            <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-              Seftec is leading the charge in enterprise-grade decentralized finance, providing secure, 
-              compliant solutions that bridge traditional banking with blockchain technology for global 
-              businesses.
+            <p className="text-lg text-seftec-navy/80 dark:text-white/80 mb-6">
+              seftec is at the forefront of decentralized finance innovation for enterprises, with ISO 20022 
+              compliant solutions that bridge traditional banking with blockchain technology.
             </p>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-start space-x-3">
-                <CheckCircle2 className="h-5 w-5 text-seftec-teal flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-seftec-navy dark:text-white">ISO 20022 Framework</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Seamless integration with global financial systems</p>
-                </div>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                <span className="text-seftec-navy/80 dark:text-white/80">Institutional-grade security and compliance frameworks</span>
+              </li>
+              <li className="flex items-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                <span className="text-seftec-navy/80 dark:text-white/80">Seamless integration with existing enterprise systems</span>
+              </li>
+              <li className="flex items-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
+                <span className="text-seftec-navy/80 dark:text-white/80">Global regulatory compliance across multiple jurisdictions</span>
+              </li>
+            </ul>
+            
+            <Link to="/defi-leadership">
+              <Button className="group">
+                Explore Our DeFi Leadership
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="bg-seftec-slate dark:bg-seftec-navy/40 p-6 md:p-8 lg:p-10 rounded-lg shadow-sm">
+            <div className="mb-6">
+              <span className="text-seftec-navy/60 dark:text-white/60 font-medium text-sm">FEATURED</span>
+              <h3 className="font-bold text-xl text-seftec-navy dark:text-white">ISO 20022 Compliance</h3>
+            </div>
+            
+            <p className="text-seftec-navy/80 dark:text-white/80 mb-6">
+              Our platform is fully compliant with ISO 20022 standards, providing a secure bridge between 
+              traditional banking systems and DeFi protocols. This ensures seamless interoperability and 
+              regulatory compliance for financial institutions.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-white dark:bg-seftec-navy/60 p-4 rounded shadow-sm">
+                <div className="text-xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">30+</div>
+                <div className="text-sm text-seftec-navy/70 dark:text-white/70">Banking Partners</div>
               </div>
-              
-              <div className="flex items-start space-x-3">
-                <Shield className="h-5 w-5 text-seftec-teal flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-seftec-navy dark:text-white">Enterprise Security</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Multi-layer protection for institutional assets</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Globe className="h-5 w-5 text-seftec-teal flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-seftec-navy dark:text-white">Global Settlements</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Real-time cross-border payment solutions</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Building className="h-5 w-5 text-seftec-teal flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-seftec-navy dark:text-white">Institutional Grade</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Built for enterprise compliance requirements</p>
-                </div>
+              <div className="bg-white dark:bg-seftec-navy/60 p-4 rounded shadow-sm">
+                <div className="text-xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">$4.2B+</div>
+                <div className="text-sm text-seftec-navy/70 dark:text-white/70">Transaction Volume</div>
               </div>
             </div>
             
-            <div className="pt-2">
-              <Button asChild className="bg-seftec-teal hover:bg-seftec-teal/90 text-white">
-                <Link to="/defi-leadership">
-                  Learn More About Our DeFi Leadership <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+            <Link to="/defi-leadership">
+              <Button variant="outline" size="sm">
+                View Technical Details
               </Button>
-            </div>
-          </div>
-          
-          <div className="lg:col-span-5">
-            <Card className="bg-white dark:bg-seftec-navy/50 backdrop-blur-sm border-gray-100 dark:border-gray-800 overflow-hidden">
-              <CardContent className="p-6">
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
-                    <div>
-                      <h3 className="font-semibold text-seftec-navy dark:text-white">Monthly Transaction Volume</h3>
-                      <p className="text-2xl font-bold text-seftec-teal mt-1">$2.8B+</p>
-                    </div>
-                    <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-full">
-                      <TrendingUpIcon />
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center pb-4 border-b border-gray-100 dark:border-gray-700">
-                    <div>
-                      <h3 className="font-semibold text-seftec-navy dark:text-white">Enterprise Clients</h3>
-                      <p className="text-2xl font-bold text-seftec-teal mt-1">150+</p>
-                    </div>
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full">
-                      <BuildingIcon />
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold text-seftec-navy dark:text-white">Countries Supported</h3>
-                      <p className="text-2xl font-bold text-seftec-teal mt-1">35+</p>
-                    </div>
-                    <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-full">
-                      <GlobeIcon />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            </Link>
           </div>
         </div>
       </div>
     </section>
   );
 };
-
-// Custom icons to ensure we don't have any issues with the Lucide imports
-const TrendingUpIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-    <polyline points="17 6 23 6 23 12"></polyline>
-  </svg>
-);
-
-const BuildingIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect width="16" height="20" x="4" y="2" rx="2" ry="2"></rect>
-    <path d="M9 22v-4h6v4"></path>
-    <path d="M8 6h.01"></path>
-    <path d="M16 6h.01"></path>
-    <path d="M12 6h.01"></path>
-    <path d="M12 10h.01"></path>
-    <path d="M12 14h.01"></path>
-    <path d="M16 10h.01"></path>
-    <path d="M16 14h.01"></path>
-    <path d="M8 10h.01"></path>
-    <path d="M8 14h.01"></path>
-  </svg>
-);
-
-const GlobeIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="10"></circle>
-    <line x1="2" x2="22" y1="12" y2="12"></line>
-    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-  </svg>
-);
 
 export default DefiHighlightSection;

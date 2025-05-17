@@ -1,14 +1,21 @@
+
 import { MainNavItem } from "@/types";
 
 export type SiteConfig = {
   name: string;
   description: string;
   mainNav: MainNavItem[];
+  links: {
+    twitter: string;
+    github: string;
+    docs: string;
+  };
 };
 
-export const siteConfig = {
-  name: "Seftec",
-  description: "Disrupting B2B Commerce",
+export const siteConfig: SiteConfig = {
+  name: "SEFTEC",
+  description:
+    "SEFTEC - Leading enterprise DeFi access platform. ISO 20022 compliant solutions for secure, regulated blockchain integration.",
   mainNav: [
     {
       title: "Home",
@@ -30,5 +37,14 @@ export const siteConfig = {
       title: "Contact",
       href: "/contact",
     },
+    {
+      title: "FAQ",
+      href: "/faq",
+    },
   ],
+  links: {
+    twitter: "https://twitter.com/seftecs",
+    github: "https://github.com/seftec",
+    docs: "https://docs.seftec.tech",
+  },
 };

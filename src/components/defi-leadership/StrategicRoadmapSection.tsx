@@ -1,223 +1,172 @@
+
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Milestone, RoadmapEvent } from '@/types';
-import { CalendarClock, Cpu, Network, Handshake, Shield } from 'lucide-react';
+import { Calendar, Milestone, Target, Users } from 'lucide-react';
 
-interface StrategicRoadmapSectionProps {
-  isActive: boolean;
-}
-
-export const StrategicRoadmapSection: React.FC<StrategicRoadmapSectionProps> = ({ isActive }) => {
-  const milestones: Milestone[] = [
-    {
-      quarter: "Q2 2024",
-      title: "ISO 20022 Full Compliance",
-      description: "Complete implementation of all ISO 20022 messaging standards for cross-border transactions",
-      status: "current"
-    },
-    {
-      quarter: "Q3 2024",
-      title: "Enterprise DeFi Dashboard 2.0",
-      description: "Enhanced analytics and reporting with AI-powered insights for treasury management",
-      status: "upcoming"
-    },
-    {
-      quarter: "Q4 2024",
-      title: "Multi-Chain Settlement Layer",
-      description: "Support for 5+ major blockchain networks with atomic swap capabilities",
-      status: "planned"
-    },
-    {
-      quarter: "Q1 2025",
-      title: "Global Banking Network Expansion",
-      description: "Direct integration with 100+ banking partners across 40 countries",
-      status: "planned"
-    },
-    {
-      quarter: "Q2 2025",
-      title: "Tokenized Asset Framework",
-      description: "Platform for enterprise-grade tokenization of traditional financial assets",
-      status: "planned"
-    }
-  ];
-
-  const partnerships: RoadmapEvent[] = [
-    {
-      title: "Central Bank Digital Currency Pilot",
-      description: "Participating in CBDC trials with two G20 central banks",
-      timeline: "Starting Q3 2024"
-    },
-    {
-      title: "Global Banking Consortium",
-      description: "Strategic partnership with international banking alliance for cross-border settlements",
-      timeline: "Q4 2024"
-    },
-    {
-      title: "Enterprise Blockchain Coalition",
-      description: "Founding member of industry standards group for enterprise DeFi protocols",
-      timeline: "Ongoing"
-    }
-  ];
-
-  const upcomingOfferings: RoadmapEvent[] = [
-    {
-      title: "Tokenized Trade Finance",
-      description: "Blockchain-based letters of credit and supply chain financing with instant verification",
-      timeline: "Q3 2024"
-    },
-    {
-      title: "Cross-Border Treasury Suite",
-      description: "Integrated solution for managing international cash positions with real-time FX optimization",
-      timeline: "Q4 2024"
-    },
-    {
-      title: "Compliance-as-a-Service API",
-      description: "Embeddable compliance checks for KYC/AML with global regulatory coverage",
-      timeline: "Q1 2025"
-    }
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch(status) {
-      case 'current': return 'bg-green-100 text-green-800 border-green-300 dark:bg-green-900/30 dark:text-green-400 dark:border-green-700';
-      case 'upcoming': return 'bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-700';
-      case 'planned': return 'bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-700';
-      case 'completed': return 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700';
-      default: return 'bg-gray-100 text-gray-800 border-gray-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700';
-    }
-  };
-
+export const StrategicRoadmapSection: React.FC = () => {
   return (
-    <div className="space-y-10 animate-fade-in" style={{ opacity: isActive ? 1 : 0, transition: 'opacity 0.3s' }}>
-      {/* Product Roadmap */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Product Development Roadmap</h3>
-        <div className="space-y-4">
-          {milestones.map((milestone, index) => (
-            <div 
-              key={index} 
-              className={`border-l-4 pl-4 py-3 ${milestone.status === 'current' ? 'border-green-500' : milestone.status === 'upcoming' ? 'border-blue-500' : 'border-purple-500'}`}
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1">
-                <h4 className="text-lg font-semibold text-seftec-navy dark:text-white">{milestone.title}</h4>
-                <div className="flex items-center mt-1 sm:mt-0">
-                  <span className="text-gray-600 dark:text-gray-400 mr-3">{milestone.quarter}</span>
-                  <span className={`text-xs px-2 py-1 rounded-full border ${getStatusColor(milestone.status)}`}>
-                    {milestone.status.charAt(0).toUpperCase() + milestone.status.slice(1)}
-                  </span>
-                </div>
-              </div>
-              <p className="text-gray-700 dark:text-gray-300">{milestone.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Partnerships */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Strategic Partnerships</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {partnerships.map((partnership, index) => (
-            <Card key={index}>
-              <CardHeader className="pb-2">
-                <div className="flex items-start gap-3">
-                  <Handshake className="h-5 w-5 text-seftec-teal mt-1" />
-                  <CardTitle className="text-lg">{partnership.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 mb-4">{partnership.description}</p>
-                <div className="flex items-center">
-                  <CalendarClock className="h-4 w-4 text-gray-500 mr-2" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{partnership.timeline}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-      
-      {/* Upcoming Offerings */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Upcoming DeFi Offerings</h3>
-        <div className="space-y-6">
-          {upcomingOfferings.map((offering, index) => (
-            <div key={index} className="flex gap-4">
-              <div className="bg-gradient-to-br from-seftec-teal to-seftec-purple p-3 rounded-lg text-white flex-shrink-0 self-start">
-                {index === 0 ? (
-                  <Network className="h-6 w-6" />
-                ) : index === 1 ? (
-                  <Cpu className="h-6 w-6" />
-                ) : (
-                  <Shield className="h-6 w-6" />
-                )}
+    <div className="space-y-12">
+      <div>
+        <h3 className="text-2xl font-bold mb-6 text-seftec-navy dark:text-white">Product Development Timeline</h3>
+        
+        <div className="relative">
+          <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-seftec-navy/20 dark:bg-white/20"></div>
+          
+          <div className="space-y-12">
+            {/* Q2 2025 */}
+            <div className="relative pl-16">
+              <div className="absolute left-0 w-10 h-10 rounded-full bg-seftec-gold dark:bg-seftec-teal flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h4 className="text-lg font-medium text-seftec-navy dark:text-white mb-2">{offering.title}</h4>
-                <p className="text-gray-700 dark:text-gray-300 mb-3">{offering.description}</p>
-                <div className="flex items-center">
-                  <CalendarClock className="h-4 w-4 text-gray-500 mr-2" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{offering.timeline}</span>
-                </div>
+                <div className="text-sm font-medium text-seftec-gold dark:text-seftec-teal mb-1">Q2 2025</div>
+                <h4 className="text-lg font-semibold mb-2 text-seftec-navy dark:text-white">
+                  Enhanced Enterprise DeFi Dashboard
+                </h4>
+                <ul className="space-y-2 text-seftec-navy/80 dark:text-white/80">
+                  <li>• Advanced treasury management tools for digital assets</li>
+                  <li>• Multi-jurisdiction compliance automation</li>
+                  <li>• Integration with major ERP systems</li>
+                </ul>
               </div>
             </div>
-          ))}
+            
+            {/* Q4 2025 */}
+            <div className="relative pl-16">
+              <div className="absolute left-0 w-10 h-10 rounded-full bg-seftec-navy dark:bg-white/80 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-white dark:text-seftec-navy" />
+              </div>
+              <div>
+                <div className="text-sm font-medium text-seftec-navy dark:text-white/80 mb-1">Q4 2025</div>
+                <h4 className="text-lg font-semibold mb-2 text-seftec-navy dark:text-white">
+                  Cross-Chain Liquidity Protocol
+                </h4>
+                <ul className="space-y-2 text-seftec-navy/80 dark:text-white/80">
+                  <li>• Enterprise-grade liquidity pools with institutional access controls</li>
+                  <li>• Market-making capabilities for treasury departments</li>
+                  <li>• Dynamic yield optimization with risk management guardrails</li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* Q2 2026 */}
+            <div className="relative pl-16">
+              <div className="absolute left-0 w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Q2 2026</div>
+                <h4 className="text-lg font-semibold mb-2 text-seftec-navy dark:text-white">
+                  Enterprise DeFi Marketplace
+                </h4>
+                <ul className="space-y-2 text-seftec-navy/80 dark:text-white/80">
+                  <li>• Tokenized real-world asset exchange for institutional investors</li>
+                  <li>• Fully compliant securities token offering platform</li>
+                  <li>• Enterprise-grade lending protocols with automated risk assessment</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
       
-      {/* Benefits for Enterprise Clients */}
-      <section>
-        <h3 className="text-2xl font-bold text-seftec-navy dark:text-white mb-6">Benefits for Enterprise Clients</h3>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <span className="h-6 w-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-700 dark:text-green-400">1</span>
-                  Operational Efficiency
-                </h4>
-                <p className="text-gray-700 dark:text-gray-300 pl-8">
-                  Reduce settlement times from days to minutes and eliminate manual reconciliation 
-                  processes through smart contract automation.
-                </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div>
+          <h3 className="text-2xl font-bold mb-6 text-seftec-navy dark:text-white">Strategic Partnerships</h3>
+          
+          <div className="space-y-5">
+            <div className="flex items-start">
+              <div className="bg-seftec-navy/10 dark:bg-white/10 p-2 rounded-full mr-4">
+                <Users className="h-5 w-5 text-seftec-navy dark:text-white" />
               </div>
-              
-              <div className="space-y-4">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <span className="h-6 w-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-700 dark:text-blue-400">2</span>
-                  Cost Reduction
-                </h4>
-                <p className="text-gray-700 dark:text-gray-300 pl-8">
-                  Lower transaction fees by up to 90% compared to traditional correspondent banking 
-                  networks, with optimized FX rates for cross-border transactions.
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <span className="h-6 w-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-700 dark:text-purple-400">3</span>
-                  Regulatory Compliance
-                </h4>
-                <p className="text-gray-700 dark:text-gray-300 pl-8">
-                  Automated compliance checks and reporting reduce regulatory risks while maintaining 
-                  full audit trails for all transactions.
-                </p>
-              </div>
-              
-              <div className="space-y-4">
-                <h4 className="font-semibold text-lg flex items-center gap-2">
-                  <span className="h-6 w-6 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-700 dark:text-amber-400">4</span>
-                  Business Agility
-                </h4>
-                <p className="text-gray-700 dark:text-gray-300 pl-8">
-                  Launch new financial products and enter new markets faster with modular, API-first 
-                  architecture that supports rapid innovation.
+              <div>
+                <h4 className="font-semibold text-seftec-navy dark:text-white">Global Banking Alliance</h4>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Partnership with consortium of 12 major banks to develop ISO 20022 
+                  compliant DeFi solutions for institutional clients.
                 </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </section>
+            
+            <div className="flex items-start">
+              <div className="bg-seftec-navy/10 dark:bg-white/10 p-2 rounded-full mr-4">
+                <Users className="h-5 w-5 text-seftec-navy dark:text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-seftec-navy dark:text-white">Enterprise Blockchain Consortium</h4>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Founding member of industry-wide initiative to establish 
+                  standards for enterprise blockchain adoption.
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start">
+              <div className="bg-seftec-navy/10 dark:bg-white/10 p-2 rounded-full mr-4">
+                <Users className="h-5 w-5 text-seftec-navy dark:text-white" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-seftec-navy dark:text-white">Regulatory Technology Integration</h4>
+                <p className="text-seftec-navy/70 dark:text-white/70">
+                  Strategic integration with leading RegTech providers to enhance 
+                  compliance capabilities across multiple jurisdictions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 className="text-2xl font-bold mb-6 text-seftec-navy dark:text-white">Upcoming DeFi Capabilities</h3>
+          
+          <div className="bg-white dark:bg-seftec-navy/30 rounded-lg p-6 shadow-sm mb-6">
+            <h4 className="font-semibold mb-3 text-seftec-navy dark:text-white">Enterprise Treasury Management</h4>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <Target className="h-5 w-5 mr-3 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-medium text-seftec-navy dark:text-white">Digital Asset Custody Solution</span>
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                    Institutional-grade custody with governance controls and multi-party approval workflows
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <Target className="h-5 w-5 mr-3 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-medium text-seftec-navy dark:text-white">Yield Generation Strategies</span>
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                    Risk-assessed DeFi yield strategies tailored for corporate treasury requirements
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <div className="bg-white dark:bg-seftec-navy/30 rounded-lg p-6 shadow-sm">
+            <h4 className="font-semibold mb-3 text-seftec-navy dark:text-white">Cross-Border Payment Optimization</h4>
+            <ul className="space-y-2">
+              <li className="flex items-start">
+                <Target className="h-5 w-5 mr-3 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-medium text-seftec-navy dark:text-white">Real-Time Settlement Network</span>
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                    24/7 settlement capability with ISO 20022 compliant messaging across borders
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <Target className="h-5 w-5 mr-3 text-seftec-gold dark:text-seftec-teal flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-medium text-seftec-navy dark:text-white">Multi-Currency Liquidity Pools</span>
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                    Optimized FX rates through blockchain-based liquidity with reduced counterparty risk
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

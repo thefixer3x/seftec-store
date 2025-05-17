@@ -1,15 +1,17 @@
 
 import React from 'react';
-import { DefiHero } from '@/components/defi-leadership/DefiHero';
-import { DefiTabs } from '@/components/defi-leadership/DefiTabs';
 import MainLayout from '@/components/layout/MainLayout';
+import { DefiHero } from '@/components/defi-leadership/DefiHero';
+import { DefiLeadershipContent } from '@/components/defi-leadership/DefiLeadershipContent';
+import { DefiTabs } from '@/components/defi-leadership/DefiTabs';
 
-const DefiLeadership = () => {
+const DefiLeadership: React.FC = () => {
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-12">
+      <div className="min-h-screen">
         <DefiHero />
         <DefiTabs />
+        <DefiLeadershipContent />
       </div>
     </MainLayout>
   );
