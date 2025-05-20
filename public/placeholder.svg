@@ -1,12 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Created by The Fixer Initiative: https://github.com/thefixer3x -->
-<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <title>SEFTEC Shield Logo</title>
-  <desc>A mustard-yellow shield on a navy blue background</desc>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC
+  "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Made by The Fixer Initiative: https://github.com/thefixer3x -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  version="1.1"
+  width="800px"
+  height="800px"
+  viewBox="-2 -2 40 40"
+  preserveAspectRatio="xMidYMid meet">
   
-  <!-- Navy blue base layer -->
-  <path fill="#263E50" d="M33 3c-7-3-15-3-15-3S10 0 3 3C0 18 3 31 18 36c15-5 18-18 15-33z"/>
+  <!-- Navy outline -->
+  <path
+    fill="#263E50"
+    d="M33 3c-7-3-15-3-15-3S10 0 3 3C0 18 3 31 18 36c15-5 18-18 15-33z"/>
   
-  <!-- Mustard yellow main shape -->
-  <path fill="#DAA520" d="M18 33.884C6.412 29.729 1.961 19.831 4.76 4.444C11.063 2.029 17.928 2 18 2c.071 0 6.958.04 13.24 2.444c2.799 15.387-1.652 25.285-13.24 29.44z"/>
+  <!-- Mustard fill -->
+  <path
+    fill="#DAA520"
+    d="M18 33.884C6.412 29.729 1.961 19.831 4.76 4.444C11.063 2.029 17.928 2 18 2c.071 0 6.958.04 13.24 2.444c2.799 15.387-1.652 25.285-13.24 29.44z"/>
+  <path
+    fill="#DAA520"
+    d="M31.24 4.444C24.958 2.04 18.071 2 18 2v31.884c11.588-4.155 16.039-14.053 13.24-29.44z"/>
+  
+  <!-- Bold Navy "S" Centered -->
+  <text
+    x="18"
+    y="26"
+    font-family="Libre Baskerville, serif"
+    font-size="24"
+    font-weight="bold"
+    fill="#263E50"
+    text-anchor="middle">S</text>
 </svg>
