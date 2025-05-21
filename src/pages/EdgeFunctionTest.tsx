@@ -1,208 +1,229 @@
-
-import React, { useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/context/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState, useEffect } from 'react';
+import DevTestLayout from '@/components/layout/DevTestLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import MainLayout from '@/components/layout/MainLayout';
-import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const EdgeFunctionTest = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [query, setQuery] = useState('Tell me about decentralized finance');
-  const [response, setResponse] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [metadata, setMetadata] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState('bizgenie');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [functionName, setFunctionName] = useState('hello-world');
+  const [payload, setPayload] = useState('{}');
+  const [activeTab, setActiveTab] = useState('invoke');
 
-  const testBizGenie = async () => {
-    if (!query.trim()) return;
-    
-    setIsLoading(true);
-    setResponse('');
-    setMetadata(null);
-    
-    try {
-      console.log('Testing bizgenie-router edge function...');
-      
-      const { data, error } = await supabase.functions.invoke('bizgenie-router', {
-        body: { 
-          prompt: query,
-          userId: user?.id,
-          systemPrompt: "You are a helpful AI assistant focused on DeFi and financial topics.",
-          isPremium: false
-        }
-      });
-      
-      if (error) throw new Error(error.message || 'Error calling bizgenie-router');
-      
-      console.log('BizGenie Response:', data);
-      setResponse(data.text || 'No response text received');
-      setMetadata({
-        model: data.model,
-        complexity: data.complexity,
-        fromCache: data.fromCache,
-        tokens: data.tokens
-      });
-      
-      toast({
-        title: 'BizGenie Test Successful',
-        description: `Model used: ${data.model}, Query complexity: ${data.complexity || 'unknown'}`,
-      });
-    } catch (error) {
-      console.error('Error testing bizgenie-router:', error);
-      setResponse(`Error: ${error.message}`);
-      
-      toast({
-        title: 'BizGenie Test Failed',
-        description: error.message,
-        variant: 'destructive'
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const invokeFunction = async () => {
+    setLoading(true);
+    setError(null);
+    setResult(null);
 
-  const testPersonalizedChat = async () => {
-    if (!query.trim()) return;
-    if (!user) {
-      toast({
-        title: 'Authentication Required',
-        description: 'Please log in to test the personalized chat function',
-        variant: 'destructive'
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    setResponse('');
-    setMetadata(null);
-    
     try {
-      console.log('Testing personalized-ai-chat edge function...');
+      // Parse the payload to ensure it's valid JSON
+      const parsedPayload = payload ? JSON.parse(payload) : {};
       
-      // Get the JWT token for authorization
-      const { data: { session } } = await supabase.auth.getSession();
+      // Simulate API call to edge function
+      console.log(`Invoking edge function: ${functionName} with payload:`, parsedPayload);
       
-      if (!session) {
-        throw new Error('No active session found');
+      // Simulate a delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Mock response based on function name
+      let mockResponse;
+      if (functionName === 'hello-world') {
+        mockResponse = { message: "Hello from Edge Function!", timestamp: new Date().toISOString() };
+      } else if (functionName === 'get-user') {
+        mockResponse = { 
+          user: { 
+            id: "user_123", 
+            name: "Test User", 
+            email: "test@example.com",
+            role: "admin"
+          }
+        };
+      } else if (functionName === 'process-payment') {
+        mockResponse = { 
+          success: true, 
+          transactionId: "tx_" + Math.random().toString(36).substring(2, 15),
+          amount: 100.50,
+          currency: "USD",
+          status: "completed"
+        };
+      } else {
+        mockResponse = { error: "Unknown function" };
       }
       
-      const { data, error } = await supabase.functions.invoke('personalized-ai-chat', {
-        body: { 
-          prompt: query,
-          generateReport: false
-        },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`
-        }
-      });
-      
-      if (error) throw new Error(error.message || 'Error calling personalized-ai-chat');
-      
-      console.log('Personalized Chat Response:', data);
-      setResponse(data.text || 'No response text received');
-      setMetadata({
-        personalized: data.personalized,
-        generateReport: data.generateReport
-      });
-      
-      toast({
-        title: 'Personalized Chat Test Successful',
-        description: `Personalized: ${data.personalized ? 'Yes' : 'No'}`,
-      });
-    } catch (error) {
-      console.error('Error testing personalized-ai-chat:', error);
-      setResponse(`Error: ${error.message}`);
-      
-      toast({
-        title: 'Personalized Chat Test Failed',
-        description: error.message,
-        variant: 'destructive'
-      });
+      setResult(mockResponse);
+    } catch (err) {
+      console.error("Error invoking edge function:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    setResponse('');
-    setMetadata(null);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    invokeFunction();
   };
 
+  const predefinedFunctions = [
+    { name: 'hello-world', description: 'Basic test function that returns a greeting' },
+    { name: 'get-user', description: 'Simulates retrieving user data' },
+    { name: 'process-payment', description: 'Simulates a payment processing function' }
+  ];
+
   return (
-    <MainLayout>
-      <div className="container mx-auto py-12 px-4">
-        <h1 className="text-2xl font-bold mb-8 text-center">Edge Function Testing Dashboard</h1>
-        
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="max-w-3xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="bizgenie">BizGenie Router</TabsTrigger>
-            <TabsTrigger value="personalized">Personalized Chat</TabsTrigger>
-          </TabsList>
-          
-          <div className="mb-8">
-            <div className="flex gap-4">
-              <Input 
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Enter your test query here"
-                className="flex-1"
-              />
-              <Button 
-                onClick={activeTab === 'bizgenie' ? testBizGenie : testPersonalizedChat}
-                disabled={isLoading || !query.trim()}
-              >
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                Test {activeTab === 'bizgenie' ? 'BizGenie' : 'Personalized Chat'}
-              </Button>
-            </div>
-          </div>
-          
-          <Card className="mb-8">
+    <DevTestLayout title="Edge Function Test" description="Test Supabase Edge Functions">
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Edge Function Tester</CardTitle>
+            <CardDescription>
+              Test edge functions by invoking them directly or viewing their logs
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="mb-4">
+                <TabsTrigger value="invoke">Invoke Function</TabsTrigger>
+                <TabsTrigger value="logs">View Logs</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="invoke">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="function-name">Function Name</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="function-name"
+                        value={functionName}
+                        onChange={(e) => setFunctionName(e.target.value)}
+                        placeholder="Enter function name"
+                        className="flex-1"
+                      />
+                      <div className="relative inline-block">
+                        <Button 
+                          type="button" 
+                          variant="outline"
+                          onClick={() => {
+                            const select = document.getElementById('function-select') as HTMLSelectElement;
+                            select.click();
+                          }}
+                        >
+                          Select
+                        </Button>
+                        <select 
+                          id="function-select"
+                          className="absolute opacity-0 w-full h-full top-0 left-0 cursor-pointer"
+                          onChange={(e) => setFunctionName(e.target.value)}
+                          value={functionName}
+                        >
+                          {predefinedFunctions.map(fn => (
+                            <option key={fn.name} value={fn.name}>{fn.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="payload">Payload (JSON)</Label>
+                    <Textarea
+                      id="payload"
+                      value={payload}
+                      onChange={(e) => setPayload(e.target.value)}
+                      placeholder='{"key": "value"}'
+                      rows={5}
+                    />
+                  </div>
+                  
+                  <Button type="submit" disabled={loading} className="w-full">
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {loading ? 'Invoking...' : 'Invoke Function'}
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              <TabsContent value="logs">
+                <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-md h-64 overflow-y-auto font-mono text-xs">
+                  <p className="text-gray-500 dark:text-gray-400">
+                    [2023-05-20 12:34:56] INFO: Function hello-world invoked
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    [2023-05-20 12:34:56] DEBUG: Processing request with payload: {"test": true}
+                  </p>
+                  <p className="text-green-600 dark:text-green-400">
+                    [2023-05-20 12:34:57] SUCCESS: Function completed successfully
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    [2023-05-20 12:35:23] INFO: Function get-user invoked
+                  </p>
+                  <p className="text-red-600 dark:text-red-400">
+                    [2023-05-20 12:35:24] ERROR: User not found with ID: user_456
+                  </p>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+
+        {result && (
+          <Card>
             <CardHeader>
-              <CardTitle>Response</CardTitle>
+              <CardTitle className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                Function Result
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              {isLoading ? (
-                <div className="flex items-center justify-center p-8">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                  <p className="ml-4">Processing your request...</p>
-                </div>
-              ) : response ? (
-                <div className="space-y-4">
-                  <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md whitespace-pre-wrap">
-                    {response}
-                  </div>
-                </div>
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center p-8">
-                  No response yet. Submit a query to test the edge function.
-                </p>
-              )}
+              <pre className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-md overflow-x-auto">
+                {JSON.stringify(result, null, 2)}
+              </pre>
             </CardContent>
           </Card>
-          
-          {metadata && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Response Metadata</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <pre className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md overflow-auto">
-                  {JSON.stringify(metadata, null, 2)}
-                </pre>
-              </CardContent>
-            </Card>
-          )}
-        </Tabs>
+        )}
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Available Functions</CardTitle>
+            <CardDescription>
+              List of predefined edge functions you can test
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {predefinedFunctions.map((fn) => (
+                <li key={fn.name} className="p-3 bg-gray-50 dark:bg-gray-800/30 rounded-md">
+                  <div className="font-medium">{fn.name}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">{fn.description}</div>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="outline" onClick={() => window.open('https://supabase.com/docs/guides/functions', '_blank')}>
+              Documentation
+            </Button>
+            <Button variant="outline" onClick={() => window.open('https://github.com/supabase/supabase/tree/master/examples/edge-functions', '_blank')}>
+              Examples
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
-    </MainLayout>
+    </DevTestLayout>
   );
 };
 

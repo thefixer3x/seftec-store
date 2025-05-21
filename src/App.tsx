@@ -21,12 +21,14 @@ import Cart from '@/pages/Cart';
 import Products from '@/pages/Products';
 import Orders from '@/pages/Orders';
 import BizGenie from '@/pages/BizGenie';
-import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
 import Cookies from '@/pages/Cookies';
 import Security from '@/pages/Security';
 import DefiLeadership from '@/pages/DefiLeadership';
+
+// Test pages moved to /developer/test
+import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 
 // Protected pages
 import Dashboard from '@/pages/Dashboard';
@@ -49,8 +51,8 @@ function App() {
       const publicRoutes = [
         '/', '/about', '/contact', '/login', '/register', '/reset-password', 
         '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
-        '/edge-function-test', '/terms', '/privacy', 
-        '/cookies', '/security', '/social-login-test', '/defi-leadership'
+        '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
+        '/developer/test'
       ];
       
       const isPublicRoute = publicRoutes.some(route => 
@@ -108,8 +110,8 @@ function App() {
         <Route path="/cookies" element={<Cookies />} />
         <Route path="/security" element={<Security />} />
         
-        {/* Testing and development pages */}
-        <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
+        {/* ===== DEVELOPER TEST ROUTES ===== */}
+        <Route path="/developer/test/edge-function" element={<EdgeFunctionTest />} />
         
         {/* ===== PROTECTED ROUTES ===== */}
         {/* Dashboard routes */}

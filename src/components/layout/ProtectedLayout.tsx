@@ -1,59 +1,45 @@
 
-import React, { ReactNode, useEffect } from 'react';
-import { Navigate, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useProtectedRoute } from '@/hooks/use-protected-route';
+import React, { ReactNode } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
+import { MainNav } from '@/components/ui/navbar';
+import { siteConfig } from '@/config/site';
+import { SeftecHub } from '@/components/ui/seftec-hub';
 
-export interface ProtectedLayoutProps {
-  children?: ReactNode;
+interface ProtectedLayoutProps {
+  children: ReactNode;
   redirectTo?: string;
   loadingComponent?: ReactNode;
 }
 
-/**
- * A wrapper component that handles authentication checks and redirects
- * for protected routes in a consistent way
- */
 export const ProtectedLayout = ({
   children,
   redirectTo = '/login',
-  loadingComponent
+  loadingComponent,
 }: ProtectedLayoutProps) => {
-  const { isAuthenticated, isLoading } = useProtectedRoute({
-    redirectTo
-  });
-  const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const location = useLocation();
 
-  useEffect(() => {
-    // Add console log to track authentication status changes
-    console.log("ProtectedLayout - Auth status:", { isAuthenticated, isLoading, path: location.pathname });
-    
-    if (!isLoading && !isAuthenticated) {
-      console.log("ProtectedLayout - Redirecting to:", redirectTo, "from:", location.pathname);
-      // Ensure we're redirecting to paths on the main domain, not subdomains
-      navigate(redirectTo, { 
-        state: { from: location.pathname },
-        replace: true 
-      });
-    }
-  }, [isLoading, isAuthenticated, navigate, redirectTo, location.pathname]);
-
-  if (isLoading) {
-    return loadingComponent ? (
-      <>{loadingComponent}</>
-    ) : (
-      <div className="container mx-auto px-4 py-10 flex justify-center items-center min-h-[50vh]">
-        <div className="animate-pulse text-lg text-seftec-navy dark:text-white">Loading...</div>
+  // While checking auth status, show loading component or default loading UI
+  if (loading) {
+    return loadingComponent || (
+      <div className="min-h-screen flex flex-col">
+        <MainNav items={siteConfig.mainNav} />
+        <div className="container mx-auto px-4 py-2 mt-[56px] border-b border-gray-100 dark:border-gray-800">
+          <SeftecHub />
+        </div>
+        <div className="flex-grow flex items-center justify-center">
+          <div className="animate-pulse">Loading...</div>
+        </div>
       </div>
     );
   }
 
-  // Only render children or Outlet if authenticated
-  if (!isAuthenticated) {
-    console.log("ProtectedLayout - Not authenticated, returning null");
-    return null;
+  // If not authenticated, redirect to login with return path
+  if (!user) {
+    return <Navigate to={redirectTo} state={{ from: location.pathname }} replace />;
   }
 
-  console.log("ProtectedLayout - Authenticated, rendering content");
-  return children ? <>{children}</> : <Outlet />;
+  // If authenticated, render children
+  return <>{children}</>;
 };
