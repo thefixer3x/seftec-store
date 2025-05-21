@@ -2,11 +2,13 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { Link } from 'react-router-dom';
-import { Shield, Lock, Mail, Phone, MapPin, ShoppingCart, ShoppingBag, ListOrdered } from 'lucide-react';
+import { Shield, Lock, Mail, Phone, MapPin, ShoppingCart, ShoppingBag, ListOrdered, BarChartHorizontal } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+
 interface FooterProps {
   className?: string;
 }
+
 const Footer: React.FC<FooterProps> = ({
   className
 }) => {
@@ -43,6 +45,10 @@ const Footer: React.FC<FooterProps> = ({
               <li><Link to="/biz-tools" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Features</Link></li>
               <li><Link to="/solutions" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Solutions</Link></li>
               <li><Link to="/value-propositions" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Value Propositions</Link></li>
+              <li><Link to="/defi-leadership" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors flex items-center">
+                <BarChartHorizontal className="h-4 w-4 mr-1" />
+                <span>DeFi Leadership</span>
+              </Link></li>
               <li><Link to="/faq" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">FAQ</Link></li>
               <li><a href="#" className="text-seftec-navy/70 hover:text-seftec-navy dark:text-white/70 dark:hover:text-white transition-colors">Pricing</a></li>
             </ul>
@@ -134,4 +140,5 @@ const Footer: React.FC<FooterProps> = ({
       </div>
     </footer>;
 };
+
 export default Footer;

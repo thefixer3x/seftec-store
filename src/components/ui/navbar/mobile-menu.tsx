@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Shield, ShoppingCart, ShoppingBag, ListOrdered } from "lucide-react";
+import { Shield, ShoppingCart, ShoppingBag, ListOrdered, BarChartHorizontal } from "lucide-react";
 import { MainNavItem } from "@/types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -46,6 +46,21 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
                   </Link>
                 )
             )}
+            
+            {/* DeFi Leadership Link */}
+            <Link
+              to="/defi-leadership"
+              className="text-base font-medium text-seftec-navy dark:text-white hover:text-seftec-gold dark:hover:text-seftec-gold transition-colors py-2"
+              onClick={() => {
+                onClose();
+                document.body.style.overflow = '';
+              }}
+            >
+              <div className="flex items-center">
+                <BarChartHorizontal className="mr-2 h-5 w-5" />
+                <span>DeFi Leadership</span>
+              </div>
+            </Link>
           </div>
         ) : null}
         
