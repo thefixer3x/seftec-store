@@ -1,138 +1,137 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from '@/components/ui/card';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { CheckCircle, XCircle, Clock, AlertCircle, CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
-import { Package } from 'lucide-react';
 
-interface BulkPaymentDetailsProps {
-  isOpen: boolean;
-  onClose: () => void;
-  payment: any;
+interface PaymentItem {
+  id: string;
+  beneficiaryName: string;
+  accountNumber: string;
+  bankName: string;
+  amount: number;
+  status: 'pending' | 'completed' | 'failed' | 'processing';
 }
 
-const BulkPaymentDetails: React.FC<BulkPaymentDetailsProps> = ({
-  isOpen,
-  onClose,
-  payment
-}) => {
-  if (!payment) return null;
+interface BulkPaymentDetailsProps {
+  id: string;
+  title: string;
+  createdAt: Date;
+  scheduledDate?: Date;
+  totalAmount: number;
+  status: 'pending' | 'completed' | 'failed' | 'processing';
+  items: PaymentItem[];
+}
 
-  const getStatusColor = (status: string) => {
+const BulkPaymentDetails = ({
+  id,
+  title,
+  createdAt,
+  scheduledDate,
+  totalAmount,
+  status,
+  items,
+}: BulkPaymentDetailsProps) => {
+  
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        return (
+          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+            <CheckCircle className="h-3 w-3 mr-1" /> Completed
+          </Badge>
+        );
+      case 'pending':
+        return (
+          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+            <Clock className="h-3 w-3 mr-1" /> Pending
+          </Badge>
+        );
       case 'processing':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+        return (
+          <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+            <CalendarClock className="h-3 w-3 mr-1" /> Processing
+          </Badge>
+        );
       case 'failed':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-      case 'canceled':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+        return (
+          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
+            <XCircle className="h-3 w-3 mr-1" /> Failed
+          </Badge>
+        );
       default:
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+        return (
+          <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">
+            <AlertCircle className="h-3 w-3 mr-1" /> Unknown
+          </Badge>
+        );
     }
   };
-  
-  // Count transactions by status
-  const statusCounts = payment.items?.reduce((acc: Record<string, number>, item: any) => {
-    acc[item.status] = (acc[item.status] || 0) + 1;
-    return acc;
-  }, {});
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center gap-2">
-            <Package className="h-5 w-5" />
-            <DialogTitle className="text-xl">{payment.title}</DialogTitle>
-            <Badge className={getStatusColor(payment.status)}>
-              {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-            </Badge>
-          </div>
-        </DialogHeader>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">Created</p>
-            <p>{payment.created_at ? format(new Date(payment.created_at), 'PPpp') : 'N/A'}</p>
-          </div>
-          
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">Total Amount</p>
-            <p className="font-medium">
-              {parseFloat(payment.total_amount).toLocaleString('en-NG', { 
-                style: 'currency', 
-                currency: payment.currency_code 
-              })}
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">Scheduled Date</p>
-            <p>{payment.scheduled_date ? format(new Date(payment.scheduled_date), 'PPpp') : 'Immediate'}</p>
-          </div>
-          
-          <div className="space-y-2">
-            <p className="text-sm text-gray-500">Status Summary</p>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(statusCounts || {}).map(([status, count]) => (
-                <Badge key={status} variant="outline" className={getStatusColor(status)}>
-                  {status}: {count}
-                </Badge>
-              ))}
+    <div className="space-y-4">
+      <Card className="shadow-sm">
+        <CardContent className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Payment ID</h3>
+              <p className="mt-1 text-sm font-mono">{id.substring(0, 8)}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Created</h3>
+              <p className="mt-1 text-sm">{format(createdAt, 'MMM dd, yyyy HH:mm')}</p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Scheduled</h3>
+              <p className="mt-1 text-sm">
+                {scheduledDate ? format(scheduledDate, 'MMM dd, yyyy HH:mm') : 'Immediate'}
+              </p>
+            </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h3>
+              <div className="mt-1">{getStatusBadge(status)}</div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <div className="bg-white dark:bg-seftec-darkNavy/80 rounded-lg shadow-sm p-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+          <h2 className="text-lg font-medium">{title}</h2>
+          <div className="mt-2 sm:mt-0">
+            <span className="text-sm text-gray-600 dark:text-gray-300 mr-2">Total Amount:</span>
+            <span className="font-medium text-seftec-navy dark:text-white">₦{totalAmount.toLocaleString('en-NG')}</span>
+          </div>
         </div>
-        
-        <div className="border rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-800">
-              <tr>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Recipient
-                </th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Account
-                </th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
-              {payment.items?.map((item: any) => (
-                <tr key={item.id}>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    {item.beneficiaries?.name || 'Unknown'}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm font-mono">
-                    {item.beneficiaries?.account_number || 'N/A'}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    {parseFloat(item.amount).toLocaleString('en-NG', { 
-                      style: 'currency', 
-                      currency: item.currency_code 
-                    })}
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    <Badge className={getStatusColor(item.status)}>
-                      {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
-                    </Badge>
-                    {item.error_message && (
-                      <p className="text-xs text-red-500 mt-1">{item.error_message}</p>
-                    )}
-                  </td>
-                </tr>
+
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Beneficiary</TableHead>
+                <TableHead>Account</TableHead>
+                <TableHead>Bank</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.beneficiaryName}</TableCell>
+                  <TableCell className="font-mono text-xs">{item.accountNumber}</TableCell>
+                  <TableCell>{item.bankName}</TableCell>
+                  <TableCell className="text-right">₦{item.amount.toLocaleString('en-NG')}</TableCell>
+                  <TableCell>{getStatusBadge(item.status)}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 

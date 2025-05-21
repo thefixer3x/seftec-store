@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { SendHorizonal, Plus, Package } from 'lucide-react';
+import { SendHorizonal, Plus, Package, Heart } from 'lucide-react';
 import BulkPaymentModal from './BulkPaymentModal';
 
 const WalletBalanceCard = () => {
@@ -22,7 +22,7 @@ const WalletBalanceCard = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Last updated: May 20, 2025</p>
           </div>
           
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             <Button 
               variant="outline" 
               className="flex flex-col h-auto py-2 px-1"
@@ -46,6 +46,14 @@ const WalletBalanceCard = () => {
             >
               <Package className="h-4 w-4 mb-1" />
               <span className="text-xs">Bulk Payment</span>
+            </Button>
+
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-2 px-1"
+            >
+              <Heart className="h-4 w-4 mb-1" />
+              <span className="text-xs">Donate</span>
             </Button>
           </div>
         </div>
