@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Route, Navigate, Outlet } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import AccountProfile from '@/pages/AccountPreferences';
 import Profile from '@/pages/Profile';
@@ -29,7 +28,11 @@ import AccountSubscription from '@/components/account/AccountSubscription';
 export const profileRoutes = (
   <>
     {/* Account section routes - for settings and preferences */}
-    <Route path="/account" element={<ProtectedLayout />}>
+    <Route path="/account" element={
+      <ProtectedLayout>
+        <Outlet />
+      </ProtectedLayout>
+    }>
       <Route index element={<Navigate to="/account/profile" />} />
       <Route path="profile" element={<AccountProfile />} />
       <Route path="preferences" element={<AccountProfile />} />
