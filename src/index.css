@@ -113,25 +113,10 @@
     }
   }
 
-  /* Apply Gabriela font to body but exclude hero section */
+  /* Apply Gabriela font to body */
   body {
     @apply bg-background text-foreground font-sans;
     font-family: "Gabriela", serif;
-  }
-
-  /* Hero section override to use the original font */
-  .hero-section {
-    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
-  }
-  
-  /* Original font for headings in hero section */
-  .hero-section h1, 
-  .hero-section h2, 
-  .hero-section h3, 
-  .hero-section h4, 
-  .hero-section h5, 
-  .hero-section h6 {
-    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
   }
 
   /* Original font for handwritten elements */
