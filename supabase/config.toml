@@ -54,6 +54,10 @@ timeout_seconds = 60
 # Disable JWT authentication for this function since it will be called by Stripe
 verify_jwt = false
 
+[functions.process-bulk-payment]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
 [api]
 # Port to use for the local API URL.
 port = 54321
