@@ -2,9 +2,8 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Clock, AlertCircle, CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
+import { StatusBadge, StatusType } from '@/components/ui/status-badge';
 
 export interface PaymentItem {
   id: string;
@@ -12,7 +11,7 @@ export interface PaymentItem {
   accountNumber: string;
   bankName: string;
   amount: number;
-  status: 'pending' | 'completed' | 'failed' | 'processing';
+  status: StatusType;
 }
 
 export interface BulkPaymentDetailsProps {
@@ -21,7 +20,7 @@ export interface BulkPaymentDetailsProps {
   createdAt: Date;
   scheduledDate?: Date;
   totalAmount: number;
-  status: 'pending' | 'completed' | 'failed' | 'processing';
+  status: StatusType;
   items: PaymentItem[];
 }
 
@@ -34,42 +33,6 @@ const BulkPaymentDetails = ({
   status,
   items,
 }: BulkPaymentDetailsProps) => {
-  
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return (
-          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
-            <CheckCircle className="h-3 w-3 mr-1" /> Completed
-          </Badge>
-        );
-      case 'pending':
-        return (
-          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">
-            <Clock className="h-3 w-3 mr-1" /> Pending
-          </Badge>
-        );
-      case 'processing':
-        return (
-          <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
-            <CalendarClock className="h-3 w-3 mr-1" /> Processing
-          </Badge>
-        );
-      case 'failed':
-        return (
-          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
-            <XCircle className="h-3 w-3 mr-1" /> Failed
-          </Badge>
-        );
-      default:
-        return (
-          <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">
-            <AlertCircle className="h-3 w-3 mr-1" /> Unknown
-          </Badge>
-        );
-    }
-  };
-
   return (
     <div className="space-y-4">
       <Card className="shadow-sm">
@@ -91,7 +54,7 @@ const BulkPaymentDetails = ({
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h3>
-              <div className="mt-1">{getStatusBadge(status)}</div>
+              <div className="mt-1"><StatusBadge status={status} /></div>
             </div>
           </div>
         </CardContent>
@@ -124,7 +87,7 @@ const BulkPaymentDetails = ({
                   <TableCell className="font-mono text-xs">{item.accountNumber}</TableCell>
                   <TableCell>{item.bankName}</TableCell>
                   <TableCell className="text-right">₦{item.amount.toLocaleString('en-NG')}</TableCell>
-                  <TableCell>{getStatusBadge(item.status)}</TableCell>
+                  <TableCell><StatusBadge status={item.status} /></TableCell>
                 </TableRow>
               ))}
             </TableBody>
