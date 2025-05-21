@@ -3,6 +3,7 @@ import React, { createContext, useContext, ReactNode, useEffect, useState, useMe
 import { useToast } from '@/hooks/use-toast';
 import { AuthContextType, Profile, MFAFactor, UserSession } from '@/types/auth';
 import { useAuthState } from '@/hooks/use-auth-state';
+import { supabase } from '@/integrations/supabase/client';
 import {
   handleSignIn,
   handleSignUp,

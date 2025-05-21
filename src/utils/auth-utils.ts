@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, MFAFactor, UserSession } from '@/types/auth';
 
@@ -247,7 +246,7 @@ export const handleGetMFAFactors = async (): Promise<MFAFactor[]> => {
     return data.totp.map(factor => ({
       id: factor.id,
       type: 'totp' as const,
-      status: factor.verified ? 'verified' : 'unverified',
+      status: factor.status === 'verified' ? 'verified' : 'unverified',
       createdAt: factor.created_at
     }));
   } catch (error) {
@@ -266,7 +265,11 @@ export const handleGetUserSessions = async (): Promise<UserSession[]> => {
     
     return data.map(session => ({
       id: session.id,
-      deviceInfo: session.device_info,
+      deviceInfo: {
+        browser: session.device_info?.browser,
+        os: session.device_info?.os,
+        device: session.device_info?.device
+      },
       ipAddress: session.ip_address,
       lastActive: session.last_active,
       createdAt: session.created_at
