@@ -155,7 +155,7 @@ const EdgeFunctionTest = () => {
                     [2023-05-20 12:34:56] INFO: Function hello-world invoked
                   </p>
                   <p className="text-gray-500 dark:text-gray-400">
-                    [2023-05-20 12:34:56] DEBUG: Processing request with payload: {"test": true}
+                    [2023-05-20 12:34:56] DEBUG: Processing request with payload: {"{\"test\": true}"}
                   </p>
                   <p className="text-green-600 dark:text-green-400">
                     [2023-05-20 12:34:57] SUCCESS: Function completed successfully
