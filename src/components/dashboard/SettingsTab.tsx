@@ -51,38 +51,46 @@ const SettingsTab = () => {
       )}
 
       {isMobile ? (
-        <Tabs defaultValue="personal" onValueChange={setCurrentTab} value={currentTab}>
-          <TabsList className="grid grid-cols-4 mb-6">
-            <TabsTrigger value="personal">Personal</TabsTrigger>
-            <TabsTrigger value="business">Business</TabsTrigger>
-            <TabsTrigger value="password">Password</TabsTrigger>
-            <TabsTrigger value="pin">PIN</TabsTrigger>
-          </TabsList>
-          <TabsContent value="personal">
-            <PersonalProfileTab />
-          </TabsContent>
-          <TabsContent value="business">
-            <BusinessProfileTab 
-              verificationStatus={verificationStatus}
-              setVerificationStatus={setVerificationStatus}
-            />
-          </TabsContent>
-          <TabsContent value="password">
-            <PasswordTab />
-          </TabsContent>
-          <TabsContent value="pin">
-            <PinTab />
-          </TabsContent>
-        </Tabs>
+        <Card className="overflow-hidden">
+          <Tabs defaultValue="personal" onValueChange={setCurrentTab} value={currentTab} className="w-full">
+            <TabsList className="grid grid-cols-4 w-full">
+              <TabsTrigger value="personal">Personal</TabsTrigger>
+              <TabsTrigger value="business">Business</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
+              <TabsTrigger value="pin">PIN</TabsTrigger>
+            </TabsList>
+            <CardContent className="pt-6">
+              <TabsContent value="personal" className="mt-0">
+                <PersonalProfileTab />
+              </TabsContent>
+              <TabsContent value="business" className="mt-0">
+                <BusinessProfileTab 
+                  verificationStatus={verificationStatus}
+                  setVerificationStatus={setVerificationStatus}
+                />
+              </TabsContent>
+              <TabsContent value="password" className="mt-0">
+                <PasswordTab />
+              </TabsContent>
+              <TabsContent value="pin" className="mt-0">
+                <PinTab />
+              </TabsContent>
+            </CardContent>
+          </Tabs>
+        </Card>
       ) : (
         <div className="grid grid-cols-4 gap-6">
           <div className="col-span-1">
-            <SettingsSidebar 
-              activeTab={currentTab} 
-              setActiveTab={setCurrentTab}
-              activeSubTab={currentSubTab}
-              setActiveSubTab={setCurrentSubTab}
-            />
+            <Card>
+              <CardContent className="p-0">
+                <SettingsSidebar 
+                  activeTab={currentTab} 
+                  setActiveTab={setCurrentTab}
+                  activeSubTab={currentSubTab}
+                  setActiveSubTab={setCurrentSubTab}
+                />
+              </CardContent>
+            </Card>
           </div>
           <div className="col-span-3">
             {currentTab === 'personal' && <PersonalProfileTab />}

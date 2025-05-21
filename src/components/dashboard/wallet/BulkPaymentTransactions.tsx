@@ -1,224 +1,280 @@
 
-import React, { useState, useEffect } from 'react';
-import { useAuthState } from '@/hooks/use-auth-state';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState } from 'react';
+import { 
+  Dialog,
+  DialogContent
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from '@/hooks/use-toast';
-import { Package, Calendar, ChevronDown, ChevronUp, Eye } from 'lucide-react';
-import BulkPaymentDetails from './BulkPaymentDetails';
+import { CheckCircle, XCircle, Clock, AlertCircle, Eye, CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
+import BulkPaymentDetails, { BulkPaymentDetailsProps, PaymentItem } from './BulkPaymentDetails';
+
+// Sample data for testing
+const SAMPLE_BULK_PAYMENTS = [
+  {
+    id: 'pay_123456789012',
+    title: 'May Staff Salaries',
+    createdAt: new Date('2025-05-10T10:30:00'),
+    totalAmount: 1250000,
+    recipientCount: 5,
+    status: 'completed' as const,
+    items: [
+      {
+        id: 'item_1',
+        beneficiaryName: 'John Doe',
+        accountNumber: '0123456789',
+        bankName: 'First Bank',
+        amount: 250000,
+        status: 'completed' as const
+      },
+      {
+        id: 'item_2',
+        beneficiaryName: 'Jane Smith',
+        accountNumber: '9876543210',
+        bankName: 'Zenith Bank',
+        amount: 250000,
+        status: 'completed' as const
+      },
+      {
+        id: 'item_3',
+        beneficiaryName: 'Alice Johnson',
+        accountNumber: '5678901234',
+        bankName: 'Access Bank',
+        amount: 250000,
+        status: 'completed' as const
+      },
+      {
+        id: 'item_4',
+        beneficiaryName: 'Bob Williams',
+        accountNumber: '4321098765',
+        bankName: 'UBA',
+        amount: 250000,
+        status: 'completed' as const
+      },
+      {
+        id: 'item_5',
+        beneficiaryName: 'Charlie Brown',
+        accountNumber: '1234567890',
+        bankName: 'GTBank',
+        amount: 250000,
+        status: 'completed' as const
+      }
+    ]
+  },
+  {
+    id: 'pay_987654321098',
+    title: 'Vendor Payments - Q2',
+    createdAt: new Date('2025-05-15T14:20:00'),
+    scheduledDate: new Date('2025-05-20T08:00:00'),
+    totalAmount: 780000,
+    recipientCount: 3,
+    status: 'pending' as const,
+    items: [
+      {
+        id: 'item_6',
+        beneficiaryName: 'Office Supplies Ltd',
+        accountNumber: '1029384756',
+        bankName: 'Fidelity Bank',
+        amount: 180000,
+        status: 'pending' as const
+      },
+      {
+        id: 'item_7',
+        beneficiaryName: 'Internet Services Co',
+        accountNumber: '6574839201',
+        bankName: 'Sterling Bank',
+        amount: 350000,
+        status: 'pending' as const
+      },
+      {
+        id: 'item_8',
+        beneficiaryName: 'Cleaning Services Inc',
+        accountNumber: '8192837465',
+        bankName: 'FCMB',
+        amount: 250000,
+        status: 'pending' as const
+      }
+    ]
+  },
+  {
+    id: 'pay_456789012345',
+    title: 'Consultant Fees',
+    createdAt: new Date('2025-05-18T09:15:00'),
+    totalAmount: 600000,
+    recipientCount: 2,
+    status: 'processing' as const,
+    items: [
+      {
+        id: 'item_9',
+        beneficiaryName: 'Marketing Experts LLC',
+        accountNumber: '5647382910',
+        bankName: 'Wema Bank',
+        amount: 350000,
+        status: 'processing' as const
+      },
+      {
+        id: 'item_10',
+        beneficiaryName: 'IT Solutions Provider',
+        accountNumber: '2019384756',
+        bankName: 'Unity Bank',
+        amount: 250000,
+        status: 'processing' as const
+      }
+    ]
+  },
+  {
+    id: 'pay_654321098765',
+    title: 'Project Team Bonuses',
+    createdAt: new Date('2025-05-05T16:40:00'),
+    totalAmount: 900000,
+    recipientCount: 3,
+    status: 'failed' as const,
+    items: [
+      {
+        id: 'item_11',
+        beneficiaryName: 'David Clark',
+        accountNumber: '9876543210',
+        bankName: 'Guaranty Trust Bank',
+        amount: 300000,
+        status: 'failed' as const
+      },
+      {
+        id: 'item_12',
+        beneficiaryName: 'Elizabeth Davis',
+        accountNumber: '1234567890',
+        bankName: 'First City Monument Bank',
+        amount: 300000,
+        status: 'failed' as const
+      },
+      {
+        id: 'item_13',
+        beneficiaryName: 'Frank Edwards',
+        accountNumber: '5678901234',
+        bankName: 'Access Bank',
+        amount: 300000,
+        status: 'failed' as const
+      }
+    ]
+  }
+];
+
+interface Payment {
+  id: string;
+  title: string;
+  createdAt: Date;
+  scheduledDate?: Date;
+  totalAmount: number;
+  recipientCount: number;
+  status: 'pending' | 'completed' | 'failed' | 'processing';
+  items: PaymentItem[];
+}
 
 const BulkPaymentTransactions = () => {
-  const { user } = useAuthState();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [bulkPayments, setBulkPayments] = useState<any[]>([]);
-  const [expandedPaymentId, setExpandedPaymentId] = useState<string | null>(null);
-  const [selectedPayment, setSelectedPayment] = useState<any>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState<boolean>(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-  useEffect(() => {
-    if (user) {
-      fetchBulkPayments();
-    }
-  }, [user]);
-
-  const fetchBulkPayments = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('bulk_payments')
-        .select('*, payment_items(count)')
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      
-      setBulkPayments(data || []);
-    } catch (error: any) {
-      console.error('Error fetching bulk payments:', error);
-      toast({
-        title: "Failed to load bulk payments",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleViewDetails = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setIsDetailsOpen(true);
   };
 
-  const toggleExpand = (paymentId: string) => {
-    setExpandedPaymentId(expandedPaymentId === paymentId ? null : paymentId);
-  };
-
-  const viewDetails = async (payment: any) => {
-    try {
-      // Fetch detailed information including payment items
-      const { data, error } = await supabase
-        .from('payment_items')
-        .select('*, beneficiaries(*)')
-        .eq('bulk_payment_id', payment.id);
-        
-      if (error) throw error;
-      
-      setSelectedPayment({
-        ...payment,
-        items: data || []
-      });
-      setIsDetailsModalOpen(true);
-    } catch (error: any) {
-      console.error('Error fetching payment details:', error);
-      toast({
-        title: "Failed to load payment details",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        return (
+          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+            <CheckCircle className="h-3 w-3 mr-1" /> Completed
+          </Badge>
+        );
+      case 'pending':
+        return (
+          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+            <Clock className="h-3 w-3 mr-1" /> Pending
+          </Badge>
+        );
       case 'processing':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+        return (
+          <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+            <CalendarClock className="h-3 w-3 mr-1" /> Processing
+          </Badge>
+        );
       case 'failed':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-      case 'canceled':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+        return (
+          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
+            <XCircle className="h-3 w-3 mr-1" /> Failed
+          </Badge>
+        );
       default:
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+        return (
+          <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">
+            <AlertCircle className="h-3 w-3 mr-1" /> Unknown
+          </Badge>
+        );
     }
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        {[1, 2, 3].map((_, index) => (
-          <Card key={index} className="p-4">
-            <div className="flex justify-between items-center">
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[200px]" />
-                <Skeleton className="h-3 w-[150px]" />
-              </div>
-              <Skeleton className="h-6 w-[100px]" />
-            </div>
-          </Card>
-        ))}
-      </div>
-    );
-  }
-
-  if (bulkPayments.length === 0) {
-    return (
-      <div className="text-center p-8 border border-dashed rounded-lg">
-        <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">No Bulk Payments</h3>
-        <p className="text-gray-500 mt-2">You haven't created any bulk payments yet.</p>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <div className="space-y-4">
-        {bulkPayments.map((payment) => (
-          <Card key={payment.id} className="p-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Package className="h-5 w-5 text-seftec-navy dark:text-white" />
-                  <h3 className="font-medium">{payment.title}</h3>
-                  <Badge className={getStatusColor(payment.status)}>
-                    {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                  </Badge>
-                </div>
-                
-                <div className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  <p>
-                    {payment.payment_items[0].count} transactions | 
-                    {' '}{parseFloat(payment.total_amount).toLocaleString('en-NG', { style: 'currency', currency: payment.currency_code })}
-                  </p>
-                  
-                  <div className="flex items-center mt-1">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    <span>
-                      {payment.created_at 
-                        ? format(new Date(payment.created_at), 'MMM d, yyyy')
-                        : 'N/A'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => viewDetails(payment)}
-                >
-                  <Eye className="h-4 w-4 mr-1" /> Details
-                </Button>
-                
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => toggleExpand(payment.id)}
-                >
-                  {expandedPaymentId === payment.id ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-            </div>
-            
-            {expandedPaymentId === payment.id && (
-              <div className="mt-4 pt-4 border-t">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-gray-500">Created</p>
-                    <p>{payment.created_at ? format(new Date(payment.created_at), 'MMM d, yyyy HH:mm') : 'N/A'}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-xs text-gray-500">Scheduled Date</p>
-                    <p>{payment.scheduled_date ? format(new Date(payment.scheduled_date), 'MMM d, yyyy HH:mm') : 'Immediate'}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-xs text-gray-500">Processed Date</p>
-                    <p>{payment.processed_at ? format(new Date(payment.processed_at), 'MMM d, yyyy HH:mm') : 'Not processed'}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-xs text-gray-500">Reference</p>
-                    <p className="font-mono text-sm">{payment.id.substring(0, 8)}</p>
-                  </div>
-                </div>
-                
-                {payment.status === 'failed' && payment.last_error && (
-                  <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md text-red-700 dark:text-red-300 text-sm">
-                    Error: {payment.last_error}
-                  </div>
-                )}
-              </div>
-            )}
-          </Card>
-        ))}
+    <div className="space-y-4">
+      <div className="bg-white dark:bg-seftec-darkNavy/80 rounded-lg shadow-sm p-4">
+        <h2 className="text-lg font-medium mb-4">Recent Bulk Payments</h2>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Reference</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Recipients</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {SAMPLE_BULK_PAYMENTS.map((payment) => (
+                <TableRow key={payment.id}>
+                  <TableCell className="font-mono text-xs">{payment.id.substring(4, 12)}</TableCell>
+                  <TableCell className="font-medium">{payment.title}</TableCell>
+                  <TableCell>{format(payment.createdAt, 'MMM dd, yyyy')}</TableCell>
+                  <TableCell>{payment.recipientCount}</TableCell>
+                  <TableCell className="text-right">₦{payment.totalAmount.toLocaleString('en-NG')}</TableCell>
+                  <TableCell>{getStatusBadge(payment.status)}</TableCell>
+                  <TableCell className="text-right">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => handleViewDetails(payment)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <span className="sr-only">View details</span>
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
-      
+
       {selectedPayment && (
-        <BulkPaymentDetails
-          isOpen={isDetailsModalOpen}
-          onClose={() => setIsDetailsModalOpen(false)}
-          payment={selectedPayment}
-        />
+        <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <BulkPaymentDetails
+              id={selectedPayment.id}
+              title={selectedPayment.title}
+              createdAt={selectedPayment.createdAt}
+              scheduledDate={selectedPayment.scheduledDate}
+              totalAmount={selectedPayment.totalAmount}
+              status={selectedPayment.status}
+              items={selectedPayment.items}
+            />
+          </DialogContent>
+        </Dialog>
       )}
-    </>
+    </div>
   );
 };
 

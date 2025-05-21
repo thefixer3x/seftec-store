@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, Clock, AlertCircle, CalendarClock } from 'lucide-react';
 import { format } from 'date-fns';
 
-interface PaymentItem {
+export interface PaymentItem {
   id: string;
   beneficiaryName: string;
   accountNumber: string;
@@ -15,7 +15,7 @@ interface PaymentItem {
   status: 'pending' | 'completed' | 'failed' | 'processing';
 }
 
-interface BulkPaymentDetailsProps {
+export interface BulkPaymentDetailsProps {
   id: string;
   title: string;
   createdAt: Date;
