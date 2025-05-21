@@ -22,7 +22,8 @@ const WalletBalanceCard = () => {
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Last updated: May 20, 2025</p>
           </div>
           
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {/* First row of buttons */}
+          <div className="grid grid-cols-2 gap-2 mb-2">
             <Button 
               variant="outline" 
               className="flex flex-col h-auto py-2 px-1"
@@ -38,7 +39,10 @@ const WalletBalanceCard = () => {
               <Plus className="h-4 w-4 mb-1" />
               <span className="text-xs">Fund Wallet</span>
             </Button>
-            
+          </div>
+          
+          {/* Second row of buttons */}
+          <div className="grid grid-cols-2 gap-2">
             <Button 
               variant="outline" 
               className="flex flex-col h-auto py-2 px-1"
