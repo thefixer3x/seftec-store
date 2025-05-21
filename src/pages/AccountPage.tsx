@@ -4,13 +4,19 @@ import { Outlet } from 'react-router-dom';
 import { withErrorBoundary } from '@/components/ui/error-boundary';
 import AccountSidebar from '@/components/account/AccountSidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { SeftecHub } from '@/components/ui/seftec-hub';
 
 const AccountPageContent = () => {
   const isMobile = useIsMobile();
 
   return (
     <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-10">
+      <div className="mb-4">
+        <SeftecHub />
+      </div>
+      
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4 md:mb-6">Account</h1>
+      
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-6">
         <div className={`${isMobile ? "col-span-1" : "md:col-span-1"} mb-3 md:mb-0`}>
           <div className="h-full">

@@ -6,6 +6,7 @@ import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
 import { useResponsive } from '@/hooks/use-mobile';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { ErrorBoundary, withErrorBoundary } from '@/components/ui/error-boundary';
+import { SeftecHub } from '@/components/ui/seftec-hub';
 
 interface ProfileProps {
   defaultPath?: string;
@@ -33,10 +34,15 @@ const ProfileContent: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashbo
     <ProtectedLayout loadingComponent={loadingComponent} redirectTo="/login">
       <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
         <DashboardSidebar />
-        <div className="p-3 md:p-4 lg:p-6 flex-1 overflow-y-auto bg-white dark:bg-seftec-darkNavy">
-          <ErrorBoundary>
-            <Outlet />
-          </ErrorBoundary>
+        <div className="flex flex-col flex-1 overflow-y-auto bg-white dark:bg-seftec-darkNavy">
+          <div className="border-b border-gray-100 dark:border-gray-800 p-3 md:p-4">
+            <SeftecHub />
+          </div>
+          <div className="p-3 md:p-4 lg:p-6 flex-1">
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
+          </div>
         </div>
         
         {/* Add floating theme toggle only for mobile view in profile section */}
