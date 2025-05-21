@@ -27,6 +27,12 @@ import Cookies from '@/pages/Cookies';
 import Security from '@/pages/Security';
 import DefiLeadership from '@/pages/DefiLeadership';
 
+// Auth pages
+import Auth from '@/pages/Auth';
+import AuthCallback from '@/pages/AuthCallback';
+import SessionManagement from '@/pages/SessionManagement';
+import RoleManagement from '@/pages/RoleManagement';
+
 // Test pages moved to /developer/test
 import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
 
@@ -36,6 +42,7 @@ import Profile from '@/pages/Profile';
 
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
+import { ProtectedLayout } from './components/layout/ProtectedLayout';
 
 function App() {
   const { user, loading } = useAuth();
@@ -52,7 +59,7 @@ function App() {
         '/', '/about', '/contact', '/login', '/register', '/reset-password', 
         '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
         '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
-        '/developer/test'
+        '/developer/test', '/auth', '/auth-callback'
       ];
       
       const isPublicRoute = publicRoutes.some(route => 
@@ -69,7 +76,7 @@ function App() {
       } else if (!isPublicRoute) {
         // If user is not logged in and tries to access protected route, redirect to login
         console.log("App - User not logged in, redirecting to login with state:", location.pathname);
-        navigate('/login', { 
+        navigate('/auth', { 
           state: { from: location.pathname },
           replace: true 
         });
@@ -97,11 +104,12 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/orders" element={<Orders />} />
         
         {/* Authentication pages */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/auth-callback" element={<AuthCallback />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         
         {/* Legal and policy pages */}
@@ -114,8 +122,31 @@ function App() {
         <Route path="/developer/test/edge-function" element={<EdgeFunctionTest />} />
         
         {/* ===== PROTECTED ROUTES ===== */}
+        {/* User-specific pages */}
+        <Route path="/orders" element={
+          <ProtectedLayout>
+            <Orders />
+          </ProtectedLayout>
+        } />
+        
+        <Route path="/sessions" element={
+          <ProtectedLayout>
+            <SessionManagement />
+          </ProtectedLayout>
+        } />
+        
+        <Route path="/roles" element={
+          <ProtectedLayout>
+            <RoleManagement />
+          </ProtectedLayout>
+        } />
+        
         {/* Dashboard routes */}
-        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/dashboard/*" element={
+          <ProtectedLayout>
+            <Dashboard />
+          </ProtectedLayout>
+        } />
         
         {/* Profile routes imported from profileRoutes.tsx */}
         {profileRoutes}
