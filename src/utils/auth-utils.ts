@@ -1,3 +1,4 @@
+
 import { supabase } from '@/integrations/supabase/client';
 import { Profile, MFAFactor, UserSession } from '@/types/auth';
 
@@ -263,12 +264,15 @@ export const handleGetUserSessions = async (): Promise<UserSession[]> => {
       
     if (error) throw error;
     
-    return data.map(session => ({
+    return (data || []).map(session => ({
       id: session.id,
       deviceInfo: {
-        browser: session.device_info?.browser,
-        os: session.device_info?.os,
-        device: session.device_info?.device
+        browser: typeof session.device_info === 'object' && session.device_info !== null ? 
+          (session.device_info as any).browser : undefined,
+        os: typeof session.device_info === 'object' && session.device_info !== null ? 
+          (session.device_info as any).os : undefined,
+        device: typeof session.device_info === 'object' && session.device_info !== null ? 
+          (session.device_info as any).device : undefined
       },
       ipAddress: session.ip_address,
       lastActive: session.last_active,
