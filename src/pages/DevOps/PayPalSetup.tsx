@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { useSupabaseClient } from '@/hooks/use-supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { withErrorBoundary } from '@/components/ui/error-boundary';
 import { AlertCircle, CreditCard, CheckCircle, RefreshCw, ArrowLeft } from 'lucide-react';
 
@@ -22,7 +23,7 @@ import { AlertCircle, CreditCard, CheckCircle, RefreshCw, ArrowLeft } from 'luci
  */
 const PayPalSetupContent = () => {
   const navigate = useNavigate();
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient() as SupabaseClient;
   const [activeTab, setActiveTab] = useState('setup');
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -67,12 +68,14 @@ const PayPalSetupContent = () => {
         .single();
         
       if (!existingFlag) {
-        await supabase.from('feature_flags').insert({
-          name: 'paypal_payments',
-          enabled: enablePayPal,
-          description: 'Enable PayPal REST API integration',
-          rollout_pct: null
-        });
+        await supabase
+          .from('feature_flags')
+          .insert({
+            name: 'paypal_payments',
+            enabled: enablePayPal,
+            description: 'Enable PayPal REST API integration',
+            rollout_pct: null
+          });
       } else {
         await supabase
           .from('feature_flags')
@@ -84,17 +87,19 @@ const PayPalSetupContent = () => {
       setSaved(true);
       
       // Create a log entry for the action
-      await supabase.from('admin_logs').insert({
-        action: 'paypal_setup',
-        details: {
-          mode,
-          enabled: enablePayPal,
-          // Don't log secrets
-          hasClientId: !!formData.clientId,
-          hasClientSecret: !!formData.clientSecret,
-          hasWebhookId: !!formData.webhookId
-        }
-      });
+      await supabase
+        .from('admin_logs')
+        .insert({
+          action: 'paypal_setup',
+          details: {
+            mode,
+            enabled: enablePayPal,
+            // Don't log secrets
+            hasClientId: !!formData.clientId,
+            hasClientSecret: !!formData.clientSecret,
+            hasWebhookId: !!formData.webhookId
+          }
+        });
     } catch (error) {
       console.error('Error saving PayPal configuration:', error);
       alert('Error saving configuration. See console for details.');
@@ -203,7 +208,7 @@ const PayPalSetupContent = () => {
                     </div>
                     
                     <div className="flex items-end">
-                      <Alert variant="outline" className="bg-blue-50 border-blue-200 text-blue-800">
+                      <Alert className="bg-blue-50 border-blue-200 text-blue-800">
                         <CheckCircle className="h-4 w-4" />
                         <AlertDescription className="text-xs">
                           Using {mode === 'sandbox' ? 'Sandbox' : 'Production'} environment
@@ -289,7 +294,7 @@ const PayPalSetupContent = () => {
               
               <div className="flex items-center gap-2">
                 {saved && (
-                  <Alert variant="success" className="py-2 px-3 flex items-center">
+                  <Alert variant="default" className="py-2 px-3 flex items-center bg-green-50 border-green-200 text-green-800">
                     <CheckCircle className="h-4 w-4 mr-2" />
                     <AlertDescription className="text-sm">
                       Configuration saved
