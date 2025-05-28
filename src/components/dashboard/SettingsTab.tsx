@@ -17,14 +17,20 @@ const SettingsTab = () => {
 
   // Handle business sub-tab content
   const renderBusinessContent = () => {
-    // Here we would normally render different content based on the currentSubTab
-    // For now, we're just returning the BusinessProfileTab
-    return (
-      <BusinessProfileTab 
-        verificationStatus={verificationStatus}
-        setVerificationStatus={setVerificationStatus}
-      />
-    );
+    switch (currentSubTab) {
+      case 'business-account':
+        return <BusinessAccountTab />;
+      case 'business-notifications':
+        return <BusinessNotificationsTab />;
+      case 'business-profile':
+      default:
+        return (
+          <BusinessProfileTab 
+            verificationStatus={verificationStatus}
+            setVerificationStatus={setVerificationStatus}
+          />
+        );
+    }
   };
 
   return (
