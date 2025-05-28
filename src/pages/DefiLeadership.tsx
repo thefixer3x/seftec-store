@@ -7,7 +7,7 @@ import { DefiHero } from '@/components/defi-leadership/DefiHero';
 const DefiLeadership = () => {
   return (
     <MainLayout>
-      <div className="bg-seftec-slate dark:bg-seftec-darkNavy min-h-screen">
+      <div className="bg-white dark:bg-seftec-darkNavy min-h-screen">
         <DefiHero />
         <DefiLeadershipContent />
       </div>

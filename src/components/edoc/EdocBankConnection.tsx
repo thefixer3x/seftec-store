@@ -1,230 +1,251 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, CreditCard, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Clock, ExternalLink, Trash2 } from 'lucide-react';
 import { useEdocIntegration } from '@/hooks/useEdocIntegration';
-import { useSubscription } from '@/hooks/use-subscription';
 import { BankConnectionForm } from './BankConnectionForm';
-import { TransactionsList } from './TransactionsList';
-import { FinancialInsights } from './FinancialInsights';
 
-interface BankAccount {
-  id: string;
-  bank_name: string;
-  consent_status: string;
-  created_at: string;
-  last_sync?: string;
-}
-
-const EdocBankConnection: React.FC = () => {
-  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { 
-    getUserConsents, 
-    syncTransactions, 
-    revokeConsent,
-    getFinancialInsights 
+const EdocBankConnection = () => {
+  const {
+    loading,
+    error,
+    listBankConsents,
+    initializeBankConsent,
+    checkConsentStatus,
+    syncTransactions,
+    checkBankDataConsent
   } = useEdocIntegration();
-  const { subscription, loading: subscriptionLoading } = useSubscription();
 
-  const isPaidUser = subscription?.status === 'active' && subscription?.plan_id !== 'free';
+  const [showConnectionForm, setShowConnectionForm] = useState(false);
+  const [consents, setConsents] = useState<any[]>([]);
 
   useEffect(() => {
-    loadBankAccounts();
+    fetchConsents();
   }, []);
 
-  const loadBankAccounts = async () => {
-    try {
-      setLoading(true);
-      const consents = await getUserConsents();
-      if (consents) {
-        setBankAccounts(consents);
-      }
-    } catch (err) {
-      setError('Failed to load bank accounts');
-      console.error('Error loading bank accounts:', err);
-    } finally {
-      setLoading(false);
+  const fetchConsents = async () => {
+    const result = await listBankConsents();
+    if (result) {
+      setConsents(result);
     }
+  };
+
+  const handleStartConnection = () => {
+    setShowConnectionForm(true);
+  };
+
+  const handleCancelConnection = () => {
+    setShowConnectionForm(false);
+  };
+
+  const handleSubmitConnection = async (email: string, bankCode: string, bankName: string) => {
+    await initializeBankConsent(email, bankCode, bankName);
+    setShowConnectionForm(false);
+    fetchConsents();
+  };
+
+  const handleDeleteConsent = async (consentId: string) => {
+    // Implementation for deleting consent would go here
+    console.log(`Deleting consent: ${consentId}`);
+    await fetchConsents();
   };
 
   const handleSyncTransactions = async (consentId: string) => {
-    try {
-      setError(null);
-      await syncTransactions(consentId);
-      await loadBankAccounts(); // Refresh to update last sync time
-    } catch (err) {
-      setError('Failed to sync transactions');
-      console.error('Error syncing transactions:', err);
-    }
+    await syncTransactions(consentId);
   };
 
-  const handleRevokeConsent = async (consentId: string) => {
-    try {
-      setError(null);
-      await revokeConsent(consentId);
-      await loadBankAccounts(); // Refresh the list
-    } catch (err) {
-      setError('Failed to revoke bank consent');
-      console.error('Error revoking consent:', err);
+  const renderConsentStatus = (status: string) => {
+    switch (status) {
+      case 'ACTIVE':
+        return (
+          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+            <CheckCircle className="w-3 h-3 mr-1" /> Active
+          </Badge>
+        );
+      case 'PENDING':
+        return (
+          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+            <Clock className="w-3 h-3 mr-1" /> Pending
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+            <AlertCircle className="w-3 h-3 mr-1" /> Expired
+          </Badge>
+        );
     }
   };
-
-  if (subscriptionLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!isPaidUser) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
-            Bank Statement Analysis
-          </CardTitle>
-          <CardDescription>
-            Connect your bank accounts for AI-powered financial insights and business planning
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Alert>
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              Bank statement analysis is available for Pro and Business plan subscribers only. 
-              Upgrade your subscription to access this feature.
-            </AlertDescription>
-          </Alert>
-          <Button className="mt-4" disabled>
-            Upgrade to Access Bank Integration
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
+  
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
-            Bank Statement Analysis
-          </CardTitle>
+          <CardTitle className="text-xl">Bank Account Connections</CardTitle>
           <CardDescription>
-            Connect your Nigerian bank accounts for automated transaction analysis and business insights
+            Connect your business bank accounts to enable financial insights and automated bookkeeping
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert className="mb-4">
-            <CheckCircle className="h-4 w-4" />
-            <AlertDescription>
-              Your data is encrypted and protected. We use bank-grade security and only access transaction data with your explicit consent.
-            </AlertDescription>
-          </Alert>
-
           {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
+            <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-md">
+              <div className="flex items-center">
+                <AlertCircle className="w-5 h-5 mr-2" />
+                <span>Error: {error}</span>
+              </div>
+            </div>
           )}
 
-          <Tabs defaultValue="accounts" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="accounts">Connected Banks</TabsTrigger>
-              <TabsTrigger value="transactions">Transactions</TabsTrigger>
-              <TabsTrigger value="insights">AI Insights</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="accounts" className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">Your Connected Banks</h3>
-                <BankConnectionForm onSuccess={loadBankAccounts} />
-              </div>
-
-              {loading ? (
-                <div className="flex items-center justify-center p-8">
-                  <Loader2 className="h-8 w-8 animate-spin" />
-                </div>
-              ) : bankAccounts.length === 0 ? (
-                <Card>
-                  <CardContent className="p-6 text-center">
-                    <CreditCard className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                    <h3 className="text-lg font-semibold mb-2">No Banks Connected</h3>
-                    <p className="text-gray-600 mb-4">
-                      Connect your first bank account to start analyzing your financial data
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid gap-4">
-                  {bankAccounts.map((account) => (
-                    <Card key={account.id}>
-                      <CardContent className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="font-semibold">{account.bank_name}</h4>
-                            <p className="text-sm text-gray-600">
-                              Connected: {new Date(account.created_at).toLocaleDateString()}
-                            </p>
-                            {account.last_sync && (
-                              <p className="text-sm text-gray-600">
-                                Last sync: {new Date(account.last_sync).toLocaleDateString()}
-                              </p>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge 
-                              variant={account.consent_status === 'active' ? 'success' : 'secondary'}
-                            >
-                              {account.consent_status}
-                            </Badge>
-                            <div className="flex gap-2">
-                              {account.consent_status === 'active' && (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => handleSyncTransactions(account.id)}
-                                >
-                                  <TrendingUp className="h-4 w-4 mr-1" />
-                                  Sync
-                                </Button>
-                              )}
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => handleRevokeConsent(account.id)}
-                              >
-                                Disconnect
-                              </Button>
-                            </div>
-                          </div>
+          {showConnectionForm ? (
+            <BankConnectionForm 
+              onSuccess={() => {
+                setShowConnectionForm(false);
+                fetchConsents();
+              }}
+            />
+          ) : (
+            <>
+              {consents.length > 0 ? (
+                <div className="space-y-4">
+                  {consents.map((consent) => (
+                    <div 
+                      key={consent.id} 
+                      className="p-4 border rounded-lg flex items-center justify-between"
+                    >
+                      <div>
+                        <div className="font-medium">{consent.bank_name}</div>
+                        <div className="text-sm text-gray-500">
+                          Connected: {new Date(consent.created_at).toLocaleDateString()}
                         </div>
-                      </CardContent>
-                    </Card>
+                        <div className="mt-1">
+                          {renderConsentStatus(consent.consent_status)}
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        {consent.consent_status === 'active' && (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleSyncTransactions(consent.id)}
+                          >
+                            Sync Data
+                          </Button>
+                        )}
+                        {consent.consent_status === 'created' && (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => checkConsentStatus(consent.id)}
+                          >
+                            Check Status
+                          </Button>
+                        )}
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                          onClick={() => handleDeleteConsent(consent.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
                   ))}
+                  <Button 
+                    variant="outline" 
+                    onClick={handleStartConnection}
+                    className="mt-4"
+                  >
+                    Connect Another Bank
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="mb-4 text-gray-400">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="48" 
+                      height="48" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="1.5" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      className="mx-auto"
+                    >
+                      <rect x="3" y="8" width="18" height="12" rx="2" />
+                      <path d="M7 8V6a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" />
+                      <line x1="12" y1="12" x2="12" y2="16" />
+                      <line x1="8" y1="16" x2="16" y2="16" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium mb-2">No bank accounts connected</h3>
+                  <p className="text-gray-500 mb-4 max-w-md mx-auto">
+                    Connect your business bank accounts to enable financial insights, automated bookkeeping, and more.
+                  </p>
+                  <Button onClick={handleStartConnection}>
+                    Connect Bank Account
+                  </Button>
                 </div>
               )}
-            </TabsContent>
-
-            <TabsContent value="transactions">
-              <TransactionsList bankAccounts={bankAccounts} />
-            </TabsContent>
-
-            <TabsContent value="insights">
-              <FinancialInsights bankAccounts={bankAccounts} />
-            </TabsContent>
-          </Tabs>
+            </>
+          )}
         </CardContent>
       </Card>
+
+      {consents.some(consent => consent.consent_status === 'active') && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Data Access Permissions</CardTitle>
+            <CardDescription>
+              Manage what data we can access from your connected bank accounts
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div>
+                  <div className="font-medium">Transaction History</div>
+                  <div className="text-sm text-gray-500">
+                    Access to your account transactions and balances
+                  </div>
+                </div>
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  <CheckCircle className="w-3 h-3 mr-1" /> Granted
+                </Badge>
+              </div>
+              
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div>
+                  <div className="font-medium">Account Information</div>
+                  <div className="text-sm text-gray-500">
+                    Access to account details and account holder information
+                  </div>
+                </div>
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  <CheckCircle className="w-3 h-3 mr-1" /> Granted
+                </Badge>
+              </div>
+              
+              <div className="mt-4 text-sm text-gray-500">
+                <p>
+                  Your data is securely encrypted and only used to provide the services you've requested.
+                  You can revoke access at any time by disconnecting your bank account.
+                </p>
+                <div className="mt-2">
+                  <Button variant="link" className="p-0 h-auto" onClick={() => window.open('#', '_blank')}>
+                    <span>Learn more about data security</span>
+                    <ExternalLink className="w-3 h-3 ml-1" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

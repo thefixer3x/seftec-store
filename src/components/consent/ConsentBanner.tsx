@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,7 @@ export const ConsentBanner = () => {
         .single();
       
       // Show banner if no consent found or consent was revoked
-      setShow(!data || !data.granted || data.revoked_at);
+      setShow(!data || !data.granted || !!data.revoked_at);
     } catch (error) {
       // If table doesn't exist yet or other error, show banner for safety
       setShow(true);

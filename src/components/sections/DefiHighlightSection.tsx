@@ -1,81 +1,101 @@
 
 import React from 'react';
+import { ArrowRight, Shield, Globe, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Shield } from 'lucide-react';
 
-const DefiHighlightSection: React.FC = () => {
+const DefiHighlightSection = () => {
+  const highlights = [
+    {
+      icon: TrendingUp,
+      metric: "$2.3B",
+      label: "Transaction Volume",
+      description: "Processed through our DeFi infrastructure"
+    },
+    {
+      icon: Globe,
+      metric: "45",
+      label: "Countries Served",
+      description: "Global enterprise DeFi reach"
+    },
+    {
+      icon: Shield,
+      metric: "500+",
+      label: "Enterprise Clients",
+      description: "Fortune 500 companies trust our platform"
+    }
+  ];
+
   return (
-    <section className="py-16 bg-white dark:bg-seftec-navy/20">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <div className="inline-flex items-center px-4 py-1.5 mb-6 rounded-full bg-seftec-gold/10 border border-seftec-gold/20 text-seftec-navy/90 font-medium text-sm dark:bg-seftec-teal/10 dark:border-seftec-teal/20 dark:text-white/90">
-              <Shield size={14} className="mr-2 text-seftec-gold dark:text-seftec-teal" />
-              Enterprise DeFi Leadership
-            </div>
-            
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-seftec-navy dark:text-white">
-              Pioneering Secure DeFi Access for Enterprises
-            </h2>
-            
-            <p className="text-lg text-seftec-navy/80 dark:text-white/80 mb-6">
-              seftec is at the forefront of decentralized finance innovation for enterprises, with ISO 20022 
-              compliant solutions that bridge traditional banking with blockchain technology.
-            </p>
-            
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
-                <span className="text-seftec-navy/80 dark:text-white/80">Institutional-grade security and compliance frameworks</span>
-              </li>
-              <li className="flex items-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
-                <span className="text-seftec-navy/80 dark:text-white/80">Seamless integration with existing enterprise systems</span>
-              </li>
-              <li className="flex items-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-seftec-gold dark:bg-seftec-teal mr-2"></div>
-                <span className="text-seftec-navy/80 dark:text-white/80">Global regulatory compliance across multiple jurisdictions</span>
-              </li>
-            </ul>
-            
+    <section className="py-16 bg-gradient-to-r from-seftec-navy via-blue-800 to-seftec-navy text-white relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-seftec-gold rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-seftec-teal rounded-full filter blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-12">
+          <Badge className="mb-4 bg-seftec-gold/20 text-seftec-gold border-seftec-gold/30">
+            DeFi Innovation Leader
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Leading Enterprise DeFi Revolution
+          </h2>
+          <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8">
+            ISO 20022 compliant platform bridging traditional banking with blockchain innovation. 
+            Trusted by Fortune 500 companies worldwide.
+          </p>
+        </div>
+
+        {/* Metrics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {highlights.map((highlight, index) => (
+            <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-6 text-center">
+                <highlight.icon className="h-8 w-8 text-seftec-gold mx-auto mb-3" />
+                <h3 className="text-2xl font-bold text-white mb-1">
+                  {highlight.metric}
+                </h3>
+                <p className="text-sm font-medium text-blue-100 mb-2">
+                  {highlight.label}
+                </p>
+                <p className="text-xs text-blue-200">
+                  {highlight.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/defi-leadership">
-              <Button className="group">
+              <Button 
+                size="lg" 
+                className="bg-seftec-gold hover:bg-seftec-gold/90 text-seftec-navy font-semibold"
+              >
                 Explore Our DeFi Leadership
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/solutions">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-white/30 text-white hover:bg-white/10"
+              >
+                View Enterprise Solutions
               </Button>
             </Link>
           </div>
           
-          <div className="bg-seftec-slate dark:bg-seftec-navy/40 p-6 md:p-8 lg:p-10 rounded-lg shadow-sm">
-            <div className="mb-6">
-              <span className="text-seftec-navy/60 dark:text-white/60 font-medium text-sm">FEATURED</span>
-              <h3 className="font-bold text-xl text-seftec-navy dark:text-white">ISO 20022 Compliance</h3>
-            </div>
-            
-            <p className="text-seftec-navy/80 dark:text-white/80 mb-6">
-              Our platform is fully compliant with ISO 20022 standards, providing a secure bridge between 
-              traditional banking systems and DeFi protocols. This ensures seamless interoperability and 
-              regulatory compliance for financial institutions.
-            </p>
-            
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="bg-white dark:bg-seftec-navy/60 p-4 rounded shadow-sm">
-                <div className="text-xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">30+</div>
-                <div className="text-sm text-seftec-navy/70 dark:text-white/70">Banking Partners</div>
-              </div>
-              <div className="bg-white dark:bg-seftec-navy/60 p-4 rounded shadow-sm">
-                <div className="text-xl font-bold text-seftec-gold dark:text-seftec-teal mb-1">$4.2B+</div>
-                <div className="text-sm text-seftec-navy/70 dark:text-white/70">Transaction Volume</div>
-              </div>
-            </div>
-            
-            <Link to="/defi-leadership">
-              <Button variant="outline" size="sm">
-                View Technical Details
-              </Button>
-            </Link>
-          </div>
+          <p className="text-sm text-blue-200 mt-4">
+            Join 500+ enterprises already using our DeFi infrastructure
+          </p>
         </div>
       </div>
     </section>

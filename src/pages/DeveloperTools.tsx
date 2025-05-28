@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -11,17 +12,17 @@ import { useNavigate } from 'react-router-dom';
 
 const DeveloperToolsContent = () => {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const { loading, adminRole } = useAdminAccess('superadmin');
+  const { isAdmin, isLoading } = useAdminAccess();
   const navigate = useNavigate();
 
   // Redirect non-admin users even after hook has completed its check
   useEffect(() => {
-    if (!loading && adminRole !== 'superadmin') {
+    if (!isLoading && !isAdmin) {
       navigate('/profile/dashboard');
     }
-  }, [loading, adminRole, navigate]);
+  }, [isLoading, isAdmin, navigate]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-10 flex items-center justify-center h-64">
         <div className="flex flex-col items-center space-y-4">

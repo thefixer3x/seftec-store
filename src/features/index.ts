@@ -5,13 +5,26 @@ import { useSupabaseClient } from '@/hooks/use-supabase';
 let featureFlagsCache: Record<string, boolean> = {};
 
 /**
+ * List of all feature flags used in the application
+ */
+export const FEATURE_FLAGS = {
+  SAYSWITCH_PAYMENTS: 'sayswitch_payments',
+  SAYSWITCH_BILLS: 'sayswitch_bills',
+  SAYSWITCH_TRANSFERS: 'sayswitch_transfers',
+  PAYPAL_PAYMENTS: 'paypal_payments',
+  AI_RECOMMENDATIONS: 'ai_recommendations',
+} as const;
+
+export type FeatureFlag = typeof FEATURE_FLAGS[keyof typeof FEATURE_FLAGS];
+
+/**
  * Checks if a feature is enabled based on the feature flag system
  * 
  * @param featureName - The name of the feature to check
  * @param userId - Optional user ID for percentage-based rollouts
  * @returns boolean indicating if the feature is enabled
  */
-export function isFeatureEnabled(featureName: string, userId?: string): boolean {
+export function isFeatureEnabled(featureName: string | FeatureFlag, userId?: string): boolean {
   // If we have a cached result, return it
   if (featureName in featureFlagsCache) {
     return featureFlagsCache[featureName];
@@ -28,7 +41,7 @@ export function isFeatureEnabled(featureName: string, userId?: string): boolean 
  * @param featureName - The name of the feature to check
  * @returns Object containing isEnabled status and loading state
  */
-export function useFeatureFlag(featureName: string) {
+export function useFeatureFlag(featureName: string | FeatureFlag) {
   const supabase = useSupabaseClient();
   
   const { data, isLoading, error } = useQuery({
@@ -119,12 +132,3 @@ function hashString(str: string): number {
   }
   return Math.abs(hash);
 }
-
-/**
- * List of all feature flags used in the application
- */
-export const FEATURE_FLAGS = {
-  SAYSWITCH_PAYMENTS: 'sayswitch_payments',
-  SAYSWITCH_BILLS: 'sayswitch_bills',
-  SAYSWITCH_TRANSFERS: 'sayswitch_transfers',
-};
