@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSupabaseClient } from '@/hooks/use-supabase';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Bank, RefreshCw, Users, UserPlus, ArrowRight, AlertCircle } from 'lucide-react';
+import { CreditCard, RefreshCw, Users, UserPlus, ArrowRight, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -379,7 +379,7 @@ export const MoneyTransferForm = () => {
         <Tabs defaultValue="new" className="w-full" onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-2 w-full mb-4">
             <TabsTrigger value="new">
-              <Bank className="h-4 w-4 mr-2" />
+              <CreditCard className="h-4 w-4 mr-2" />
               New Transfer
             </TabsTrigger>
             <TabsTrigger value="beneficiaries">
@@ -622,7 +622,7 @@ export const MoneyTransferForm = () => {
       </CardContent>
       
       <CardFooter className="flex-col items-start gap-2 border-t pt-6">
-        <Alert variant="warning">
+        <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Important</AlertTitle>
           <AlertDescription className="text-xs">
