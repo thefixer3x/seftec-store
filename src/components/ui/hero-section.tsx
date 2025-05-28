@@ -17,77 +17,83 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
+          {/* Top Badge Indicators */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+            <Badge className="bg-white/90 text-seftec-navy border-seftec-navy/20 px-4 py-2 backdrop-blur-sm">
+              <Globe className="w-4 h-4 mr-2" />
+              The Future of Secure B2B Trade & Vendor Payments
+            </Badge>
+            <Badge className="bg-seftec-gold/10 text-seftec-navy dark:text-seftec-gold border-seftec-gold/30 px-4 py-2">
+              <Shield className="w-4 h-4 mr-2" />
+              ISO 20022 Compliant DeFi Leadership
+            </Badge>
+          </div>
+
+          {/* Handwritten Style Tagline */}
+          <div className="mb-6">
+            <span className="text-2xl md:text-3xl font-handwritten text-seftec-gold dark:text-seftec-teal">
+              Grow Smarter, Together
+            </span>
+          </div>
+
           {/* Main Headline */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-seftec-navy dark:text-white mb-6 leading-tight">
-            Transform Your Business
+            Revolutionizing Global
             <span className="block bg-gradient-to-r from-seftec-gold to-orange-500 dark:from-seftec-teal dark:to-blue-400 bg-clip-text text-transparent">
-              with SEFTEC
+              Trade with a Trusted AI-
+            </span>
+            <span className="block text-seftec-navy dark:text-white">
+              Powered Marketplace
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-seftec-navy/70 dark:text-white/70 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Empowering businesses with innovative marketplace solutions, secure payments, 
-            and cutting-edge technology for sustainable growth and success.
+            Trade with Trust, Pay with Confidence. Connect with verified 
+            businesses worldwide, transact securely, and access 
+            financing solutions all in one platform.
           </p>
-
-          {/* Key Features */}
-          <div className="flex flex-wrap justify-center gap-8 mb-10">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-seftec-gold dark:text-seftec-teal" />
-              <span className="text-sm font-medium text-seftec-navy dark:text-white">
-                Business Growth Solutions
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Globe className="w-5 h-5 text-seftec-gold dark:text-seftec-teal" />
-              <span className="text-sm font-medium text-seftec-navy dark:text-white">
-                Global Marketplace
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Shield className="w-5 h-5 text-seftec-gold dark:text-seftec-teal" />
-              <span className="text-sm font-medium text-seftec-navy dark:text-white">
-                Secure Platform
-              </span>
-            </div>
-          </div>
 
           {/* Call to Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Link to="/solutions">
-              <Button 
-                size="lg" 
-                className="bg-seftec-navy hover:bg-seftec-navy/90 text-white dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 dark:text-seftec-darkNavy font-semibold px-8 py-3 text-lg"
-              >
-                Explore Solutions
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="bg-seftec-navy hover:bg-seftec-navy/90 text-white dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 dark:text-seftec-darkNavy font-semibold px-8 py-3 text-lg"
+            >
+              Get Started
+            </Button>
             
-            <Link to="/about">
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-seftec-teal dark:text-seftec-teal dark:hover:bg-seftec-teal dark:hover:text-seftec-darkNavy px-8 py-3 text-lg"
-              >
-                <Play className="mr-2 h-5 w-5" />
-                Learn More
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-seftec-teal dark:text-seftec-teal dark:hover:bg-seftec-teal dark:hover:text-seftec-darkNavy px-8 py-3 text-lg"
+            >
+              Book a Demo
+            </Button>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="text-center">
-            <p className="text-sm text-seftec-navy/60 dark:text-white/60 mb-4">
-              Trusted by businesses worldwide
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-              {/* Placeholder for company logos */}
-              <div className="h-8 w-24 bg-seftec-navy/20 dark:bg-white/20 rounded"></div>
-              <div className="h-8 w-20 bg-seftec-navy/20 dark:bg-white/20 rounded"></div>
-              <div className="h-8 w-28 bg-seftec-navy/20 dark:bg-white/20 rounded"></div>
-              <div className="h-8 w-22 bg-seftec-navy/20 dark:bg-white/20 rounded"></div>
+          {/* Bottom Section with Enterprise DeFi Leadership */}
+          <div className="bg-white/80 dark:bg-seftec-darkNavy/80 backdrop-blur-sm rounded-xl p-6 border border-seftec-gold/20 max-w-2xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-seftec-gold rounded-full flex items-center justify-center">
+                  <Shield className="w-4 h-4 text-white" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-semibold text-seftec-navy dark:text-white">
+                    Enterprise DeFi Leadership
+                  </h3>
+                  <p className="text-sm text-seftec-navy/70 dark:text-white/70">
+                    Pioneering decentralized finance solutions with ISO 20022 compliance
+                  </p>
+                </div>
+              </div>
+              <Link to="/defi-leadership">
+                <Button variant="ghost" size="sm" className="text-seftec-navy dark:text-seftec-teal">
+                  Explore Our Vision
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
