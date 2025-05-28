@@ -22,7 +22,7 @@ async function callPerplexity({
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'llama-3.1-sonar-small-128k-online',
+      model: 'sonar-pro',
       messages: [
         {
           role: 'system',
@@ -190,9 +190,9 @@ export async function handleAIChat(requestData: any, env: any) {
   } catch (bizgenieError) {
     console.error('BizGenie API failed, trying Perplexity backup:', bizgenieError);
     
-    // Try Perplexity as backup
+    // Try Perplexity as backup - check for both possible environment variable names
     try {
-      const perplexityApiKey = env.PERPLEXITY_API_KEY;
+      const perplexityApiKey = env.PERPLEXITY_API_KEY || env.PERPLEXITY_API_SK;
       if (!perplexityApiKey) {
         throw new Error('No Perplexity API key available for backup');
       }
@@ -210,7 +210,7 @@ export async function handleAIChat(requestData: any, env: any) {
 
       aiResponse = perplexityResponse.choices?.[0]?.message?.content || "";
       tokensUsed = perplexityResponse.usage?.total_tokens || 0;
-      modelUsed = 'perplexity-llama-3.1-sonar-small';
+      modelUsed = 'perplexity-sonar-pro';
       
       if (!aiResponse) {
         throw new Error('Empty response from Perplexity');
