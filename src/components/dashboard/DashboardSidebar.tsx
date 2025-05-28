@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -15,7 +16,8 @@ import {
   Home,
   Briefcase,
   Menu,
-  LifeBuoy
+  LifeBuoy,
+  MapPin
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
@@ -57,6 +59,7 @@ const DashboardSidebar = () => {
 
   const SidebarContent = () => (
     <div className="py-4 flex flex-col h-full">
+      {/* Logo / title */}
       <div className="px-3 py-2">
         <div className="flex items-center mb-4 sm:mb-6 px-3">
           <Icons.logo className="h-5 w-5 sm:h-6 sm:w-6 text-seftec-gold dark:text-seftec-teal mr-2" />
@@ -68,15 +71,16 @@ const DashboardSidebar = () => {
 
       <ScrollArea className="flex-grow px-3 h-[calc(100vh-120px)]">
         <nav className="space-y-1">
-          {sidebarItems.map((item) => {
+          {/* generic links */}
+          {sidebarItems.map(({ icon: Icon, label, path }) => {
             const isActive =
-              currentPath === item.path ||
-              (item.path !== '/' && currentPath.startsWith(item.path));
+              currentPath === path ||
+              (path !== '/' && currentPath.startsWith(path));
 
             return (
               <Link
-                key={item.path}
-                to={item.path}
+                key={path}
+                to={path}
                 className={cn(
                   'flex items-center px-3 py-2 sm:py-3 text-xs sm:text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5',
                   isActive
@@ -85,7 +89,7 @@ const DashboardSidebar = () => {
                 )}
                 onClick={() => isMobile && setIsOpen(false)}
               >
-                <item.icon
+                <Icon
                   className={cn(
                     'h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3',
                     isActive
@@ -93,11 +97,12 @@ const DashboardSidebar = () => {
                       : 'text-seftec-navy/70 dark:text-white/70 group-hover:text-seftec-navy dark:group-hover:text-white'
                   )}
                 />
-                <span>{item.label}</span>
+                <span>{label}</span>
               </Link>
             );
           })}
 
+          {/* super-admin extras */}
           {isSuperAdmin && (
             <>
               <Separator className="my-2" />
@@ -105,6 +110,8 @@ const DashboardSidebar = () => {
                 <p className="px-3 text-xs text-seftec-navy/50 dark:text-white/50 uppercase font-medium mb-1">
                   Admin Tools
                 </p>
+
+                {/* Developer Tools */}
                 <Link
                   to="/profile/developer"
                   className={cn(
@@ -124,6 +131,21 @@ const DashboardSidebar = () => {
                     )}
                   />
                   <span>Developer Tools</span>
+                </Link>
+
+                {/* Site Map (super-admin only) */}
+                <Link
+                  to="/profile/sitemap"
+                  className={cn(
+                    'flex items-center px-3 py-2 sm:py-3 text-xs sm:text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5',
+                    currentPath === '/profile/sitemap'
+                      ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 font-medium border-l-4 border-amber-400'
+                      : 'text-amber-600 dark:text-amber-400/70 hover:text-amber-700 dark:hover:text-amber-400'
+                  )}
+                  onClick={() => isMobile && setIsOpen(false)}
+                >
+                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                  <span>Site Map</span>
                 </Link>
               </div>
             </>
