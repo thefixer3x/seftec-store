@@ -39,31 +39,35 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     setIsReport(false);
     
     try {
-      console.log(`Sending ${generateReport ? 'report' : 'query'} to AI service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
+      console.log(`Sending ${generateReport ? 'report' : 'query'} to BizGenie service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
       
-      const { data, error } = await supabase.functions.invoke('ai-chat', {
-        body: { query, isPremium, generateReport }
+      // Use the BizGenie router instead of the generic ai-chat endpoint
+      const { data, error: edgeError } = await supabase.functions.invoke('bizgenie-router', {
+        body: { 
+          prompt: query,
+          userId: null, // Will be handled by the edge function
+          isPremium,
+          mode: generateReport ? 'business-plan' : 'chat'
+        }
       });
       
-      if (error) {
-        console.error("Edge function error:", error);
-        throw new Error(error.message || 'Error calling AI service');
+      if (edgeError) {
+        console.error("Edge function error:", edgeError);
+        throw new Error(edgeError.message || 'Error calling BizGenie service');
       }
       
       if (!data) {
-        throw new Error('No response data received');
+        throw new Error('No response data received from BizGenie');
       }
       
       if (data.error) {
         throw new Error(data.error);
       }
       
-      if (!data.response) {
-        throw new Error('Empty response from AI service');
-      }
+      // Handle both chat and business plan responses
+      const fullResponse = data.text || data.planHtml || 'No response received';
+      setIsReport(data.isReport || generateReport || false);
       
-      const fullResponse = data.response;
-      setIsReport(data.isReport || false);
       let i = 0;
       
       if (userTrainingEnabled) {
@@ -79,22 +83,22 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           clearInterval(typingInterval);
           setIsTyping(false);
           
-          if (data.isReport) {
+          if (data.isReport || generateReport) {
             toast({
-              title: "Report Generated",
-              description: "Your business report has been successfully generated.",
+              title: "Response Generated",
+              description: "Your AI response has been successfully generated.",
               duration: 3000,
             });
           }
         }
       }, 15);
     } catch (error: any) {
-      console.error('Error calling AI service:', error);
+      console.error('Error calling BizGenie service:', error);
       setError(error.message || "I apologize, but I'm having trouble processing your request right now. Please try again later.");
       setIsTyping(false);
       
       toast({
-        title: "AI Assistant Error",
+        title: "BizGenie Assistant Error",
         description: error.message || "There was a problem connecting to the AI service.",
         variant: "destructive",
       });
