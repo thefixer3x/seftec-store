@@ -34,7 +34,7 @@ const HeroSection = () => {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-seftec-navy dark:text-white mb-6 leading-tight">
+          <h1 className="text-4xl lg:text-7xl font-bold text-seftec-navy dark:text-white mb-6 leading-tight md:text-5xl">
             Revolutionizing Global
             <span className="block bg-gradient-to-r from-seftec-gold to-orange-500 dark:from-seftec-teal dark:to-blue-400 bg-clip-text text-transparent">
               Trade with a Trusted AI-
