@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,9 +15,21 @@ interface InsightData {
 }
 
 export const FinancialInsights = () => {
-  const { loading, error, consents } = useEdocIntegration();
+  const { loading, error, listBankConsents } = useEdocIntegration();
   const [insights, setInsights] = useState<InsightData[]>([]);
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d'>('30d');
+  const [consents, setConsents] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchConsents();
+  }, []);
+
+  const fetchConsents = async () => {
+    const result = await listBankConsents();
+    if (result) {
+      setConsents(result);
+    }
+  };
 
   useEffect(() => {
     if (consents.length > 0) {

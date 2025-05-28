@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -14,10 +15,12 @@ export const useAdminAccess = () => {
 
   const fetchAdminStatus = async () => {
     try {
+      // Check if user has admin role in user_roles table
       const { data, error } = await supabase
-        .from('admins')
-        .select('*')
-        .eq('user_id', user.id)
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user?.id)
+        .eq('role', 'admin')
         .single();
 
       if (error) {
