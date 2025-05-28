@@ -2,6 +2,10 @@
 # working directory name when running `supabase init`.
 project_id = "seftec-store"
 
+[functions.process-bulk-payment]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
 [api]
 # Port to use for the local API URL.
 port = 54331

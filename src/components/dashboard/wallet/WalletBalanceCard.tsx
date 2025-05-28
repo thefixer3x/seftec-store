@@ -1,29 +1,72 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUp } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { SendHorizonal, Plus, Package, Heart } from 'lucide-react';
+import BulkPaymentModal from './BulkPaymentModal';
 
 const WalletBalanceCard = () => {
-  const isMobile = useIsMobile();
-  
+  const [isBulkPaymentModalOpen, setIsBulkPaymentModalOpen] = useState(false);
+
   return (
-    <Card className="bg-seftec-slate dark:bg-seftec-charcoal shadow-sm border border-seftec-lightgray dark:border-white/10">
-      <CardContent className={`${isMobile ? 'p-4' : 'p-6'}`}>
-        <p className="text-seftec-navy dark:text-white/80 mb-2">Wallet balance</p>
-        <h2 className={`${isMobile ? 'text-3xl' : 'text-4xl'} font-bold text-seftec-navy dark:text-white`}>NGN12,500.00</h2>
-        <div className={`flex mt-4 ${isMobile ? 'flex-col space-y-2' : 'space-x-4'}`}>
-          <Button className="bg-seftec-navy hover:bg-seftec-navy/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90">
-            Send Money
-            <ArrowUp className="h-4 w-4 ml-2" />
-          </Button>
-          <Button variant="outline" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy/10 dark:border-seftec-teal dark:text-seftec-teal dark:hover:bg-seftec-teal/10">
-            Fund Wallet
-            <ArrowUp className="h-4 w-4 ml-2 rotate-45" />
-          </Button>
+    <Card className="bg-white dark:bg-seftec-darkNavy/80 shadow-md">
+      <CardContent className="p-6">
+        <div className="flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-medium text-gray-700 dark:text-gray-300">Available Balance</h3>
+            <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 rounded-full px-2 py-1">Virtual</span>
+          </div>
+          
+          <div className="mb-6">
+            <p className="text-3xl font-semibold text-seftec-navy dark:text-white">₦2,500,000.00</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Last updated: May 20, 2025</p>
+          </div>
+          
+          {/* First row of buttons */}
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-2 px-1"
+            >
+              <SendHorizonal className="h-4 w-4 mb-1" />
+              <span className="text-xs">Send Money</span>
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-2 px-1"
+            >
+              <Plus className="h-4 w-4 mb-1" />
+              <span className="text-xs">Fund Wallet</span>
+            </Button>
+          </div>
+          
+          {/* Second row of buttons */}
+          <div className="grid grid-cols-2 gap-2">
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-2 px-1"
+              onClick={() => setIsBulkPaymentModalOpen(true)}
+            >
+              <Package className="h-4 w-4 mb-1" />
+              <span className="text-xs">Bulk Payment</span>
+            </Button>
+
+            <Button 
+              variant="outline" 
+              className="flex flex-col h-auto py-2 px-1"
+            >
+              <Heart className="h-4 w-4 mb-1" />
+              <span className="text-xs">Donate</span>
+            </Button>
+          </div>
         </div>
       </CardContent>
+
+      <BulkPaymentModal
+        isOpen={isBulkPaymentModalOpen}
+        onClose={() => setIsBulkPaymentModalOpen(false)}
+      />
     </Card>
   );
 };

@@ -40,8 +40,6 @@ export function SignInForm({
   // Get the intended destination from state, or default to dashboard
   const from = location.state?.from || '/profile/dashboard';
 
-  console.log("SignInForm - Redirect destination:", from);
-
   const form = useForm<z.infer<typeof SignInAuthFormSchema>>({
     resolver: zodResolver(SignInAuthFormSchema),
     defaultValues: {
@@ -59,17 +57,15 @@ export function SignInForm({
         title: "Successfully signed in",
       });
       
-      console.log("Login successful, redirecting to:", from);
-      
       // Always redirect to paths on the main domain, not subdomains
       navigate(from, { replace: true });
       
       // Still call onSuccess if provided (for potential modal closing, etc.)
-      onSuccess?.();
-    } catch (error) {
+      if (onSuccess) onSuccess();
+    } catch (error: any) {
       toast({
         title: "Something went wrong.",
-        description: "There was an error signing in. Please try again.",
+        description: error.message || "There was an error signing in. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -89,10 +85,11 @@ export function SignInForm({
               <FormControl>
                 <Input
                   id="email"
-                  placeholder="shadcn@example.com"
+                  placeholder="you@example.com"
                   {...field}
                   type="email"
                   disabled={isLoading}
+                  autoComplete="email"
                 />
               </FormControl>
               <FormMessage />
@@ -111,6 +108,7 @@ export function SignInForm({
                   type="password"
                   {...field}
                   disabled={isLoading}
+                  autoComplete="current-password"
                 />
               </FormControl>
               <FormMessage />
@@ -128,11 +126,15 @@ export function SignInForm({
             Forgot password?
           </Button>
         </div>
-        <Button disabled={isLoading}>
-          {isLoading && (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        <Button disabled={isLoading} className="w-full">
+          {isLoading ? (
+            <>
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              Signing In...
+            </>
+          ) : (
+            "Sign In"
           )}
-          Sign In
         </Button>
       </form>
     </Form>

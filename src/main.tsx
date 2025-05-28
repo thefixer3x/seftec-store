@@ -28,7 +28,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       enableSystem
     >
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter basename="/seftec-store">
+        <BrowserRouter>
           <AuthProvider>
             <CartProvider>
               <FeatureFlagProvider>

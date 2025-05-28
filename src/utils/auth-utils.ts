@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { Profile } from '@/types/auth';
+import { Profile, MFAFactor, UserSession } from '@/types/auth';
 
 export const fetchUserProfile = async (userId: string): Promise<Profile | null> => {
   try {
@@ -25,6 +25,37 @@ export const fetchUserProfile = async (userId: string): Promise<Profile | null> 
 
 export const handleSignIn = async (email: string, password: string) => {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
+  
+  if (error) {
+    throw error;
+  }
+  
+  // Store the email for future biometric login
+  localStorage.setItem('last_email', email);
+  // This is just for our simulation - in real biometric auth, we wouldn't store the password
+  localStorage.setItem('temp_auth_key', password);
+};
+
+export const handleSignInWithMagicLink = async (email: string) => {
+  const { error } = await supabase.auth.signInWithOtp({ 
+    email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth-callback`
+    }
+  });
+  
+  if (error) {
+    throw error;
+  }
+};
+
+export const handleSignInWithOAuth = async (provider: 'google' | 'facebook' | 'github' | 'apple') => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: `${window.location.origin}/auth-callback?provider=${provider}`,
+    },
+  });
   
   if (error) {
     throw error;
@@ -86,7 +117,8 @@ export const handleSignUp = async (email: string, password: string, userData: Pa
       data: {
         first_name: userData.first_name,
         last_name: userData.last_name,
-      }
+      },
+      emailRedirectTo: `${window.location.origin}/auth-callback`
     }
   });
   
@@ -112,6 +144,9 @@ export const handleSendVerificationEmail = async (email: string) => {
   const { error } = await supabase.auth.resend({
     type: 'signup',
     email,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth-callback`,
+    }
   });
   
   if (error) {
@@ -135,17 +170,130 @@ export const handleUpdateProfile = async (
 ) => {
   const { fullName, phone } = data;
   
+  // Split full name into first and last name
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+  
+  // Update profile in database
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .update({
+      first_name: firstName,
+      last_name: lastName,
+    })
+    .eq('id', userId);
+
+  if (profileError) {
+    throw profileError;
+  }
+  
   // Update user metadata
-  const { error } = await supabase.auth.updateUser({
+  const { error: userError } = await supabase.auth.updateUser({
     data: { 
       full_name: fullName,
       phone: phone || null
     }
   });
 
-  if (error) {
-    throw error;
+  if (userError) {
+    throw userError;
   }
 
   return true;
+};
+
+export const handleSetupMFA = async () => {
+  try {
+    // Start MFA enrollment
+    const { data, error } = await supabase.auth.mfa.enroll({
+      factorType: 'totp',
+    });
+    
+    if (error) throw error;
+    
+    return {
+      qrCode: data.totp.qr_code,
+      factorId: data.id
+    };
+  } catch (error) {
+    console.error('MFA setup error:', error);
+    throw error;
+  }
+};
+
+export const handleVerifyMFA = async (factorId: string, code: string) => {
+  try {
+    const { data, error } = await supabase.auth.mfa.challengeAndVerify({
+      factorId,
+      code
+    });
+    
+    if (error) throw error;
+    
+    return !!data;
+  } catch (error) {
+    console.error('MFA verification error:', error);
+    throw error;
+  }
+};
+
+export const handleGetMFAFactors = async (): Promise<MFAFactor[]> => {
+  try {
+    const { data, error } = await supabase.auth.mfa.listFactors();
+    
+    if (error) throw error;
+    
+    return data.totp.map(factor => ({
+      id: factor.id,
+      type: 'totp' as const,
+      status: factor.status === 'verified' ? 'verified' : 'unverified',
+      createdAt: factor.created_at
+    }));
+  } catch (error) {
+    console.error('Error fetching MFA factors:', error);
+    return [];
+  }
+};
+
+export const handleGetUserSessions = async (): Promise<UserSession[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('user_sessions')
+      .select('*');
+      
+    if (error) throw error;
+    
+    return (data || []).map(session => ({
+      id: session.id,
+      deviceInfo: {
+        browser: typeof session.device_info === 'object' && session.device_info !== null ? 
+          (session.device_info as any).browser : undefined,
+        os: typeof session.device_info === 'object' && session.device_info !== null ? 
+          (session.device_info as any).os : undefined,
+        device: typeof session.device_info === 'object' && session.device_info !== null ? 
+          (session.device_info as any).device : undefined
+      },
+      ipAddress: session.ip_address,
+      lastActive: session.last_active,
+      createdAt: session.created_at
+    }));
+  } catch (error) {
+    console.error('Error fetching user sessions:', error);
+    return [];
+  }
+};
+
+export const handleRemoveSession = async (sessionId: string) => {
+  try {
+    const { error } = await supabase
+      .from('user_sessions')
+      .delete()
+      .eq('id', sessionId);
+      
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error removing session:', error);
+    throw error;
+  }
 };
