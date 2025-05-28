@@ -111,7 +111,7 @@ api_url = "http://localhost"
 
 # API Key used by Supabase Studio to talk to the local API. This is different from the anon and
 # service keys of your remote database.
-internalApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU"
+internalApiKey = "eyJhbGciOiJIU*****************************
 
 [auth]
 # Port to use for the Auth API.
