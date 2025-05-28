@@ -15,7 +15,7 @@ export type SiteConfig = {
 export const siteConfig: SiteConfig = {
   name: "SEFTEC",
   description:
-    "SEFTEC - Leading enterprise DeFi access platform. ISO 20022 compliant solutions for secure, regulated blockchain integration.",
+    "SEFTEC - Transform your business with innovative marketplace solutions, secure payments, and cutting-edge technology.",
   mainNav: [
     {
       title: "Home",
