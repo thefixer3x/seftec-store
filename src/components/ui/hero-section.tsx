@@ -17,70 +17,62 @@ const HeroSection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Leadership Badge */}
-          <div className="flex justify-center mb-6">
-            <Badge className="bg-seftec-gold/10 text-seftec-navy dark:text-seftec-gold border-seftec-gold/30 px-4 py-2">
-              <Shield className="w-4 h-4 mr-2" />
-              Leading Enterprise DeFi Platform
-            </Badge>
-          </div>
-
           {/* Main Headline */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-seftec-navy dark:text-white mb-6 leading-tight">
-            Secure Enterprise
+            Transform Your Business
             <span className="block bg-gradient-to-r from-seftec-gold to-orange-500 dark:from-seftec-teal dark:to-blue-400 bg-clip-text text-transparent">
-              DeFi Solutions
+              with SEFTEC
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-seftec-navy/70 dark:text-white/70 mb-8 max-w-3xl mx-auto leading-relaxed">
-            ISO 20022 compliant platform bridging traditional banking with blockchain innovation. 
-            Trusted by <span className="font-semibold text-seftec-gold dark:text-seftec-teal">500+ Fortune 500</span> companies worldwide.
+            Empowering businesses with innovative marketplace solutions, secure payments, 
+            and cutting-edge technology for sustainable growth and success.
           </p>
 
-          {/* Key Metrics */}
+          {/* Key Features */}
           <div className="flex flex-wrap justify-center gap-8 mb-10">
             <div className="flex items-center space-x-2">
               <TrendingUp className="w-5 h-5 text-seftec-gold dark:text-seftec-teal" />
               <span className="text-sm font-medium text-seftec-navy dark:text-white">
-                $2.3B+ Transaction Volume
+                Business Growth Solutions
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <Globe className="w-5 h-5 text-seftec-gold dark:text-seftec-teal" />
               <span className="text-sm font-medium text-seftec-navy dark:text-white">
-                45 Countries Served
+                Global Marketplace
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <Shield className="w-5 h-5 text-seftec-gold dark:text-seftec-teal" />
               <span className="text-sm font-medium text-seftec-navy dark:text-white">
-                Enterprise-Grade Security
+                Secure Platform
               </span>
             </div>
           </div>
 
           {/* Call to Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Link to="/defi-leadership">
+            <Link to="/solutions">
               <Button 
                 size="lg" 
                 className="bg-seftec-navy hover:bg-seftec-navy/90 text-white dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 dark:text-seftec-darkNavy font-semibold px-8 py-3 text-lg"
               >
-                Explore DeFi Leadership
+                Explore Solutions
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             
-            <Link to="/solutions">
+            <Link to="/about">
               <Button 
                 variant="outline" 
                 size="lg" 
                 className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-seftec-teal dark:text-seftec-teal dark:hover:bg-seftec-teal dark:hover:text-seftec-darkNavy px-8 py-3 text-lg"
               >
                 <Play className="mr-2 h-5 w-5" />
-                View Demo
+                Learn More
               </Button>
             </Link>
           </div>
@@ -88,7 +80,7 @@ const HeroSection = () => {
           {/* Trust Indicators */}
           <div className="text-center">
             <p className="text-sm text-seftec-navy/60 dark:text-white/60 mb-4">
-              Trusted by leading enterprises worldwide
+              Trusted by businesses worldwide
             </p>
             <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
               {/* Placeholder for company logos */}
