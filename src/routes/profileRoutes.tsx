@@ -17,6 +17,7 @@ import InvoicesPage from '@/pages/InvoicesPage';
 import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
 import FinancialPage from '@/pages/FinancialPage';
+// Import the actual page components
 import DeveloperTools from '@/pages/DeveloperTools';
 import SiteMapPage from '@/pages/SiteMapPage';
 // Import the ProfileSettings component
