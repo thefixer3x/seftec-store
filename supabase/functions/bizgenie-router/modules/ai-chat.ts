@@ -123,7 +123,7 @@ export async function handleAIChat(requestData: any, env: any) {
   
   // Classify query complexity
   const startTime = Date.now();
-  const complexity = await classifyQueryComplexity(prompt, env.OPENAI_API_KEY);
+  const complexity = await classifyQueryComplexity(prompt, env.BizGenie_API_key);
   
   // Track classification in database for training
   if (userId) {
@@ -165,30 +165,30 @@ export async function handleAIChat(requestData: any, env: any) {
   let responseTime = Date.now() - startTime;
 
   try {
-    // Try OpenAI first
-    console.log('Attempting OpenAI API call...');
+    // Try BizGenie/OpenAI first
+    console.log('Attempting BizGenie API call...');
     const responseData = await callOpenAI({
       model: selectedModel,
       systemPrompt: systemPrompt || defaultSystemPrompt,
       userMessage: prompt,
-      apiKey: env.OPENAI_API_KEY
+      apiKey: env.BizGenie_API_key
     });
 
     if (responseData.error) {
-      throw new Error(`OpenAI API error: ${responseData.error.message || responseData.error}`);
+      throw new Error(`BizGenie API error: ${responseData.error.message || responseData.error}`);
     }
 
     aiResponse = responseData.choices?.[0]?.message?.content || "";
     tokensUsed = responseData.usage?.total_tokens || 0;
     
     if (!aiResponse) {
-      throw new Error('Empty response from OpenAI');
+      throw new Error('Empty response from BizGenie API');
     }
 
-    console.log('OpenAI response successful');
+    console.log('BizGenie API response successful');
     
-  } catch (openaiError) {
-    console.error('OpenAI failed, trying Perplexity backup:', openaiError);
+  } catch (bizgenieError) {
+    console.error('BizGenie API failed, trying Perplexity backup:', bizgenieError);
     
     // Try Perplexity as backup
     try {
@@ -219,7 +219,7 @@ export async function handleAIChat(requestData: any, env: any) {
       console.log('Perplexity backup response successful');
       
     } catch (perplexityError) {
-      console.error('Both OpenAI and Perplexity failed:', perplexityError);
+      console.error('Both BizGenie and Perplexity failed:', perplexityError);
       
       // Final fallback response
       aiResponse = "I apologize, but I'm experiencing technical difficulties at the moment. Please try again in a few minutes, or contact support if the issue persists.";

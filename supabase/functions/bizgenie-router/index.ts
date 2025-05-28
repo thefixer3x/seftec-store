@@ -7,7 +7,8 @@ import { corsHeaders } from "./utils/cors.ts";
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY') || '';
+const BizGenie_API_key = Deno.env.get('BizGenie_API_key') || '';
+const PERPLEXITY_API_KEY = Deno.env.get('PERPLEXITY_API_KEY') || '';
 
 // Main handler function
 serve(async (req) => {
@@ -21,11 +22,21 @@ serve(async (req) => {
     
     // Handle business plan generation mode
     if (requestData.mode === 'business-plan') {
-      return await handleBusinessPlan(requestData, { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, OPENAI_API_KEY });
+      return await handleBusinessPlan(requestData, { 
+        SUPABASE_URL, 
+        SUPABASE_SERVICE_ROLE_KEY, 
+        BizGenie_API_key,
+        PERPLEXITY_API_KEY 
+      });
     }
     
     // Handle regular chat mode
-    return await handleAIChat(requestData, { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, OPENAI_API_KEY });
+    return await handleAIChat(requestData, { 
+      SUPABASE_URL, 
+      SUPABASE_SERVICE_ROLE_KEY, 
+      BizGenie_API_key,
+      PERPLEXITY_API_KEY 
+    });
     
   } catch (error) {
     console.error('Error processing request:', error);
