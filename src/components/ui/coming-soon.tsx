@@ -101,11 +101,11 @@ const ComingSoon: React.FC<ComingSoonProps> = ({
         )}
         
         {showHomeLink && (
-          <Button asChild className="w-full sm:w-auto bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90">
-            <Link to="/">
+          <Link to="/">
+            <Button className="w-full sm:w-auto bg-seftec-gold hover:bg-seftec-gold/90 dark:bg-seftec-teal dark:hover:bg-seftec-teal/90">
               Return to Homepage
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         )}
       </div>
     </div>
