@@ -11,7 +11,6 @@ import { Card } from '@/components/ui/card';
 const SettingsContent = () => {
   const [activeTab, setActiveTab] = useState('business');
   const [activeSubTab, setActiveSubTab] = useState('business-profile');
-  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
   const isMobile = useIsMobile();
 
   const renderContent = () => {
@@ -19,12 +18,7 @@ const SettingsContent = () => {
       case 'business':
         switch (activeSubTab) {
           case 'business-profile':
-            return (
-              <BusinessProfileTab 
-                verificationStatus={verificationStatus}
-                setVerificationStatus={setVerificationStatus}
-              />
-            );
+            return <BusinessProfileTab />;
           case 'business-account':
             return (
               <Card className="p-6">
@@ -40,12 +34,7 @@ const SettingsContent = () => {
               </Card>
             );
           default:
-            return (
-              <BusinessProfileTab 
-                verificationStatus={verificationStatus}
-                setVerificationStatus={setVerificationStatus}
-              />
-            );
+            return <BusinessProfileTab />;
         }
       case 'personal':
         return <PersonalProfileTab />;
@@ -54,12 +43,7 @@ const SettingsContent = () => {
       case 'pin':
         return <PinTab />;
       default:
-        return (
-          <BusinessProfileTab 
-            verificationStatus={verificationStatus}
-            setVerificationStatus={setVerificationStatus}
-          />
-        );
+        return <BusinessProfileTab />;
     }
   };
 
