@@ -2,6 +2,7 @@
 import React from 'react';
 import { MainNav } from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
+import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { siteConfig } from '@/config/site';
 import { SeftecHub } from '@/components/ui/seftec-hub';
 
@@ -25,6 +26,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, hideSeftecHub = false
         {children}
       </main>
       <Footer />
+      <ConsentBanner />
     </div>
   );
 };
