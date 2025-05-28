@@ -1,36 +1,38 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 
-// Public pages
+// Core pages (loaded immediately)
 import Index from '@/pages/Index';
 import About from '@/pages/About';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Contact from '@/pages/Contact';
 import NotFound from '@/pages/NotFound';
-import Solutions from '@/pages/Solutions';
-import ValuePropositions from '@/pages/ValuePropositions';
-import ResetPassword from '@/pages/ResetPassword';
-import BizTools from '@/pages/BizTools';
-import FAQ from '@/pages/FAQ';
-import ComingSoon from '@/pages/ComingSoon';
-import Shop from '@/pages/Shop';
-import Cart from '@/pages/Cart';
-import Products from '@/pages/Products';
-import Orders from '@/pages/Orders';
-import BizGenie from '@/pages/BizGenie';
-import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
-import Terms from '@/pages/Terms';
-import Privacy from '@/pages/Privacy';
-import Cookies from '@/pages/Cookies';
-import Security from '@/pages/Security';
-import DefiLeadership from '@/pages/DefiLeadership';
 
-// Protected pages
-import Dashboard from '@/pages/Dashboard';
-import Profile from '@/pages/Profile';
+// Lazy-loaded pages for better performance
+const Solutions = lazy(() => import('@/pages/Solutions'));
+const ValuePropositions = lazy(() => import('@/pages/ValuePropositions'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const BizTools = lazy(() => import('@/pages/BizTools'));
+const FAQ = lazy(() => import('@/pages/FAQ'));
+const ComingSoon = lazy(() => import('@/pages/ComingSoon'));
+const Shop = lazy(() => import('@/pages/Shop'));
+const Cart = lazy(() => import('@/pages/Cart'));
+const Products = lazy(() => import('@/pages/Products'));
+const Orders = lazy(() => import('@/pages/Orders'));
+const BizGenie = lazy(() => import('@/pages/BizGenie'));
+const EdgeFunctionTest = lazy(() => import('@/pages/EdgeFunctionTest'));
+const Terms = lazy(() => import('@/pages/Terms'));
+const Privacy = lazy(() => import('@/pages/Privacy'));
+const Cookies = lazy(() => import('@/pages/Cookies'));
+const Security = lazy(() => import('@/pages/Security'));
+const DefiLeadership = lazy(() => import('@/pages/DefiLeadership'));
+
+// Protected pages (lazy-loaded)
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Profile = lazy(() => import('@/pages/Profile'));
 
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
@@ -77,50 +79,56 @@ function App() {
 
   return (
     <>
-      <Routes>
-        {/* ===== PUBLIC ROUTES ===== */}
-        {/* Main marketing and information pages */}
-        <Route path="/" element={<Index />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/solutions" element={<Solutions />} />
-        <Route path="/value-propositions" element={<ValuePropositions />} />
-        <Route path="/biztools" element={<BizTools />} />
-        <Route path="/bizgenie" element={<BizGenie />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/coming-soon" element={<ComingSoon />} />
-        <Route path="/defi-leadership" element={<DefiLeadership />} />
-        
-        {/* E-commerce public pages */}
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/orders" element={<Orders />} />
-        
-        {/* Authentication pages */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        
-        {/* Legal and policy pages */}
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/cookies" element={<Cookies />} />
-        <Route path="/security" element={<Security />} />
-        
-        {/* Testing and development pages */}
-        <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
-        
-        {/* ===== PROTECTED ROUTES ===== */}
-        {/* Dashboard routes */}
-        <Route path="/dashboard/*" element={<Dashboard />} />
-        
-        {/* Profile routes imported from profileRoutes.tsx */}
-        {profileRoutes}
-        
-        {/* Fallback route for 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      }>
+        <Routes>
+          {/* ===== PUBLIC ROUTES ===== */}
+          {/* Main marketing and information pages */}
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/value-propositions" element={<ValuePropositions />} />
+          <Route path="/biztools" element={<BizTools />} />
+          <Route path="/bizgenie" element={<BizGenie />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/defi-leadership" element={<DefiLeadership />} />
+          
+          {/* E-commerce public pages */}
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/orders" element={<Orders />} />
+          
+          {/* Authentication pages */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          
+          {/* Legal and policy pages */}
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/security" element={<Security />} />
+          
+          {/* Testing and development pages */}
+          <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
+          
+          {/* ===== PROTECTED ROUTES ===== */}
+          {/* Dashboard routes */}
+          <Route path="/dashboard/*" element={<Dashboard />} />
+          
+          {/* Profile routes imported from profileRoutes.tsx */}
+          {profileRoutes}
+          
+          {/* Fallback route for 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
       <Toaster />
     </>
   );

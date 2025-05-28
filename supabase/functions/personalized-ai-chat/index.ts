@@ -10,6 +10,11 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
+// Check if keys are set at startup
+console.log(`OpenAI API key status: ${OPENAI_API_KEY ? 'SET' : 'NOT SET'}`);
+console.log(`Supabase URL: ${SUPABASE_URL}`);
+console.log(`Supabase Service Role key status: ${SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET'}`);
+
 // Update CORS headers to include both the original domain and the new api.seftec.store domain
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*", // Allow requests from any origin
@@ -32,7 +37,29 @@ serve(async (req) => {
     // Check if OpenAI API key is available
     if (!OPENAI_API_KEY) {
       console.error("OPENAI_API_KEY is not set");
-      throw new Error("OpenAI API key is not configured");
+      throw new Error("OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable.");
+    }
+    
+    // For demonstration or development environments, you can use a fallback
+    const useApiKey = OPENAI_API_KEY || "DEMO_MODE";
+    
+    if (useApiKey === "DEMO_MODE") {
+      console.warn("Using DEMO_MODE for AI responses - this will return mock data");
+      
+      // Return a mock response for testing
+      return new Response(
+        JSON.stringify({ 
+          text: "This is a mock personalized response from the AI service. The OpenAI API key is not configured correctly. Please set up your API key to get real personalized responses.",
+          personalized: true,
+          generateReport: false
+        }),
+        {
+          headers: { 
+            ...corsHeaders, 
+            "Content-Type": "application/json" 
+          },
+        }
+      );
     }
     
     // Create supabase admin client for fetching user data
@@ -139,7 +166,7 @@ serve(async (req) => {
           const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${OPENAI_API_KEY}`,
+              Authorization: `Bearer ${useApiKey}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({

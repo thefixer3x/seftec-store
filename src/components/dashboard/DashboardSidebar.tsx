@@ -17,7 +17,8 @@ import {
   Home,
   Briefcase,
   Menu,
-  X
+  X,
+  LifeBuoy
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
@@ -26,6 +27,8 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { useAuthState } from "@/hooks/use-auth-state";
 
 const sidebarItems = [
   { icon: LayoutDashboard, label: 'Control Room', path: '/profile/dashboard' },
@@ -48,7 +51,12 @@ const DashboardSidebar = () => {
   const currentPath = location.pathname;
   const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
-
+  const { user } = useAuthState();
+  
+  // Check if user is a super admin
+  const isSuperAdmin = user?.email === 'superadmin@seftec.com' || 
+                    user?.email?.includes('superadmin');
+  
   const SidebarContent = () => (
     <div className="py-4 flex flex-col h-full">
       <div className="px-3 py-2">
@@ -85,6 +93,36 @@ const DashboardSidebar = () => {
               </Link>
             );
           })}
+          
+          {/* Super Admin Section */}
+          {isSuperAdmin && (
+            <>
+              <Separator className="my-2" />
+              <div className="pt-2">
+                <p className="px-3 text-xs text-seftec-navy/50 dark:text-white/50 uppercase font-medium mb-1">
+                  Admin Tools
+                </p>
+                <Link
+                  to="/profile/developer"
+                  className={cn(
+                    "flex items-center px-3 py-2 sm:py-3 text-xs sm:text-sm rounded-md group transition-colors hover:bg-white/40 dark:hover:bg-white/5",
+                    currentPath === "/profile/developer"
+                      ? "bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 font-medium border-l-4 border-amber-400" 
+                      : "text-amber-600 dark:text-amber-400/70 hover:text-amber-700 dark:hover:text-amber-400"
+                  )}
+                  onClick={() => isMobile && setIsOpen(false)}
+                >
+                  <LifeBuoy className={cn(
+                    "h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3", 
+                    currentPath === "/profile/developer"
+                      ? "text-amber-500 dark:text-amber-400" 
+                      : "text-amber-500/70 dark:text-amber-400/70"
+                  )} />
+                  <span>Developer Tools</span>
+                </Link>
+              </div>
+            </>
+          )}
         </nav>
       </ScrollArea>
     </div>
