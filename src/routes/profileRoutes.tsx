@@ -17,6 +17,7 @@ import InvoicesPage from '@/pages/InvoicesPage';
 import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
 import FinancialPage from '@/pages/FinancialPage';
+import DeveloperTools from '@/pages/DeveloperTools';
 // Import the ProfileSettings component
 import { ProfileSettings } from '@/components/account/ProfileSettings';
 // Import components using default imports
@@ -61,6 +62,9 @@ export const profileRoutes = (
       <Route path="invoices" element={<InvoicesPage />} />
       <Route path="customers" element={<CustomersPage />} />
       <Route path="transaction" element={<TransactionPage />} />
+      
+      {/* Developer Tools - Super Admin access only */}
+      <Route path="developer" element={<DeveloperTools />} />
     </Route>
   </>
 );

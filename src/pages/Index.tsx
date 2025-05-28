@@ -16,6 +16,7 @@ import DefiHighlightSection from '@/components/sections/DefiHighlightSection';
 import PersonalizedAIAdvisorSection from '@/components/sections/PersonalizedAIAdvisorSection';
 import AIAdvisorSection from '@/components/sections/AIAdvisorSection';
 import HomeHeroSection from '@/components/sections/HomeHeroSection';
+import { ProductRecommendations } from '@/components/recommendations/ProductRecommendations';
 import MainLayout from '@/components/layout/MainLayout';
 
 const Home = () => {
@@ -24,10 +25,10 @@ const Home = () => {
     { id: 'problems', Component: ProblemsSection },
     { id: 'solutions', Component: SolutionsSection },
     { id: 'advantages', Component: AdvantagesSection },
-    { id: 'bizCounter', Component: BusinessCounterSection },
     { id: 'defi', Component: DefiHighlightSection },
     { id: 'paymentCounter', Component: PaymentCounterSection },
-    { id: 'payment', Component: PaymentSection },
+    // Note: BusinessCounterSection and PaymentSection are both included within PaymentCounterSection
+    { id: 'recommendations', Component: ProductRecommendations },
     { id: 'aiAdvisor', Component: AIAdvisorSection },
     { id: 'regions', Component: RegionsCoveredSection },
     { id: 'features', Component: FeaturesSection },
