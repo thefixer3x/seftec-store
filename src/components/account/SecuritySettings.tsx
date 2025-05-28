@@ -8,12 +8,14 @@ import { Shield, Fingerprint, KeyRound, LogOut, Monitor, RefreshCw, X } from 'lu
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function SecuritySettings() {
   const { hasMFA, mfaFactors, getUserSessions, removeSession } = useAuth();
   const [showMFASetup, setShowMFASetup] = useState(false);
   const [activeSessions, setActiveSessions] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     fetchSessions();
@@ -34,7 +36,6 @@ export function SecuritySettings() {
   const handleEndSession = async (sessionId: string) => {
     try {
       await removeSession(sessionId);
-      // Refresh sessions list
       fetchSessions();
     } catch (error) {
       console.error('Error ending session:', error);
@@ -46,36 +47,40 @@ export function SecuritySettings() {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold tracking-tight">Security Settings</h2>
-      <p className="text-gray-500 dark:text-gray-400">
-        Manage your account security settings, multi-factor authentication, and active sessions.
-      </p>
+    <div className="space-y-4 md:space-y-6 max-w-full overflow-hidden">
+      <div className="px-2 md:px-0">
+        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-seftec-navy dark:text-white">Security Settings</h2>
+        <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-2">
+          Manage your account security settings, multi-factor authentication, and active sessions.
+        </p>
+      </div>
       
-      <div className="grid gap-6">
+      <div className="grid gap-4 md:gap-6 px-2 md:px-0">
         {/* Two-Factor Authentication Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <div>
-              <CardTitle>Two-Factor Authentication</CardTitle>
-              <CardDescription>Add an extra layer of security to your account</CardDescription>
+        <Card className="overflow-hidden">
+          <CardHeader className={`flex ${isMobile ? 'flex-col space-y-3' : 'flex-row items-center justify-between space-y-0'} pb-3 md:pb-4`}>
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-base md:text-lg text-seftec-navy dark:text-white">Two-Factor Authentication</CardTitle>
+              <CardDescription className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Add an extra layer of security to your account
+              </CardDescription>
             </div>
             
             {hasMFA ? (
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 flex-shrink-0">
                 Enabled
               </Badge>
             ) : (
-              <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800">
+              <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800 flex-shrink-0">
                 Disabled
               </Badge>
             )}
           </CardHeader>
-          <CardContent>
-            <div className="flex items-start space-x-4">
-              <Shield className="h-8 w-8 text-gray-400" />
-              <div className="flex-1">
-                <p className="text-sm leading-relaxed">
+          <CardContent className="pt-0">
+            <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'items-start space-x-4'}`}>
+              <Shield className={`h-6 w-6 md:h-8 md:w-8 text-gray-400 ${isMobile ? 'mx-auto' : 'flex-shrink-0'}`} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
                   {hasMFA ? (
                     "Two-factor authentication is enabled. You're protected with an additional layer of security."
                   ) : (
@@ -87,29 +92,29 @@ export function SecuritySettings() {
                     <Button 
                       onClick={() => setShowMFASetup(true)} 
                       variant={hasMFA ? "outline" : "default"} 
-                      className="mt-4"
+                      className="mt-4 w-full md:w-auto text-sm"
                     >
                       {hasMFA ? "Manage 2FA" : "Enable 2FA"}
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md max-w-[95vw] max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle>Two-Factor Authentication</DialogTitle>
-                      <DialogDescription>
+                      <DialogTitle className="text-base md:text-lg">Two-Factor Authentication</DialogTitle>
+                      <DialogDescription className="text-sm">
                         {hasMFA ? "Manage your two-factor authentication settings" : "Set up two-factor authentication for your account"}
                       </DialogDescription>
                     </DialogHeader>
                     {showMFASetup && !hasMFA && <SetupMFAForm onSuccess={handleMFASuccess} />}
                     
                     {hasMFA && mfaFactors.map(factor => (
-                      <div key={factor.id} className="p-4 border rounded-md flex justify-between items-center">
-                        <div>
-                          <p className="font-medium">Authenticator App</p>
-                          <p className="text-sm text-gray-500">
+                      <div key={factor.id} className="p-3 md:p-4 border rounded-md flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm md:text-base text-gray-900 dark:text-white">Authenticator App</p>
+                          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
                             Setup on {format(new Date(factor.createdAt), 'MMM d, yyyy')}
                           </p>
                         </div>
-                        <Button variant="destructive" size="sm">
+                        <Button variant="destructive" size="sm" className="text-xs w-full md:w-auto">
                           Remove
                         </Button>
                       </div>
