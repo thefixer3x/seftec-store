@@ -61,12 +61,13 @@ export const TransactionsList: React.FC<TransactionsListProps> = ({ bankAccounts
 
       const allTransactions: Transaction[] = [];
       
-      for (const accountId of accountsToSync) {
-        const accountTransactions = await getTransactions(accountId);
+      const transactionPromises = accountsToSync.map(accountId => getTransactions(accountId));
+      const results = await Promise.all(transactionPromises);
+      results.forEach(accountTransactions => {
         if (accountTransactions) {
           allTransactions.push(...accountTransactions);
         }
-      }
+      });
 
       // Sort by date (newest first)
       allTransactions.sort((a, b) => 
