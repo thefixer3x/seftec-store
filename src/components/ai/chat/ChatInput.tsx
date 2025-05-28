@@ -21,6 +21,18 @@ const ChatInput: React.FC<ChatInputProps> = ({
   isLoading,
   placeholder = 'Ask BizGenie about business strategies, financial advice, or market insights...'
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!isLoading && query.trim()) {
+        const syntheticEvent = {
+          preventDefault: () => {},
+        } as React.FormEvent;
+        onSubmit(syntheticEvent);
+      }
+    }
+  };
+
   return (
     <>
       <Separator />
@@ -29,7 +41,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={placeholder}
+            onKeyDown={handleKeyDown}
+            placeholder={`${placeholder} (Press Enter to send)`}
             disabled={isLoading}
             className="flex-1"
           />

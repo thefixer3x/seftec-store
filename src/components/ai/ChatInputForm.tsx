@@ -29,6 +29,15 @@ const ChatInputForm: React.FC<ChatInputFormProps> = ({
   generateReport,
   setGenerateReport
 }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (!isTyping && query.trim()) {
+        handleAskAI();
+      }
+    }
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -59,9 +68,10 @@ const ChatInputForm: React.FC<ChatInputFormProps> = ({
       <Textarea
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={generateReport 
-          ? "e.g., Create a market analysis report for small retail businesses in 2024" 
-          : "e.g., How can I improve my company's cash flow?"}
+          ? "e.g., Create a market analysis report for small retail businesses in 2024. Press Enter to send." 
+          : "e.g., How can I improve my company's cash flow? Press Enter to send."}
         className="resize-none h-[80px] border-seftec-slate/50 dark:border-white/20"
       />
       
@@ -88,6 +98,8 @@ const ChatInputForm: React.FC<ChatInputFormProps> = ({
         Your data is analyzed securely using enterprise-grade encryption
         {isPremium && " • Premium insights powered by advanced analytics"}
         {generateReport && " • Reports include detailed analysis and recommendations"}
+        <br />
+        <span className="text-seftec-gold dark:text-seftec-teal">Press Enter to send, Shift+Enter for new line</span>
       </p>
     </div>
   );
