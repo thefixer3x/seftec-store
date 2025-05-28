@@ -1,10 +1,13 @@
+
 import React from 'react';
 import { ArrowRight, Play, Shield, Globe, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+
 const HeroSection = () => {
-  return <section className="relative min-h-screen flex items-center bg-gradient-to-br from-seftec-slate via-white to-blue-50 dark:from-seftec-darkNavy dark:via-seftec-darkNavy dark:to-blue-900 overflow-hidden">
+  return (
+    <section className="relative min-h-screen flex items-center bg-gradient-to-br from-seftec-slate via-white to-blue-50 dark:from-seftec-darkNavy dark:via-seftec-darkNavy dark:to-blue-900 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-seftec-gold/10 rounded-full filter blur-3xl animate-pulse"></div>
@@ -53,11 +56,11 @@ const HeroSection = () => {
 
           {/* Call to Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Button size="lg" className="bg-seftec-navy hover:bg-seftec-navy/90 text-white dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 dark:text-seftec-darkNavy font-semibold px-8 py-3 text-lg">
+            <Button size="lg" className="bg-seftec-navy hover:bg-seftec-navy/90 text-white dark:bg-seftec-teal dark:hover:bg-seftec-teal/90 dark:text-seftec-darkNavy font-semibold px-8 py-3 text-lg shimmer">
               Get Started
             </Button>
             
-            <Button variant="outline" size="lg" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-seftec-teal dark:text-seftec-teal dark:hover:bg-seftec-teal dark:hover:text-seftec-darkNavy px-8 py-3 text-lg">
+            <Button variant="outline" size="lg" className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-seftec-teal dark:text-seftec-teal dark:hover:bg-seftec-teal dark:hover:text-seftec-darkNavy px-8 py-3 text-lg shimmer">
               Book a Demo
             </Button>
           </div>
@@ -79,7 +82,7 @@ const HeroSection = () => {
                 </div>
               </div>
               <Link to="/defi-leadership">
-                <Button variant="ghost" size="sm" className="text-seftec-navy dark:text-seftec-teal">
+                <Button variant="ghost" size="sm" className="text-seftec-navy dark:text-seftec-teal shimmer">
                   Explore Our Vision
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -95,6 +98,8 @@ const HeroSection = () => {
           <div className="w-1 h-3 bg-seftec-gold dark:bg-seftec-teal rounded-full mt-2 animate-pulse"></div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default HeroSection;
