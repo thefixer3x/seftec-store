@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ProtectedLayout from '@/components/layout/ProtectedLayout';
+import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import SettingsContainer from '@/components/dashboard/settings/SettingsContainer';
 
 const SettingsPage = () => {

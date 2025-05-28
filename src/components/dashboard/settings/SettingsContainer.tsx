@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import SettingsNavigation from './SettingsNavigation';
-import { PersonalProfileTab } from './PersonalProfileTab';
-import { BusinessProfileTab } from './BusinessProfileTab';
-import { PasswordTab } from './PasswordTab';
-import { PinTab } from './PinTab';
+import PersonalProfileTab from './PersonalProfileTab';
+import BusinessProfileTab from './BusinessProfileTab';
+import PasswordTab from './PasswordTab';
+import PinTab from './PinTab';
 
 const SettingsContainer = () => {
   const [activeTab, setActiveTab] = useState('personal');
