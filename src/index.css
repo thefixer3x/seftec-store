@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gabriela&display=swap');
@@ -169,6 +170,14 @@
 
   .glass-effect {
     @apply bg-white/80 backdrop-blur-md border border-white/20 dark:bg-seftec-darkNavy/50 dark:border-white/10;
+  }
+
+  /* Claude-style Glass Panel Effect */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
   
   .text-balance {
