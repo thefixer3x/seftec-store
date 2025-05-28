@@ -1,7 +1,7 @@
 
 import React from 'react';
 import SectionHeading from '@/components/ui/section-heading';
-import { Brain, Globe, CreditCard, UserPlus, Store, Bot } from 'lucide-react';
+import { Brain, Globe, CreditCard, UserPlus, Store, Bot, FileText, TrendingUp, Shield, Building, Banknote, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const valuePropositions = [
@@ -35,6 +35,36 @@ const valuePropositions = [
     title: 'AI Business Advisor',
     description: 'Our intelligent assistant analyzes financial data, market trends, and operations to provide strategic recommendations that optimize performance and enhance profitability.'
   },
+  {
+    icon: <FileText className="h-10 w-10 text-seftec-teal" />,
+    title: 'Business Plan Review & Drafting',
+    description: 'Comprehensive business plan creation, review, and strategic planning services powered by AI to ensure your business strategy is optimized for success.'
+  },
+  {
+    icon: <TrendingUp className="h-10 w-10 text-seftec-purple" />,
+    title: 'In-Depth Cashflow Management',
+    description: 'Advanced cashflow analytics, forecasting, and management tools to maintain healthy liquidity and optimize working capital.'
+  },
+  {
+    icon: <Building className="h-10 w-10 text-seftec-gold" />,
+    title: 'Multi-Country Business Registration',
+    description: 'Complete business incorporation and regulatory alignment support for US, UK & EU markets - exclusive for Pro users.'
+  },
+  {
+    icon: <Shield className="h-10 w-10 text-seftec-teal" />,
+    title: 'Global Compliance & Risk Analytics',
+    description: 'Highly tuned, context-aware AI for global business practices, risk analytics, and regulatory compliance suited for growing businesses.'
+  },
+  {
+    icon: <Banknote className="h-10 w-10 text-seftec-purple" />,
+    title: 'DeFi & Open Banking Integration',
+    description: 'Leverage decentralized finance and open banking solutions, bringing your business to the future of financial technology.'
+  },
+  {
+    icon: <Users className="h-10 w-10 text-seftec-gold" />,
+    title: 'Instant Settlement for Verified Businesses',
+    description: 'Lightning-fast payment settlements available exclusively for fully verified businesses, ensuring optimal cash flow management.'
+  },
 ];
 
 const ValuePropositionsSection = () => {
@@ -44,7 +74,7 @@ const ValuePropositionsSection = () => {
         <SectionHeading
           label="Our Value Propositions"
           title="Empowering Your Business Growth"
-          subtitle="Discover how our platform can transform your business operations and drive success."
+          subtitle="Discover how our comprehensive platform can transform your business operations and drive unprecedented success."
           align="center"
         />
         
@@ -63,6 +93,15 @@ const ValuePropositionsSection = () => {
               <p className="text-seftec-navy/70 dark:text-white/70">{prop.description}</p>
             </div>
           ))}
+        </div>
+        
+        <div className="mt-12 text-center">
+          <p className="text-lg text-seftec-navy/80 dark:text-white/80 font-medium">
+            And much more advanced features coming in our phased rollout stages
+          </p>
+          <p className="text-sm text-seftec-navy/60 dark:text-white/60 mt-2">
+            Trade finance offers from multiple vendors • Comparative benefits • Lowest interest rates • Curated for business growth
+          </p>
         </div>
       </div>
     </section>
