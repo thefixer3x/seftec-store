@@ -6,8 +6,12 @@ import SolutionsSection from '@/components/sections/SolutionsSection';
 import BusinessCounter from "@/components/ui/business-counter";
 import { siteConfig } from '@/config/site';
 import { Toaster } from "@/components/ui/toaster";
+import { useDocumentTitle } from '@/hooks/use-document-title';
 
 const Solutions = () => {
+  // Set page title
+  useDocumentTitle('Enterprise Solutions | SEFTEC');
+  
   // Set light mode on initial load
   useEffect(() => {
     document.documentElement.classList.remove('dark');
