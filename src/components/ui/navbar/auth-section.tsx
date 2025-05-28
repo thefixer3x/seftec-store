@@ -1,42 +1,30 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 interface AuthSectionProps {
   user: any;
 }
-
-const AuthSection = ({ user }: AuthSectionProps) => {
-  const { profile } = useAuth();
+const AuthSection = ({
+  user
+}: AuthSectionProps) => {
+  const {
+    profile
+  } = useAuth();
   const isMobile = useIsMobile();
-  
-  return (
-    <div className="hidden md:flex items-center space-x-2 sm:space-x-4">
+  return <div className="hidden md:flex items-center space-x-2 sm:space-x-4">
       {/* Welcome message for logged in users */}
-      {user && (
-        <span className="hidden md:inline-block text-sm text-seftec-navy/80 dark:text-white/80">
-          Welcome, Demo User
-        </span>
-      )}
+      {user && <span className="hidden md:inline-block text-sm text-seftec-navy/80 dark:text-white/80">Welcome</span>}
       
       {/* "Guest" message if no user */}
-      {!user && (
-        <span className="hidden md:inline-block text-sm text-seftec-navy/80 dark:text-white/80">
+      {!user && <span className="hidden md:inline-block text-sm text-seftec-navy/80 dark:text-white/80">
           Welcome, Guest
-        </span>
-      )}
+        </span>}
       
       {/* Secured by AI Badge */}
       <Link to="/bizgenie" className="group relative overflow-hidden hidden md:flex">
@@ -48,8 +36,7 @@ const AuthSection = ({ user }: AuthSectionProps) => {
       </Link>
       
       {/* Auth Buttons */}
-      {!user ? (
-        <div className="flex items-center space-x-2">
+      {!user ? <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="text-xs sm:text-sm bg-gradient-to-r from-seftec-gold to-seftec-gold/80 dark:from-seftec-teal dark:to-seftec-purple text-white" size="sm">
@@ -69,12 +56,7 @@ const AuthSection = ({ user }: AuthSectionProps) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-      ) : (
-        <UserProfileDropdown />
-      )}
-    </div>
-  );
+        </div> : <UserProfileDropdown />}
+    </div>;
 };
-
 export default AuthSection;

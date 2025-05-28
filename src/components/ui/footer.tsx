@@ -1,30 +1,24 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/components/icons';
 import { Link } from 'react-router-dom';
 import { Shield, Lock, Mail, Phone, MapPin, ShoppingCart, ShoppingBag, ListOrdered } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-
 interface FooterProps {
   className?: string;
 }
-
-const Footer: React.FC<FooterProps> = ({ className }) => {
+const Footer: React.FC<FooterProps> = ({
+  className
+}) => {
   const currentYear = new Date().getFullYear();
-  
-  return (
-    <footer className={cn('py-12 bg-seftec-slate dark:bg-seftec-darkNavy border-t border-seftec-navy/10 dark:border-white/10', className)}>
+  return <footer className={cn('py-12 bg-seftec-slate dark:bg-seftec-darkNavy border-t border-seftec-navy/10 dark:border-white/10', className)}>
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           <div className="md:col-span-1">
-            <Link 
-              to="/" 
-              className="text-2xl font-bold text-seftec-navy dark:text-white flex items-center mb-4"
-            >
+            <Link to="/" className="text-2xl font-bold text-seftec-navy dark:text-white flex items-center mb-4">
               <Icons.logo className="h-6 w-6 text-seftec-gold mr-2" />
               <span className="font-bold text-seftec-navy dark:text-white">
-                Seftec.<span className="text-seftec-gold">Store</span>
+                Seftec.<span className="text-seftec-gold">Hub</span>
               </span>
             </Link>
             <p className="text-seftec-navy/70 dark:text-white/70 mb-6">
@@ -138,8 +132,6 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;

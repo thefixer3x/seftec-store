@@ -87,6 +87,87 @@ export type Database = {
         }
         Relationships: []
       }
+      beneficiaries: {
+        Row: {
+          account_number: string
+          bank_code: string
+          category: string | null
+          created_at: string
+          id: string
+          is_archived: boolean | null
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_number: string
+          bank_code: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_archived?: boolean | null
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_number?: string
+          bank_code?: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_archived?: boolean | null
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bulk_payments: {
+        Row: {
+          created_at: string
+          currency_code: string
+          id: string
+          last_error: string | null
+          modified_by: string | null
+          processed_at: string | null
+          scheduled_date: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          title: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency_code?: string
+          id?: string
+          last_error?: string | null
+          modified_by?: string | null
+          processed_at?: string | null
+          scheduled_date?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          title: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency_code?: string
+          id?: string
+          last_error?: string | null
+          modified_by?: string | null
+          processed_at?: string | null
+          scheduled_date?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          title?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       marketplace_transactions: {
         Row: {
           amount: number
@@ -288,6 +369,90 @@ export type Database = {
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_audit: {
+        Row: {
+          changed_at: string | null
+          changed_by: string | null
+          id: string
+          new_status: Database["public"]["Enums"]["payment_status"] | null
+          old_status: Database["public"]["Enums"]["payment_status"] | null
+          payment_id: string
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["payment_status"] | null
+          old_status?: Database["public"]["Enums"]["payment_status"] | null
+          payment_id: string
+        }
+        Update: {
+          changed_at?: string | null
+          changed_by?: string | null
+          id?: string
+          new_status?: Database["public"]["Enums"]["payment_status"] | null
+          old_status?: Database["public"]["Enums"]["payment_status"] | null
+          payment_id?: string
+        }
+        Relationships: []
+      }
+      payment_items: {
+        Row: {
+          amount: number
+          beneficiary_id: string
+          bulk_payment_id: string
+          created_at: string
+          currency_code: string
+          description: string | null
+          error_message: string | null
+          id: string
+          processed_at: string | null
+          retry_count: number | null
+          status: Database["public"]["Enums"]["payment_status"]
+        }
+        Insert: {
+          amount: number
+          beneficiary_id: string
+          bulk_payment_id: string
+          created_at?: string
+          currency_code?: string
+          description?: string | null
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          retry_count?: number | null
+          status?: Database["public"]["Enums"]["payment_status"]
+        }
+        Update: {
+          amount?: number
+          beneficiary_id?: string
+          bulk_payment_id?: string
+          created_at?: string
+          currency_code?: string
+          description?: string | null
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          retry_count?: number | null
+          status?: Database["public"]["Enums"]["payment_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_items_beneficiary_id_fkey"
+            columns: ["beneficiary_id"]
+            isOneToOne: false
+            referencedRelation: "beneficiaries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_items_bulk_payment_id_fkey"
+            columns: ["bulk_payment_id"]
+            isOneToOne: false
+            referencedRelation: "bulk_payments"
             referencedColumns: ["id"]
           },
         ]
@@ -763,6 +928,57 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          device_info: Json | null
+          id: string
+          ip_address: string | null
+          last_active: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          ip_address?: string | null
+          last_active?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          ip_address?: string | null
+          last_active?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_tiers: {
         Row: {
           can_use_advanced_models: boolean
@@ -841,8 +1057,19 @@ export type Database = {
         Args: { image_path: string }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
       is_admin: {
         Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_owner: {
+        Args: { bulk_id: string }
         Returns: boolean
       }
       request_password_reset: {
@@ -851,7 +1078,13 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      payment_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "canceled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -966,6 +1199,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      payment_status: [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "canceled",
+      ],
+    },
   },
 } as const

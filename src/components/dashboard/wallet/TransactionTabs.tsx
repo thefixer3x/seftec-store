@@ -3,10 +3,11 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, Package } from 'lucide-react';
 import PaymentTransactions from './PaymentTransactions';
 import LoanTransactions from './LoanTransactions';
 import TradeFinanceTransactions from './TradeFinanceTransactions';
+import BulkPaymentTransactions from './BulkPaymentTransactions';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TransactionTabsProps {
@@ -40,6 +41,13 @@ const TransactionTabs: React.FC<TransactionTabsProps> = ({ activeTab, onTabChang
             >
               {isMobile ? 'Trade' : 'Trade Finance'}
             </TabsTrigger>
+            <TabsTrigger 
+              value="bulk" 
+              className={`rounded-md ${isMobile ? 'text-sm' : ''} ${activeTab === 'bulk' ? 'bg-white dark:bg-seftec-darkNavy text-seftec-navy dark:text-white shadow-sm' : 'text-seftec-navy/80 dark:text-white/80'}`}
+            >
+              <Package className="h-4 w-4 mr-1 inline-block" />
+              {isMobile ? 'Bulk' : 'Bulk Payments'}
+            </TabsTrigger>
           </TabsList>
 
           <div className="flex items-center space-x-2 w-full">
@@ -66,6 +74,10 @@ const TransactionTabs: React.FC<TransactionTabsProps> = ({ activeTab, onTabChang
 
         <TabsContent value="trade" className="mt-0 p-0">
           <TradeFinanceTransactions />
+        </TabsContent>
+
+        <TabsContent value="bulk" className="mt-0 p-0">
+          <BulkPaymentTransactions />
         </TabsContent>
       </Tabs>
     </div>

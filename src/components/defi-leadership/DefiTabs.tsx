@@ -21,15 +21,21 @@ export const DefiTabs: React.FC = () => {
           </div>
           
           <TabsContent value="leadership">
-            <MarketLeadershipSection />
+            <div className="animate-fadeIn">
+              <MarketLeadershipSection />
+            </div>
           </TabsContent>
           
           <TabsContent value="technical">
-            <TechnicalSolutionSection />
+            <div className="animate-fadeIn">
+              <TechnicalSolutionSection />
+            </div>
           </TabsContent>
           
           <TabsContent value="roadmap">
-            <StrategicRoadmapSection />
+            <div className="animate-fadeIn">
+              <StrategicRoadmapSection />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
