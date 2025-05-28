@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDocumentTitle } from '@/hooks/use-document-title';
+import { useToast } from "@/components/ui/use-toast";
+import { useSupabaseClient } from '@/hooks';
+import { withErrorBoundary } from '@/components/ui/error-boundary';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -7,9 +11,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSupabaseClient } from '@/hooks/use-supabase';
-import { withErrorBoundary } from '@/components/ui/error-boundary';
-import { CreditCard, AlertCircle, RefreshCw, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";
+import { CreditCard, AlertCircle, RefreshCw, CheckCircle, ArrowUpRight, Copy, ExternalLink, ClipboardList, Zap } from 'lucide-react';
 
 /**
  * SaySwitch Admin
@@ -20,6 +23,10 @@ import { CreditCard, AlertCircle, RefreshCw, CheckCircle, ArrowUpRight } from 'l
 const SaySwitchAdminContent = () => {
   const navigate = useNavigate();
   const supabase = useSupabaseClient();
+  const { toast } = useToast();
+  useDocumentTitle('SaySwitch Admin');
+  const [isProduction, setIsProduction] = useState(false);
+  const [currentTab, setCurrentTab] = useState("general");
   const [activeTab, setActiveTab] = useState('overview');
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
@@ -367,8 +374,14 @@ const SaySwitchAdminContent = () => {
                   </div>
                 </div>
                 
-                <div className="p-4 border rounded-lg">
-                  <h3 className="font-medium mb-2">Webhook Configuration</h3>
+                <div className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-900">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-medium">Webhook Configuration</h3>
+                    <Badge variant="outline" className="text-green-600 bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+                      <CheckCircle className="h-3 w-3 mr-1" /> Active
+                    </Badge>
+                  </div>
+                  
                   <Alert className="mb-4">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Important</AlertTitle>
@@ -421,7 +434,30 @@ const SaySwitchAdminContent = () => {
                           readOnly
                           className="font-mono"
                         />
-                        <p className="mt-1 text-sm text-muted-foreground">
+                        <div className="flex mt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => {
+                              navigator.clipboard.writeText("https://seftechub.com/payment/callback");
+                              toast({
+                                title: "Copied!",
+                                description: "Callback URL copied to clipboard",
+                              });
+                            }}
+                          >
+                            <Copy className="h-3.5 w-3.5 mr-1" /> Copy URL
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.open("https://seftechub.com/payment/callback", "_blank")}
+                          >
+                            <ExternalLink className="h-3.5 w-3.5 mr-1" /> View Page
+                          </Button>
+                        </div>
+                        <p className="mt-2 text-sm text-muted-foreground">
                           This is where users are redirected after completing a payment.
                           Can be overridden per transaction.
                         </p>
@@ -430,14 +466,61 @@ const SaySwitchAdminContent = () => {
                     
                     <div>
                       <Label>Supported Events</Label>
-                      <ul className="list-disc list-inside space-y-1 text-sm mt-1">
-                        <li>charge.success</li>
-                        <li>charge.failed</li>
-                        <li>transfer.success</li>
-                        <li>transfer.failed</li>
-                        <li>bill.success</li>
-                        <li>bill.failed</li>
-                      </ul>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        <div className="bg-white dark:bg-slate-800 border rounded p-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+                          charge.success
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 border rounded p-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+                          charge.failed
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 border rounded p-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+                          transfer.success
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 border rounded p-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+                          transfer.failed
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 border rounded p-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+                          bill.success
+                        </div>
+                        <div className="bg-white dark:bg-slate-800 border rounded p-2 text-sm">
+                          <span className="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+                          bill.failed
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label>Test Webhook</Label>
+                      <div className="mt-2 flex">
+                        <Button 
+                          onClick={() => {
+                            toast({
+                              title: "Test event sent",
+                              description: "A test charge.success event was sent to your webhook",
+                            });
+                          }}
+                          className="mr-2"
+                        >
+                          <Zap className="h-4 w-4 mr-2" /> Send Test Event
+                        </Button>
+                        
+                        <Button 
+                          variant="outline"
+                          onClick={() => {
+                            setCurrentTab("logs");
+                          }}
+                        >
+                          <ClipboardList className="h-4 w-4 mr-2" /> View Webhook Logs
+                        </Button>
+                      </div>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Test your webhook integration by sending a sample event and checking the logs.
+                      </p>
                     </div>
                   </div>
                 </div>

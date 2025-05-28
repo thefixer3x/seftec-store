@@ -1,69 +1,213 @@
-# Welcome to your Lovable project
+# SEFTEC Platform
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/0a3e7ae9-61af-4f2c-aa1b-96ad5fddc817
+SEFTEC is a comprehensive enterprise platform built with React, TypeScript, Vite, and Supabase. Deployed on GitHub Pages at https://thefixer3x.github.io/seftec-store, this multi-feature e-commerce and business management platform offers secure, regulated blockchain integration and enterprise-grade DeFi infrastructure.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+### Core Features
 
-**Use Lovable**
+- **E-commerce Marketplace**: Complete B2C shop with product listings, cart management, and checkout.
+- **Business Management Tools**: Enterprise tools for operations management.
+- **Financial Dashboard**: Comprehensive analytics and reporting.
+- **AI-powered Assistance**: Intelligent recommendations and business insights.
+- **Authentication System**: Secure user authentication and profile management.
+- **Subscription Services**: Premium features with tiered access levels.
+- **Dark/Light Mode**: UI theme toggle for user preference.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/0a3e7ae9-61af-4f2c-aa1b-96ad5fddc817) and start prompting.
+### Payment Integrations
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Stripe**: Primary payment processor for international transactions.
+- **SaySwitch**: Local payment gateway integration with secure signature verification.
+- **PayPal**: Additional payment option for international customers.
 
-**Use your preferred IDE**
+### Recent Major Updates (May 2025)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+#### 1. E-Doc Bank Statement Integration
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Nigerian bank connections with real-time transaction sync
+- AI-powered transaction categorization
+- Financial insights generation for premium users
+- GDPR-compliant consent management
 
-Follow these steps:
+#### 2. AI System Enhancements
+
+- Personalized product recommendations
+- Enhanced AI chat functionality
+- Developer tools for system administration
+- Consent management system for privacy compliance
+
+#### 3. Payment Gateway Expansions
+
+- SaySwitch integration for local payments
+- PayPal integration for international coverage
+- Enhanced admin dashboard for payment gateway management
+
+## Technical Stack
+
+- **Frontend**: React 18.3, TypeScript, Tailwind CSS, shadcn-ui components
+- **Backend**: Supabase (Authentication, Database, Edge Functions)
+- **State Management**: TanStack Query for data fetching and caching
+- **Routing**: React Router v6 for application routing
+- **UI Components**: Radix UI primitives with custom styling
+- **Deployment**: GitHub Pages via Lovable platform
+
+## Project Structure
+
+```
+/src
+  /components       # UI components organized by feature
+    /account        # User account management components
+    /ai             # AI-related components
+    /auth           # Authentication components
+    /dashboard      # Main dashboard features
+    /edoc           # Banking integration components
+    /ui             # Reusable UI primitives (shadcn-ui)
+  /features         # Modular feature architecture
+    /ai-assistant   # AI assistant implementation
+    /auth           # Authentication logic
+    /b2c-shop       # E-commerce shop features
+    /marketplace    # Marketplace functionality
+    /sayswitch      # SaySwitch payment integration
+  /hooks            # Custom React hooks
+  /pages            # Route pages
+  /supabase         # Backend configuration
+    /functions      # Edge functions
+    /migrations     # Database schema
+```
+
+## Installation and Setup
+
+### Prerequisites
+
+- Node.js 16+ and npm (or yarn)
+- Supabase account for backend services
+- API keys for integrated services (Stripe, SaySwitch, PayPal, etc.)
+
+### Local Development
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repository
+git clone https://github.com/thefixer3x/seftec-store.git
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Navigate to project directory
+cd seftec-store
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Set up environment variables (see .env.example)
+cp .env.example .env.local
+
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Required for full functionality:
 
-**Use GitHub Codespaces**
+```
+# Supabase
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Stripe
+VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
 
-## What technologies are used for this project?
+# SaySwitch
+VITE_SAYSWITCH_BASE_URL=your_sayswitch_base_url
+VITE_SAYSWITCH_PUBLIC_KEY=your_sayswitch_public_key
 
-This project is built with .
+# PayPal
+VITE_PAYPAL_CLIENT_ID=your_paypal_client_id
+VITE_PAYPAL_MODE=sandbox_or_production
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+The application is deployed to GitHub Pages using a custom deployment script:
 
-Simply open [Lovable](https://lovable.dev/projects/0a3e7ae9-61af-4f2c-aa1b-96ad5fddc817) and click on Share -> Publish.
+```sh
+# Build the application
+npm run build
 
-## I want to use a custom domain - is that possible?
+# Deploy to GitHub Pages
+npm run deploy
+```
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+## Feature Flags
+
+The application uses a feature flag system to enable/disable features. In development mode, all features are enabled by default. In production, features are controlled through the Supabase database.
+
+Key feature flags include:
+
+- `AI_RECOMMENDATIONS`: Controls AI-powered product recommendations
+- `SAYSWITCH_PAYMENTS`: Enables SaySwitch payment integration
+- `PAYPAL_PAYMENTS`: Enables PayPal payment integration
+- `EDOC_INTEGRATION`: Controls E-Doc bank statement integration
+
+## Testing
+
+```sh
+# Run unit tests
+npm run test
+
+# Run e2e tests
+npm run test:e2e
+```
+
+## Contributing
+
+1. Create a feature branch (`git checkout -b feature/amazing-feature`)
+2. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Push to the branch (`git push origin feature/amazing-feature`)
+4. Open a Pull Request
+
+## License
+
+Proprietary - All rights reserved by SEFTEC DYNAMICS.
+
+## Development Tools
+
+### IDE Integration
+
+This project is configured to work well with popular code editors:
+
+- VSCode with the following recommended extensions:
+  - ESLint
+  - Prettier
+  - Tailwind CSS IntelliSense
+  - TypeScript Vue Plugin
+
+### CI/CD Pipeline
+
+The project uses GitHub Actions for continuous integration and deployment:
+
+- Automated testing on push to main branch
+- Automatic deployment to GitHub Pages on successful build
+- Code quality checks and linting validation
+
+## Documentation
+
+### API Documentation
+
+API documentation for edge functions is available in the `/docs` directory.
+
+### Edge Functions
+
+Key edge functions include:
+
+- `/supabase/functions/stripe-webhook`: Handles Stripe webhook events
+- `/supabase/functions/sayswitch-webhook`: Processes SaySwitch payment notifications
+- `/supabase/functions/paypal-webhook`: Manages PayPal IPN messages
+- `/supabase/functions/edoc-webhook`: Handles E-Doc bank statement updates
+
+## Support and Contact
+
+For technical support or feature requests, please open an issue on the GitHub repository or contact the development team at support@seftec.store.
+
+---
+
+© 2025 SEFTEC DYNAMICS. All Rights Reserved.

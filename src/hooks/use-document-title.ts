@@ -1,13 +1,23 @@
-
 import { useEffect } from 'react';
 
-export const useDocumentTitle = (title: string) => {
+/**
+ * Hook to set the document title
+ * 
+ * This hook updates the document title when the component mounts
+ * and restores the original title when the component unmounts.
+ * 
+ * @param title - The title to set for the document
+ * @param restoreOnUnmount - Whether to restore the original title on unmount (default: true)
+ */
+export function useDocumentTitle(title: string, restoreOnUnmount: boolean = true) {
   useEffect(() => {
     const originalTitle = document.title;
     document.title = title;
     
     return () => {
-      document.title = originalTitle;
+      if (restoreOnUnmount) {
+        document.title = originalTitle;
+      }
     };
-  }, [title]);
-};
+  }, [title, restoreOnUnmount]);
+}
