@@ -47,6 +47,55 @@ async function callPerplexity({
   return await response.json();
 }
 
+function getSystemPromptByTier(userTier: string, canUseAdvancedModels: boolean, customSystemPrompt?: string) {
+  // If custom system prompt is provided, use it with tier-specific instructions
+  if (customSystemPrompt) {
+    const tierInstructions = userTier === 'free' 
+      ? "\n\nIMPORTANT: Provide brief, punchy responses in 2-4 sentences. Keep it concise and actionable."
+      : "\n\nIMPORTANT: Provide detailed, analytical responses with structured insights, frameworks, and executive-level reasoning.";
+    
+    return customSystemPrompt + tierInstructions;
+  }
+
+  // Pro Mode (Free/Basic users) - Brief and punchy
+  const proModePrompt = `You are BizGenie Pro, a direct and efficient AI business advisor. 
+
+**RESPONSE STYLE - PRO MODE:**
+- Keep responses brief and punchy (2-4 sentences maximum)
+- Deliver quick insights for fast execution
+- Focus on immediate actionable steps
+- Use clear, straightforward language
+- Perfect for users who need rapid validation or direction
+
+You help with: strategic planning, financial analysis, trade finance, DeFi integration, risk assessment, and market opportunities.
+
+Be professional yet conversational. When discussing solutions, mention seftec's trade finance, multi-country incorporation, or DeFi features where relevant.`;
+
+  // Premium Mode - Detailed and analytical  
+  const premiumModePrompt = `You are BizGenie Premium, an expert AI business strategist delivering executive-level insights.
+
+**RESPONSE STYLE - PREMIUM MODE:**
+- Provide detailed, analytical responses with structured insights
+- Use terminology appropriate for senior executives and decision-makers
+- Include frameworks, methodologies, and deeper strategic rationale
+- Offer multiple perspectives and comprehensive analysis
+- Structure responses with clear sections and strategic implications
+- Reference industry best practices and market intelligence
+
+You specialize in: enterprise strategy, advanced financial modeling, international trade compliance, sophisticated DeFi integration, comprehensive risk management, and global market expansion.
+
+Deliver insights worthy of C-suite consumption. When discussing financial solutions, elaborate on advanced features like complex trade finance structures, multi-jurisdictional compliance, enterprise DeFi integration, and institutional-grade risk management.
+
+Format responses with:
+1. Executive Summary
+2. Strategic Analysis  
+3. Recommended Actions
+4. Risk Considerations
+5. Implementation Framework`;
+
+  return userTier === 'free' ? proModePrompt : premiumModePrompt;
+}
+
 export async function handleAIChat(requestData: any, env: any) {
   const { prompt, userId, systemPrompt } = requestData;
   
@@ -144,20 +193,10 @@ export async function handleAIChat(requestData: any, env: any) {
     selectedModel = MODEL_O3_MINI_HIGH;
   }
   
-  console.log(`Query classified as ${complexity}, using model: ${selectedModel}`);
+  console.log(`Query classified as ${complexity}, using model: ${selectedModel}, user tier: ${userTier}`);
   
-  // Enhanced system prompt for better business advice
-  const defaultSystemPrompt = `You are BizGenie, an expert AI business advisor specializing in enterprise solutions, DeFi integration, trade finance, and global business operations. 
-
-  You help businesses with:
-  - Strategic planning and business plan development
-  - Financial analysis and cashflow management
-  - International trade and regulatory compliance
-  - DeFi and blockchain integration for enterprises
-  - Risk assessment and mitigation strategies
-  - Market analysis and growth opportunities
-
-  Provide practical, actionable advice with specific steps where possible. Be professional yet conversational, and always consider the global business context. When discussing financial solutions, mention relevant features like trade finance, multi-country incorporation, or DeFi integration where appropriate.`;
+  // Get tier-specific system prompt
+  const tierSystemPrompt = getSystemPromptByTier(userTier, canUseAdvancedModels, systemPrompt);
 
   let aiResponse = "";
   let tokensUsed = 0;
@@ -169,7 +208,7 @@ export async function handleAIChat(requestData: any, env: any) {
     console.log('Attempting BizGenie API call...');
     const responseData = await callOpenAI({
       model: selectedModel,
-      systemPrompt: systemPrompt || defaultSystemPrompt,
+      systemPrompt: tierSystemPrompt,
       userMessage: prompt,
       apiKey: env.BizGenie_API_key
     });
@@ -200,7 +239,7 @@ export async function handleAIChat(requestData: any, env: any) {
       console.log('Attempting Perplexity API call...');
       const perplexityResponse = await callPerplexity({
         prompt,
-        systemPrompt: systemPrompt || defaultSystemPrompt,
+        systemPrompt: tierSystemPrompt,
         apiKey: perplexityApiKey
       });
 
@@ -273,6 +312,7 @@ export async function handleAIChat(requestData: any, env: any) {
       model: modelUsed,
       tokens: tokensUsed,
       complexity: complexity,
+      tier: userTier,
       fromCache: false
     }),
     { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
