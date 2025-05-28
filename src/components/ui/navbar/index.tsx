@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import Logo from "./logo";
 import MobileToggle from "./mobile-toggle";
-import DesktopNav from "./desktop-nav";
+import { DesktopNav } from "./desktop-nav";
 import AuthSection from "./auth-section";
 import MobileMenu from "./mobile-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -58,7 +58,7 @@ export function MainNav({ items }: MainNavProps) {
       <div className="container mx-auto flex items-center justify-between px-4">
         <Logo />
         <MobileToggle isOpen={mobileMenuOpen} onClick={toggleMobileMenu} />
-        <DesktopNav items={items} />
+        <DesktopNav />
         <div className="flex items-center gap-4">
           <Link to="/cart" className="relative">
             <ShoppingCart className="h-5 w-5 text-gray-600 dark:text-white/90 hover:text-seftec-navy dark:hover:text-white transition-colors" />
