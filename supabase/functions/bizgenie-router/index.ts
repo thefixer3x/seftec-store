@@ -8,7 +8,8 @@ import { corsHeaders } from "./utils/cors.ts";
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
 const BizGenie_API_key = Deno.env.get('BizGenie_API_key') || '';
-const PERPLEXITY_API_KEY = Deno.env.get('PERPLEXITY_API_KEY') || '';
+// Support both possible environment variable names for Perplexity
+const PERPLEXITY_API_KEY = Deno.env.get('PERPLEXITY_API_KEY') || Deno.env.get('PERPLEXITY_API_SK') || '';
 
 // Main handler function
 serve(async (req) => {
@@ -26,7 +27,8 @@ serve(async (req) => {
         SUPABASE_URL, 
         SUPABASE_SERVICE_ROLE_KEY, 
         BizGenie_API_key,
-        PERPLEXITY_API_KEY 
+        PERPLEXITY_API_KEY,
+        PERPLEXITY_API_SK: PERPLEXITY_API_KEY // Pass the same value for both names
       });
     }
     
@@ -35,7 +37,8 @@ serve(async (req) => {
       SUPABASE_URL, 
       SUPABASE_SERVICE_ROLE_KEY, 
       BizGenie_API_key,
-      PERPLEXITY_API_KEY 
+      PERPLEXITY_API_KEY,
+      PERPLEXITY_API_SK: PERPLEXITY_API_KEY // Pass the same value for both names
     });
     
   } catch (error) {
