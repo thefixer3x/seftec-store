@@ -13,13 +13,9 @@ import RegistrationInfo from './business-profile/RegistrationInfo';
 import ShareholdersSection from './business-profile/ShareholdersSection';
 import DocumentUpload from './business-profile/DocumentUpload';
 
-interface BusinessProfileTabProps {
-  verificationStatus: 'pending' | 'verified' | 'unverified';
-  setVerificationStatus: (status: 'pending' | 'verified' | 'unverified') => void;
-}
-
-const BusinessProfileTab = ({ verificationStatus, setVerificationStatus }: BusinessProfileTabProps) => {
+const BusinessProfileTab = () => {
   const [shareholders, setShareholders] = useState<{name: string, ownership: string}[]>([]);
+  const [verificationStatus, setVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
 
   const businessForm = useForm<BusinessFormValues>({
     resolver: zodResolver(businessFormSchema),

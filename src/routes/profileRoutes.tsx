@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
@@ -17,6 +18,7 @@ import CustomersPage from '@/pages/CustomersPage';
 import TransactionPage from '@/pages/TransactionPage';
 import FinancialPage from '@/pages/FinancialPage';
 import DeveloperTools from '@/pages/DeveloperTools';
+import SiteMapPage from '@/pages/SiteMapPage';
 // Import the ProfileSettings component
 import { ProfileSettings } from '@/components/account/ProfileSettings';
 // Import components using default imports
@@ -68,6 +70,7 @@ export const profileRoutes = (
       
       {/* Developer Tools - Super Admin access only */}
       <Route path="developer" element={<DeveloperTools />} />
+      <Route path="sitemap" element={<SiteMapPage />} />
     </Route>
   </>
 );
