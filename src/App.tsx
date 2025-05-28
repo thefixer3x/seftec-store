@@ -1,159 +1,129 @@
-
-import React, { useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, lazy, Suspense } from 'react';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
-
-// Public pages
-import Index from '@/pages/Index';
-import About from '@/pages/About';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import Contact from '@/pages/Contact';
-import NotFound from '@/pages/NotFound';
-import Solutions from '@/pages/Solutions';
-import ValuePropositions from '@/pages/ValuePropositions';
-import ResetPassword from '@/pages/ResetPassword';
-import BizTools from '@/pages/BizTools';
-import FAQ from '@/pages/FAQ';
-import ComingSoon from '@/pages/ComingSoon';
-import Shop from '@/pages/Shop';
-import Cart from '@/pages/Cart';
-import Products from '@/pages/Products';
-import Orders from '@/pages/Orders';
-import BizGenie from '@/pages/BizGenie';
-import Terms from '@/pages/Terms';
-import Privacy from '@/pages/Privacy';
-import Cookies from '@/pages/Cookies';
-import Security from '@/pages/Security';
-import DefiLeadership from '@/pages/DefiLeadership';
-
-// Auth pages
-import Auth from '@/pages/Auth';
-import AuthCallback from '@/pages/AuthCallback';
-import SessionManagement from '@/pages/SessionManagement';
-import RoleManagement from '@/pages/RoleManagement';
-
-// Test pages moved to /developer/test
-import EdgeFunctionTest from '@/pages/EdgeFunctionTest';
-
-// Protected pages
-import Dashboard from '@/pages/Dashboard';
-import Profile from '@/pages/Profile';
-
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
 import { ProtectedLayout } from './components/layout/ProtectedLayout';
 
+/* ─── Core (eager-loaded) ─────────────────────────────────────────── */
+import Index from '@/pages/Index';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import NotFound from '@/pages/NotFound';
+
+/* ─── Lazy-loaded pages ────────────────────────────────────────────── */
+const Solutions          = lazy(() => import('@/pages/Solutions'));
+const ValuePropositions  = lazy(() => import('@/pages/ValuePropositions'));
+const ResetPassword      = lazy(() => import('@/pages/ResetPassword'));
+const BizTools           = lazy(() => import('@/pages/BizTools'));
+const FAQ                = lazy(() => import('@/pages/FAQ'));
+const ComingSoon         = lazy(() => import('@/pages/ComingSoon'));
+const Shop               = lazy(() => import('@/pages/Shop'));
+const Cart               = lazy(() => import('@/pages/Cart'));
+const Products           = lazy(() => import('@/pages/Products'));
+const Orders             = lazy(() => import('@/pages/Orders'));
+const BizGenie           = lazy(() => import('@/pages/BizGenie'));
+const EdgeFunctionTest   = lazy(() => import('@/pages/EdgeFunctionTest'));
+const Terms              = lazy(() => import('@/pages/Terms'));
+const Privacy            = lazy(() => import('@/pages/Privacy'));
+const Cookies            = lazy(() => import('@/pages/Cookies'));
+const Security           = lazy(() => import('@/pages/Security'));
+const DefiLeadership     = lazy(() => import('@/pages/DefiLeadership'));
+
+/* ─── Auth / management (lazy too) ─────────────────────────────────── */
+const Auth               = lazy(() => import('@/pages/Auth'));
+const AuthCallback       = lazy(() => import('@/pages/AuthCallback'));
+const SessionManagement  = lazy(() => import('@/pages/SessionManagement'));
+const RoleManagement     = lazy(() => import('@/pages/RoleManagement'));
+
+/* ─── Protected dashboards ─────────────────────────────────────────── */
+const Dashboard          = lazy(() => import('@/pages/Dashboard'));
+const Profile            = lazy(() => import('@/pages/Profile'));
+
 function App() {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate          = useNavigate();
+  const location          = useLocation();
 
   useEffect(() => {
-    // Log authentication status changes for debugging
-    console.log("App - Auth status:", { user: !!user, loading, path: location.pathname });
-    
     if (!loading) {
-      // Define public routes that don't require authentication
       const publicRoutes = [
-        '/', '/about', '/contact', '/login', '/register', '/reset-password', 
-        '/solutions', '/value-propositions', '/faq', '/shop', '/products', 
+        '/', '/about', '/contact', '/login', '/register', '/reset-password',
+        '/solutions', '/value-propositions', '/faq', '/shop', '/products',
         '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
-        '/developer/test', '/auth', '/auth-callback'
+        '/coming-soon', '/edge-function-test', '/auth', '/auth-callback'
       ];
-      
-      const isPublicRoute = publicRoutes.some(route => 
-        location.pathname === route || location.pathname.startsWith(`${route}/`)
-      );
-      
-      // Handle authentication redirects
+
+      const isPublic = publicRoutes.some(r => location.pathname === r || location.pathname.startsWith(`${r}/`));
+
       if (user) {
-        // If user is logged in and tries to access login/register, redirect to dashboard
         if (location.pathname === '/login' || location.pathname === '/register') {
-          console.log("App - User already logged in, redirecting to dashboard");
           navigate('/profile/dashboard', { replace: true });
         }
-      } else if (!isPublicRoute) {
-        // If user is not logged in and tries to access protected route, redirect to login
-        console.log("App - User not logged in, redirecting to login with state:", location.pathname);
-        navigate('/auth', { 
-          state: { from: location.pathname },
-          replace: true 
-        });
+      } else if (!isPublic) {
+        navigate('/auth', { state: { from: location.pathname }, replace: true });
       }
     }
   }, [user, loading, navigate, location.pathname]);
 
   return (
     <>
-      <Routes>
-        {/* ===== PUBLIC ROUTES ===== */}
-        {/* Main marketing and information pages */}
-        <Route path="/" element={<Index />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/solutions" element={<Solutions />} />
-        <Route path="/value-propositions" element={<ValuePropositions />} />
-        <Route path="/biztools" element={<BizTools />} />
-        <Route path="/bizgenie" element={<BizGenie />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/coming-soon" element={<ComingSoon />} />
-        <Route path="/defi-leadership" element={<DefiLeadership />} />
-        
-        {/* E-commerce public pages */}
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/products" element={<Products />} />
-        
-        {/* Authentication pages */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/auth-callback" element={<AuthCallback />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        
-        {/* Legal and policy pages */}
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/cookies" element={<Cookies />} />
-        <Route path="/security" element={<Security />} />
-        
-        {/* ===== DEVELOPER TEST ROUTES ===== */}
-        <Route path="/developer/test/edge-function" element={<EdgeFunctionTest />} />
-        
-        {/* ===== PROTECTED ROUTES ===== */}
-        {/* User-specific pages */}
-        <Route path="/orders" element={
-          <ProtectedLayout>
-            <Orders />
-          </ProtectedLayout>
-        } />
-        
-        <Route path="/sessions" element={
-          <ProtectedLayout>
-            <SessionManagement />
-          </ProtectedLayout>
-        } />
-        
-        <Route path="/roles" element={
-          <ProtectedLayout>
-            <RoleManagement />
-          </ProtectedLayout>
-        } />
-        
-        {/* Dashboard routes */}
-        <Route path="/dashboard/*" element={
-          <ProtectedLayout>
-            <Dashboard />
-          </ProtectedLayout>
-        } />
-        
-        {/* Profile routes imported from profileRoutes.tsx */}
-        {profileRoutes}
-        
-        {/* Fallback route for 404 */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={
+        <div className="flex h-screen items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
+        </div>
+      }>
+        <Routes>
+          {/* Public marketing */}
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/solutions" element={<Solutions />} />
+          <Route path="/value-propositions" element={<ValuePropositions />} />
+          <Route path="/biztools" element={<BizTools />} />
+          <Route path="/bizgenie" element={<BizGenie />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/defi-leadership" element={<DefiLeadership />} />
+
+          {/* E-commerce */}
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/products" element={<Products />} />
+
+          {/* Authentication */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/auth-callback" element={<AuthCallback />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Legal */}
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/cookies" element={<Cookies />} />
+          <Route path="/security" element={<Security />} />
+
+          {/* Dev / test */}
+          <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
+
+          {/* Protected (wrap or sub-route) */}
+          <Route path="/orders" element={<ProtectedLayout><Orders /></ProtectedLayout>} />
+          <Route path="/sessions" element={<ProtectedLayout><SessionManagement /></ProtectedLayout>} />
+          <Route path="/roles" element={<ProtectedLayout><RoleManagement /></ProtectedLayout>} />
+
+          <Route path="/dashboard/*" element={<ProtectedLayout><Dashboard /></ProtectedLayout>} />
+
+          {/* Nested profile routes */}
+          {profileRoutes}
+
+          {/* 404 */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+
       <Toaster />
     </>
   );

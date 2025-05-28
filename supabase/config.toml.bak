@@ -1,0 +1,118 @@
+# A string used to distinguish different Supabase projects on the same host. Defaults to the
+# working directory name when running `supabase init`.
+project_id = "ptnrwrgzrsbocgxlpvhd"
+
+# Config specific to the Supabase CLI.
+[tools]
+# Database migration files location
+migrations_dir = "supabase/migrations"
+
+# The name of the schema that will be used for the in-app API
+schemas = ["public", "storage", "graphql_public"]
+
+# Configures the database migration engine to use for generating and applying migrations.
+migration_engine = "sql"
+
+[functions.ai-chat]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.bizgenie-router]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.personalized-ai-chat]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.cache-cleanup]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+# Disable JWT authentication for this function since it will be called by a scheduled job
+verify_jwt = false
+
+[functions.setup-cron-jobs]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-subscription]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-connect]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-issuing]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+
+[functions.stripe-webhook]
+# Specifies the maximum amount of time (in seconds) that the function can run.
+timeout_seconds = 60
+# Disable JWT authentication for this function since it will be called by Stripe
+verify_jwt = false
+
+[api]
+# Port to use for the local API URL.
+port = 54321
+# Additional environment variables to be set, useful for local development
+env_variables = []
+
+# Configures the API schema to use for the application functionality base path.
+schemas = ["public", "storage", "graphql_public"]
+
+# Extra schemas to add to the search_path of every request.
+extra_search_path = ["extensions"]
+
+# The maximum number of rows returns from a view, table, or stored procedure. Limits payload size
+# for accidental or malicious requests.
+max_rows = 1000
+
+[api.rate_limits]
+# Enabling rate limiting will enforce request limits per end user (IP, auth, etc.)
+enabled = true
+
+[db]
+# Port to use for the local database URL.
+port = 54322
+# The database major version to use. This has to be the same as your remote database's. Run `SHOW
+# server_version;` on the remote database to check.
+major_version = 15
+
+# Configures the database version to use for local development and CI. The database version is used
+# to validate the migration files against a specific version of the database.
+version = "15.1.0.25"
+
+# The name of the default database scheduler to use.
+scheduler = "pg_cron"
+
+# The connection string Deno will use to connect to the database.
+connection_string = "postgres://postgres:postgres@localhost:54322/postgres"
+
+# Enables handling of native math operators in JSON-encoded columns.
+native_json_serialization = true
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 15
+max_client_conn = 100
+
+[studio]
+enabled = true
+
+# Port to use for Supabase Studio.
+port = 54323
+
+# External URL of the API used by Supabase Studio.
+api_url = "http://localhost"
+
+# API Key used by Supabase Studio to talk to the local API. This is different from the anon and
+# service keys of your remote database.
+internalApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU"
+
+[auth]
+# Port to use for the Auth API.
+port = 54324

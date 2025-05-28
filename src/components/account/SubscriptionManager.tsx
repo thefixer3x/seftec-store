@@ -175,6 +175,7 @@ const SubscriptionManager = () => {
               'Unlimited transactions',
               'Single virtual card',
               'Basic analytics',
+              'Bank statement analysis',
               'Standard support'
             ]}
             current={subscription?.plan_name === 'basic'}
@@ -192,6 +193,8 @@ const SubscriptionManager = () => {
               'Unlimited transactions',
               'Multiple virtual cards',
               'Advanced analytics',
+              'AI-powered bank insights',
+              'Transaction categorization',
               'Priority support'
             ]}
             current={subscription?.plan_name === 'premium'}
