@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_recommendations: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          product_id: string | null
+          reason: string | null
+          recommendation_type: string | null
+          score: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          product_id?: string | null
+          reason?: string | null
+          recommendation_type?: string | null
+          score?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          product_id?: string | null
+          reason?: string | null
+          recommendation_type?: string | null
+          score?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_recommendations_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_response_cache: {
         Row: {
           created_at: string
@@ -165,6 +206,376 @@ export type Database = {
           total_amount?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      business_financial_insights: {
+        Row: {
+          acknowledged_at: string | null
+          action_items: Json | null
+          completed_at: string | null
+          consent_id: string | null
+          created_at: string | null
+          description: string
+          due_date: string | null
+          id: string
+          impact_score: number | null
+          insight_type: string
+          potential_savings: number | null
+          priority_level: string | null
+          recommendation: string | null
+          status: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          action_items?: Json | null
+          completed_at?: string | null
+          consent_id?: string | null
+          created_at?: string | null
+          description: string
+          due_date?: string | null
+          id?: string
+          impact_score?: number | null
+          insight_type: string
+          potential_savings?: number | null
+          priority_level?: string | null
+          recommendation?: string | null
+          status?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          acknowledged_at?: string | null
+          action_items?: Json | null
+          completed_at?: string | null
+          consent_id?: string | null
+          created_at?: string | null
+          description?: string
+          due_date?: string | null
+          id?: string
+          impact_score?: number | null
+          insight_type?: string
+          potential_savings?: number | null
+          priority_level?: string | null
+          recommendation?: string | null
+          status?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_financial_insights_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "edoc_consents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_profiles: {
+        Row: {
+          address: Json | null
+          business_name: string | null
+          business_type: string | null
+          contact_info: Json | null
+          created_at: string | null
+          edoc_markup_pct: number | null
+          id: string
+          registration_number: string | null
+          tax_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: Json | null
+          business_name?: string | null
+          business_type?: string | null
+          contact_info?: Json | null
+          created_at?: string | null
+          edoc_markup_pct?: number | null
+          id?: string
+          registration_number?: string | null
+          tax_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: Json | null
+          business_name?: string | null
+          business_type?: string | null
+          contact_info?: Json | null
+          created_at?: string | null
+          edoc_markup_pct?: number | null
+          id?: string
+          registration_number?: string | null
+          tax_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      edoc_consents: {
+        Row: {
+          account_name: string | null
+          account_number_masked: string | null
+          bank_code: string | null
+          bank_name: string
+          business_profile_id: string | null
+          consent_status: string
+          consent_url: string | null
+          created_at: string | null
+          edoc_consent_id: string | null
+          error_message: string | null
+          expires_at: string | null
+          id: string
+          import_complete: boolean | null
+          last_sync_at: string | null
+          raw_response: Json | null
+          redirect_url: string | null
+          sync_frequency: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_name?: string | null
+          account_number_masked?: string | null
+          bank_code?: string | null
+          bank_name: string
+          business_profile_id?: string | null
+          consent_status?: string
+          consent_url?: string | null
+          created_at?: string | null
+          edoc_consent_id?: string | null
+          error_message?: string | null
+          expires_at?: string | null
+          id?: string
+          import_complete?: boolean | null
+          last_sync_at?: string | null
+          raw_response?: Json | null
+          redirect_url?: string | null
+          sync_frequency?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_name?: string | null
+          account_number_masked?: string | null
+          bank_code?: string | null
+          bank_name?: string
+          business_profile_id?: string | null
+          consent_status?: string
+          consent_url?: string | null
+          created_at?: string | null
+          edoc_consent_id?: string | null
+          error_message?: string | null
+          expires_at?: string | null
+          id?: string
+          import_complete?: boolean | null
+          last_sync_at?: string | null
+          raw_response?: Json | null
+          redirect_url?: string | null
+          sync_frequency?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edoc_consents_business_profile_id_fkey"
+            columns: ["business_profile_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      edoc_financial_analysis: {
+        Row: {
+          analysis_data: Json
+          analysis_period_end: string
+          analysis_period_start: string
+          analysis_type: string
+          confidence_score: number | null
+          consent_id: string | null
+          created_at: string | null
+          id: string
+          insights: Json | null
+          recommendations: Json | null
+        }
+        Insert: {
+          analysis_data: Json
+          analysis_period_end: string
+          analysis_period_start: string
+          analysis_type: string
+          confidence_score?: number | null
+          consent_id?: string | null
+          created_at?: string | null
+          id?: string
+          insights?: Json | null
+          recommendations?: Json | null
+        }
+        Update: {
+          analysis_data?: Json
+          analysis_period_end?: string
+          analysis_period_start?: string
+          analysis_type?: string
+          confidence_score?: number | null
+          consent_id?: string | null
+          created_at?: string | null
+          id?: string
+          insights?: Json | null
+          recommendations?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edoc_financial_analysis_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "edoc_consents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      edoc_transactions: {
+        Row: {
+          amount: number
+          category: string | null
+          confidence_score: number | null
+          consent_id: string | null
+          created_at: string | null
+          edoc_transaction_id: string | null
+          id: string
+          is_credit: boolean
+          merchant_name: string | null
+          narration: string | null
+          raw_data: Json | null
+          reference_number: string | null
+          running_balance: number | null
+          subcategory: string | null
+          tags: string[] | null
+          transaction_date: string
+          transaction_type: string | null
+        }
+        Insert: {
+          amount: number
+          category?: string | null
+          confidence_score?: number | null
+          consent_id?: string | null
+          created_at?: string | null
+          edoc_transaction_id?: string | null
+          id?: string
+          is_credit: boolean
+          merchant_name?: string | null
+          narration?: string | null
+          raw_data?: Json | null
+          reference_number?: string | null
+          running_balance?: number | null
+          subcategory?: string | null
+          tags?: string[] | null
+          transaction_date: string
+          transaction_type?: string | null
+        }
+        Update: {
+          amount?: number
+          category?: string | null
+          confidence_score?: number | null
+          consent_id?: string | null
+          created_at?: string | null
+          edoc_transaction_id?: string | null
+          id?: string
+          is_credit?: boolean
+          merchant_name?: string | null
+          narration?: string | null
+          raw_data?: Json | null
+          reference_number?: string | null
+          running_balance?: number | null
+          subcategory?: string | null
+          tags?: string[] | null
+          transaction_date?: string
+          transaction_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edoc_transactions_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "edoc_consents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      edoc_usage_logs: {
+        Row: {
+          api_calls_count: number | null
+          consent_id: string | null
+          cost_usd: number | null
+          created_at: string | null
+          id: string
+          markup_applied: number | null
+          operation_type: string
+          total_cost_usd: number | null
+          usage_date: string
+          user_id: string | null
+        }
+        Insert: {
+          api_calls_count?: number | null
+          consent_id?: string | null
+          cost_usd?: number | null
+          created_at?: string | null
+          id?: string
+          markup_applied?: number | null
+          operation_type: string
+          total_cost_usd?: number | null
+          usage_date?: string
+          user_id?: string | null
+        }
+        Update: {
+          api_calls_count?: number | null
+          consent_id?: string | null
+          cost_usd?: number | null
+          created_at?: string | null
+          id?: string
+          markup_applied?: number | null
+          operation_type?: string
+          total_cost_usd?: number | null
+          usage_date?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edoc_usage_logs_consent_id_fkey"
+            columns: ["consent_id"]
+            isOneToOne: false
+            referencedRelation: "edoc_consents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_flags: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          enabled: boolean | null
+          name: string
+          rollout_pct: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          enabled?: boolean | null
+          name: string
+          rollout_pct?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          enabled?: boolean | null
+          name?: string
+          rollout_pct?: number | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -883,6 +1294,105 @@ export type Database = {
         }
         Relationships: []
       }
+      system_error_logs: {
+        Row: {
+          created_at: string | null
+          error_context: Json | null
+          error_message: string
+          id: string
+          resolved: boolean | null
+          resolved_at: string | null
+          resolved_by: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_context?: Json | null
+          error_message: string
+          id?: string
+          resolved?: boolean | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_context?: Json | null
+          error_message?: string
+          id?: string
+          resolved?: boolean | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
+      user_activity_logs: {
+        Row: {
+          action_data: Json | null
+          action_type: string
+          ai_processed: boolean | null
+          created_at: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action_data?: Json | null
+          action_type: string
+          ai_processed?: boolean | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action_data?: Json | null
+          action_type?: string
+          ai_processed?: boolean | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_consents: {
+        Row: {
+          consent_type: string
+          created_at: string | null
+          granted: boolean | null
+          granted_at: string | null
+          id: string
+          ip_address: unknown | null
+          revoked_at: string | null
+          updated_at: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consent_type: string
+          created_at?: string | null
+          granted?: boolean | null
+          granted_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          revoked_at?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consent_type?: string
+          created_at?: string | null
+          granted?: boolean | null
+          granted_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          revoked_at?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           business_size: string | null
@@ -927,6 +1437,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_product_interactions: {
+        Row: {
+          created_at: string | null
+          id: string
+          interaction_data: Json | null
+          interaction_type: string
+          product_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          interaction_data?: Json | null
+          interaction_type: string
+          product_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          interaction_data?: Json | null
+          interaction_type?: string
+          product_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_product_interactions_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -1053,6 +1598,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      categorize_transaction: {
+        Args: { p_narration: string; p_amount: number; p_is_credit: boolean }
+        Returns: {
+          category: string
+          subcategory: string
+          confidence: number
+        }[]
+      }
+      cleanup_expired_recommendations: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_cash_flow_summary: {
+        Args: { p_consent_id: string; p_days_back?: number }
+        Returns: {
+          period_start: string
+          period_end: string
+          total_inflow: number
+          total_outflow: number
+          net_flow: number
+          transaction_count: number
+          avg_daily_balance: number
+        }[]
+      }
       get_product_image_url: {
         Args: { image_path: string }
         Returns: string
