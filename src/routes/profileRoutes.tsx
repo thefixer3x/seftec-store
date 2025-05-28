@@ -69,7 +69,7 @@ export const profileRoutes = (
       <Route path="customers" element={<CustomersPage />} />
       <Route path="transaction" element={<TransactionPage />} />
       
-      {/* Developer Tools - Super Admin access only */}
+      {/* Developer Tools and Site Map - Super Admin access only */}
       <Route path="developer" element={<DeveloperTools />} />
       <Route path="sitemap" element={<SiteMapPage />} />
     </Route>
