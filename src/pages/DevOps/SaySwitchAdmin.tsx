@@ -367,6 +367,81 @@ const SaySwitchAdminContent = () => {
                   </div>
                 </div>
                 
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-medium mb-2">Webhook Configuration</h3>
+                  <Alert className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Important</AlertTitle>
+                    <AlertDescription>
+                      Configure these webhook settings in your SaySwitch dashboard to receive real-time payment notifications.
+                    </AlertDescription>
+                  </Alert>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="webhookUrl">Webhook URL</Label>
+                      <div className="flex mt-1">
+                        <Input
+                          id="webhookUrl"
+                          value="https://ptnrwrgzrsbocgxlpvhd.supabase.co/functions/v1/sayswitch-webhook"
+                          readOnly
+                          className="font-mono flex-1"
+                        />
+                        <Button
+                          variant="outline"
+                          className="ml-2"
+                          onClick={() => {
+                            navigator.clipboard.writeText("https://ptnrwrgzrsbocgxlpvhd.supabase.co/functions/v1/sayswitch-webhook");
+                            alert("Webhook URL copied to clipboard");
+                          }}
+                        >
+                          Copy
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label>Required Headers</Label>
+                      <div className="mt-1 p-3 bg-secondary/20 rounded font-mono text-xs">
+                        <div className="mb-1">X-SaySwitch-Signature: [HMAC-SHA512 signature]</div>
+                        <div>Content-Type: application/json</div>
+                      </div>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        The webhook signature is automatically calculated using your public key and the payload, 
+                        following SaySwitch's signing requirements. Our function validates this signature to ensure 
+                        security.  
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <Label>Callback URL (Browser Redirect)</Label>
+                      <div className="mt-1">
+                        <Input
+                          value="https://seftechub.com/payment/callback"
+                          readOnly
+                          className="font-mono"
+                        />
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          This is where users are redirected after completing a payment.
+                          Can be overridden per transaction.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label>Supported Events</Label>
+                      <ul className="list-disc list-inside space-y-1 text-sm mt-1">
+                        <li>charge.success</li>
+                        <li>charge.failed</li>
+                        <li>transfer.success</li>
+                        <li>transfer.failed</li>
+                        <li>bill.success</li>
+                        <li>bill.failed</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
                 <Button
                   variant="default"
                   onClick={() => window.open('https://ptnrwrgzrsbocgxlpvhd.supabase.co/dashboard/settings/general', '_blank')}

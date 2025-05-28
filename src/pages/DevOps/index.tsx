@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/context/AuthContext';
 import { useSupabaseClient } from '@/hooks/use-supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { withErrorBoundary } from '@/components/ui/error-boundary';
 import {
   Settings,
@@ -32,7 +33,7 @@ import {
 const DevOpsDashboardContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient() as SupabaseClient;
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [paymentStats, setPaymentStats] = useState({
@@ -414,7 +415,7 @@ const DevOpsDashboardContent = () => {
                     <Button 
                       variant="default" 
                       size="sm"
-                      onClick={() => navigate('/devops/payment-setup/paypal')}
+                      onClick={() => navigate('/devops/PayPalSetup')}
                     >
                       Set Up
                     </Button>
