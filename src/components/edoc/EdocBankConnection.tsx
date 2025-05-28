@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,12 +7,11 @@ import { AlertCircle, CheckCircle, Clock, ExternalLink, Trash2 } from 'lucide-re
 import { useEdocIntegration } from '@/hooks/useEdocIntegration';
 import { BankConnectionForm } from './BankConnectionForm';
 
-export const EdocBankConnection = () => {
+const EdocBankConnection = () => {
   const {
     loading,
     error,
-    consents,
-    getConsents,
+    listBankConsents,
     initializeBankConsent,
     checkConsentStatus,
     syncTransactions,
@@ -19,10 +19,18 @@ export const EdocBankConnection = () => {
   } = useEdocIntegration();
 
   const [showConnectionForm, setShowConnectionForm] = useState(false);
+  const [consents, setConsents] = useState<any[]>([]);
 
   useEffect(() => {
-    getConsents();
-  }, [getConsents]);
+    fetchConsents();
+  }, []);
+
+  const fetchConsents = async () => {
+    const result = await listBankConsents();
+    if (result) {
+      setConsents(result);
+    }
+  };
 
   const handleStartConnection = () => {
     setShowConnectionForm(true);
@@ -32,16 +40,16 @@ export const EdocBankConnection = () => {
     setShowConnectionForm(false);
   };
 
-  const handleSubmitConnection = async (bankId: string) => {
-    await initializeBankConsent(bankId);
+  const handleSubmitConnection = async (email: string, bankCode: string, bankName: string) => {
+    await initializeBankConsent(email, bankCode, bankName);
     setShowConnectionForm(false);
-    getConsents();
+    fetchConsents();
   };
 
   const handleDeleteConsent = async (consentId: string) => {
     // Implementation for deleting consent would go here
     console.log(`Deleting consent: ${consentId}`);
-    await getConsents();
+    await fetchConsents();
   };
 
   const handleSyncTransactions = async (consentId: string) => {
@@ -92,8 +100,10 @@ export const EdocBankConnection = () => {
 
           {showConnectionForm ? (
             <BankConnectionForm 
-              onSubmit={handleSubmitConnection}
-              onCancel={handleCancelConnection}
+              onSuccess={() => {
+                setShowConnectionForm(false);
+                fetchConsents();
+              }}
             />
           ) : (
             <>
@@ -105,16 +115,16 @@ export const EdocBankConnection = () => {
                       className="p-4 border rounded-lg flex items-center justify-between"
                     >
                       <div>
-                        <div className="font-medium">{consent.bankName}</div>
+                        <div className="font-medium">{consent.bank_name}</div>
                         <div className="text-sm text-gray-500">
-                          Connected: {new Date(consent.createdAt).toLocaleDateString()}
+                          Connected: {new Date(consent.created_at).toLocaleDateString()}
                         </div>
                         <div className="mt-1">
-                          {renderConsentStatus(consent.status)}
+                          {renderConsentStatus(consent.consent_status)}
                         </div>
                       </div>
                       <div className="flex space-x-2">
-                        {consent.status === 'ACTIVE' && (
+                        {consent.consent_status === 'active' && (
                           <Button 
                             variant="outline" 
                             size="sm"
@@ -123,7 +133,7 @@ export const EdocBankConnection = () => {
                             Sync Data
                           </Button>
                         )}
-                        {consent.status === 'PENDING' && (
+                        {consent.consent_status === 'created' && (
                           <Button 
                             variant="outline" 
                             size="sm"
@@ -186,7 +196,7 @@ export const EdocBankConnection = () => {
         </CardContent>
       </Card>
 
-      {consents.some(consent => consent.status === 'ACTIVE') && (
+      {consents.some(consent => consent.consent_status === 'active') && (
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Data Access Permissions</CardTitle>
@@ -239,3 +249,5 @@ export const EdocBankConnection = () => {
     </div>
   );
 };
+
+export default EdocBankConnection;
