@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Building2, Shield, FileText, Coins, Brain, CreditCard, Store, DollarSign, Code } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { faqCategories } from '@/data/faqData';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const iconMap = {
   Building2,
@@ -33,6 +34,7 @@ interface EnhancedFAQSectionProps {
 export function EnhancedFAQSection({ className }: EnhancedFAQSectionProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const isMobile = useIsMobile();
 
   const filteredCategories = faqCategories.map(category => ({
     ...category,
@@ -76,22 +78,55 @@ export function EnhancedFAQSection({ className }: EnhancedFAQSectionProps) {
         </div>
 
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 mb-8">
-            <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
-            {faqCategories.map((category, index) => {
-              const IconComponent = iconMap[category.icon as keyof typeof iconMap];
-              return (
-                <TabsTrigger 
-                  key={index} 
-                  value={category.title.toLowerCase().replace(/\s+/g, '-')}
-                  className="text-xs"
-                >
-                  <IconComponent className="h-3 w-3 mr-1" />
-                  <span className="hidden sm:inline">{category.title}</span>
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
+          {/* Mobile-First Responsive Tabs */}
+          <div className="mb-8">
+            <TabsList className={cn(
+              "w-full p-1 h-auto",
+              isMobile 
+                ? "flex flex-col space-y-1" 
+                : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-10 gap-1"
+            )}>
+              <TabsTrigger 
+                value="all" 
+                className={cn(
+                  "flex items-center justify-center gap-2 text-xs font-medium px-3 py-2",
+                  isMobile ? "w-full" : "min-w-0"
+                )}
+              >
+                <span>All Categories</span>
+                <Badge variant="secondary" className="text-xs">
+                  {faqCategories.reduce((total, cat) => total + cat.items.length, 0)}
+                </Badge>
+              </TabsTrigger>
+              
+              {faqCategories.map((category, index) => {
+                const IconComponent = iconMap[category.icon as keyof typeof iconMap];
+                const categoryKey = category.title.toLowerCase().replace(/\s+/g, '-');
+                
+                return (
+                  <TabsTrigger 
+                    key={index} 
+                    value={categoryKey}
+                    className={cn(
+                      "flex items-center justify-center gap-2 text-xs font-medium px-3 py-2",
+                      isMobile ? "w-full" : "min-w-0"
+                    )}
+                  >
+                    <IconComponent className="h-3 w-3 flex-shrink-0" />
+                    <span className={cn(
+                      "truncate",
+                      isMobile ? "text-sm" : "hidden sm:inline"
+                    )}>
+                      {category.title}
+                    </span>
+                    <Badge variant="outline" className="text-xs ml-auto">
+                      {category.items.length}
+                    </Badge>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
 
           <TabsContent value="all">
             {searchTerm ? (
@@ -187,7 +222,7 @@ export function EnhancedFAQSection({ className }: EnhancedFAQSectionProps) {
                             {item.question}
                           </span>
                           {item.tags && (
-                            <div className="flex gap-1 mt-2">
+                            <div className="flex gap-1 mt-2 flex-wrap">
                               {item.tags.slice(0, 3).map((tag, tagIndex) => (
                                 <Badge key={tagIndex} variant="outline" className="text-xs">
                                   {tag}
