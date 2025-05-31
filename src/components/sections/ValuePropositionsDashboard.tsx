@@ -49,80 +49,106 @@ const ValuePropositionsDashboard = () => {
   );
   
   return (
-    <section className="py-16 px-4 sm:px-6 bg-white dark:bg-seftec-darkNavy">
+    <section className="py-20 px-4 sm:px-6 bg-gradient-to-br from-white via-seftec-slate/10 to-white dark:from-seftec-darkNavy dark:via-seftec-navy/30 dark:to-seftec-darkNavy">
       <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-4xl font-bold text-seftec-navy dark:text-white mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold text-seftec-navy dark:text-white mb-6">
             Powerful Tools for Modern Businesses
           </h2>
-          <p className="text-base md:text-lg text-seftec-navy/70 dark:text-white/70 max-w-3xl mx-auto">
-            Our platform provides you with cutting-edge tools to monitor, analyze, and grow your business effectively.
+          <p className="text-lg md:text-xl text-seftec-navy/70 dark:text-white/70 max-w-4xl mx-auto leading-relaxed">
+            Our platform provides you with cutting-edge tools to monitor, analyze, and grow your business effectively. 
+            Experience the future of business management with our comprehensive suite of intelligent solutions.
           </p>
         </div>
         
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <Tabs 
             defaultValue="dashboard" 
             className="w-full"
             value={activeTab}
             onValueChange={(value) => setActiveTab(value)}
           >
-            <TabsList className={`flex mb-8 md:mb-12 rounded-lg p-1 bg-muted w-full ${isMobile ? 'flex-wrap gap-2 justify-center' : 'overflow-x-auto'}`}>
+            <TabsList className={`flex mb-12 md:mb-16 rounded-xl p-2 bg-white/80 backdrop-blur-sm border border-seftec-slate/20 dark:bg-seftec-charcoal/80 dark:border-white/10 w-full shadow-lg ${isMobile ? 'flex-wrap gap-2 justify-center' : 'overflow-x-auto'}`}>
               {dashboardFeatures.map((feature, idx) => (
                 <TabsTrigger 
                   key={idx}
                   value={feature.title.toLowerCase().split(' ')[0]}
-                  className={`${isMobile ? 'text-xs px-2 py-1 flex-grow-0' : 'flex-1 whitespace-nowrap'} relative overflow-hidden`}
+                  className={`${isMobile ? 'text-xs px-3 py-2 flex-grow-0' : 'flex-1 whitespace-nowrap px-6 py-3'} relative overflow-hidden font-semibold`}
                 >
-                  {isMobile ? feature.title.split(' ')[0] : feature.title}
+                  <span className="flex items-center gap-2">
+                    {React.cloneElement(feature.icon, { className: 'h-4 w-4' })}
+                    {isMobile ? feature.title.split(' ')[0] : feature.title}
+                  </span>
                 </TabsTrigger>
               ))}
             </TabsList>
             
             {dashboardFeatures.map((feature, index) => (
               <TabsContent key={index} value={feature.title.toLowerCase().split(' ')[0]}>
-                <Card className="border-seftec-slate dark:border-white/10 animate-fade-up">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex flex-col md:flex-row gap-6 md:gap-8">
-                      <div className="md:w-1/2">
-                        <div className="flex items-center gap-3 mb-4">
-                          {feature.icon}
-                          <h3 className="text-xl sm:text-2xl font-bold text-seftec-navy dark:text-white">
+                <Card className="border-seftec-slate/20 dark:border-white/10 animate-fade-up shadow-xl bg-white/90 backdrop-blur-sm dark:bg-seftec-darkNavy/90">
+                  <CardContent className="p-8 sm:p-12">
+                    <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                      <div className="lg:w-3/5">
+                        <div className="flex items-center gap-4 mb-6">
+                          <div className="p-3 rounded-xl bg-gradient-to-br from-seftec-teal/10 to-seftec-purple/10 dark:from-seftec-teal/20 dark:to-seftec-purple/20">
+                            {feature.icon}
+                          </div>
+                          <h3 className="text-2xl sm:text-3xl font-bold text-seftec-navy dark:text-white">
                             {feature.title}
                           </h3>
                         </div>
-                        <p className="text-seftec-navy/70 dark:text-white/70 mb-4 sm:mb-6 text-sm sm:text-base">
+                        <p className="text-seftec-navy/80 dark:text-white/80 mb-6 text-lg sm:text-xl leading-relaxed">
                           {feature.description}
                         </p>
-                        <p className="text-seftec-navy/80 dark:text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">
+                        <p className="text-seftec-navy/70 dark:text-white/70 mb-8 text-base sm:text-lg leading-relaxed">
                           {feature.detail}
                         </p>
                         
-                        <HoverCard>
-                          <HoverCardTrigger asChild>
-                            <Button className="bg-gradient-teal-purple text-white hover:opacity-90 text-sm sm:text-base">
-                              Learn More
-                            </Button>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-72 sm:w-80">
-                            <div className="flex justify-between space-x-4">
-                              <div>
-                                <h4 className="text-sm font-semibold">{feature.title}</h4>
-                                <p className="text-xs sm:text-sm">
-                                  Hover to explore more about our {feature.title.toLowerCase()} features.
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <HoverCard>
+                            <HoverCardTrigger asChild>
+                              <Button className="bg-gradient-teal-purple text-white hover:opacity-90 text-base sm:text-lg px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                                Explore Features
+                              </Button>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-80 sm:w-96 p-6">
+                              <div className="space-y-3">
+                                <h4 className="text-lg font-semibold text-seftec-navy dark:text-white">{feature.title}</h4>
+                                <p className="text-sm sm:text-base text-seftec-navy/70 dark:text-white/70">
+                                  Discover how our {feature.title.toLowerCase()} can revolutionize your business operations and drive unprecedented growth.
                                 </p>
+                                <div className="flex items-center gap-2 text-xs text-seftec-teal dark:text-seftec-gold">
+                                  <div className="w-2 h-2 bg-seftec-teal dark:bg-seftec-gold rounded-full"></div>
+                                  Premium SEFTEC Feature
+                                </div>
                               </div>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
+                            </HoverCardContent>
+                          </HoverCard>
+                          
+                          <Button variant="outline" className="text-base sm:text-lg px-8 py-3 rounded-xl border-2 border-seftec-navy/20 dark:border-white/20 hover:border-seftec-teal dark:hover:border-seftec-gold transition-all duration-300">
+                            Learn More
+                          </Button>
+                        </div>
                       </div>
                       
-                      <div className="md:w-1/2 bg-seftec-slate/50 dark:bg-seftec-navy/50 rounded-lg p-4 sm:p-6 h-[200px] sm:h-[250px] md:h-[300px] flex items-center justify-center mt-4 md:mt-0">
-                        <div className="text-center">
-                          <div className="mb-4 flex justify-center">{feature.icon}</div>
-                          <p className="text-seftec-navy/70 dark:text-white/70 text-sm sm:text-base">
-                            Interactive demonstration coming soon
+                      <div className="lg:w-2/5 bg-gradient-to-br from-seftec-slate/30 via-white/50 to-seftec-slate/30 dark:from-seftec-navy/50 dark:via-seftec-charcoal/50 dark:to-seftec-navy/50 rounded-2xl p-8 sm:p-10 h-[300px] sm:h-[350px] lg:h-[400px] flex items-center justify-center mt-6 lg:mt-0 shadow-inner backdrop-blur-sm">
+                        <div className="text-center space-y-6">
+                          <div className="mb-6 flex justify-center">
+                            <div className="p-6 rounded-2xl bg-white/80 dark:bg-seftec-darkNavy/80 shadow-lg backdrop-blur-sm">
+                              {React.cloneElement(feature.icon, { className: 'h-12 w-12' })}
+                            </div>
+                          </div>
+                          <h4 className="text-xl sm:text-2xl font-bold text-seftec-navy dark:text-white mb-4">
+                            Interactive Demo
+                          </h4>
+                          <p className="text-seftec-navy/70 dark:text-white/70 text-base sm:text-lg leading-relaxed">
+                            Experience our {feature.title.toLowerCase()} in action with live demonstrations and interactive previews coming soon.
                           </p>
+                          <div className="flex justify-center">
+                            <div className="px-4 py-2 bg-seftec-teal/20 dark:bg-seftec-gold/20 rounded-full text-sm font-medium text-seftec-teal dark:text-seftec-gold">
+                              Coming Soon
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
