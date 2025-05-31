@@ -18,12 +18,14 @@ interface Slide {
   trustIndicators?: Array<{ icon: React.ReactNode; text: string }>;
   illustration?: React.ReactNode;
   backgroundPattern?: React.ReactNode;
+  tagline?: string;
 }
 
 const slides: Slide[] = [
   {
     id: "trade",
     variant: "light",
+    tagline: "Grow Smarter, Together",
     headline: (
       <>
         <span className="text-seftec-navy dark:text-white">Revolutionizing Global</span>{" "}
@@ -170,6 +172,15 @@ export default function HeroSlider() {
                       
                       {/* Content Section */}
                       <div className="text-center lg:text-left space-y-6 sm:space-y-8 animate-fade-up">
+                        
+                        {/* Tagline */}
+                        {slide.tagline && (
+                          <div className="mb-4">
+                            <span className="inline-block px-4 py-2 bg-seftec-gold/10 text-seftec-navy dark:text-seftec-gold border border-seftec-gold/30 rounded-full text-sm font-medium">
+                              {slide.tagline}
+                            </span>
+                          </div>
+                        )}
                         
                         {/* Badges */}
                         {slide.badges && (
