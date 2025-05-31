@@ -4,7 +4,6 @@ import { MainNav } from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
 import { siteConfig } from '@/config/site';
 import BizToolsHeader from '@/components/sections/BizToolsHeader';
-import SolutionsSection from '@/components/sections/SolutionsSection';
 import ValuePropositionsSection from '@/components/sections/ValuePropositionsSection';
 import ValuePropositionsDashboard from '@/components/sections/ValuePropositionsDashboard';
 import BusinessCounterSection from '@/components/sections/BusinessCounterSection';
@@ -24,12 +23,11 @@ const BizTools: React.FC = () => {
         {/* Header */}
         <BizToolsHeader />
 
-        {/* Solutions Section - Migrated from Solutions page */}
-        <SolutionsSection />
-
-        {/* Main Sections */}
-        <ValuePropositionsSection />
+        {/* Powerful Tools for Modern Businesses Dashboard */}
         <ValuePropositionsDashboard />
+
+        {/* Value Propositions Section */}
+        <ValuePropositionsSection />
         
         {/* Business Counter Section */}
         <section className="py-12 bg-seftec-slate dark:bg-seftec-navy/20">
