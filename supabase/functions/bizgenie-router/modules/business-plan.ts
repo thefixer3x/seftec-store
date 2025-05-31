@@ -7,18 +7,10 @@ import { getSupabaseClient, logUsage } from "../utils/supabase-client.ts";
 // Function for business plan generation
 export async function generateBusinessPlan(userId: string, planData: any, env: any) {
   try {
-    const {
-      idea,
-      customers,
-      revenue,
-      competition,
-      advantages,
-      funding,
-      saveData
-    } = planData;
+    const idea = planData.idea || planData;
     
     // Calculate hash for caching
-    const planHash = md5(JSON.stringify(planData));
+    const planHash = md5(typeof planData === 'string' ? planData : JSON.stringify(planData));
     
     // Initialize Supabase client
     const supabase = getSupabaseClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
@@ -55,7 +47,8 @@ export async function generateBusinessPlan(userId: string, planData: any, env: a
       return { 
         planHtml: cacheData.response,
         model: cacheData.model_used,
-        fromCache: true
+        fromCache: true,
+        isBusinessPlan: true
       };
     }
     
@@ -107,21 +100,11 @@ export async function generateBusinessPlan(userId: string, planData: any, env: a
       - Integrate financial technology recommendations where relevant
     `;
 
-    // Construct user message with all provided information
+    // Construct user message
     const userMessage = `
       Please create a comprehensive enterprise-grade business plan leveraging SEFTEC's competitive advantages for the following business:
       
       BUSINESS IDEA: ${idea || '[Not provided - Please analyze market opportunities]'}
-      
-      TARGET CUSTOMERS: ${customers || '[Not provided - Please conduct customer analysis]'}
-      
-      REVENUE MODEL: ${revenue || '[Not provided - Please recommend optimal revenue strategies]'}
-      
-      COMPETITION: ${competition || '[Not provided - Please conduct competitive analysis]'}
-      
-      COMPETITIVE ADVANTAGES: ${advantages || '[Not provided - Please identify potential advantages]'}
-      
-      FUNDING NEEDS: ${funding || '[Not provided - Please estimate funding requirements]'}
       
       Additional Context: This business plan is being generated through SEFTEC's premium BizGenie service, which provides access to enterprise-grade market intelligence, DeFi integration opportunities, and global trade finance solutions.
     `;
@@ -149,23 +132,21 @@ export async function generateBusinessPlan(userId: string, planData: any, env: a
     // Estimate cost (updated pricing for GPT-4)
     let estimatedCost = tokensUsed * 0.00003; // $0.03 per 1000 tokens for GPT-4
     
-    // Cache the response if the user consents
-    if (saveData) {
-      try {
-        await supabase
-          .from('ai_response_cache')
-          .upsert({
-            prompt_hash: `business-plan-${planHash}`,
-            prompt: "Business plan generation: " + (idea || 'New Business').substring(0, 100),
-            response: planHtml,
-            model_used: selectedModel,
-            tokens_used: tokensUsed,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Cache for 30 days
-          });
-      } catch (cacheError) {
-        console.error('Error caching business plan:', cacheError);
-        // Continue even if caching fails
-      }
+    // Cache the response
+    try {
+      await supabase
+        .from('ai_response_cache')
+        .upsert({
+          prompt_hash: `business-plan-${planHash}`,
+          prompt: "Business plan generation: " + (idea || 'New Business').substring(0, 100),
+          response: planHtml,
+          model_used: selectedModel,
+          tokens_used: tokensUsed,
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // Cache for 30 days
+        });
+    } catch (cacheError) {
+      console.error('Error caching business plan:', cacheError);
+      // Continue even if caching fails
     }
     
     // Log usage
@@ -182,27 +163,6 @@ export async function generateBusinessPlan(userId: string, planData: any, env: a
       } catch (logError) {
         console.error('Error logging usage:', logError);
         // Continue even if logging fails
-      }
-      
-      // Store business plan data if user consents
-      if (saveData) {
-        try {
-          await supabase
-            .from('business_plans')
-            .insert({
-              user_id: userId,
-              business_idea: idea,
-              target_customers: customers,
-              revenue_model: revenue,
-              competition: competition,
-              competitive_advantages: advantages,
-              funding_needs: funding,
-              generated_plan: planHtml
-            });
-        } catch (storageError) {
-          console.error('Error storing business plan data:', storageError);
-          // Continue even if storage fails
-        }
       }
     }
     
@@ -223,7 +183,7 @@ export async function generateBusinessPlan(userId: string, planData: any, env: a
 export async function handleBusinessPlan(requestData: any, env: any) {
   const { userId, planData } = requestData;
   
-  if (!planData || !planData.idea) {
+  if (!planData) {
     return new Response(
       JSON.stringify({ error: "Business idea is required for premium business plan generation" }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -45,10 +44,8 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       const requestData = generateReport ? {
         mode: 'business-plan',
         userId: null, // Will be handled by the edge function
-        planData: {
-          idea: query,
-          saveData: userTrainingEnabled
-        }
+        planData: query, // Send the query as the business idea
+        generateReport: true
       } : {
         prompt: query,
         userId: null,

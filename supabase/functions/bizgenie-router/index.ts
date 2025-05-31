@@ -20,10 +20,14 @@ serve(async (req) => {
 
   try {
     const requestData = await req.json();
-    console.log('BizGenie router received request:', { mode: requestData.mode, hasApiKey: !!OPENAI_API_KEY });
+    console.log('BizGenie router received request:', { 
+      mode: requestData.mode, 
+      generateReport: requestData.generateReport,
+      hasApiKey: !!OPENAI_API_KEY 
+    });
     
     // Handle business plan generation mode (Premium Feature)
-    if (requestData.mode === 'business-plan') {
+    if (requestData.mode === 'business-plan' || requestData.generateReport) {
       console.log('Processing premium business plan generation request');
       
       if (!OPENAI_API_KEY) {
@@ -33,7 +37,14 @@ serve(async (req) => {
         );
       }
       
-      return await handleBusinessPlan(requestData, { 
+      // Transform the request for business plan generation
+      const planRequest = {
+        userId: requestData.userId,
+        planData: requestData.planData || requestData.prompt, // Support both structures
+        ...requestData
+      };
+      
+      return await handleBusinessPlan(planRequest, { 
         SUPABASE_URL, 
         SUPABASE_SERVICE_ROLE_KEY, 
         BizGenie_API_key,
