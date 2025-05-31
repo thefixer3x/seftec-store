@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface MobileToggleProps {
@@ -10,21 +10,15 @@ interface MobileToggleProps {
 
 const MobileToggle = ({ isOpen, onClick }: MobileToggleProps) => {
   return (
-    <div className="md:hidden z-20">
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        onClick={onClick}
-        className="p-1 focus:outline-none focus:ring-0"
-        aria-label={isOpen ? "Close menu" : "Open menu"}
-      >
-        {isOpen ? (
-          <X className="h-5 w-5 text-seftec-navy dark:text-white" />
-        ) : (
-          <Menu className="h-5 w-5 text-seftec-navy dark:text-white" />
-        )}
-      </Button>
-    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={onClick}
+      className="md:hidden text-seftec-navy dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+      aria-label={isOpen ? "Close menu" : "Open menu"}
+    >
+      <Menu className="h-5 w-5" />
+    </Button>
   );
 };
 
