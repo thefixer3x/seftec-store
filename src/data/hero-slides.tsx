@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {
   Carousel,
@@ -165,7 +164,11 @@ export default function HeroSlider() {
       <Carousel
         opts={{ loop: true, align: "center" }}
         plugins={[
-          Autoplay({ delay: 8000, stopOnInteraction: true }),
+          Autoplay({
+            delay: 8000,
+            stopOnInteraction: false,  // Resume after manual swipe
+            stopOnMouseEnter: true     // Hover-to-pause
+          }),
         ]}
         className="w-full overflow-hidden"
       >
