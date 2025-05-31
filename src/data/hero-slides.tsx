@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {
   Carousel,
@@ -189,24 +188,14 @@ export default function HeroSlider() {
                 {s.backgroundPattern}
 
                 {/* ---------- INNER GRID ---------- */}
-                <div
-                  className={clsx(
-                    "container mx-auto px-4",
-                    s.illustration ? "md:grid md:grid-cols-[1fr_auto] md:gap-12" : "flex justify-center"
-                  )}
-                >
+                <div className="container mx-auto px-4 md:grid md:grid-cols-[1fr_auto] md:gap-12">
                   {/* ---- COPY BLOCK ---- */}
                   <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     viewport={{ once: true }}
-                    className={clsx(
-                      "mx-auto text-center space-y-6",
-                      s.illustration 
-                        ? "max-w-2xl md:text-left" 
-                        : "max-w-3xl xl:mx-auto xl:text-center"
-                    )}
+                    className="mx-auto max-w-xl text-center md:text-left space-y-6"
                   >
                     {/* Tagline */}
                     {s.tagline && (
