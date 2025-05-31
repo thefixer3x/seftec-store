@@ -39,16 +39,26 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     setIsReport(false);
     
     try {
-      console.log(`Sending ${generateReport ? 'report' : 'query'} to BizGenie service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
+      console.log(`Sending ${generateReport ? 'premium business plan' : 'query'} to BizGenie service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
       
-      // Use the BizGenie router instead of the generic ai-chat endpoint
-      const { data, error: edgeError } = await supabase.functions.invoke('bizgenie-router', {
-        body: { 
-          prompt: query,
-          userId: null, // Will be handled by the edge function
-          isPremium,
-          mode: generateReport ? 'business-plan' : 'chat'
+      // Prepare request data based on mode
+      const requestData = generateReport ? {
+        mode: 'business-plan',
+        userId: null, // Will be handled by the edge function
+        planData: {
+          idea: query,
+          saveData: userTrainingEnabled
         }
+      } : {
+        prompt: query,
+        userId: null,
+        isPremium,
+        mode: 'chat'
+      };
+      
+      // Use the BizGenie router
+      const { data, error: edgeError } = await supabase.functions.invoke('bizgenie-router', {
+        body: requestData
       });
       
       if (edgeError) {
@@ -65,8 +75,8 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       }
       
       // Handle both chat and business plan responses
-      const fullResponse = data.text || data.planHtml || 'No response received';
-      setIsReport(data.isReport || generateReport || false);
+      const fullResponse = data.planHtml || data.text || 'No response received';
+      setIsReport(data.isBusinessPlan || generateReport || false);
       
       let i = 0;
       
@@ -83,9 +93,15 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
           clearInterval(typingInterval);
           setIsTyping(false);
           
-          if (data.isReport || generateReport) {
+          if (data.isBusinessPlan || generateReport) {
             toast({
-              title: "Response Generated",
+              title: "Premium Business Plan Generated",
+              description: "Your enterprise-grade business plan has been successfully generated using SEFTEC's competitive advantage features.",
+              duration: 4000,
+            });
+          } else {
+            toast({
+              title: "BizGenie Response Generated",
               description: "Your AI response has been successfully generated.",
               duration: 3000,
             });
