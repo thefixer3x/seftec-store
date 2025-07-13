@@ -396,7 +396,7 @@ const SaySwitchAdminContent = () => {
                       <div className="flex mt-1">
                         <Input
                           id="webhookUrl"
-                          value="https://ptnrwrgzrsbocgxlpvhd.supabase.co/functions/v1/sayswitch-webhook"
+                          value="https://seftechub.supabase.co/functions/v1/sayswitch-webhook"
                           readOnly
                           className="font-mono flex-1"
                         />
@@ -404,7 +404,7 @@ const SaySwitchAdminContent = () => {
                           variant="outline"
                           className="ml-2"
                           onClick={() => {
-                            navigator.clipboard.writeText("https://ptnrwrgzrsbocgxlpvhd.supabase.co/functions/v1/sayswitch-webhook");
+                            navigator.clipboard.writeText("https://seftechub.supabase.co/functions/v1/sayswitch-webhook");
                             alert("Webhook URL copied to clipboard");
                           }}
                         >

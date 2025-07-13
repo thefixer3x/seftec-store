@@ -2,7 +2,7 @@
 import React from "react";
 import SectionHeading from "@/components/ui/section-heading";
 import { ShieldCheck, Wallet, Building, Globe, Handshake, Calculator } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { GlareCard } from "@/components/ui/glare-card";
 import { ResponsiveGrid, ResponsiveContainer } from "@/components/ui/mobile-optimizations/ResponsiveGrid";
 import { ResponsiveSpacing } from "@/components/ui/mobile-optimizations/ResponsiveBreakpoints";
 
@@ -72,30 +72,32 @@ const ProblemsSection: React.FC = () => {
             gap={{ mobile: 6, tablet: 6, desktop: 8 }}
           >
             {problemsData.map((problem, index) => (
-              <Card 
-                key={index} 
-                className="p-4 sm:p-6 lg:p-8 bg-white dark:bg-seftec-darkNavy/80 border-0 shadow-lg hover:shadow-xl transition-all duration-300 animate-fade-up group touch-manipulation hover:scale-105" 
+              <div 
+                key={index}
+                className="animate-fade-up group"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="flex flex-col items-start space-y-3 sm:space-y-4">
-                  {/* Icon */}
-                  <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl ${problem.iconBg} group-hover:scale-110 transition-transform duration-300`}>
-                    {React.cloneElement(problem.icon, { 
-                      size: window.innerWidth < 640 ? 24 : 32 
-                    })}
+                <GlareCard className="p-4 sm:p-6 lg:p-8 shadow-lg transition-all duration-300 touch-manipulation min-h-[280px] flex flex-col">
+                  <div className="flex flex-col items-start space-y-3 sm:space-y-4 h-full">
+                    {/* Icon */}
+                    <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl ${problem.iconBg} group-hover:scale-110 transition-transform duration-300`}>
+                      {React.cloneElement(problem.icon, { 
+                        size: typeof window !== 'undefined' && window.innerWidth < 640 ? 24 : 32 
+                      })}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="space-y-2 sm:space-y-3 flex-grow">
+                      <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-seftec-navy dark:text-white">
+                        {problem.title}
+                      </h3>
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                        {problem.description}
+                      </p>
+                    </div>
                   </div>
-                  
-                  {/* Content */}
-                  <div className="space-y-2 sm:space-y-3">
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-seftec-navy dark:text-white">
-                      {problem.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                      {problem.description}
-                    </p>
-                  </div>
-                </div>
-              </Card>
+                </GlareCard>
+              </div>
             ))}
           </ResponsiveGrid>
         </ResponsiveContainer>
