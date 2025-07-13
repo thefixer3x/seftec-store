@@ -394,7 +394,7 @@ const PayPalSetupContent = () => {
                   <div className="flex">
                     <Input
                       id="webhookUrl"
-                      value={`https://${import.meta.env.VITE_SUPABASE_PROJECT_ID || 'your-project-id'}.supabase.co/functions/v1/paypal-webhook`}
+                      value="https://seftechub.supabase.co/functions/v1/paypal-webhook"
                       readOnly
                       className="font-mono flex-1"
                     />
@@ -402,7 +402,7 @@ const PayPalSetupContent = () => {
                       variant="outline"
                       className="ml-2"
                       onClick={() => {
-                        navigator.clipboard.writeText(`https://${import.meta.env.VITE_SUPABASE_PROJECT_ID || 'your-project-id'}.supabase.co/functions/v1/paypal-webhook`);
+                        navigator.clipboard.writeText("https://seftechub.supabase.co/functions/v1/paypal-webhook");
                         alert("Webhook URL copied to clipboard");
                       }}
                     >

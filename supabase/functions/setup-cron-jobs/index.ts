@@ -29,7 +29,7 @@ serve(async (req) => {
     
     // Get project reference from the URL
     const projectRef = supabaseUrl.split('//')[1].split('.')[0];
-    const functionUrl = `https://${projectRef}.supabase.co/functions/v1/cache-cleanup`;
+    const functionUrl = `https://seftechub.supabase.co/functions/v1/cache-cleanup`;
     
     // Set up a cron job to run the cache cleanup function daily at midnight
     const { data: cronData, error: cronError } = await supabase.rpc(
