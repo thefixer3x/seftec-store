@@ -3,8 +3,12 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bnJ3cmd6cnNib2NneGxwdmhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzNDY0MTYsImV4cCI6MjA1NzkyMjQxNn0.--EOILmgTdPD2uZxu3LcLuSDXsYWV9ElhGPI5m4Ng-8";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (() => {
+  console.error('❌ NEXT_PUBLIC_SUPABASE_ANON_KEY not set in environment variables');
+  console.error('   Set it with: export NEXT_PUBLIC_SUPABASE_ANON_KEY="your_key_here"');
+  throw new Error('Supabase configuration missing');
+})();
 
 // Define the API endpoint that will be used for all backend services
 // This will be used in a phased approach where api.seftec.store handles all backend services
