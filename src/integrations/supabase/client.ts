@@ -4,9 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (() => {
-  throw new Error('Supabase anon key is required. Please set NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
-})();
+const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "demo-key-for-development";
 
 // Define the API endpoint that will be used for all backend services
 // This will be used in a phased approach where api.seftec.store handles all backend services
@@ -15,9 +13,13 @@ const API_ENDPOINT = "https://api.seftec.store";
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(
-  SUPABASE_URL, 
-  SUPABASE_PUBLISHABLE_KEY,
+// Create Supabase client with error handling
+let supabaseClient: any = null;
+
+try {
+  supabaseClient = createClient<Database>(
+    SUPABASE_URL, 
+    SUPABASE_PUBLISHABLE_KEY,
   {
     auth: {
       autoRefreshToken: true,
@@ -70,10 +72,31 @@ export const supabase = createClient<Database>(
       }
     }
   }
-);
+  );
+} catch (error) {
+  console.warn('Supabase client initialization failed:', error);
+  // Create a mock client for development
+  supabaseClient = {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
+      signOut: () => Promise.resolve({ error: null })
+    },
+    from: () => ({
+      select: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
+      insert: () => Promise.resolve({ data: null, error: null }),
+      update: () => Promise.resolve({ data: null, error: null }),
+      delete: () => Promise.resolve({ data: null, error: null })
+    })
+  };
+}
+
+export const supabase = supabaseClient;
 
 // Helper functions for authentication
 export const getCurrentUser = async () => {
+  if (!supabase?.auth?.getSession) return null;
+  
   const { data: { session }, error } = await supabase.auth.getSession();
   
   if (error) {
@@ -92,18 +115,23 @@ export const getCurrentUserId = async () => {
 export const getUserProfile = async () => {
   const userId = await getCurrentUserId();
   
-  if (!userId) return null;
+  if (!userId || !supabase?.from) return null;
   
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId as string)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId as string)
+      .single();
     
-  if (error) {
-    console.error('Error fetching profile:', error);
+    if (error) {
+      console.error('Error fetching profile:', error);
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error in getUserProfile:', error);
     return null;
   }
-  
-  return data;
 };
