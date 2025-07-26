@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, ExternalLink, ShoppingCart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
+import { useI18nContext } from '@/components/ui/language-toggle';
 
 interface Recommendation {
   id: string;
@@ -22,15 +23,40 @@ interface Recommendation {
 // AI-Powered Product Recommendations Component
 export const ProductRecommendations = () => {
   const { user } = useAuth();
+  const { t, currentLanguage } = useI18nContext();
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasConsent, setHasConsent] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  console.log('ProductRecommendations: rendering, user:', !!user, 'loading:', loading, 'hasConsent:', hasConsent, 'recommendations:', recommendations.length, 'language:', currentLanguage, 'forceUpdate:', forceUpdate);
 
   useEffect(() => {
-    if (user) {
-      checkConsentAndFetchRecommendations();
-    }
-  }, [user]);
+    // For now, always show sample recommendations for debugging
+    setLoading(false);
+    setHasConsent(false); // This will trigger sample recommendations
+  }, []);
+
+  // Listen for language changes and force re-render
+  useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('language-changed', handleLanguageChange);
+    window.addEventListener('language-updated', handleLanguageChange);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'seftec-language') {
+        setForceUpdate(prev => prev + 1);
+      }
+    });
+
+    return () => {
+      window.removeEventListener('language-changed', handleLanguageChange);
+      window.removeEventListener('language-updated', handleLanguageChange);
+      window.removeEventListener('storage', handleLanguageChange);
+    };
+  }, []);
 
   const checkConsentAndFetchRecommendations = async () => {
     try {
@@ -116,49 +142,49 @@ export const ProductRecommendations = () => {
       {
         id: 'sample-1',
         score: 0.92,
-        reason: 'Popular in your industry - Manufacturing & Trade',
+        reason: t('recommendations.reason_industry', 'Popular in your industry - Manufacturing & Trade'),
         product: {
           id: 'prod-1',
-          name: 'Smart Inventory Management System',
-          description: 'AI-powered inventory tracking with real-time analytics and automated reordering capabilities.',
+          name: t('products.inventory_system', 'Smart Inventory Management System'),
+          description: t('products.inventory_desc', 'AI-powered inventory tracking with real-time analytics and automated reordering capabilities.'),
           price: 2499,
-          category: 'Business Software'
+          category: t('categories.business_software', 'Business Software')
         }
       },
       {
         id: 'sample-2', 
         score: 0.88,
-        reason: 'Recommended for B2B marketplaces like yours',
+        reason: t('recommendations.reason_marketplace', 'Recommended for B2B marketplaces like yours'),
         product: {
           id: 'prod-2',
-          name: 'Enterprise Payment Gateway',
-          description: 'Multi-currency payment processing with fraud detection and global compliance.',
+          name: t('products.payment_gateway', 'Enterprise Payment Gateway'),
+          description: t('products.payment_desc', 'Multi-currency payment processing with fraud detection and global compliance.'),
           price: 1299,
-          category: 'FinTech'
+          category: t('categories.fintech', 'FinTech')
         }
       },
       {
         id: 'sample-3',
         score: 0.85,
-        reason: 'Trending in trade finance sector',
+        reason: t('recommendations.reason_trending', 'Trending in trade finance sector'),
         product: {
           id: 'prod-3',
-          name: 'Trade Finance Automation',
-          description: 'Streamline letters of credit, guarantees, and trade documentation with blockchain verification.',
+          name: t('products.trade_finance', 'Trade Finance Automation'),
+          description: t('products.trade_desc', 'Streamline letters of credit, guarantees, and trade documentation with blockchain verification.'),
           price: 3999,
-          category: 'Trade Finance'
+          category: t('categories.trade_finance', 'Trade Finance')
         }
       },
       {
         id: 'sample-4',
         score: 0.82,
-        reason: 'Perfect for enterprise DeFi integration',
+        reason: t('recommendations.reason_defi', 'Perfect for enterprise DeFi integration'),
         product: {
           id: 'prod-4',
-          name: 'DeFi Yield Optimizer',
-          description: 'Institutional-grade DeFi portfolio management with risk assessment and automated strategies.',
+          name: t('products.defi_optimizer', 'DeFi Yield Optimizer'),
+          description: t('products.defi_desc', 'Institutional-grade DeFi portfolio management with risk assessment and automated strategies.'),
           price: 5999,
-          category: 'DeFi Solutions'
+          category: t('categories.defi_solutions', 'DeFi Solutions')
         }
       }
     ];
@@ -167,7 +193,7 @@ export const ProductRecommendations = () => {
       <section className="py-8 space-y-6">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-purple-500" />
-          <h2 className="text-2xl font-bold">Recommended for You</h2>
+          <h2 className="text-2xl font-bold">{t('recommendations.title', 'Recommended for You')}</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -187,7 +213,7 @@ export const ProductRecommendations = () => {
                         {rec.product.category}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {Math.round(rec.score * 100)}% match
+                        {Math.round(rec.score * 100)}% {t('recommendations.match', 'match')}
                       </span>
                     </div>
                   </div>
@@ -216,7 +242,7 @@ export const ProductRecommendations = () => {
                     onClick={() => console.log('Sample product clicked:', rec.product.name)}
                   >
                     <ShoppingCart className="h-4 w-4 mr-1" />
-                    Learn More
+                    {t('cta.learn_more', 'Learn More')}
                   </Button>
                   <Button 
                     size="sm" 
