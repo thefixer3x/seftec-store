@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "SeftecHub Store",
+    "description": "Plateforme de gestion de boutique e-commerce",
+    "welcome": "Bienvenue sur SeftecHub Store",
+    "tagline": "Votre solution complète de gestion de boutique"
+  },
+  "store": {
+    "products": "Produits",
+    "inventory": "Inventaire",
+    "orders": "Commandes",
+    "customers": "Clients",
+    "analytics": "Analyses",
+    "settings": "Paramètres de la boutique"
+  },
+  "ecommerce": {
+    "cart": "Panier d'achat",
+    "checkout": "Paiement",
+    "payment": "Paiement",
+    "shipping": "Expédition",
+    "returns": "Retours et remboursements",
+    "reviews": "Avis clients"
+  },
+  "management": {
+    "stock_levels": "Niveaux de stock",
+    "price_management": "Gestion des prix",
+    "promotions": "Promotions et remises",
+    "supplier_management": "Gestion des fournisseurs"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "SeftecHub Store",
+    "description": "E-commerce store management platform",
+    "welcome": "Welcome to SeftecHub Store",
+    "tagline": "Your complete store management solution"
+  },
+  "store": {
+    "products": "Products",
+    "inventory": "Inventory",
+    "orders": "Orders",
+    "customers": "Customers",
+    "analytics": "Analytics",
+    "settings": "Store Settings"
+  },
+  "ecommerce": {
+    "cart": "Shopping Cart",
+    "checkout": "Checkout",
+    "payment": "Payment",
+    "shipping": "Shipping",
+    "returns": "Returns & Refunds",
+    "reviews": "Customer Reviews"
+  },
+  "management": {
+    "stock_levels": "Stock Levels",
+    "price_management": "Price Management",
+    "promotions": "Promotions & Discounts",
+    "supplier_management": "Supplier Management"
+  }
+}

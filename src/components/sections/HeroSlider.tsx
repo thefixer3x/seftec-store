@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, Shield, Globe, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { useI18nContext } from "@/components/ui/language-toggle";
 
 // Reusable slide "payload" so you can add more later
 interface Slide {
@@ -144,6 +145,8 @@ const slides: Slide[] = [{
       </div>
 }];
 export default function HeroSlider() {
+  const { t } = useI18nContext();
+  
   return <section className="relative min-h-screen">
       <Carousel opts={{
       loop: true,

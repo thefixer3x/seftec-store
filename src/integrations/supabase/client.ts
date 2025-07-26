@@ -5,9 +5,7 @@ import type { Database } from './types';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (() => {
-  console.error('❌ NEXT_PUBLIC_SUPABASE_ANON_KEY not set in environment variables');
-  console.error('   Set it with: export NEXT_PUBLIC_SUPABASE_ANON_KEY="your_key_here"');
-  throw new Error('Supabase configuration missing');
+  throw new Error('Supabase anon key is required. Please set NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable');
 })();
 
 // Define the API endpoint that will be used for all backend services

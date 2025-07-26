@@ -9,6 +9,7 @@ import { DesktopNav } from "./desktop-nav";
 import AuthSection from "./auth-section";
 import MobileMenu from "./mobile-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ShoppingCart } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -92,6 +93,7 @@ export function MainNav({ items }: MainNavProps) {
               )}
             </Link>
             <div className="hidden md:flex items-center gap-4">
+              <LanguageToggle variant="compact" />
               <ThemeToggle className="static bottom-auto right-auto" />
               <AuthSection user={user} />
             </div>

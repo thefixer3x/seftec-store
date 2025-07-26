@@ -1,5 +1,9 @@
-const ghpages = require('gh-pages');
-const path = require('path');
+import ghpages from 'gh-pages';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configuration for GitHub Pages deployment
 const options = {
