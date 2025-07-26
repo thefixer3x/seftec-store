@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { UserProfileDropdown } from "@/components/auth/UserProfileDropdown";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useCart } from "@/context/CartContext";
+import { useI18nContext } from "@/components/ui/language-toggle";
 
 interface MobileMenuProps {
   items?: MainNavItem[];
@@ -18,6 +19,41 @@ interface MobileMenuProps {
 
 const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
   const { cartCount } = useCart();
+  const { t, currentLanguage } = useI18nContext();
+  const [forceUpdate, setForceUpdate] = React.useState(0);
+
+  // Listen for language changes and force re-render
+  React.useEffect(() => {
+    const handleLanguageChange = () => {
+      setForceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('language-changed', handleLanguageChange);
+    window.addEventListener('language-updated', handleLanguageChange);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'seftec-language') {
+        setForceUpdate(prev => prev + 1);
+      }
+    });
+
+    return () => {
+      window.removeEventListener('language-changed', handleLanguageChange);
+      window.removeEventListener('language-updated', handleLanguageChange);
+      window.removeEventListener('storage', handleLanguageChange);
+    };
+  }, []);
+
+  // Map navigation titles to translation keys
+  const getNavTitle = (title: string) => {
+    const titleMap: Record<string, string> = {
+      'Home': t('nav.home', 'Home'),
+      'Solutions': t('nav.solutions', 'Solutions'),
+      'BizTools': t('nav.biztools', 'BizTools'),
+      'Enterprise DeFi': t('nav.defi', 'Enterprise DeFi'),
+      'About Us': t('nav.about', 'About Us'),
+    };
+    return titleMap[title] || title;
+  };
   
   if (!isOpen) return null;
 
@@ -25,7 +61,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
     <div className="md:hidden fixed inset-0 bg-white dark:bg-seftec-darkNavy z-50 flex flex-col">
       {/* Header with close button */}
       <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">Menu</h2>
+        <h2 className="text-lg font-semibold text-seftec-navy dark:text-white">{t('nav.menu', 'Menu')}</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -43,7 +79,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
           {items?.length ? (
             <div className="space-y-1 mb-6">
               <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 px-3">
-                Navigation
+                {t('nav.navigation', 'Navigation')}
               </div>
               {items?.map(
                 (item, index) =>
@@ -60,7 +96,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
                         document.body.style.overflow = '';
                       }}
                     >
-                      {item.title}
+                      {getNavTitle(item.title)}
                     </Link>
                   )
               )}
@@ -70,7 +106,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
           {/* Shop, Cart and Orders Links */}
           <div className="space-y-1 mb-6">
             <div className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2 px-3">
-              Shopping
+              {t('nav.shopping', 'Shopping')}
             </div>
             <Link
               to="/shop"
@@ -78,7 +114,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
               onClick={onClose}
             >
               <ShoppingBag className="mr-3 h-5 w-5" />
-              <span>Shop</span>
+              <span>{t('nav.shop', 'Shop')}</span>
             </Link>
             
             <Link
@@ -87,7 +123,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
               onClick={onClose}
             >
               <ShoppingCart className="mr-3 h-5 w-5" />
-              <span>Cart</span>
+              <span>{t('nav.cart', 'Cart')}</span>
               {cartCount > 0 && (
                 <span className="ml-auto bg-seftec-gold dark:bg-seftec-teal text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
                   {cartCount}
@@ -102,7 +138,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
                 onClick={onClose}
               >
                 <ListOrdered className="mr-3 h-5 w-5" />
-                <span>My Orders</span>
+                <span>{t('nav.orders', 'My Orders')}</span>
               </Link>
             )}
           </div>
@@ -115,7 +151,7 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
               onClick={onClose}
             >
               <Shield className="h-4 w-4 mr-2 text-white" />
-              <span className="text-sm text-white font-medium">Secured by AI</span>
+              <span className="text-sm text-white font-medium">{t('nav.secured_by_ai', 'Secured by AI')}</span>
             </Link>
           </div>
         </div>
@@ -128,12 +164,12 @@ const MobileMenu = ({ items, user, isOpen, onClose }: MobileMenuProps) => {
           <div className="space-y-3">
             <Link to="/login" className="w-full block" onClick={onClose}>
               <Button variant="outline" className="w-full">
-                Log In
+                {t('cta.sign_in', 'Log In')}
               </Button>
             </Link>
             <Link to="/register" className="w-full block" onClick={onClose}>
               <Button className="bg-gradient-to-r from-seftec-gold to-seftec-gold/80 dark:from-seftec-teal dark:to-seftec-purple text-white w-full">
-                Get Started
+                {t('cta.get_started', 'Get Started')}
               </Button>
             </Link>
           </div>
