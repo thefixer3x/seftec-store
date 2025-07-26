@@ -21,23 +21,23 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://seftechub.com/" />
+    <meta property="og:url" content="https://www.seftechub.com/" />
     <meta property="og:title" content="SeftecHub | Enterprise DeFi Access Platform | Global B2B Trade & Finance" />
     <meta property="og:description" content="SeftecHub - Leading enterprise DeFi access platform. AI-powered B2B marketplace with trade finance, business registration, cashflow management, global compliance, and ISO 20022 solutions. Transform your business with our enterprise-grade DeFi infrastructure." />
-    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image" content="https://www.seftechub.com/og-image.png" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://seftechub.com/" />
+    <meta name="twitter:url" content="https://www.seftechub.com/" />
     <meta name="twitter:title" content="SeftecHub | Enterprise DeFi Access Platform | Global B2B Trade & Finance" />
     <meta name="twitter:description" content="SeftecHub - Leading enterprise DeFi access platform. AI-powered B2B marketplace with trade finance, business registration, cashflow management, and global compliance solutions." />
     <meta name="twitter:creator" content="@seftecs" />
-    <meta name="twitter:image" content="/og-image.png" />
+    <meta name="twitter:image" content="https://www.seftechub.com/og-image.png" />
     
     <!-- Enhanced SEO for Services -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow" />
-    <link rel="canonical" href="https://seftechub.com/" />
+    <link rel="canonical" href="https://www.seftechub.com/" />
     
     <!-- Additional Service-Specific Meta Tags -->
     <meta name="geo.region" content="Global" />
@@ -53,35 +53,120 @@
     <!-- Social Media -->
     <meta property="instagram:account" content="@seftecs" />
     
-    <!-- Business Schema Markup -->
+    <!-- Enhanced Schema Markup for E-commerce -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
+      "@type": ["SoftwareApplication", "WebApplication", "Store"],
       "name": "SeftecHub",
+      "alternateName": "SEFTEC Enterprise Platform",
       "description": "Enterprise DeFi access platform providing AI-powered B2B marketplace, trade finance, business registration, and global compliance solutions",
-      "url": "https://seftechub.com",
-      "applicationCategory": "BusinessApplication",
+      "url": "https://www.seftechub.com",
+      "sameAs": [
+        "https://twitter.com/seftecs",
+        "https://linkedin.com/company/seftec-dynamics",
+        "https://instagram.com/seftecs"
+      ],
+      "applicationCategory": ["BusinessApplication", "FinanceApplication", "E-commerce"],
       "operatingSystem": "Web",
+      "browserRequirements": "HTML5, CSS3, JavaScript",
       "offers": {
         "@type": "Offer",
-        "category": "Enterprise Software"
+        "category": "Enterprise Software",
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": "2025-12-31"
       },
       "provider": {
         "@type": "Organization",
         "name": "SEFTEC DYNAMICS",
-        "url": "https://seftechub.com"
+        "url": "https://www.seftechub.com",
+        "logo": "https://www.seftechub.com/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+1-800-SEFTEC",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "Arabic", "Spanish", "French", "German", "Portuguese", "Japanese", "Chinese"]
+        }
       },
       "featureList": [
         "AI-Powered B2B Marketplace",
-        "Trade Finance Solutions",
+        "Trade Finance Solutions", 
         "Multi-Country Business Registration",
         "DeFi Integration",
         "Global Compliance Monitoring",
         "Cashflow Management",
         "Risk Analytics",
-        "Open Banking Solutions"
+        "Open Banking Solutions",
+        "Multi-language Support",
+        "Real-time Payment Processing",
+        "Business Intelligence Dashboard",
+        "API Integration Platform"
+      ],
+      "applicationSubCategory": "Enterprise Resource Planning",
+      "downloadUrl": "https://www.seftechub.com",
+      "screenshot": "https://www.seftechub.com/screenshot.png",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      }
+    }
+    </script>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SEFTEC DYNAMICS",
+      "url": "https://www.seftechub.com",
+      "logo": "https://www.seftechub.com/logo.png",
+      "description": "Leading provider of enterprise DeFi solutions and B2B marketplace technology",
+      "foundingDate": "2020",
+      "industry": "Financial Technology",
+      "numberOfEmployees": "50-100",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "Global"
+      },
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+1-800-SEFTEC",
+          "contactType": "customer service",
+          "availableLanguage": ["en", "ar", "es", "fr", "de", "pt", "ja", "zh"]
+        },
+        {
+          "@type": "ContactPoint",
+          "email": "sales@seftechub.com",
+          "contactType": "sales"
+        }
+      ],
+      "sameAs": [
+        "https://twitter.com/seftecs",
+        "https://linkedin.com/company/seftec-dynamics"
       ]
+    }
+    </script>
+
+    <!-- Website Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SeftecHub",
+      "url": "https://www.seftechub.com",
+      "description": "Enterprise DeFi Access Platform for Global B2B Trade & Finance",
+      "inLanguage": ["en", "ar", "es", "fr", "de", "pt", "ja", "zh"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.seftechub.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SEFTEC DYNAMICS"
+      }
     }
     </script>
     

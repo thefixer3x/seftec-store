@@ -1,5 +1,6 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
@@ -12,6 +13,7 @@ import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
+import TestPage from '@/TestPage';
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
 const Solutions          = lazy(() => import('@/pages/Solutions'));
@@ -69,13 +71,16 @@ function App() {
   }, [user, loading, navigate, location.pathname]);
 
   return (
-    <>
+    <HelmetProvider>
       <Suspense fallback={
         <div className="flex h-screen items-center justify-center">
           <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
         </div>
       }>
         <Routes>
+          {/* Debug test route */}
+          <Route path="/test" element={<TestPage />} />
+          
           {/* Public marketing */}
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
@@ -125,7 +130,7 @@ function App() {
       </Suspense>
 
       <Toaster />
-    </>
+    </HelmetProvider>
   );
 }
 

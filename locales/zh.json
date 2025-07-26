@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "SeftecHub Store",
+    "description": "电子商务商店管理平台",
+    "welcome": "欢迎来到 SeftecHub Store",
+    "tagline": "您的完整商店管理解决方案"
+  },
+  "store": {
+    "products": "商品",
+    "inventory": "库存",
+    "orders": "订单",
+    "customers": "客户",
+    "analytics": "分析",
+    "settings": "商店设置"
+  },
+  "ecommerce": {
+    "cart": "购物车",
+    "checkout": "结账",
+    "payment": "支付",
+    "shipping": "配送",
+    "returns": "退货与退款",
+    "reviews": "客户评价"
+  },
+  "management": {
+    "stock_levels": "库存水平",
+    "price_management": "价格管理",
+    "promotions": "促销与折扣",
+    "supplier_management": "供应商管理"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "متجر سيفتك هب",
+    "description": "منصة إدارة متجر التجارة الإلكترونية",
+    "welcome": "مرحبًا بك في متجر سيفتك هب",
+    "tagline": "حلك المتكامل لإدارة المتجر"
+  },
+  "store": {
+    "products": "المنتجات",
+    "inventory": "المخزون",
+    "orders": "الطلبات",
+    "customers": "العملاء",
+    "analytics": "التحليلات",
+    "settings": "إعدادات المتجر"
+  },
+  "ecommerce": {
+    "cart": "سلة التسوق",
+    "checkout": "إتمام الشراء",
+    "payment": "الدفع",
+    "shipping": "الشحن",
+    "returns": "الإرجاع واسترداد الأموال",
+    "reviews": "تقييمات العملاء"
+  },
+  "management": {
+    "stock_levels": "مستويات المخزون",
+    "price_management": "إدارة الأسعار",
+    "promotions": "العروض والخصومات",
+    "supplier_management": "إدارة الموردين"
+  }
+}

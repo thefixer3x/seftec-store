@@ -1,0 +1,49 @@
+User-agent: *
+Allow: /
+
+# Important pages
+Allow: /about
+Allow: /contact
+Allow: /solutions
+Allow: /value-propositions
+Allow: /shop
+Allow: /products
+Allow: /faq
+Allow: /terms
+Allow: /privacy
+Allow: /security
+Allow: /defi-leadership
+Allow: /biztools
+Allow: /bizgenie
+
+# Block sensitive areas
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /auth
+Disallow: /login
+Disallow: /register
+Disallow: /reset-password
+Disallow: /orders
+Disallow: /cart
+Disallow: /sessions
+Disallow: /roles
+Disallow: /edge-function-test
+
+# Block admin and test routes
+Disallow: /admin
+Disallow: /test
+Disallow: /dev
+Disallow: /.env
+Disallow: /api/test
+
+# Allow assets
+Allow: /assets/
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://www.seftechub.com/sitemap.xml
