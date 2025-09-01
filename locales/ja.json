@@ -1,0 +1,30 @@
+{
+  "app": {
+    "title": "SeftecHubストア",
+    "description": "Eコマースストア管理プラットフォーム",
+    "welcome": "SeftecHubストアへようこそ",
+    "tagline": "完全なストア管理ソリューション"
+  },
+  "store": {
+    "products": "商品",
+    "inventory": "在庫",
+    "orders": "注文",
+    "customers": "顧客",
+    "analytics": "分析",
+    "settings": "ストア設定"
+  },
+  "ecommerce": {
+    "cart": "ショッピングカート",
+    "checkout": "レジに進む",
+    "payment": "お支払い",
+    "shipping": "配送",
+    "returns": "返品・返金",
+    "reviews": "カスタマーレビュー"
+  },
+  "management": {
+    "stock_levels": "在庫レベル",
+    "price_management": "価格管理",
+    "promotions": "プロモーション・割引",
+    "supplier_management": "サプライヤー管理"
+  }
+}

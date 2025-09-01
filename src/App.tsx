@@ -1,5 +1,6 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
@@ -69,7 +70,7 @@ function App() {
   }, [user, loading, navigate, location.pathname]);
 
   return (
-    <>
+    <HelmetProvider>
       <Suspense fallback={
         <div className="flex h-screen items-center justify-center">
           <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
@@ -125,7 +126,7 @@ function App() {
       </Suspense>
 
       <Toaster />
-    </>
+    </HelmetProvider>
   );
 }
 

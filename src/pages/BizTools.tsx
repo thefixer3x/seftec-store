@@ -1,13 +1,10 @@
 
 import React, { useEffect } from 'react';
-import { MainNav } from '@/components/ui/navbar';
-import Footer from '@/components/ui/footer';
-import { siteConfig } from '@/config/site';
+import MainLayout from '@/components/layout/MainLayout';
 import BizToolsHeader from '@/components/sections/BizToolsHeader';
 import ValuePropositionsSection from '@/components/sections/ValuePropositionsSection';
 import ValuePropositionsDashboard from '@/components/sections/ValuePropositionsDashboard';
 import BusinessCounterSection from '@/components/sections/BusinessCounterSection';
-import { Toaster } from "@/components/ui/toaster";
 
 const BizTools: React.FC = () => {
   // Set light mode on initial load
@@ -17,9 +14,8 @@ const BizTools: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-seftec-darkNavy pt-[56px]">
-      <MainNav items={siteConfig.mainNav} />
-      <main className="flex-grow">
+    <MainLayout>
+      <main>
         {/* Header */}
         <BizToolsHeader />
 
@@ -36,9 +32,7 @@ const BizTools: React.FC = () => {
           </div>
         </section>
       </main>
-      <Footer />
-      <Toaster />
-    </div>
+    </MainLayout>
   );
 };
 

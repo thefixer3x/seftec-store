@@ -1,14 +1,11 @@
 
 import React from 'react';
-import { MainNav } from '@/components/ui/navbar';
-import Footer from '@/components/ui/footer';
-import { siteConfig } from '@/config/site';
+import MainLayout from '@/components/layout/MainLayout';
 
 const About = () => {
   return (
-    <div className="flex min-h-screen flex-col">
-      <MainNav items={siteConfig.mainNav} />
-      <main className="flex-1 pt-16">
+    <MainLayout>
+      <main>
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-3xl md:text-4xl font-bold text-seftec-navy dark:text-white mb-8">About Seftec</h1>
@@ -52,8 +49,7 @@ const About = () => {
           </div>
         </div>
       </main>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 
