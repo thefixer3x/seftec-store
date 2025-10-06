@@ -13,6 +13,7 @@ import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
+import TestPage from '@/TestPage';
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
 const Solutions          = lazy(() => import('@/pages/Solutions'));
@@ -77,6 +78,9 @@ function App() {
         </div>
       }>
         <Routes>
+          {/* Debug test route */}
+          <Route path="/test" element={<TestPage />} />
+          
           {/* Public marketing */}
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
