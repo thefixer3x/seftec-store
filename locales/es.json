@@ -5,6 +5,137 @@
     "welcome": "Bienvenido a SeftecHub Store",
     "tagline": "Tu solución completa para la gestión de tiendas"
   },
+  "nav": {
+    "home": "Inicio",
+    "solutions": "Soluciones",
+    "biztools": "BizTools",
+    "defi": "DeFi Empresarial",
+    "about": "Acerca de",
+    "products": "Productos",
+    "services": "Servicios",
+    "contact": "Contacto",
+    "menu": "Menú",
+    "navigation": "Navegación",
+    "shopping": "Compras",
+    "shop": "Tienda",
+    "cart": "Carrito",
+    "orders": "Mis pedidos",
+    "secured_by_ai": "Asegurado por IA"
+  },
+  "cta": {
+    "sign_in": "Iniciar sesión",
+    "sign_up": "Registrarse",
+    "get_started": "Comenzar",
+    "get_started_free": "Comenzar gratis",
+    "book_demo": "Reservar demo",
+    "learn_more": "Más información",
+    "try_bizgenie": "Probar BizGenie AI"
+  },
+  "hero": {
+    "title": "Transforma tu negocio con tecnología avanzada",
+    "subtitle": "Desbloquea acceso a DeFi de nivel empresarial, soluciones de mercado impulsadas por IA y automatización empresarial inteligente en una plataforma integral.",
+    "tagline": "Crecer más inteligentemente, juntos",
+    "trade_part1": "Revolucionando el comercio",
+    "trade_part2": "global con un mercado confiable impulsado por IA",
+    "trade_title": "Revolucionando el comercio global con un mercado confiable impulsado por IA",
+    "trade_subtitle": "Comercia con confianza, paga con seguridad. Conéctate con empresas verificadas en todo el mundo, realiza transacciones de forma segura y accede a soluciones de financiación, todo en una plataforma.",
+    "transform": "Transforma tu",
+    "business": "negocio",
+    "with_ai": "con IA",
+    "badge_trade": "El futuro del comercio B2B seguro y pagos a proveedores",
+    "badge_compliance": "Liderazgo DeFi compatible con ISO 20022",
+    "badge_ai": "Plataforma empresarial impulsada por IA"
+  },
+  "trust": {
+    "security": "Seguridad empresarial",
+    "compliance": "Cumplimiento global",
+    "support": "Soporte IA 24/7"
+  },
+  "dashboard": {
+    "revenue": "Ingresos",
+    "growth": "Crecimiento"
+  },
+  "problems": {
+    "label": "El desafío",
+    "title": "Desafíos empresariales que resolvemos",
+    "subtitle": "Las empresas enfrentan obstáculos significativos que limitan su potencial de crecimiento y eficiencia en el comercio global.",
+    "lack_of_trust": {
+      "title": "Falta de confianza",
+      "description": "Las empresas luchan con compradores y vendedores no verificados, lo que dificulta establecer relaciones comerciales confiables."
+    },
+    "payment_uncertainty": {
+      "title": "Incertidumbre en los pagos",
+      "description": "Las transacciones retrasadas o fraudulentas limitan el crecimiento empresarial y crean riesgos financieros innecesarios."
+    },
+    "manual_processes": {
+      "title": "Procesos comerciales manuales",
+      "description": "La incorporación lenta, la negociación y la ejecución de contratos desperdician tiempo y recursos valiosos."
+    },
+    "financing_gaps": {
+      "title": "Brechas de financiación comercial",
+      "description": "La falta de opciones de financiación comercial para las PYME limita su capacidad para aprovechar oportunidades más grandes."
+    },
+    "cross_border": {
+      "title": "Desafíos transfronterizos",
+      "description": "Las PYME enfrentan tarifas altas y retrasos en los pagos internacionales, lo que dificulta la expansión global."
+    },
+    "market_access": {
+      "title": "Acceso limitado al mercado",
+      "description": "Dificultad para encontrar y conectarse con socios comerciales globales relevantes."
+    }
+  },
+  "solutions": {
+    "title": "Nuestras soluciones",
+    "verified_marketplace": {
+      "title": "Mercado B2B verificado",
+      "description": "Conéctate con empresas previamente verificadas, accede a perfiles de empresas y genera confianza a través de calificaciones y reseñas transparentes."
+    },
+    "secure_payments": {
+      "title": "Soluciones de pago seguras",
+      "description": "Transacciones multimoneda con protección de depósito en garantía, liquidaciones instantáneas y prevención de fraude."
+    },
+    "smart_contracts": {
+      "title": "Automatización de contratos inteligentes",
+      "description": "Flujos de trabajo automatizados para pedidos, facturas y acuerdos con seguridad respaldada por blockchain."
+    },
+    "trade_finance": {
+      "title": "Financiación comercial integrada",
+      "description": "Accede a capital de trabajo, factoraje de facturas y financiación de la cadena de suministro diseñada para PYME."
+    },
+    "global_reach": {
+      "title": "Red de pagos globales",
+      "description": "Transferencias internacionales de bajo costo con tipos de cambio en tiempo real y billeteras multimoneda."
+    },
+    "ai_matching": {
+      "title": "Coincidencia impulsada por IA",
+      "description": "Encuentra socios comerciales ideales con recomendaciones inteligentes basadas en las necesidades de tu negocio."
+    }
+  },
+  "recommendations": {
+    "title": "Recomendado para ti",
+    "match": "coincidencia",
+    "add_to_cart": "Añadir al carrito",
+    "reason_industry": "Popular en tu industria",
+    "reason_marketplace": "Recomendado para mercados B2B",
+    "reason_trending": "Tendencia en financiación comercial",
+    "reason_defi": "Perfecto para DeFi empresarial"
+  },
+  "products": {
+    "inventory_system": "Sistema inteligente de gestión de inventario",
+    "payment_gateway": "Pasarela de pago empresarial",
+    "trade_finance": "Automatización de financiación comercial",
+    "defi_optimizer": "Optimizador de rendimiento DeFi",
+    "inventory_desc": "Seguimiento de inventario impulsado por IA con análisis en tiempo real y capacidades de reordenamiento automático.",
+    "payment_desc": "Procesamiento de pagos multimoneda con detección de fraude y cumplimiento global.",
+    "trade_desc": "Agiliza cartas de crédito, garantías y documentación comercial con verificación blockchain.",
+    "defi_desc": "Gestión de cartera DeFi de nivel institucional con evaluación de riesgos y estrategias automatizadas."
+  },
+  "categories": {
+    "business_software": "Software empresarial",
+    "fintech": "FinTech",
+    "trade_finance": "Financiación comercial",
+    "defi_solutions": "Soluciones DeFi"
+  },
   "store": {
     "products": "Productos",
     "inventory": "Inventario",

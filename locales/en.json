@@ -5,6 +5,135 @@
     "welcome": "Welcome to SeftecHub Store",
     "tagline": "Your complete store management solution"
   },
+  "nav": {
+    "home": "Home",
+    "solutions": "Solutions",
+    "biztools": "BizTools",
+    "defi": "Enterprise DeFi",
+    "about": "About Us",
+    "products": "Products",
+    "services": "Services",
+    "contact": "Contact",
+    "menu": "Menu",
+    "navigation": "Navigation",
+    "shopping": "Shopping",
+    "shop": "Shop",
+    "cart": "Cart",
+    "orders": "My Orders",
+    "secured_by_ai": "Secured by AI"
+  },
+  "cta": {
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "get_started": "Get Started",
+    "get_started_free": "Get Started Free",
+    "book_demo": "Book a Demo",
+    "learn_more": "Learn More",
+    "try_bizgenie": "Try BizGenie AI"
+  },
+  "hero": {
+    "title": "Transform Your Business with Advanced Technology",
+    "subtitle": "Unlock enterprise-grade DeFi access, AI-powered marketplace solutions, and intelligent business automation in one comprehensive platform.",
+    "tagline": "Grow Smarter, Together",
+    "trade_part1": "Revolutionizing Global",
+    "trade_part2": "Trade with a Trusted AI-Powered Marketplace",
+    "trade_title": "Revolutionizing Global Trade with a Trusted AI-Powered Marketplace",
+    "trade_subtitle": "Trade with Trust, Pay with Confidence. Connect with verified businesses worldwide, transact securely, and access financing solutions all in one platform.",
+    "transform": "Transform Your",
+    "business": "Business",
+    "with_ai": "with AI",
+    "badge_trade": "The Future of Secure B2B Trade & Vendor Payments",
+    "badge_compliance": "ISO 20022 Compliant DeFi Leadership",
+    "badge_ai": "AI-Powered Business Platform"
+  },
+  "trust": {
+    "security": "Enterprise Security",
+    "compliance": "Global Compliance",
+    "support": "24/7 AI Support"
+  },
+  "dashboard": {
+    "revenue": "Revenue",
+    "growth": "Growth"
+  },
+  "problems": {
+    "title": "Business Challenges We Solve",
+    "lack_of_trust": {
+      "title": "Lack of Trust",
+      "description": "Businesses struggle with unverified buyers and sellers, making it difficult to establish reliable trading relationships."
+    },
+    "payment_uncertainty": {
+      "title": "Payment Uncertainty",
+      "description": "Delayed or fraudulent transactions limit business growth and create unnecessary financial risks."
+    },
+    "manual_processes": {
+      "title": "Manual Trade Processes",
+      "description": "Slow onboarding, negotiation, and contract execution waste valuable time and resources."
+    },
+    "financing_gaps": {
+      "title": "Trade Financing Gaps",
+      "description": "Lack of trade financing options for SMEs limits their ability to take on larger opportunities."
+    },
+    "cross_border": {
+      "title": "Cross-Border Challenges",
+      "description": "SMEs face high fees & delays in international payments, hindering global expansion."
+    },
+    "market_access": {
+      "title": "Limited Market Access",
+      "description": "Difficulty finding and connecting with relevant global trading partners."
+    }
+  },
+  "solutions": {
+    "title": "Our Solutions",
+    "verified_marketplace": {
+      "title": "Verified B2B Marketplace",
+      "description": "Connect with pre-verified businesses, access company profiles, and build trust through transparent ratings and reviews."
+    },
+    "secure_payments": {
+      "title": "Secure Payment Solutions",
+      "description": "Multi-currency transactions with escrow protection, instant settlements, and fraud prevention."
+    },
+    "smart_contracts": {
+      "title": "Smart Contract Automation",
+      "description": "Automated workflows for orders, invoices, and agreements with blockchain-backed security."
+    },
+    "trade_finance": {
+      "title": "Integrated Trade Finance",
+      "description": "Access working capital, invoice factoring, and supply chain financing tailored for SMEs."
+    },
+    "global_reach": {
+      "title": "Global Payment Network",
+      "description": "Low-cost international transfers with real-time FX rates and multi-currency wallets."
+    },
+    "ai_matching": {
+      "title": "AI-Powered Matching",
+      "description": "Find ideal trading partners with intelligent recommendations based on your business needs."
+    }
+  },
+  "recommendations": {
+    "title": "Recommended for You",
+    "match": "match",
+    "add_to_cart": "Add to Cart",
+    "reason_industry": "Popular in your industry",
+    "reason_marketplace": "Recommended for B2B marketplaces",
+    "reason_trending": "Trending in trade finance",
+    "reason_defi": "Perfect for enterprise DeFi"
+  },
+  "products": {
+    "inventory_system": "Smart Inventory Management System",
+    "payment_gateway": "Enterprise Payment Gateway",
+    "trade_finance": "Trade Finance Automation",
+    "defi_optimizer": "DeFi Yield Optimizer",
+    "inventory_desc": "AI-powered inventory tracking with real-time analytics and automated reordering capabilities.",
+    "payment_desc": "Multi-currency payment processing with fraud detection and global compliance.",
+    "trade_desc": "Streamline letters of credit, guarantees, and trade documentation with blockchain verification.",
+    "defi_desc": "Institutional-grade DeFi portfolio management with risk assessment and automated strategies."
+  },
+  "categories": {
+    "business_software": "Business Software",
+    "fintech": "FinTech",
+    "trade_finance": "Trade Finance",
+    "defi_solutions": "DeFi Solutions"
+  },
   "store": {
     "products": "Products",
     "inventory": "Inventory",

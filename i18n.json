@@ -1,0 +1,22 @@
+{
+  "version": 1.8,
+  "locale": {
+    "source": "en",
+    "targets": ["es", "fr", "de", "ja", "zh", "pt", "ar"]
+  },
+  "buckets": {
+    "seftec-store": {
+      "include": ["locales/[locale].json"],
+      "description": "Store management app translations"
+    }
+  },
+  "provider": {
+    "id": "lingo.dev"
+  },
+  "lockedKeys": [
+    "brand.name",
+    "*.seftechub",
+    "*.seftec*"
+  ],
+  "$schema": "https://lingo.dev/schema/i18n.json"
+}
