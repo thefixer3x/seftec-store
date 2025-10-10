@@ -2,9 +2,10 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
+import { useTranslation } from '@/hooks/useTranslation';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -22,14 +23,16 @@ export const NotificationSorter: React.FC<NotificationSorterProps> = ({
   activeSort,
   setActiveSort
 }) => {
+  const { t } = useTranslation();
+
   // Helper to get the sort label
   const getSortLabel = () => {
     switch (activeSort) {
-      case 'newest': return 'Newest first';
-      case 'oldest': return 'Oldest first';
-      case 'unread': return 'Unread first';
-      case 'type': return 'Group by type';
-      default: return 'Sort';
+      case 'newest': return t('notifications.sort.newest', 'Newest first');
+      case 'oldest': return t('notifications.sort.oldest', 'Oldest first');
+      case 'unread': return t('notifications.sort.unread', 'Unread first');
+      case 'type': return t('notifications.sort.type', 'Group by type');
+      default: return t('common.sort', 'Sort');
     }
   };
 

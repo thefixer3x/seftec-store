@@ -7,46 +7,6 @@ import { ResponsiveGrid, ResponsiveContainer } from "@/components/ui/mobile-opti
 import { ResponsiveSpacing } from "@/components/ui/mobile-optimizations/ResponsiveBreakpoints";
 import { useI18nContext } from "@/components/ui/language-toggle";
 
-// Data for the problems section matching the image layout
-const problemsData = [
-  {
-    title: 'Lack of Trust',
-    description: 'Businesses struggle with unverified buyers and sellers, making it difficult to establish reliable trading relationships.',
-    icon: <ShieldCheck className="text-seftec-navy dark:text-white" size={32} />,
-    iconBg: 'bg-blue-100 dark:bg-blue-900/20'
-  },
-  {
-    title: 'Payment Uncertainty',
-    description: 'Delayed or fraudulent transactions limit business growth and create unnecessary financial risks.',
-    icon: <Wallet className="text-seftec-navy dark:text-white" size={32} />,
-    iconBg: 'bg-green-100 dark:bg-green-900/20'
-  },
-  {
-    title: 'Manual Trade Processes',
-    description: 'Slow onboarding, negotiation, and contract execution waste valuable time and resources.',
-    icon: <Building className="text-seftec-navy dark:text-white" size={32} />,
-    iconBg: 'bg-orange-100 dark:bg-orange-900/20'
-  },
-  {
-    title: 'Trade Financing Gaps',
-    description: 'Lack of trade financing options for SMEs limits their ability to take on larger opportunities.',
-    icon: <Calculator className="text-seftec-navy dark:text-white" size={32} />,
-    iconBg: 'bg-purple-100 dark:bg-purple-900/20'
-  },
-  {
-    title: 'Cross-Border Challenges',
-    description: 'SMEs face high fees & delays in international payments, hindering global expansion.',
-    icon: <Globe className="text-seftec-navy dark:text-white" size={32} />,
-    iconBg: 'bg-teal-100 dark:bg-teal-900/20'
-  },
-  {
-    title: 'Limited Market Access',
-    description: 'Difficulty finding and connecting with relevant global trading partners.',
-    icon: <Handshake className="text-seftec-navy dark:text-white" size={32} />,
-    iconBg: 'bg-indigo-100 dark:bg-indigo-900/20'
-  }
-];
-
 const ProblemsSection: React.FC = () => {
   const { t } = useI18nContext();
   const [forceUpdate, setForceUpdate] = React.useState(0);
@@ -72,8 +32,8 @@ const ProblemsSection: React.FC = () => {
     };
   }, []);
 
-  // Translate problems data
-  const translatedProblemsData = [
+  // Data for the problems section with translations
+  const problemsData = [
     {
       title: t('problems.lack_of_trust.title', 'Lack of Trust'),
       description: t('problems.lack_of_trust.description', 'Businesses struggle with unverified buyers and sellers, making it difficult to establish reliable trading relationships.'),
@@ -130,14 +90,14 @@ const ProblemsSection: React.FC = () => {
               {t('problems.subtitle', 'Businesses face significant obstacles that limit their growth potential and efficiency in global trade.')}
             </p>
           </div>
-          
+
           {/* Problems Grid */}
           <ResponsiveGrid
             cols={{ mobile: 1, tablet: 2, desktop: 3 }}
             gap={{ mobile: 6, tablet: 6, desktop: 8 }}
           >
-            {translatedProblemsData.map((problem, index) => (
-              <div 
+            {problemsData.map((problem, index) => (
+              <div
                 key={index}
                 className="animate-fade-up group"
                 style={{ animationDelay: `${index * 100}ms` }}
@@ -146,11 +106,11 @@ const ProblemsSection: React.FC = () => {
                   <div className="flex flex-col items-start space-y-3 sm:space-y-4 h-full">
                     {/* Icon */}
                     <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl ${problem.iconBg} group-hover:scale-110 transition-transform duration-300`}>
-                      {React.cloneElement(problem.icon, { 
-                        size: typeof window !== 'undefined' && window.innerWidth < 640 ? 24 : 32 
+                      {React.cloneElement(problem.icon, {
+                        size: typeof window !== 'undefined' && window.innerWidth < 640 ? 24 : 32
                       })}
                     </div>
-                    
+
                     {/* Content */}
                     <div className="space-y-2 sm:space-y-3 flex-grow">
                       <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-seftec-navy dark:text-white">
