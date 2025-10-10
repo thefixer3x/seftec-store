@@ -1,9 +1,9 @@
 {
   "app": {
-    "title": "SeftecHub Store",
-    "description": "E-commerce store management platform",
-    "welcome": "Welcome to SeftecHub Store",
-    "tagline": "Your complete store management solution"
+    "title": "SeftecHub",
+    "description": "Enterprise DeFi Access Platform | Global B2B Trade & Finance",
+    "welcome": "Welcome to SeftecHub",
+    "tagline": "Your complete enterprise DeFi solution"
   },
   "nav": {
     "home": "Home",
@@ -155,5 +155,262 @@
     "price_management": "Price Management",
     "promotions": "Promotions & Discounts",
     "supplier_management": "Supplier Management"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "settings": "Settings",
+    "help": "Help",
+    "support": "Support",
+    "documentation": "Documentation",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cookies": "Cookies",
+    "security": "Security"
+  },
+  "features": {
+    "title": "Platform Features",
+    "subtitle": "Comprehensive tools for modern business",
+    "ai_powered": "AI-Powered",
+    "secure": "Secure",
+    "scalable": "Scalable",
+    "compliant": "Compliant",
+    "global": "Global",
+    "realtime": "Real-time"
+  },
+  "business": {
+    "registration": "Business Registration",
+    "verification": "Business Verification",
+    "compliance": "Compliance Management",
+    "analytics": "Business Analytics",
+    "dashboard": "Business Dashboard",
+    "tools": "Business Tools",
+    "advisor": "Business Advisor",
+    "intelligence": "Business Intelligence"
+  },
+  "finance": {
+    "defi": "DeFi Solutions",
+    "payments": "Payment Processing",
+    "banking": "Banking Services",
+    "transfers": "Money Transfers",
+    "cashflow": "Cashflow Management",
+    "risk": "Risk Management",
+    "compliance": "Financial Compliance",
+    "reporting": "Financial Reporting"
+  },
+  "marketplace": {
+    "title": "B2B Marketplace",
+    "buyers": "Buyers",
+    "sellers": "Sellers",
+    "vendors": "Vendors",
+    "suppliers": "Suppliers",
+    "orders": "Orders",
+    "transactions": "Transactions",
+    "reviews": "Reviews",
+    "ratings": "Ratings"
+  },
+  "ai": {
+    "assistant": "AI Assistant",
+    "recommendations": "AI Recommendations",
+    "insights": "AI Insights",
+    "automation": "AI Automation",
+    "analysis": "AI Analysis",
+    "optimization": "AI Optimization",
+    "predictions": "AI Predictions",
+    "bizgenie": "BizGenie AI"
+  },
+  "performance": {
+    "title": "Performance Dashboard",
+    "subtitle": "Real-time system performance and reliability metrics",
+    "uptime": "System Uptime",
+    "response_time": "API Response Time",
+    "success_rate": "Transaction Success Rate",
+    "processing_speed": "Processing Speed",
+    "last_30_days": "Last 30 days",
+    "average_response": "Average response time",
+    "successful_transactions": "Successful DeFi transactions",
+    "average_processing": "Average transaction processing"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "mark_read": "Mark as Read",
+    "mark_unread": "Mark as Unread",
+    "delete": "Delete",
+    "clear_all": "Clear All",
+    "sort": {
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "unread": "Unread first",
+      "type": "Group by type"
+    }
+  },
+  "auth": {
+    "sign_in": "Sign In",
+    "sign_up": "Sign Up",
+    "sign_out": "Sign Out",
+    "forgot_password": "Forgot Password",
+    "reset_password": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "remember_me": "Remember Me",
+    "or": "or",
+    "continue_with": "Continue with",
+    "google": "Google",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter"
+  },
+  "footer": {
+    "company": "Company",
+    "products": "Products",
+    "resources": "Resources",
+    "legal": "Legal",
+    "follow_us": "Follow Us",
+    "newsletter": "Newsletter",
+    "subscribe": "Subscribe",
+    "copyright": "© 2025 SEFTEC DYNAMICS. All rights reserved."
+  },
+  "testimonials": {
+    "title": "What Our Clients Say",
+    "subtitle": "Businesses around the world trust our platform to drive their financial decision-making and strategic planning.",
+    "label": "Client Success",
+    "sarah_johnson": {
+      "name": "Sarah Johnson",
+      "company": "TechAdvance Inc.",
+      "role": "Head of Operations",
+      "quote": "The AI assistant feature has revolutionized our decision-making process. We've seen a 30% increase in operational efficiency since implementation."
+    },
+    "michael_chen": {
+      "name": "Michael Chen",
+      "company": "GlobalTrade Solutions",
+      "role": "Director of Strategy",
+      "quote": "The platform's ability to analyze market trends and provide strategic recommendations has been invaluable for our international expansion."
+    },
+    "aisha_patel": {
+      "name": "Aisha Patel",
+      "company": "Innovate Financial",
+      "role": "CFO",
+      "quote": "The customizable dashboard has given us unprecedented visibility into our financial performance. The AI insights are spot-on and actionable."
+    },
+    "robert_martinez": {
+      "name": "Robert Martinez",
+      "company": "MarketEdge Partners",
+      "role": "Director of Strategy",
+      "quote": "The predictive analytics have helped us anticipate market shifts and adjust our strategy accordingly. It's like having a financial advisor available 24/7."
+    }
+  },
+  "regions": {
+    "title": "Global Presence",
+    "subtitle": "Regions We Cover",
+    "description": "Our platform supports businesses across multiple regions, providing localized insights and global perspectives.",
+    "middle_east_africa": "Middle East & Africa",
+    "north_america": "North America",
+    "europe": "Europe",
+    "asia_pacific": "Asia Pacific",
+    "countries": {
+      "saudi_arabia": "Saudi Arabia",
+      "south_africa": "South Africa",
+      "united_states": "United States",
+      "united_kingdom": "United Kingdom",
+      "hong_kong": "Hong Kong",
+      "new_zealand": "New Zealand"
+    }
+  },
+  "value_propositions": {
+    "title": "Our Value Propositions",
+    "subtitle": "Empowering Your Business Growth",
+    "description": "Discover how our comprehensive platform can transform your business operations and drive unprecedented success.",
+    "ai_matching": {
+      "title": "AI-Powered Smart Matching",
+      "description": "Our advanced algorithms connect you with the perfect business partners based on your needs, preferences, and transaction history."
+    },
+    "cross_border": {
+      "title": "Cross-Border Sourcing & Export",
+      "description": "Connect with global suppliers and buyers, facilitating international trade across borders with ease and confidence."
+    },
+    "vendor_financing": {
+      "title": "Embedded Vendor Financing",
+      "description": "Access instant credit for inventory purchases with competitive interest rates between 4% to 6%, improving your cash flow."
+    },
+    "direct_access": {
+      "title": "Direct Vendor Access",
+      "description": "Manufacturers can promote products directly to high-potential vendors through targeted advertising and bulk special offers."
+    },
+    "marketplace": {
+      "title": "Marketplace for Local & Global Sourcing",
+      "description": "Access international brands and export locally produced goods, expanding your business reach globally."
+    },
+    "ai_advisor": {
+      "title": "AI Business Advisor",
+      "description": "Our intelligent assistant analyzes financial data, market trends, and operations to provide strategic recommendations that optimize performance and enhance profitability."
+    },
+    "business_plan": {
+      "title": "Business Plan Review & Drafting",
+      "description": "Comprehensive business plan creation, review, and strategic planning services powered by AI to ensure your business strategy is optimized for success."
+    },
+    "cashflow": {
+      "title": "In-Depth Cashflow Management",
+      "description": "Advanced cashflow analytics, forecasting, and management tools to maintain healthy liquidity and optimize working capital."
+    },
+    "multi_country": {
+      "title": "Multi-Country Business Registration",
+      "description": "Complete business incorporation and regulatory alignment support for US, UK & EU markets - exclusive for Pro users."
+    },
+    "compliance": {
+      "title": "Global Compliance & Risk Analytics",
+      "description": "Highly tuned, context-aware AI for global business practices, risk analytics, and regulatory compliance suited for growing businesses."
+    },
+    "defi_banking": {
+      "title": "DeFi & Open Banking Integration",
+      "description": "Leverage decentralized finance and open banking solutions, bringing your business to the future of financial technology."
+    },
+    "instant_settlement": {
+      "title": "Instant Settlement for Verified Businesses",
+      "description": "Lightning-fast payment settlements available exclusively for fully verified businesses, ensuring optimal cash flow management."
+    }
+  },
+  "dashboard_features": {
+    "intuitive_dashboard": {
+      "title": "Intuitive Dashboard",
+      "description": "Get a 360-degree view of your business with our intuitive dashboard that presents all critical information at a glance.",
+      "details": "Our dashboard consolidates your key metrics, recent activities, and important notifications in a clean, organized interface designed for maximum productivity."
+    },
+    "realtime_analytics": {
+      "title": "Real-Time Analytics",
+      "description": "Monitor key performance indicators and track trends in real-time to make data-driven decisions.",
+      "details": "Access up-to-the-minute data on sales, inventory, customer behavior, and market trends through interactive charts and visualizations that help you spot opportunities and challenges instantly."
+    },
+    "customizable_reports": {
+      "title": "Customizable Reports",
+      "description": "Generate detailed reports tailored to your specific needs for deeper business insights.",
+      "details": "Create, schedule, and share reports with flexible parameters, custom metrics, and multiple export options to support your decision-making process and stakeholder communications."
+    },
+    "user_friendly": {
+      "title": "User-Friendly Interface",
+      "description": "Navigate with ease and access the information you need quickly with our intuitive design.",
+      "details": "Enjoy a clean, responsive interface with thoughtful touches like keyboard shortcuts, personalized workspaces, and accessible design that makes managing your business a pleasure rather than a chore."
+    },
+    "bizgenie_advisor": {
+      "title": "BizGenie AI Advisor",
+      "label": "AI Advisor",
+      "description": "Get strategic business and financial advisory powered by BizGenie, your personalised AI assistant.",
+      "details": "Our intelligent assistant analyzes your financial data, market trends, and business operations to offer insightful recommendations. It helps you anticipate market changes, manage risks, and enhance profitability through data-driven strategies tailored to your specific business needs."
+    }
   }
 }

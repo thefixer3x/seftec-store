@@ -3,38 +3,41 @@ import React from 'react';
 import { Activity, Zap, TrendingUp, Clock } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export const PerformanceMetrics = () => {
+  const { t } = useTranslation();
+
   const metrics = [
     {
       icon: Activity,
-      title: "System Uptime",
+      title: t('performance.uptime', 'System Uptime'),
       value: "99.97%",
-      description: "Last 30 days",
+      description: t('performance.last_30_days', 'Last 30 days'),
       progress: 99.97,
       color: "text-green-600"
     },
     {
       icon: Zap,
-      title: "API Response Time",
+      title: t('performance.response_time', 'API Response Time'),
       value: "< 200ms",
-      description: "Average response time",
+      description: t('performance.average_response', 'Average response time'),
       progress: 85,
       color: "text-blue-600"
     },
     {
       icon: TrendingUp,
-      title: "Transaction Success Rate",
+      title: t('performance.success_rate', 'Transaction Success Rate'),
       value: "99.9%",
-      description: "Successful DeFi transactions",
+      description: t('performance.successful_transactions', 'Successful DeFi transactions'),
       progress: 99.9,
       color: "text-seftec-gold"
     },
     {
       icon: Clock,
-      title: "Processing Speed",
+      title: t('performance.processing_speed', 'Processing Speed'),
       value: "< 3 sec",
-      description: "Average transaction processing",
+      description: t('performance.average_processing', 'Average transaction processing'),
       progress: 92,
       color: "text-purple-600"
     }
@@ -44,10 +47,10 @@ export const PerformanceMetrics = () => {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold text-seftec-navy dark:text-white mb-2">
-          Performance Dashboard
+          {t('performance.title', 'Performance Dashboard')}
         </h2>
         <p className="text-muted-foreground">
-          Real-time system performance and reliability metrics
+          {t('performance.subtitle', 'Real-time system performance and reliability metrics')}
         </p>
       </div>
 
