@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 .vercel
 i18n.cache
+
+# Local Netlify folder
+.netlify
+~/.kiro/settings/mcp-fixed.json
+.gitignore
+.kiro/settings/mcp.json
+string
