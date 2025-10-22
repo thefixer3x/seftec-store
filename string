@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "command:": {
+      "args": [
+        "args:",
+        "users/seye/mcp-http-bridge.js,",
+        "env:",
+        "MCP_SERVER_URL:",
+        "https://link.seyederick.com/mcp,",
+        "MCP_API_KEY:",
+        "lano_master_key_2024"
+      ],
+      "command": "node,"
+    }
+  }
+}
