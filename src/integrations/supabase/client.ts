@@ -3,8 +3,9 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "demo-key-for-development";
+// Vite uses import.meta.env for environment variables
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://seftechub.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 // Define the API endpoint that will be used for all backend services
 // This will be used in a phased approach where api.seftec.store handles all backend services

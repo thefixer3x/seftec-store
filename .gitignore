@@ -31,3 +31,5 @@ i18n.cache
 .gitignore
 .kiro/settings/mcp.json
 string
+.env
+.env.local
