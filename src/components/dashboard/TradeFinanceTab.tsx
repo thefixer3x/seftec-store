@@ -6,6 +6,8 @@ import { TabsList, TabsTrigger, Tabs, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTradeFinance, TradeFinanceApplication } from '@/hooks/use-trade-finance';
 import { ApplicationDetailModal } from './trade-finance/ApplicationDetailModal';
+import { ApplicationFormModal } from './trade-finance/ApplicationFormModal';
+import { DocumentUploadModal } from './trade-finance/DocumentUploadModal';
 
 // Helper to get facility type display name
 const getFacilityTypeLabel = (type: string): string => {
@@ -45,7 +47,9 @@ const ApplicationCard: React.FC<{
   application: TradeFinanceApplication;
   variant: 'active' | 'pending' | 'completed';
   onViewDetails: (applicationId: string) => void;
-}> = ({ application, variant, onViewDetails }) => {
+  onEdit?: (application: TradeFinanceApplication) => void;
+  onUploadDocuments?: (applicationId: string) => void;
+}> = ({ application, variant, onViewDetails, onEdit, onUploadDocuments }) => {
   const cardColors = {
     active: 'bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800/30',
     pending: 'bg-amber-50 dark:bg-amber-900/20 border dark:border-amber-800/30',
@@ -131,11 +135,26 @@ const ApplicationCard: React.FC<{
               >
                 View Details
               </Button>
-              {variant !== 'completed' && (
+              {application.application_status === 'draft' && onEdit && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-700 dark:text-blue-300 border-blue-700 dark:border-blue-600 text-xs"
+                  onClick={() => onEdit(application)}
+                >
+                  Edit
+                </Button>
+              )}
+              {variant !== 'completed' && application.application_status !== 'draft' && (
                 <Button
                   variant="outline"
                   size="sm"
                   className="text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 text-xs"
+                  onClick={() => {
+                    if (variant === 'pending' && onUploadDocuments) {
+                      onUploadDocuments(application.id);
+                    }
+                  }}
                 >
                   {variant === 'pending' ? 'Upload Documents' : 'Manage'}
                 </Button>
@@ -152,13 +171,17 @@ const TradeFinanceTab = () => {
   const [tradeTab, setTradeTab] = React.useState("active");
   const [selectedApplicationId, setSelectedApplicationId] = React.useState<string | null>(null);
   const [detailModalOpen, setDetailModalOpen] = React.useState(false);
+  const [formModalOpen, setFormModalOpen] = React.useState(false);
+  const [editingApplication, setEditingApplication] = React.useState<TradeFinanceApplication | null>(null);
+  const [uploadModalOpen, setUploadModalOpen] = React.useState(false);
+  const [uploadApplicationId, setUploadApplicationId] = React.useState<string | null>(null);
 
   const isMobile = useIsMobile();
-  const { applications, summary, isLoading, isSummaryLoading } = useTradeFinance();
+  const { applications, summary, isLoading, isSummaryLoading, refetch } = useTradeFinance();
 
   // Filter applications by status
   const activeApplications = applications.filter(app => app.application_status === 'active');
-  const pendingApplications = applications.filter(app => ['submitted', 'under_review'].includes(app.application_status));
+  const pendingApplications = applications.filter(app => ['submitted', 'under_review', 'draft'].includes(app.application_status));
   const completedApplications = applications.filter(app => app.application_status === 'completed');
 
   const handleViewDetails = (applicationId: string) => {
@@ -166,11 +189,37 @@ const TradeFinanceTab = () => {
     setDetailModalOpen(true);
   };
 
+  const handleNewApplication = () => {
+    setEditingApplication(null);
+    setFormModalOpen(true);
+  };
+
+  const handleEditApplication = (application: TradeFinanceApplication) => {
+    setEditingApplication(application);
+    setFormModalOpen(true);
+  };
+
+  const handleFormSuccess = () => {
+    refetch();
+  };
+
+  const handleUploadDocuments = (applicationId: string) => {
+    setUploadApplicationId(applicationId);
+    setUploadModalOpen(true);
+  };
+
+  const handleUploadSuccess = () => {
+    refetch();
+  };
+
   return (
     <div className="w-full space-y-4 md:space-y-6 p-2 md:p-0">
       <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'flex-row justify-between items-center'} mb-4 md:mb-6`}>
         <h1 className="text-xl md:text-2xl font-bold text-seftec-navy dark:text-white">Trade Finance</h1>
-        <Button className="bg-blue-700 hover:bg-blue-800 text-white w-full md:w-auto">
+        <Button
+          className="bg-blue-700 hover:bg-blue-800 text-white w-full md:w-auto"
+          onClick={handleNewApplication}
+        >
           Apply for New Facility
           <ArrowUp className="h-4 w-4 ml-2 rotate-45" />
         </Button>
@@ -275,6 +324,8 @@ const TradeFinanceTab = () => {
                     application={app}
                     variant="active"
                     onViewDetails={handleViewDetails}
+                    onEdit={handleEditApplication}
+                    onUploadDocuments={handleUploadDocuments}
                   />
                 ))
               ) : (
@@ -287,7 +338,10 @@ const TradeFinanceTab = () => {
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
                       You don't have any active trade finance facilities yet.
                     </p>
-                    <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+                    <Button
+                      className="bg-blue-700 hover:bg-blue-800 text-white"
+                      onClick={handleNewApplication}
+                    >
                       Apply for New Facility
                     </Button>
                   </CardContent>
@@ -309,6 +363,8 @@ const TradeFinanceTab = () => {
                     application={app}
                     variant="pending"
                     onViewDetails={handleViewDetails}
+                    onEdit={handleEditApplication}
+                    onUploadDocuments={handleUploadDocuments}
                   />
                 ))
               ) : (
@@ -321,7 +377,10 @@ const TradeFinanceTab = () => {
                     <p className="text-gray-600 dark:text-gray-300 mb-4">
                       You don't have any pending applications at the moment.
                     </p>
-                    <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+                    <Button
+                      className="bg-blue-700 hover:bg-blue-800 text-white"
+                      onClick={handleNewApplication}
+                    >
                       Submit New Application
                     </Button>
                   </CardContent>
@@ -343,6 +402,8 @@ const TradeFinanceTab = () => {
                     application={app}
                     variant="completed"
                     onViewDetails={handleViewDetails}
+                    onEdit={handleEditApplication}
+                    onUploadDocuments={handleUploadDocuments}
                   />
                 ))
               ) : (
@@ -368,6 +429,23 @@ const TradeFinanceTab = () => {
         applicationId={selectedApplicationId}
         open={detailModalOpen}
         onOpenChange={setDetailModalOpen}
+        onUploadDocuments={handleUploadDocuments}
+      />
+
+      {/* Application Form Modal */}
+      <ApplicationFormModal
+        application={editingApplication}
+        open={formModalOpen}
+        onOpenChange={setFormModalOpen}
+        onSuccess={handleFormSuccess}
+      />
+
+      {/* Document Upload Modal */}
+      <DocumentUploadModal
+        applicationId={uploadApplicationId}
+        open={uploadModalOpen}
+        onOpenChange={setUploadModalOpen}
+        onSuccess={handleUploadSuccess}
       />
     </div>
   );
