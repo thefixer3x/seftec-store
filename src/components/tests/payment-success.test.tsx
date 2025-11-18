@@ -1,22 +1,26 @@
 
-/// <reference types="jest" />
+/// <reference types="vitest" />
 
 // Import jest-dom for extended matchers
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
+import { describe, it, expect, vi } from 'vitest';
 // Import testing library with proper type support
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import PaymentSuccess from '@/pages/PaymentSuccess';
 
 // Mock the useSearchParams hook
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useSearchParams: () => [
-    new URLSearchParams({ session_id: 'test_session_123' }),
-    jest.fn()
-  ]
-}));
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useSearchParams: () => [
+      new URLSearchParams({ session_id: 'test_session_123' }),
+      vi.fn()
+    ]
+  };
+});
 
 describe('PaymentSuccess Component', () => {
   it('renders success message', () => {
