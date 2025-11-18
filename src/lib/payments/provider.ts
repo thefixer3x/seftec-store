@@ -101,8 +101,13 @@ export abstract class PaymentProvider {
       }
 
       // If rollout percentage is 100 or not set, allow all users
-      if (!flag.rollout_pct || flag.rollout_pct >= 100) {
+      if (flag.rollout_pct === null || flag.rollout_pct === undefined || flag.rollout_pct >= 100) {
         return true;
+      }
+
+      // If rollout is 0%, exclude all users
+      if (flag.rollout_pct === 0) {
+        return false;
       }
 
       // Check if specific user is in rollout
