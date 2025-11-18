@@ -63,22 +63,66 @@ serve(async (req) => {
     switch (action) {
       case "get_providers": {
         const { category } = params;
-        
+
         if (!category) {
           return new Response(
             JSON.stringify({ success: false, error: "Category is required" }),
             { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
           );
         }
-        
+
         // Get providers from SaySwitch
         const response = await saySwitchRequest(`/bills/providers?category=${category}`);
-        
+
         return new Response(
           JSON.stringify({
             success: true,
             providers: response.data || []
-          }), 
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      case "get_data_plans": {
+        const { provider } = params;
+
+        if (!provider) {
+          return new Response(
+            JSON.stringify({ success: false, error: "Provider is required" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Get data plans from SaySwitch
+        const response = await saySwitchRequest(`/bills/data-plans?provider=${provider}`);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            plans: response.data || []
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      case "get_tv_packages": {
+        const { provider } = params;
+
+        if (!provider) {
+          return new Response(
+            JSON.stringify({ success: false, error: "Provider is required" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Get TV packages from SaySwitch
+        const response = await saySwitchRequest(`/bills/tv-packages?provider=${provider}`);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            packages: response.data || []
+          }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
