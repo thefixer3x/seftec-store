@@ -40,3 +40,10 @@ supabase/.env.local
 # Kiro settings
 ~/.kiro/settings/mcp-fixed.json
 .kiro/settings/mcp.json
+
+# Sensitive files - NEVER commit these!
+string
+
+# Supabase temporary files and credentials
+supabase/.temp/
+supabase/config.toml

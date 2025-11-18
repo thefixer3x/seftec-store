@@ -44,6 +44,8 @@ export function useFeatureFlags() {
 
         // Attempt to fetch feature flags from Supabase
         // Try feature_flags table first, fall back to defaults if it doesn't exist
+        // Note: Limit set to 100. If you need more feature flags, consider using pagination
+        // or increasing this limit based on your application's requirements.
         const { data, error } = await supabase
           .from('feature_flags')
           .select('name, enabled')
