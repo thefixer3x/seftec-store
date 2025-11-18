@@ -61,7 +61,7 @@ The authentication system is critical for security and user experience but curre
 - [ ] Sign out functionality
 
 ### Advanced Authentication
-- [ ] OAuth providers (Google, GitHub, Apple, Facebook)
+- [ ] OAuth providers (Google, GitHub, Apple)
 - [ ] Magic link authentication
 - [ ] Biometric authentication
 - [ ] Password reset flow
