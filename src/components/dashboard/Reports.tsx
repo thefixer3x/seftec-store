@@ -95,6 +95,24 @@ export const Reports: React.FC = () => {
     enabled: !!user?.id,
   });
 
+  // Fetch PayPal subscriptions
+  const { data: subscriptions, isLoading: isLoadingSubscriptions } = useQuery({
+    queryKey: ['subscriptions-report', user?.id, dateRange],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user!.id)
+        .gte('created_at', dateRange.startDate)
+        .lte('created_at', dateRange.endDate)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!user?.id,
+  });
+
   // Filter applications by date range
   const filteredApplications = applications.filter((app) => {
     const createdDate = new Date(app.created_at).toISOString().split('T')[0];
@@ -137,6 +155,39 @@ export const Reports: React.FC = () => {
       exportTransactions(transactions);
     } else {
       downloadJSON(transactions, `transactions-${Date.now()}`);
+    }
+  };
+
+  const handleExportSubscriptions = (format: 'csv' | 'json') => {
+    if (!subscriptions) return;
+    if (format === 'csv') {
+      // We'll create this export function in export.ts
+      const exportData = subscriptions.map((sub: any) => ({
+        'Subscription ID': sub.subscription_id,
+        'Plan ID': sub.plan_id,
+        'Status': sub.status,
+        'Quantity': sub.quantity || 1,
+        'Custom ID': sub.custom_id || '',
+        'Created At': new Date(sub.created_at).toLocaleDateString(),
+        'Updated At': new Date(sub.updated_at).toLocaleDateString(),
+        'Cancelled At': sub.cancelled_at ? new Date(sub.cancelled_at).toLocaleDateString() : '',
+        'Cancel Reason': sub.cancel_reason || '',
+      }));
+
+      const csv = exportData.map((row) => Object.values(row).join(',')).join('\n');
+      const headers = Object.keys(exportData[0] || {}).join(',');
+      const blob = new Blob([headers + '\n' + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `paypal-subscriptions-${Date.now()}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } else {
+      downloadJSON(subscriptions, `paypal-subscriptions-${Date.now()}`);
     }
   };
 
@@ -199,6 +250,7 @@ export const Reports: React.FC = () => {
           <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="transactions">Transactions</TabsTrigger>
+          <TabsTrigger value="subscriptions">PayPal Subscriptions</TabsTrigger>
         </TabsList>
 
         {/* Trade Finance Report */}
@@ -530,6 +582,122 @@ export const Reports: React.FC = () => {
                   ) : (
                     <p className="text-center py-8 text-gray-500">
                       No transactions found in selected date range
+                    </p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* PayPal Subscriptions Report */}
+        <TabsContent value="subscriptions">
+          <Card>
+            <CardHeader>
+              <CardTitle>PayPal Subscriptions</CardTitle>
+              <CardDescription>
+                {isLoadingSubscriptions
+                  ? 'Loading...'
+                  : `${subscriptions?.length || 0} subscriptions in selected date range`}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isLoadingSubscriptions ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* Summary */}
+                  {subscriptions && subscriptions.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Total Subscriptions</p>
+                        <p className="text-2xl font-bold">{subscriptions.length}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Active Subscriptions</p>
+                        <p className="text-2xl font-bold">
+                          {subscriptions.filter((sub: any) => sub.status === 'ACTIVE').length}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Cancelled Subscriptions</p>
+                        <p className="text-2xl font-bold">
+                          {subscriptions.filter((sub: any) => sub.status === 'CANCELLED').length}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Export Buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    <Button onClick={() => handleExportSubscriptions('csv')} disabled={!subscriptions || subscriptions.length === 0}>
+                      <FileSpreadsheet className="h-4 w-4 mr-2" />
+                      Export as CSV
+                    </Button>
+                    <Button variant="outline" onClick={() => handleExportSubscriptions('json')} disabled={!subscriptions || subscriptions.length === 0}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as JSON
+                    </Button>
+                  </div>
+
+                  {/* Preview */}
+                  {subscriptions && subscriptions.length > 0 ? (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead className="bg-gray-50 dark:bg-gray-900">
+                          <tr>
+                            <th className="text-left p-2">Subscription ID</th>
+                            <th className="text-left p-2">Plan ID</th>
+                            <th className="text-left p-2">Status</th>
+                            <th className="text-center p-2">Quantity</th>
+                            <th className="text-left p-2">Created</th>
+                            <th className="text-left p-2">Cancelled</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {subscriptions.slice(0, 10).map((sub: any) => (
+                            <tr key={sub.id} className="border-t">
+                              <td className="p-2 font-mono text-xs">{sub.subscription_id}</td>
+                              <td className="p-2 font-mono text-xs">{sub.plan_id}</td>
+                              <td className="p-2">
+                                <span
+                                  className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
+                                    sub.status === 'ACTIVE'
+                                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                      : sub.status === 'CANCELLED'
+                                      ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                      : sub.status === 'SUSPENDED'
+                                      ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                      : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+                                  }`}
+                                >
+                                  {sub.status}
+                                </span>
+                              </td>
+                              <td className="text-center p-2">{sub.quantity || 1}</td>
+                              <td className="p-2">
+                                {new Date(sub.created_at).toLocaleDateString()}
+                              </td>
+                              <td className="p-2">
+                                {sub.cancelled_at
+                                  ? new Date(sub.cancelled_at).toLocaleDateString()
+                                  : '-'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      {subscriptions.length > 10 && (
+                        <p className="text-sm text-gray-500 mt-2 text-center">
+                          Showing 10 of {subscriptions.length} subscriptions. Export to see all.
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-center py-8 text-gray-500">
+                      No subscriptions found in selected date range
                     </p>
                   )}
                 </div>
