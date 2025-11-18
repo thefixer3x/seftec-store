@@ -1,8 +1,8 @@
 
-/// <reference types="jest" />
+/// <reference types="vitest" />
 
 // Import jest-dom for extended matchers
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 // Import directly from testing-library without type declaration module augmentation
 import React, { ReactElement } from 'react';
@@ -51,23 +51,25 @@ const customRender = (
 export * from '@testing-library/react';
 export { customRender as render };
 
+import { vi } from 'vitest';
+
 // Mock for Supabase client with proper method signatures
 export const mockSupabase = {
   auth: {
-    getSession: jest.fn().mockResolvedValue({ data: { session: null } }),
-    onAuthStateChange: jest.fn().mockReturnValue({ data: { subscription: { unsubscribe: jest.fn() } } }),
-    signInWithPassword: jest.fn(),
-    signUp: jest.fn(),
-    signOut: jest.fn(),
+    getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+    onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+    signInWithPassword: vi.fn(),
+    signUp: vi.fn(),
+    signOut: vi.fn(),
   },
-  from: jest.fn().mockReturnValue({
-    select: jest.fn().mockReturnThis(),
-    eq: jest.fn().mockReturnThis(),
-    single: jest.fn().mockReturnThis(),
-    then: jest.fn().mockImplementation(cb => cb({ data: null, error: null })),
+  from: vi.fn().mockReturnValue({
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    single: vi.fn().mockReturnThis(),
+    then: vi.fn().mockImplementation(cb => cb({ data: null, error: null })),
   }),
   functions: {
-    invoke: jest.fn().mockResolvedValue({ data: {}, error: null }),
+    invoke: vi.fn().mockResolvedValue({ data: {}, error: null }),
   },
 };
 
@@ -76,7 +78,7 @@ export const mockAuthContext = {
   user: null,
   profile: null,
   loading: false,
-  refreshProfile: jest.fn(),
+  refreshProfile: vi.fn(),
 };
 
 // Helper to simulate responsive viewport with proper type annotations
@@ -90,9 +92,9 @@ export const setViewport = (width: number, height: number): void => {
 export const mockCartContext = {
   cart: [],
   cartCount: 0,
-  addToCart: jest.fn(),
-  removeFromCart: jest.fn(),
-  clearCart: jest.fn(),
-  updateQuantity: jest.fn(),
+  addToCart: vi.fn(),
+  removeFromCart: vi.fn(),
+  clearCart: vi.fn(),
+  updateQuantity: vi.fn(),
   cartTotal: 0,
 };
