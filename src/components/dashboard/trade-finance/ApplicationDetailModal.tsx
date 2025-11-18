@@ -30,6 +30,7 @@ interface ApplicationDetailModalProps {
   applicationId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onUploadDocuments?: (applicationId: string) => void;
 }
 
 const formatCurrency = (amount: number, currency: string): string => {
@@ -80,6 +81,7 @@ export const ApplicationDetailModal: React.FC<ApplicationDetailModalProps> = ({
   applicationId,
   open,
   onOpenChange,
+  onUploadDocuments,
 }) => {
   const { fetchApplicationDetails } = useTradeFinance();
   const [application, setApplication] = useState<TradeFinanceApplication | null>(null);
@@ -344,7 +346,14 @@ export const ApplicationDetailModal: React.FC<ApplicationDetailModalProps> = ({
                       <p className="text-gray-600 dark:text-gray-300 mb-4">
                         Upload required documents to complete your application.
                       </p>
-                      <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+                      <Button
+                        className="bg-blue-700 hover:bg-blue-800 text-white"
+                        onClick={() => {
+                          if (onUploadDocuments && application) {
+                            onUploadDocuments(application.id);
+                          }
+                        }}
+                      >
                         <Upload className="h-4 w-4 mr-2" />
                         Upload Documents
                       </Button>
