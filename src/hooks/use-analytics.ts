@@ -149,18 +149,70 @@ const fetchPaymentMetrics = async (userId: string): Promise<PaymentMetrics> => {
   const previousMonth = transactionsByMonth[transactionsByMonth.length - 2]?.volume || 0;
   const monthlyGrowth = previousMonth > 0 ? ((currentMonth - previousMonth) / previousMonth) * 100 : 0;
 
-  // Mock provider data (would need to query actual payment tables)
-  const transactionsByProvider = [
-    { provider: 'Stripe', count: Math.floor(totalTransactions * 0.6), volume: totalVolume * 0.6, percentage: 60 },
-    { provider: 'SaySwitch', count: Math.floor(totalTransactions * 0.3), volume: totalVolume * 0.3, percentage: 30 },
-    { provider: 'PayPal', count: Math.floor(totalTransactions * 0.1), volume: totalVolume * 0.1, percentage: 10 },
-  ];
+  // Fetch real PayPal subscription payments
+  const { data: paypalPayments } = await supabase
+    .from('subscription_payments')
+    .select('amount, currency, created_at')
+    .eq('user_id', userId);
+
+  // Fetch user payments (consolidated payment history including PayPal)
+  const { data: userPayments } = await supabase
+    .from('user_payments')
+    .select('amount, provider, payment_method, created_at')
+    .eq('user_id', userId);
+
+  // Calculate provider breakdown
+  const providerData: Record<string, { count: number; volume: number }> = {};
+
+  // Add wallet transactions as SaySwitch
+  snapshots.forEach((snapshot) => {
+    if (!providerData['SaySwitch']) {
+      providerData['SaySwitch'] = { count: 0, volume: 0 };
+    }
+    providerData['SaySwitch'].count += 1;
+    providerData['SaySwitch'].volume += snapshot.balance || 0;
+  });
+
+  // Add PayPal subscription payments
+  if (paypalPayments && paypalPayments.length > 0) {
+    paypalPayments.forEach((payment) => {
+      if (!providerData['PayPal']) {
+        providerData['PayPal'] = { count: 0, volume: 0 };
+      }
+      providerData['PayPal'].count += 1;
+      providerData['PayPal'].volume += payment.amount || 0;
+    });
+  }
+
+  // Add user payments by provider
+  if (userPayments && userPayments.length > 0) {
+    userPayments.forEach((payment) => {
+      const provider = payment.provider || payment.payment_method || 'Other';
+      if (!providerData[provider]) {
+        providerData[provider] = { count: 0, volume: 0 };
+      }
+      providerData[provider].count += 1;
+      providerData[provider].volume += payment.amount || 0;
+    });
+  }
+
+  // Calculate total for percentages
+  const totalProviderVolume = Object.values(providerData).reduce((sum, p) => sum + p.volume, 0);
+  const totalProviderCount = Object.values(providerData).reduce((sum, p) => sum + p.count, 0);
+
+  // Build provider array with percentages
+  const transactionsByProvider = Object.entries(providerData).map(([provider, data]) => ({
+    provider,
+    count: data.count,
+    volume: data.volume,
+    percentage: totalProviderVolume > 0 ? (data.volume / totalProviderVolume) * 100 : 0,
+  })).sort((a, b) => b.volume - a.volume); // Sort by volume descending
 
   return {
-    totalTransactions,
-    totalVolume,
+    totalTransactions: totalProviderCount,
+    totalVolume: totalProviderVolume,
     monthlyGrowth,
-    averageTransactionValue,
+    averageTransactionValue: totalProviderVolume / totalProviderCount,
     transactionsByMonth,
     transactionsByProvider,
   };
