@@ -7,9 +7,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    // Dummy values for testing only. These are not real credentials.
     env: {
-      VITE_SUPABASE_URL: 'https://test.supabase.co',
-      VITE_SUPABASE_ANON_KEY: 'test-key-for-testing-purposes',
+      VITE_SUPABASE_URL: 'https://example.com',
+      VITE_SUPABASE_ANON_KEY: 'dummy-test-key',
     },
     coverage: {
       provider: 'v8',
