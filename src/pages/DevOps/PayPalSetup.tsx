@@ -29,6 +29,11 @@ const PayPalSetupContent = () => {
   const [saved, setSaved] = useState(false);
   const [mode, setMode] = useState('sandbox');
   const [enablePayPal, setEnablePayPal] = useState(false);
+  const [testResults, setTestResults] = useState<{
+    connection?: { success: boolean; message: string };
+    payment?: { success: boolean; message: string; data?: any };
+    webhook?: { success: boolean; message: string };
+  }>({});
   const [formData, setFormData] = useState({
     clientId: '',
     clientSecret: '',
@@ -103,6 +108,176 @@ const PayPalSetupContent = () => {
     } catch (error) {
       console.error('Error saving PayPal configuration:', error);
       alert('Error saving configuration. See console for details.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Test API Connection
+  const testApiConnection = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('paypal-payment', {
+        body: { action: 'list_plans' },
+      });
+
+      if (error) {
+        setTestResults({
+          ...testResults,
+          connection: {
+            success: false,
+            message: `Connection failed: ${error.message}`,
+          },
+        });
+      } else if (data.error) {
+        setTestResults({
+          ...testResults,
+          connection: {
+            success: false,
+            message: `API Error: ${data.error}`,
+          },
+        });
+      } else {
+        setTestResults({
+          ...testResults,
+          connection: {
+            success: true,
+            message: `Successfully connected! Found ${data.plans?.length || 0} billing plans.`,
+          },
+        });
+      }
+    } catch (error: any) {
+      setTestResults({
+        ...testResults,
+        connection: {
+          success: false,
+          message: `Unexpected error: ${error.message}`,
+        },
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Test Create Subscription
+  const testCreatePayment = async () => {
+    setLoading(true);
+    try {
+      // First get available plans
+      const { data: plansData, error: plansError } = await supabase.functions.invoke('paypal-payment', {
+        body: { action: 'list_plans' },
+      });
+
+      if (plansError || !plansData?.plans || plansData.plans.length === 0) {
+        setTestResults({
+          ...testResults,
+          payment: {
+            success: false,
+            message: 'No billing plans available. Create a plan first in PayPal Dashboard.',
+          },
+        });
+        setLoading(false);
+        return;
+      }
+
+      const testPlanId = plansData.plans[0].id;
+
+      const { data, error } = await supabase.functions.invoke('paypal-payment', {
+        body: {
+          action: 'create_subscription',
+          planId: testPlanId,
+          returnUrl: formData.returnUrl,
+          cancelUrl: formData.cancelUrl,
+          subscriber: {
+            name: { given_name: 'Test', surname: 'User' },
+            email_address: 'test@example.com',
+          },
+        },
+      });
+
+      if (error) {
+        setTestResults({
+          ...testResults,
+          payment: {
+            success: false,
+            message: `Failed to create test subscription: ${error.message}`,
+          },
+        });
+      } else if (data.error) {
+        setTestResults({
+          ...testResults,
+          payment: {
+            success: false,
+            message: `API Error: ${data.error}`,
+          },
+        });
+      } else {
+        setTestResults({
+          ...testResults,
+          payment: {
+            success: true,
+            message: `Test subscription created! ID: ${data.subscriptionId}`,
+            data: { approvalUrl: data.approvalUrl, subscriptionId: data.subscriptionId },
+          },
+        });
+      }
+    } catch (error: any) {
+      setTestResults({
+        ...testResults,
+        payment: {
+          success: false,
+          message: `Unexpected error: ${error.message}`,
+        },
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Test Webhook Simulation
+  const testWebhook = async () => {
+    setLoading(true);
+    try {
+      // Simulate a webhook event by calling the webhook endpoint
+      const testEvent = {
+        event_type: 'BILLING.SUBSCRIPTION.ACTIVATED',
+        resource: {
+          id: 'TEST-SUBSCRIPTION-ID',
+          plan_id: 'TEST-PLAN-ID',
+          status: 'ACTIVE',
+          quantity: 1,
+        },
+      };
+
+      const { data, error } = await supabase.functions.invoke('paypal-webhook', {
+        body: testEvent,
+      });
+
+      if (error) {
+        setTestResults({
+          ...testResults,
+          webhook: {
+            success: false,
+            message: `Webhook simulation failed: ${error.message}`,
+          },
+        });
+      } else {
+        setTestResults({
+          ...testResults,
+          webhook: {
+            success: true,
+            message: 'Webhook simulation successful! Check webhook_logs table for details.',
+          },
+        });
+      }
+    } catch (error: any) {
+      setTestResults({
+        ...testResults,
+        webhook: {
+          success: false,
+          message: `Unexpected error: ${error.message}`,
+        },
+      });
     } finally {
       setLoading(false);
     }
@@ -333,37 +508,83 @@ const PayPalSetupContent = () => {
             <CardContent>
               <Alert className="mb-6">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Testing Not Available</AlertTitle>
+                <AlertTitle>PayPal Testing Tools</AlertTitle>
                 <AlertDescription>
-                  PayPal testing tools will be available after completing the initial setup.
-                  Complete the configuration on the Setup tab first.
+                  Use these tools to verify your PayPal integration is working correctly.
+                  Make sure you've configured your credentials in the Setup tab first.
                 </AlertDescription>
               </Alert>
-              
+
               <div className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  disabled
-                >
-                  Test API Connection
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  disabled
-                >
-                  Create Test Payment
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  disabled
-                >
-                  Simulate Webhook Event
-                </Button>
+                <div>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={testApiConnection}
+                    disabled={loading}
+                  >
+                    {loading ? <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> : null}
+                    Test API Connection
+                  </Button>
+                  {testResults.connection && (
+                    <Alert className={`mt-2 ${testResults.connection.success ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
+                      {testResults.connection.success ? <CheckCircle className="h-4 w-4 text-green-600" /> : <AlertCircle className="h-4 w-4 text-red-600" />}
+                      <AlertDescription className={testResults.connection.success ? 'text-green-800' : 'text-red-800'}>
+                        {testResults.connection.message}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+
+                <div>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={testCreatePayment}
+                    disabled={loading}
+                  >
+                    {loading ? <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> : null}
+                    Create Test Subscription
+                  </Button>
+                  {testResults.payment && (
+                    <Alert className={`mt-2 ${testResults.payment.success ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
+                      {testResults.payment.success ? <CheckCircle className="h-4 w-4 text-green-600" /> : <AlertCircle className="h-4 w-4 text-red-600" />}
+                      <AlertDescription className={testResults.payment.success ? 'text-green-800' : 'text-red-800'}>
+                        {testResults.payment.message}
+                        {testResults.payment.data?.approvalUrl && (
+                          <a
+                            href={testResults.payment.data.approvalUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block mt-2 text-blue-600 hover:underline text-sm"
+                          >
+                            Open Approval URL →
+                          </a>
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+
+                <div>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={testWebhook}
+                    disabled={loading}
+                  >
+                    {loading ? <RefreshCw className="h-4 w-4 mr-2 animate-spin" /> : null}
+                    Simulate Webhook Event
+                  </Button>
+                  {testResults.webhook && (
+                    <Alert className={`mt-2 ${testResults.webhook.success ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
+                      {testResults.webhook.success ? <CheckCircle className="h-4 w-4 text-green-600" /> : <AlertCircle className="h-4 w-4 text-red-600" />}
+                      <AlertDescription className={testResults.webhook.success ? 'text-green-800' : 'text-red-800'}>
+                        {testResults.webhook.message}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
