@@ -103,14 +103,14 @@ export const supabase = supabaseClient;
 // Helper functions for authentication
 export const getCurrentUser = async () => {
   if (!supabase?.auth?.getSession) return null;
-  
+
   const { data: { session }, error } = await supabase.auth.getSession();
-  
+
   if (error) {
     console.error('Error getting session:', error);
     return null;
   }
-  
+
   return session?.user || null;
 };
 
@@ -121,21 +121,21 @@ export const getCurrentUserId = async () => {
 
 export const getUserProfile = async () => {
   const userId = await getCurrentUserId();
-  
+
   if (!userId || !supabase?.from) return null;
-  
+
   try {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId as string)
       .single();
-    
+
     if (error) {
       console.error('Error fetching profile:', error);
       return null;
     }
-    
+
     return data;
   } catch (error) {
     console.error('Error in getUserProfile:', error);

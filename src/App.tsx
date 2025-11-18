@@ -16,38 +16,36 @@ import NotFound from '@/pages/NotFound';
 import TestPage from '@/TestPage';
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
-const Solutions          = lazy(() => import('@/pages/Solutions'));
-const ValuePropositions  = lazy(() => import('@/pages/ValuePropositions'));
-const ResetPassword      = lazy(() => import('@/pages/ResetPassword'));
-const BizTools           = lazy(() => import('@/pages/BizTools'));
-const FAQ                = lazy(() => import('@/pages/FAQ'));
-const ComingSoon         = lazy(() => import('@/pages/ComingSoon'));
-const Shop               = lazy(() => import('@/pages/Shop'));
-const Cart               = lazy(() => import('@/pages/Cart'));
-const Products           = lazy(() => import('@/pages/Products'));
-const Orders             = lazy(() => import('@/pages/Orders'));
-const BizGenie           = lazy(() => import('@/pages/BizGenie'));
-const EdgeFunctionTest   = lazy(() => import('@/pages/EdgeFunctionTest'));
-const Terms              = lazy(() => import('@/pages/Terms'));
-const Privacy            = lazy(() => import('@/pages/Privacy'));
-const Cookies            = lazy(() => import('@/pages/Cookies'));
-const Security           = lazy(() => import('@/pages/Security'));
-const DefiLeadership     = lazy(() => import('@/pages/DefiLeadership'));
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Profile = lazy(() => import('@/pages/Profile'));
+const Solutions = lazy(() => import('@/pages/Solutions'));
+const ValuePropositions = lazy(() => import('@/pages/ValuePropositions'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const BizTools = lazy(() => import('@/pages/BizTools'));
+const FAQ = lazy(() => import('@/pages/FAQ'));
+const ComingSoon = lazy(() => import('@/pages/ComingSoon'));
+const Shop = lazy(() => import('@/pages/Shop'));
+const Cart = lazy(() => import('@/pages/Cart'));
+const Products = lazy(() => import('@/pages/Products'));
+const Orders = lazy(() => import('@/pages/Orders'));
+const BizGenie = lazy(() => import('@/pages/BizGenie'));
+const EdgeFunctionTest = lazy(() => import('@/pages/EdgeFunctionTest'));
+const Terms = lazy(() => import('@/pages/Terms'));
+const Privacy = lazy(() => import('@/pages/Privacy'));
+const Cookies = lazy(() => import('@/pages/Cookies'));
+const Security = lazy(() => import('@/pages/Security'));
+const DefiLeadership = lazy(() => import('@/pages/DefiLeadership'));
 
 /* ─── Auth / management (lazy too) ─────────────────────────────────── */
-const Auth               = lazy(() => import('@/pages/Auth'));
-const AuthCallback       = lazy(() => import('@/pages/AuthCallback'));
-const SessionManagement  = lazy(() => import('@/pages/SessionManagement'));
-const RoleManagement     = lazy(() => import('@/pages/RoleManagement'));
-
-/* ─── Protected dashboards ─────────────────────────────────────────── */
-const Dashboard          = lazy(() => import('@/pages/Dashboard'));
-const Profile            = lazy(() => import('@/pages/Profile'));
+const Auth = lazy(() => import('@/pages/Auth'));
+const AuthCallback = lazy(() => import('@/pages/AuthCallback'));
+const SessionManagement = lazy(() => import('@/pages/SessionManagement'));
+const RoleManagement = lazy(() => import('@/pages/RoleManagement'));
 
 function App() {
   const { user, loading } = useAuth();
-  const navigate          = useNavigate();
-  const location          = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (!loading) {
@@ -80,7 +78,7 @@ function App() {
         <Routes>
           {/* Debug test route */}
           <Route path="/test" element={<TestPage />} />
-          
+
           {/* Public marketing */}
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
