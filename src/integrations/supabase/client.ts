@@ -80,10 +80,17 @@ try {
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-      signOut: () => Promise.resolve({ error: null })
+      signOut: () => Promise.resolve({ error: null }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+        unsubscribe: () => {}
+      })
     },
     from: () => ({
-      select: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
+      select: () => ({ 
+        single: () => Promise.resolve({ data: null, error: null }),
+        eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) })
+      }),
       insert: () => Promise.resolve({ data: null, error: null }),
       update: () => Promise.resolve({ data: null, error: null }),
       delete: () => Promise.resolve({ data: null, error: null })
