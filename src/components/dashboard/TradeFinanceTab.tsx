@@ -1,13 +1,20 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Calendar, Briefcase, ArrowUp, Upload, Download } from 'lucide-react';
+import { FileText, Calendar, Briefcase, ArrowUp, Upload, Download, Loader2 } from 'lucide-react';
 import { TabsList, TabsTrigger, Tabs, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTradeFinance } from '@/hooks/use-trade-finance';
 
 const TradeFinanceTab = () => {
   const [tradeTab, setTradeTab] = React.useState("active");
   const isMobile = useIsMobile();
+  const { applications, summary, isLoading, isSummaryLoading } = useTradeFinance();
+
+  // Filter applications by status
+  const activeApplications = applications.filter(app => app.application_status === 'active');
+  const pendingApplications = applications.filter(app => ['submitted', 'under_review'].includes(app.application_status));
+  const completedApplications = applications.filter(app => app.application_status === 'completed');
 
   return (
     <div className="w-full space-y-4 md:space-y-6 p-2 md:p-0">
@@ -20,52 +27,66 @@ const TradeFinanceTab = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
-        <Card className="bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800/30">
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-start">
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-2 rounded-full mr-3 md:mr-4 flex-shrink-0">
-                <Briefcase className="h-4 w-4 md:h-5 md:w-5 text-blue-700 dark:text-blue-300" />
+      {isSummaryLoading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+          <Card className="bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800/30">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-start">
+                <div className="bg-blue-100 dark:bg-blue-800/50 p-2 rounded-full mr-3 md:mr-4 flex-shrink-0">
+                  <Briefcase className="h-4 w-4 md:h-5 md:w-5 text-blue-700 dark:text-blue-300" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs md:text-sm text-blue-700 dark:text-blue-300 font-medium">Active Facilities</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-100">{summary?.active_facilities_count || 0}</h3>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1">
+                    Total Value: {summary?.currency || 'NGN'} {summary?.active_facilities_total?.toLocaleString() || '0.00'}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs md:text-sm text-blue-700 dark:text-blue-300 font-medium">Active Facilities</p>
-                <h3 className="text-xl md:text-2xl font-bold text-blue-900 dark:text-blue-100">2</h3>
-                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1">Total Value: ₦120,000.00</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-amber-50 dark:bg-amber-900/20 border dark:border-amber-800/30">
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-start">
-              <div className="bg-amber-100 dark:bg-amber-800/50 p-2 rounded-full mr-3 md:mr-4 flex-shrink-0">
-                <Upload className="h-4 w-4 md:h-5 md:w-5 text-amber-700 dark:text-amber-300" />
+          <Card className="bg-amber-50 dark:bg-amber-900/20 border dark:border-amber-800/30">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-start">
+                <div className="bg-amber-100 dark:bg-amber-800/50 p-2 rounded-full mr-3 md:mr-4 flex-shrink-0">
+                  <Upload className="h-4 w-4 md:h-5 md:w-5 text-amber-700 dark:text-amber-300" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs md:text-sm text-amber-700 dark:text-amber-300 font-medium">Pending Applications</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-amber-900 dark:text-amber-100">{summary?.pending_applications_count || 0}</h3>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1">
+                    Total Value: {summary?.currency || 'NGN'} {summary?.pending_applications_total?.toLocaleString() || '0.00'}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs md:text-sm text-amber-700 dark:text-amber-300 font-medium">Pending Applications</p>
-                <h3 className="text-xl md:text-2xl font-bold text-amber-900 dark:text-amber-100">1</h3>
-                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1">Total Value: ₦45,000.00</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-green-50 dark:bg-green-900/20 border dark:border-green-800/30">
-          <CardContent className="p-4 md:p-6">
-            <div className="flex items-start">
-              <div className="bg-green-100 dark:bg-green-800/50 p-2 rounded-full mr-3 md:mr-4 flex-shrink-0">
-                <Download className="h-4 w-4 md:h-5 md:w-5 text-green-700 dark:text-green-300" />
+          <Card className="bg-green-50 dark:bg-green-900/20 border dark:border-green-800/30">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-start">
+                <div className="bg-green-100 dark:bg-green-800/50 p-2 rounded-full mr-3 md:mr-4 flex-shrink-0">
+                  <Download className="h-4 w-4 md:h-5 md:w-5 text-green-700 dark:text-green-300" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs md:text-sm text-green-700 dark:text-green-300 font-medium">Available Credit</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-green-900 dark:text-green-100">
+                    {summary?.currency || 'NGN'} {summary?.available_limit?.toLocaleString() || '0.00'}
+                  </h3>
+                  <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1">
+                    Credit Limit: {summary?.currency || 'NGN'} {summary?.credit_limit?.toLocaleString() || '0.00'}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs md:text-sm text-green-700 dark:text-green-300 font-medium">Available Credit</p>
-                <h3 className="text-xl md:text-2xl font-bold text-green-900 dark:text-green-100">₦180,000.00</h3>
-                <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1">Credit Limit: ₦300,000.00</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Trade Finance Facilities */}
       <div className="mt-6 md:mt-8">
