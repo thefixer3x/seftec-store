@@ -8,10 +8,14 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "127.0.0.1",
-    port: 9994,
+    port: 8080,
+    strictPort: false,
+    hmr: {
+      clientPort: 8080,
+    },
     allowedHosts: [
       "440284790815.ngrok-free.app",
-      ".ngrok-free.app", // Allow any ngrok-free.app subdomain
+      ".ngrok-free.app",
       "localhost",
       "127.0.0.1",
       "192.168.1.13"
