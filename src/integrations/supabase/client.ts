@@ -3,9 +3,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Vite uses import.meta.env for environment variables
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://seftechub.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 // Define the API endpoint that will be used for all backend services
 // This will be used in a phased approach where api.seftec.store handles all backend services
@@ -19,60 +18,60 @@ let supabaseClient: any = null;
 
 try {
   supabaseClient = createClient<Database>(
-    SUPABASE_URL, 
+    SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true,
-      flowType: "pkce",
-      // Configure authentication callbacks
-      // Note: Using object notation that's compatible with the Supabase types
-      storage: {
-        getItem: (key) => {
-          try {
-            const storedSession = localStorage.getItem(key);
-            return storedSession;
-          } catch (error) {
-            console.error('Error getting session from storage:', error);
-            return null;
-          }
-        },
-        setItem: (key, value) => {
-          try {
-            localStorage.setItem(key, value);
-          } catch (error) {
-            console.error('Error storing session:', error);
-          }
-        },
-        removeItem: (key) => {
-          try {
-            localStorage.removeItem(key);
-          } catch (error) {
-            console.error('Error removing session:', error);
+    {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: "pkce",
+        // Configure authentication callbacks
+        // Note: Using object notation that's compatible with the Supabase types
+        storage: {
+          getItem: (key) => {
+            try {
+              const storedSession = localStorage.getItem(key);
+              return storedSession;
+            } catch (error) {
+              console.error('Error getting session from storage:', error);
+              return null;
+            }
+          },
+          setItem: (key, value) => {
+            try {
+              localStorage.setItem(key, value);
+            } catch (error) {
+              console.error('Error storing session:', error);
+            }
+          },
+          removeItem: (key) => {
+            try {
+              localStorage.removeItem(key);
+            } catch (error) {
+              console.error('Error removing session:', error);
+            }
           }
         }
-      }
-    },
-    global: {
-      // Configure custom fetch function to use the API endpoint for functions
-      fetch: (...args) => {
-        const [url, options] = args;
-        
-        // Check if this is a function invocation request (matches /functions/invoke)
-        if (typeof url === 'string' && url.includes('/functions/invoke')) {
-          // Replace the URL with the new API endpoint
-          // This is temporary until the proper DNS configuration is in place
-          const newUrl = url.replace(SUPABASE_URL, API_ENDPOINT);
-          return fetch(newUrl, options);
+      },
+      global: {
+        // Configure custom fetch function to use the API endpoint for functions
+        fetch: (...args) => {
+          const [url, options] = args;
+
+          // Check if this is a function invocation request (matches /functions/invoke)
+          if (typeof url === 'string' && url.includes('/functions/invoke')) {
+            // Replace the URL with the new API endpoint
+            // This is temporary until the proper DNS configuration is in place
+            const newUrl = url.replace(SUPABASE_URL, API_ENDPOINT);
+            return fetch(newUrl, options);
+          }
+
+          // For all other requests, use the default fetch behavior
+          return fetch(url, options);
         }
-        
-        // For all other requests, use the default fetch behavior
-        return fetch(url, options);
       }
     }
-  }
   );
 } catch (error) {
   console.warn('Supabase client initialization failed:', error);
@@ -81,10 +80,17 @@ try {
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-      signOut: () => Promise.resolve({ error: null })
+      signOut: () => Promise.resolve({ error: null }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+        unsubscribe: () => {}
+      })
     },
     from: () => ({
-      select: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
+      select: () => ({ 
+        single: () => Promise.resolve({ data: null, error: null }),
+        eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) })
+      }),
       insert: () => Promise.resolve({ data: null, error: null }),
       update: () => Promise.resolve({ data: null, error: null }),
       delete: () => Promise.resolve({ data: null, error: null })
