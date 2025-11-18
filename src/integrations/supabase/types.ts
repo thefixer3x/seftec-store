@@ -7,8 +7,43 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
+      ai_chat_sessions: {
+        Row: {
+          ai_model: string
+          created_at: string
+          id: string
+          messages: Json
+          session_name: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_model?: string
+          created_at?: string
+          id?: string
+          messages?: Json
+          session_name?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_model?: string
+          created_at?: string
+          id?: string
+          messages?: Json
+          session_name?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_recommendations: {
         Row: {
           created_at: string | null
@@ -1005,30 +1040,42 @@ export type Database = {
           business_type: string | null
           company_name: string | null
           created_at: string | null
+          email: string | null
           first_name: string | null
+          full_name: string | null
           id: string
           is_vendor: boolean | null
           last_name: string | null
+          stripe_customer_id: string | null
+          subscription_tier: string | null
           updated_at: string | null
         }
         Insert: {
           business_type?: string | null
           company_name?: string | null
           created_at?: string | null
+          email?: string | null
           first_name?: string | null
+          full_name?: string | null
           id: string
           is_vendor?: boolean | null
           last_name?: string | null
+          stripe_customer_id?: string | null
+          subscription_tier?: string | null
           updated_at?: string | null
         }
         Update: {
           business_type?: string | null
           company_name?: string | null
           created_at?: string | null
+          email?: string | null
           first_name?: string | null
+          full_name?: string | null
           id?: string
           is_vendor?: boolean | null
           last_name?: string | null
+          stripe_customer_id?: string | null
+          subscription_tier?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -1361,7 +1408,7 @@ export type Database = {
           granted: boolean | null
           granted_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           revoked_at: string | null
           updated_at: string | null
           user_agent: string | null
@@ -1373,7 +1420,7 @@ export type Database = {
           granted?: boolean | null
           granted_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           revoked_at?: string | null
           updated_at?: string | null
           user_agent?: string | null
@@ -1385,7 +1432,7 @@ export type Database = {
           granted?: boolean | null
           granted_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           revoked_at?: string | null
           updated_at?: string | null
           user_agent?: string | null
@@ -1557,6 +1604,330 @@ export type Database = {
         }
         Relationships: []
       }
+      vendor_billing_records: {
+        Row: {
+          base_cost: number | null
+          billing_period_end: string
+          billing_period_start: string
+          created_at: string | null
+          currency: string | null
+          discount_amount: number | null
+          id: string
+          invoice_number: string | null
+          invoice_url: string | null
+          overage_cost: number | null
+          paid_at: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          payment_status: string | null
+          tax_amount: number | null
+          total_amount: number | null
+          total_compute_hours: number | null
+          total_requests: number | null
+          total_tokens: number | null
+          updated_at: string | null
+          usage_cost: number | null
+          vendor_org_id: string
+        }
+        Insert: {
+          base_cost?: number | null
+          billing_period_end: string
+          billing_period_start: string
+          created_at?: string | null
+          currency?: string | null
+          discount_amount?: number | null
+          id?: string
+          invoice_number?: string | null
+          invoice_url?: string | null
+          overage_cost?: number | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          total_compute_hours?: number | null
+          total_requests?: number | null
+          total_tokens?: number | null
+          updated_at?: string | null
+          usage_cost?: number | null
+          vendor_org_id: string
+        }
+        Update: {
+          base_cost?: number | null
+          billing_period_end?: string
+          billing_period_start?: string
+          created_at?: string | null
+          currency?: string | null
+          discount_amount?: number | null
+          id?: string
+          invoice_number?: string | null
+          invoice_url?: string | null
+          overage_cost?: number | null
+          paid_at?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          payment_status?: string | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          total_compute_hours?: number | null
+          total_requests?: number | null
+          total_tokens?: number | null
+          updated_at?: string | null
+          usage_cost?: number | null
+          vendor_org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_billing_records_vendor_org_id_fkey"
+            columns: ["vendor_org_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_organizations: {
+        Row: {
+          billing_address: Json | null
+          billing_model: string | null
+          billing_tier: string | null
+          business_registration: string | null
+          compliance_requirements: Json | null
+          contact_email: string
+          contact_name: string | null
+          created_at: string | null
+          created_by: string | null
+          credit_balance: number | null
+          currency: string | null
+          data_retention_days: number | null
+          id: string
+          monthly_limit: number | null
+          monthly_spend_limit: number | null
+          organization_name: string
+          organization_type: string
+          platform_access: Json | null
+          privacy_level: string | null
+          rate_limit_per_minute: number | null
+          service_permissions: Json | null
+          status: string | null
+          tax_id: string | null
+          trial_ends_at: string | null
+          updated_at: string | null
+          vendor_code: string
+          website_url: string | null
+        }
+        Insert: {
+          billing_address?: Json | null
+          billing_model?: string | null
+          billing_tier?: string | null
+          business_registration?: string | null
+          compliance_requirements?: Json | null
+          contact_email: string
+          contact_name?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          credit_balance?: number | null
+          currency?: string | null
+          data_retention_days?: number | null
+          id?: string
+          monthly_limit?: number | null
+          monthly_spend_limit?: number | null
+          organization_name: string
+          organization_type: string
+          platform_access?: Json | null
+          privacy_level?: string | null
+          rate_limit_per_minute?: number | null
+          service_permissions?: Json | null
+          status?: string | null
+          tax_id?: string | null
+          trial_ends_at?: string | null
+          updated_at?: string | null
+          vendor_code: string
+          website_url?: string | null
+        }
+        Update: {
+          billing_address?: Json | null
+          billing_model?: string | null
+          billing_tier?: string | null
+          business_registration?: string | null
+          compliance_requirements?: Json | null
+          contact_email?: string
+          contact_name?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          credit_balance?: number | null
+          currency?: string | null
+          data_retention_days?: number | null
+          id?: string
+          monthly_limit?: number | null
+          monthly_spend_limit?: number | null
+          organization_name?: string
+          organization_type?: string
+          platform_access?: Json | null
+          privacy_level?: string | null
+          rate_limit_per_minute?: number | null
+          service_permissions?: Json | null
+          status?: string | null
+          tax_id?: string | null
+          trial_ends_at?: string | null
+          updated_at?: string | null
+          vendor_code?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
+      vendor_platform_sessions: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown
+          is_active: boolean | null
+          last_activity_at: string | null
+          mfa_verified_at: string | null
+          platform: string
+          requires_mfa: boolean | null
+          session_metadata: Json | null
+          session_token: string
+          user_agent: string | null
+          user_id: string | null
+          vendor_org_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown
+          is_active?: boolean | null
+          last_activity_at?: string | null
+          mfa_verified_at?: string | null
+          platform: string
+          requires_mfa?: boolean | null
+          session_metadata?: Json | null
+          session_token: string
+          user_agent?: string | null
+          user_id?: string | null
+          vendor_org_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown
+          is_active?: boolean | null
+          last_activity_at?: string | null
+          mfa_verified_at?: string | null
+          platform?: string
+          requires_mfa?: boolean | null
+          session_metadata?: Json | null
+          session_token?: string
+          user_agent?: string | null
+          user_id?: string | null
+          vendor_org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_platform_sessions_vendor_org_id_fkey"
+            columns: ["vendor_org_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_usage_logs: {
+        Row: {
+          api_key_id: string | null
+          billing_tier: string | null
+          compute_units: number | null
+          cost_amount: number | null
+          cost_currency: string | null
+          endpoint: string | null
+          error_message: string | null
+          id: string
+          ip_address: unknown
+          method: string | null
+          platform: string
+          processed_at: string | null
+          processing_time_ms: number | null
+          request_id: string
+          request_metadata: Json | null
+          request_size_bytes: number | null
+          request_timestamp: string | null
+          response_metadata: Json | null
+          response_size_bytes: number | null
+          service: string
+          status_code: number | null
+          success: boolean | null
+          tokens_consumed: number | null
+          user_agent: string | null
+          vendor_org_id: string
+        }
+        Insert: {
+          api_key_id?: string | null
+          billing_tier?: string | null
+          compute_units?: number | null
+          cost_amount?: number | null
+          cost_currency?: string | null
+          endpoint?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown
+          method?: string | null
+          platform: string
+          processed_at?: string | null
+          processing_time_ms?: number | null
+          request_id: string
+          request_metadata?: Json | null
+          request_size_bytes?: number | null
+          request_timestamp?: string | null
+          response_metadata?: Json | null
+          response_size_bytes?: number | null
+          service: string
+          status_code?: number | null
+          success?: boolean | null
+          tokens_consumed?: number | null
+          user_agent?: string | null
+          vendor_org_id: string
+        }
+        Update: {
+          api_key_id?: string | null
+          billing_tier?: string | null
+          compute_units?: number | null
+          cost_amount?: number | null
+          cost_currency?: string | null
+          endpoint?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: unknown
+          method?: string | null
+          platform?: string
+          processed_at?: string | null
+          processing_time_ms?: number | null
+          request_id?: string
+          request_metadata?: Json | null
+          request_size_bytes?: number | null
+          request_timestamp?: string | null
+          response_metadata?: Json | null
+          response_size_bytes?: number | null
+          service?: string
+          status_code?: number | null
+          success?: boolean | null
+          tokens_consumed?: number | null
+          user_agent?: string | null
+          vendor_org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_usage_logs_vendor_org_id_fkey"
+            columns: ["vendor_org_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       virtual_cards: {
         Row: {
           card_id: string | null
@@ -1593,57 +1964,317 @@ export type Database = {
         }
         Relationships: []
       }
+      vortex_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          description: string | null
+          id: string
+          metadata: Json | null
+          reference: string | null
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
+          wallet_id: string | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          reference?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+          user_id: string
+          wallet_id?: string | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          reference?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+          wallet_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vortex_transactions_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "vortex_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vortex_wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       categorize_transaction: {
-        Args: { p_narration: string; p_amount: number; p_is_credit: boolean }
+        Args: { p_amount: number; p_is_credit: boolean; p_narration: string }
         Returns: {
           category: string
-          subcategory: string
           confidence: number
+          subcategory: string
         }[]
       }
-      cleanup_expired_recommendations: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
+      cleanup_expired_recommendations: { Args: never; Returns: undefined }
+      generate_vendor_api_key: {
+        Args: {
+          p_environment?: string
+          p_key_name?: string
+          p_key_type?: string
+          p_vendor_org_id: string
+        }
+        Returns: {
+          api_key_record_id: string
+          key_id: string
+          key_secret: string
+        }[]
       }
       get_cash_flow_summary: {
         Args: { p_consent_id: string; p_days_back?: number }
         Returns: {
-          period_start: string
+          avg_daily_balance: number
+          net_flow: number
           period_end: string
+          period_start: string
           total_inflow: number
           total_outflow: number
-          net_flow: number
           transaction_count: number
-          avg_daily_balance: number
         }[]
       }
-      get_product_image_url: {
-        Args: { image_path: string }
-        Returns: string
+      get_product_image_url: { Args: { image_path: string }; Returns: string }
+      get_vendor_usage_summary: {
+        Args: {
+          p_end_date?: string
+          p_start_date?: string
+          p_vendor_org_id: string
+        }
+        Returns: {
+          platform_breakdown: Json
+          service_breakdown: Json
+          successful_requests: number
+          total_cost: number
+          total_requests: number
+          total_tokens: number
+        }[]
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
+      hybrid_search_memories: {
+        Args: {
+          keyword_weight?: number
+          match_count?: number
+          min_similarity?: number
+          p_memory_types?: string[]
+          p_organization_id?: string
+          p_tags?: string[]
+          p_user_id?: string
+          query_embedding: string
+          query_text: string
+          semantic_weight?: number
+        }
+        Returns: {
+          access_count: number
+          combined_score: number
+          content: string
+          created_at: string
+          id: string
+          keyword_rank: number
+          metadata: Json
+          organization_id: string
+          semantic_similarity: number
+          summary: string
+          tags: string[]
+          title: string
+          topic_id: string
+          type: string
+          user_id: string
+        }[]
       }
-      is_owner: {
-        Args: { bulk_id: string }
-        Returns: boolean
+      is_admin: { Args: never; Returns: boolean }
+      is_owner: { Args: { bulk_id: string }; Returns: boolean }
+      keyword_search_memories: {
+        Args: {
+          match_count?: number
+          p_memory_types?: string[]
+          p_organization_id?: string
+          p_tags?: string[]
+          p_topic_id?: string
+          p_user_id?: string
+          query_text: string
+        }
+        Returns: {
+          access_count: number
+          content: string
+          created_at: string
+          headline: string
+          id: string
+          metadata: Json
+          organization_id: string
+          rank: number
+          summary: string
+          tags: string[]
+          title: string
+          topic_id: string
+          type: string
+          user_id: string
+        }[]
       }
-      request_password_reset: {
-        Args: { email: string }
-        Returns: boolean
+      log_search_analytics: {
+        Args: {
+          p_avg_similarity?: number
+          p_distance_metric: string
+          p_execution_time_ms: number
+          p_filters: Json
+          p_organization_id: string
+          p_query_text: string
+          p_results_count: number
+          p_search_type: string
+          p_top_similarity?: number
+          p_user_id: string
+        }
+        Returns: string
+      }
+      log_vendor_usage: {
+        Args: {
+          p_api_key_id: string
+          p_platform: string
+          p_processing_time_ms?: number
+          p_request_id: string
+          p_service: string
+          p_status_code?: number
+          p_success?: boolean
+          p_tokens_consumed?: number
+          p_vendor_org_id: string
+        }
+        Returns: string
+      }
+      match_memories: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          p_organization_id?: string
+          p_user_id?: string
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          created_at: string
+          id: string
+          similarity: number
+          tags: string[]
+          title: string
+          type: string
+        }[]
+      }
+      match_memories_advanced: {
+        Args: {
+          distance_metric?: string
+          include_archived?: boolean
+          match_count?: number
+          match_threshold?: number
+          p_memory_types?: string[]
+          p_organization_id?: string
+          p_tags?: string[]
+          p_topic_id?: string
+          p_user_id?: string
+          query_embedding: string
+        }
+        Returns: {
+          access_count: number
+          content: string
+          created_at: string
+          distance: number
+          id: string
+          metadata: Json
+          organization_id: string
+          similarity: number
+          summary: string
+          tags: string[]
+          title: string
+          topic_id: string
+          type: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
+      register_user_with_org: {
+        Args: {
+          p_email: string
+          p_organization_id: string
+          p_organization_name: string
+          p_password_hash: string
+          p_plan?: string
+          p_role?: string
+          p_timestamp?: string
+          p_user_id: string
+        }
+        Returns: {
+          organization_id: string
+          user_id: string
+        }[]
+      }
+      request_password_reset: { Args: { email: string }; Returns: boolean }
+      update_memory_access: { Args: { memory_id: string }; Returns: undefined }
+      validate_vendor_api_key: {
+        Args: { p_key_id: string; p_key_secret: string }
+        Returns: {
+          allowed_platforms: Json
+          allowed_services: Json
+          is_valid: boolean
+          rate_limit: number
+          vendor_code: string
+          vendor_org_id: string
+        }[]
       }
     }
     Enums: {
@@ -1661,21 +2292,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -1693,14 +2328,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -1716,14 +2353,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -1739,14 +2378,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -1754,14 +2395,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
