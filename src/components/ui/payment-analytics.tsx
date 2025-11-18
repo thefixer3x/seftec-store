@@ -2,58 +2,75 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { ArrowUpRight, CreditCard, DollarSign, ArrowDownRight } from "lucide-react";
-
-// Mock data for payment analytics
-const transactionData = [
-  { month: "Jan", amount: 12000 },
-  { month: "Feb", amount: 19000 },
-  { month: "Mar", amount: 15000 },
-  { month: "Apr", amount: 28000 },
-  { month: "May", amount: 26000 },
-  { month: "Jun", amount: 32000 },
-];
-
-const paymentMethodData = [
-  { name: "Credit Card", value: 45 },
-  { name: "Bank Transfer", value: 30 },
-  { name: "Apple Pay", value: 15 },
-  { name: "Google Pay", value: 10 },
-];
+import { ArrowUpRight, CreditCard, DollarSign, ArrowDownRight, Loader2 } from "lucide-react";
+import { usePaymentAnalytics } from "@/hooks/use-analytics";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const PaymentAnalytics: React.FC = () => {
+  const { data: analytics, isLoading, error } = usePaymentAnalytics();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <span className="ml-2 text-gray-600">Loading analytics...</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-600">Failed to load analytics. Please try again.</p>
+      </div>
+    );
+  }
+
+  if (!analytics) {
+    return null;
+  }
+
   // Calculate total transactions
-  const totalTransactions = transactionData.reduce((sum, item) => sum + item.amount, 0);
-  
-  // Calculate month-over-month growth
-  const lastMonthAmount = transactionData[transactionData.length - 2].amount;
-  const currentMonthAmount = transactionData[transactionData.length - 1].amount;
-  const growth = ((currentMonthAmount - lastMonthAmount) / lastMonthAmount) * 100;
+  const totalTransactions = analytics.totalVolume;
+
+  // Get month-over-month growth from analytics
+  const growth = analytics.monthlyGrowth;
   const isPositiveGrowth = growth >= 0;
+
+  // Format transaction data for chart
+  const transactionData = analytics.transactionsByMonth.map((item) => ({
+    month: item.month,
+    amount: item.volume,
+  }));
+
+  // Format payment method data for chart
+  const paymentMethodData = analytics.transactionsByProvider.map((item) => ({
+    name: item.provider,
+    value: item.percentage,
+  }));
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard 
-          title="Total Transactions" 
-          value={`$${(totalTransactions / 1000).toFixed(1)}k`} 
+        <StatCard
+          title="Total Transaction Volume"
+          value={`$${(totalTransactions / 1000).toFixed(1)}k`}
           icon={<DollarSign className="h-4 w-4" />}
-          description="Across all payment gateways"
+          description={`${analytics.totalTransactions} transactions across all gateways`}
         />
-        <StatCard 
-          title="Monthly Growth" 
-          value={`${Math.abs(growth).toFixed(1)}%`} 
+        <StatCard
+          title="Monthly Growth"
+          value={`${Math.abs(growth).toFixed(1)}%`}
           icon={isPositiveGrowth ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
           description={`${isPositiveGrowth ? "Increase" : "Decrease"} from last month`}
           trend={isPositiveGrowth ? "positive" : "negative"}
         />
-        <StatCard 
-          title="Active Payment Methods" 
-          value="4" 
+        <StatCard
+          title="Active Payment Methods"
+          value={analytics.transactionsByProvider.length.toString()}
           icon={<CreditCard className="h-4 w-4" />}
-          description="Credit Card, Bank Transfer, Apple Pay, Google Pay"
+          description={analytics.transactionsByProvider.map(p => p.provider).join(", ")}
         />
       </div>
       
