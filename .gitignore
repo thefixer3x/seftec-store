@@ -27,9 +27,23 @@ i18n.cache
 
 # Local Netlify folder
 .netlify
-~/.kiro/settings/mcp-fixed.json
-.gitignore
-.kiro/settings/mcp.json
-string
+
+# Environment variables - NEVER commit these!
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
+supabase/.env
+supabase/.env.local
+
+# Kiro settings
+~/.kiro/settings/mcp-fixed.json
+.kiro/settings/mcp.json
+
+# Sensitive files - NEVER commit these!
+string
+
+# Supabase temporary files and credentials
+supabase/.temp/
+supabase/config.toml
