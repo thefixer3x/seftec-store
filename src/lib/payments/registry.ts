@@ -176,6 +176,8 @@ export class PaymentProviderRegistry {
       PaymentProviderRegistry.instance.providers.clear();
       PaymentProviderRegistry.instance.initialized = false;
     }
+    // Reset the singleton instance
+    (PaymentProviderRegistry as any).instance = undefined;
   }
 }
 
