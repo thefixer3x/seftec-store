@@ -14,10 +14,10 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
 import TestPage from '@/TestPage';
-import Dashboard from '@/pages/Dashboard';
-import Profile from '@/pages/Profile';
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Profile = lazy(() => import('@/pages/Profile'));
 const Solutions = lazy(() => import('@/pages/Solutions'));
 const ValuePropositions = lazy(() => import('@/pages/ValuePropositions'));
 const ResetPassword = lazy(() => import('@/pages/ResetPassword'));

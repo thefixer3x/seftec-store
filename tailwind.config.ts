@@ -11,9 +11,10 @@ export default {
 	],
 	prefix: "",
 	safelist: [
-		{
-			pattern: /^(animate|delay|duration|ease)-/,
-		},
+		// Only safelist animation classes that are used dynamically in the codebase
+		'animate-spin',
+		'animate-pulse',
+		'animate-sparkle',
 	],
 	theme: {
 		container: {
