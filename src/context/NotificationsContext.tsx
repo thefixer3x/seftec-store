@@ -174,12 +174,12 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
         if (error) throw error;
         
         if (data) {
-          // Extract unique groups
+          // Extract unique groups with proper typing
           const groups = data
             .map(item => item.notification_group)
             .filter((group): group is string => !!group);
             
-          const uniqueGroups = [...new Set(groups)];
+          const uniqueGroups = Array.from(new Set(groups)) as string[];
           setNotificationGroups(uniqueGroups);
         }
       } catch (error: any) {
