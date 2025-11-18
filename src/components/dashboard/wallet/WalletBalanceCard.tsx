@@ -1,12 +1,80 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SendHorizonal, Plus, Package, Heart } from 'lucide-react';
 import BulkPaymentModal from './BulkPaymentModal';
+import { useAuthState } from '@/hooks/use-auth-state';
+import { supabase } from '@/integrations/supabase/client';
 
 const WalletBalanceCard = () => {
   const [isBulkPaymentModalOpen, setIsBulkPaymentModalOpen] = useState(false);
+  const { user } = useAuthState();
+  const [balance, setBalance] = useState<string>('0.00');
+  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWalletData = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch user wallet balance - use .maybeSingle() to handle no wallet gracefully
+        const { data: walletData, error } = await supabase
+          .from('wallets')
+          .select('balance, updated_at')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        // Only log errors if it's not a "not found" error
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error fetching wallet:', error);
+        }
+
+        if (walletData) {
+          setBalance(walletData.balance?.toFixed(2) || '0.00');
+          setLastUpdated(new Date(walletData.updated_at || Date.now()).toLocaleDateString());
+        } else {
+          // Set default balance if no wallet found (for new users)
+          setBalance('0.00');
+          setLastUpdated(new Date().toLocaleDateString());
+        }
+      } catch (error) {
+        console.error('Error in fetchWalletData:', error);
+        // Set default values on error
+        setBalance('0.00');
+        setLastUpdated(new Date().toLocaleDateString());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWalletData();
+
+    // Subscribe to wallet updates (commented out to prevent CSP errors until tables exist)
+    // const walletChannel = supabase
+    //   .channel('wallet-updates')
+    //   .on(
+    //     'postgres_changes',
+    //     {
+    //       event: '*',
+    //       schema: 'public',
+    //       table: 'wallets',
+    //       filter: `user_id=eq.${user?.id}`,
+    //     },
+    //     () => {
+    //       fetchWalletData();
+    //     }
+    //   )
+    //   .subscribe();
+
+    // return () => {
+    //   supabase.removeChannel(walletChannel);
+    // };
+  }, [user]);
 
   return (
     <Card className="bg-white dark:bg-seftec-darkNavy/80 shadow-md">
@@ -18,8 +86,17 @@ const WalletBalanceCard = () => {
           </div>
           
           <div className="mb-6">
-            <p className="text-3xl font-semibold text-seftec-navy dark:text-white">₦2,500,000.00</p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Last updated: May 20, 2025</p>
+            {loading ? (
+              <div className="animate-pulse">
+                <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded w-48 mb-2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
+              </div>
+            ) : (
+              <>
+                <p className="text-3xl font-semibold text-seftec-navy dark:text-white">₦{balance}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Last updated: {lastUpdated}</p>
+              </>
+            )}
           </div>
           
           {/* First row of buttons */}
