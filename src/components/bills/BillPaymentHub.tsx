@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { isFeatureEnabled } from '@/features';
+import { useFeatureFlag, FEATURE_FLAGS } from '@/features/feature-flags';
 
 type Provider = {
   id: string;
@@ -28,6 +28,14 @@ type DataPlan = {
   code: string;
   amount: number;
   validity: string;
+};
+
+type TVPackage = {
+  id: string;
+  name: string;
+  code: string;
+  amount: number;
+  duration: string;
 };
 
 type Favorite = {
@@ -64,6 +72,9 @@ export const BillPaymentHub = () => {
   const supabase = useSupabaseClient();
   const { toast } = useToast();
 
+  // Check if SaySwitch bills feature is enabled
+  const { isEnabled: isBillsEnabled, isLoading: isLoadingFlag } = useFeatureFlag(FEATURE_FLAGS.SAYSWITCH_BILLS);
+
   // Service categories with their icons
   const services = [
     { id: 'airtime', label: 'Airtime', icon: Phone, color: 'text-blue-500' },
@@ -71,10 +82,26 @@ export const BillPaymentHub = () => {
     { id: 'tv', label: 'TV', icon: Tv, color: 'text-purple-500' },
     { id: 'electricity', label: 'Power', icon: Zap, color: 'text-yellow-500' },
   ];
-  
-  // Check if SaySwitch bills feature is enabled
-  const isBillsEnabled = isFeatureEnabled('sayswitch_bills');
-  
+
+  // Show loading state while checking feature flag
+  if (isLoadingFlag) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Bill Payments</CardTitle>
+          <CardDescription>Loading...</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   if (!isBillsEnabled) {
     return (
       <Card className="w-full">
@@ -138,7 +165,18 @@ export const BillPaymentHub = () => {
     },
     enabled: activeTab === 'tv' && isBillsEnabled,
   });
-  
+
+  const { data: tvPackages, isLoading: loadingTVPackages } = useQuery({
+    queryKey: ['tvPackages', formData.tvProvider],
+    queryFn: async () => {
+      const { data } = await supabase.functions.invoke('sayswitch-bills', {
+        body: { action: 'get_tv_packages', provider: formData.tvProvider }
+      });
+      return data?.packages || [];
+    },
+    enabled: !!formData.tvProvider && activeTab === 'tv' && isBillsEnabled,
+  });
+
   const { data: electricityProviders, isLoading: loadingElectricity } = useQuery({
     queryKey: ['billProviders', 'electricity'],
     queryFn: async () => {
@@ -579,7 +617,7 @@ export const BillPaymentHub = () => {
                 {loadingTV ? (
                   <Skeleton className="h-10 w-full" />
                 ) : (
-                  <Select 
+                  <Select
                     value={formData.tvProvider}
                     onValueChange={(value) => handleSelectChange('tvProvider', value)}
                   >
@@ -596,7 +634,30 @@ export const BillPaymentHub = () => {
                   </Select>
                 )}
               </div>
-              {/* Additional fields for TV package selection */}
+              {formData.tvProvider && (
+                <div>
+                  <Label htmlFor="tvPackage">TV Package</Label>
+                  {loadingTVPackages ? (
+                    <Skeleton className="h-10 w-full" />
+                  ) : (
+                    <Select
+                      value={formData.tvPackage}
+                      onValueChange={(value) => handleSelectChange('tvPackage', value)}
+                    >
+                      <SelectTrigger id="tvPackage">
+                        <SelectValue placeholder="Select package" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {tvPackages?.map((pkg: TVPackage) => (
+                          <SelectItem key={pkg.code} value={pkg.code}>
+                            {pkg.name} - ₦{pkg.amount.toLocaleString()} ({pkg.duration})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              )}
               <div className="flex items-center space-x-2">
                 <Switch 
                   id="save-favorite-tv" 
