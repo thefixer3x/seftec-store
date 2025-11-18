@@ -5,6 +5,7 @@ import { FileText, Calendar, Briefcase, ArrowUp, Upload, Download, Loader2 } fro
 import { TabsList, TabsTrigger, Tabs, TabsContent } from '@/components/ui/tabs';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTradeFinance, TradeFinanceApplication } from '@/hooks/use-trade-finance';
+import { ApplicationDetailModal } from './trade-finance/ApplicationDetailModal';
 
 // Helper to get facility type display name
 const getFacilityTypeLabel = (type: string): string => {
@@ -43,7 +44,8 @@ const formatStatus = (status: string): string => {
 const ApplicationCard: React.FC<{
   application: TradeFinanceApplication;
   variant: 'active' | 'pending' | 'completed';
-}> = ({ application, variant }) => {
+  onViewDetails: (applicationId: string) => void;
+}> = ({ application, variant, onViewDetails }) => {
   const cardColors = {
     active: 'bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800/30',
     pending: 'bg-amber-50 dark:bg-amber-900/20 border dark:border-amber-800/30',
@@ -125,6 +127,7 @@ const ApplicationCard: React.FC<{
                 variant="outline"
                 size="sm"
                 className={`${buttonColors[variant]} text-xs`}
+                onClick={() => onViewDetails(application.id)}
               >
                 View Details
               </Button>
@@ -147,6 +150,9 @@ const ApplicationCard: React.FC<{
 
 const TradeFinanceTab = () => {
   const [tradeTab, setTradeTab] = React.useState("active");
+  const [selectedApplicationId, setSelectedApplicationId] = React.useState<string | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = React.useState(false);
+
   const isMobile = useIsMobile();
   const { applications, summary, isLoading, isSummaryLoading } = useTradeFinance();
 
@@ -154,6 +160,11 @@ const TradeFinanceTab = () => {
   const activeApplications = applications.filter(app => app.application_status === 'active');
   const pendingApplications = applications.filter(app => ['submitted', 'under_review'].includes(app.application_status));
   const completedApplications = applications.filter(app => app.application_status === 'completed');
+
+  const handleViewDetails = (applicationId: string) => {
+    setSelectedApplicationId(applicationId);
+    setDetailModalOpen(true);
+  };
 
   return (
     <div className="w-full space-y-4 md:space-y-6 p-2 md:p-0">
@@ -259,7 +270,12 @@ const TradeFinanceTab = () => {
                 </div>
               ) : activeApplications.length > 0 ? (
                 activeApplications.map((app) => (
-                  <ApplicationCard key={app.id} application={app} variant="active" />
+                  <ApplicationCard
+                    key={app.id}
+                    application={app}
+                    variant="active"
+                    onViewDetails={handleViewDetails}
+                  />
                 ))
               ) : (
                 <Card className="bg-blue-50 dark:bg-blue-900/20 border dark:border-blue-800/30">
@@ -288,7 +304,12 @@ const TradeFinanceTab = () => {
                 </div>
               ) : pendingApplications.length > 0 ? (
                 pendingApplications.map((app) => (
-                  <ApplicationCard key={app.id} application={app} variant="pending" />
+                  <ApplicationCard
+                    key={app.id}
+                    application={app}
+                    variant="pending"
+                    onViewDetails={handleViewDetails}
+                  />
                 ))
               ) : (
                 <Card className="bg-amber-50 dark:bg-amber-900/20 border dark:border-amber-800/30">
@@ -317,7 +338,12 @@ const TradeFinanceTab = () => {
                 </div>
               ) : completedApplications.length > 0 ? (
                 completedApplications.map((app) => (
-                  <ApplicationCard key={app.id} application={app} variant="completed" />
+                  <ApplicationCard
+                    key={app.id}
+                    application={app}
+                    variant="completed"
+                    onViewDetails={handleViewDetails}
+                  />
                 ))
               ) : (
                 <Card className="bg-gray-50 dark:bg-gray-900/20 border dark:border-gray-800/30">
@@ -336,6 +362,13 @@ const TradeFinanceTab = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Application Detail Modal */}
+      <ApplicationDetailModal
+        applicationId={selectedApplicationId}
+        open={detailModalOpen}
+        onOpenChange={setDetailModalOpen}
+      />
     </div>
   );
 };
