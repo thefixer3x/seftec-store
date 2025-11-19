@@ -52,24 +52,24 @@ const BizGenieDashboardContainer: React.FC<BizGenieDashboardProps> = ({ userId }
     try {
       setIsLoading(true);
       setError(null);
-      
-      // Call personalized OpenAI proxy
-      const response = await fetch('/api/openai-personal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+
+      // Call BizGenie AI service via Supabase Edge Function
+      const { data, error: invokeError } = await supabase.functions.invoke('bizgenie-router', {
+        body: {
           prompt,
           userId: actualUserId,
           allowLearning,
           generateReport
-        })
+        }
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to get AI response. Please try again.');
+
+      if (invokeError) {
+        throw new Error(invokeError.message || 'Failed to get AI response. Please try again.');
       }
-      
-      const data = await response.json();
+
+      if (!data || !data.text) {
+        throw new Error('Invalid response from BizGenie service');
+      }
       setResponse(data.text);
       
       // Set market insight if available

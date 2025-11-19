@@ -46,7 +46,7 @@ serve(async (req) => {
       console.error("OPENAI_API_KEY is not set");
       return new Response(
         JSON.stringify({
-          error: "OpenAI API key is not configured. Please contact the administrator to set up the OPENAI_API_KEY environment variable."
+          error: "The AI service is currently unavailable. Please contact an administrator."
         }),
         {
           status: 503,
