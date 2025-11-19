@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Vite uses import.meta.env for environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://seftechub.supabase.co'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mxtsdgkwzjzlttpotole.supabase.co'
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -18,25 +18,25 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })
 
-// Export centralized function URLs
+// Export centralized function URLs - dynamically constructed from supabaseUrl
 export const FUNCTION_URLS = {
-  AI_CHAT: 'https://seftechub.supabase.co/functions/v1/ai-chat',
-  PERSONALIZED_AI: 'https://seftechub.supabase.co/functions/v1/personalized-ai-chat',
-  BIZGENIE_ROUTER: 'https://seftechub.supabase.co/functions/v1/bizgenie-router',
-  STRIPE_WEBHOOK: 'https://seftechub.supabase.co/functions/v1/stripe-webhook',
-  STRIPE_CHECKOUT: 'https://seftechub.supabase.co/functions/v1/create-stripe-checkout',
-  PAYPAL_PAYMENT: 'https://seftechub.supabase.co/functions/v1/paypal-payment',
-  PAYPAL_WEBHOOK: 'https://seftechub.supabase.co/functions/v1/paypal-webhook',
-  SAYSWITCH_PAYMENT: 'https://seftechub.supabase.co/functions/v1/sayswitch-payment',
-  SAYSWITCH_WEBHOOK: 'https://seftechub.supabase.co/functions/v1/sayswitch-webhook',
-  SAYSWITCH_BILLS: 'https://seftechub.supabase.co/functions/v1/sayswitch-bills',
-  SAYSWITCH_TRANSFER: 'https://seftechub.supabase.co/functions/v1/sayswitch-transfer',
-  EDOC_CONSENT: 'https://seftechub.supabase.co/functions/v1/edoc-consent',
-  EDOC_TRANSACTIONS: 'https://seftechub.supabase.co/functions/v1/edoc-transactions',
-  EDOC_WEBHOOK: 'https://seftechub.supabase.co/functions/v1/edoc-webhook',
-  NOTIFICATIONS: 'https://seftechub.supabase.co/functions/v1/create-notification',
-  PAYMENTS_GATEWAY: 'https://seftechub.supabase.co/functions/v1/payments-gateway',
-  HEALTH_CHECK: 'https://seftechub.supabase.co/functions/v1/health-check'
+  AI_CHAT: `${supabaseUrl}/functions/v1/ai-chat`,
+  PERSONALIZED_AI: `${supabaseUrl}/functions/v1/personalized-ai-chat`,
+  BIZGENIE_ROUTER: `${supabaseUrl}/functions/v1/bizgenie-router`,
+  STRIPE_WEBHOOK: `${supabaseUrl}/functions/v1/stripe-webhook`,
+  STRIPE_CHECKOUT: `${supabaseUrl}/functions/v1/create-stripe-checkout`,
+  PAYPAL_PAYMENT: `${supabaseUrl}/functions/v1/paypal-payment`,
+  PAYPAL_WEBHOOK: `${supabaseUrl}/functions/v1/paypal-webhook`,
+  SAYSWITCH_PAYMENT: `${supabaseUrl}/functions/v1/sayswitch-payment`,
+  SAYSWITCH_WEBHOOK: `${supabaseUrl}/functions/v1/sayswitch-webhook`,
+  SAYSWITCH_BILLS: `${supabaseUrl}/functions/v1/sayswitch-bills`,
+  SAYSWITCH_TRANSFER: `${supabaseUrl}/functions/v1/sayswitch-transfer`,
+  EDOC_CONSENT: `${supabaseUrl}/functions/v1/edoc-consent`,
+  EDOC_TRANSACTIONS: `${supabaseUrl}/functions/v1/edoc-transactions`,
+  EDOC_WEBHOOK: `${supabaseUrl}/functions/v1/edoc-webhook`,
+  NOTIFICATIONS: `${supabaseUrl}/functions/v1/create-notification`,
+  PAYMENTS_GATEWAY: `${supabaseUrl}/functions/v1/payments-gateway`,
+  HEALTH_CHECK: `${supabaseUrl}/functions/v1/health-check`
 }
 
 // Helper function for authenticated requests
