@@ -4,21 +4,55 @@ import { AuthProvider, useAuth } from './AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 
-// Mock authentication utilities
-const mockHandleSignIn = vi.fn();
-const mockHandleSignUp = vi.fn();
-const mockHandleSignOut = vi.fn();
-const mockHandleSendVerificationEmail = vi.fn();
-const mockHandleResetPassword = vi.fn();
-const mockHandleUpdateProfile = vi.fn();
-const mockHandleSignInWithBiometric = vi.fn();
-const mockHandleSignInWithOAuth = vi.fn();
-const mockHandleSignInWithMagicLink = vi.fn();
-const mockHandleSetupMFA = vi.fn();
-const mockHandleVerifyMFA = vi.fn();
-const mockHandleGetMFAFactors = vi.fn();
-const mockHandleGetUserSessions = vi.fn();
-const mockHandleRemoveSession = vi.fn();
+// Hoist all mock variables
+const {
+  mockHandleSignIn,
+  mockHandleSignUp,
+  mockHandleSignOut,
+  mockHandleSendVerificationEmail,
+  mockHandleResetPassword,
+  mockHandleUpdateProfile,
+  mockHandleSignInWithBiometric,
+  mockHandleSignInWithOAuth,
+  mockHandleSignInWithMagicLink,
+  mockHandleSetupMFA,
+  mockHandleVerifyMFA,
+  mockHandleGetMFAFactors,
+  mockHandleGetUserSessions,
+  mockHandleRemoveSession,
+  mockFetchUserProfile,
+  mockSupabase,
+  mockToast,
+} = vi.hoisted(() => ({
+  mockHandleSignIn: vi.fn(),
+  mockHandleSignUp: vi.fn(),
+  mockHandleSignOut: vi.fn(),
+  mockHandleSendVerificationEmail: vi.fn(),
+  mockHandleResetPassword: vi.fn(),
+  mockHandleUpdateProfile: vi.fn(),
+  mockHandleSignInWithBiometric: vi.fn(),
+  mockHandleSignInWithOAuth: vi.fn(),
+  mockHandleSignInWithMagicLink: vi.fn(),
+  mockHandleSetupMFA: vi.fn(),
+  mockHandleVerifyMFA: vi.fn(),
+  mockHandleGetMFAFactors: vi.fn(),
+  mockHandleGetUserSessions: vi.fn(),
+  mockHandleRemoveSession: vi.fn(),
+  mockFetchUserProfile: vi.fn().mockResolvedValue(null),
+  mockSupabase: {
+    auth: {
+      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+      onAuthStateChange: vi.fn().mockReturnValue({
+        data: { subscription: { unsubscribe: vi.fn() } },
+      }),
+    },
+    from: vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+    }),
+  },
+  mockToast: vi.fn(),
+}));
 
 vi.mock('@/utils/auth-utils', () => ({
   handleSignIn: mockHandleSignIn,
@@ -35,29 +69,13 @@ vi.mock('@/utils/auth-utils', () => ({
   handleGetMFAFactors: mockHandleGetMFAFactors,
   handleGetUserSessions: mockHandleGetUserSessions,
   handleRemoveSession: mockHandleRemoveSession,
-  fetchUserProfile: vi.fn().mockResolvedValue(null),
+  fetchUserProfile: mockFetchUserProfile,
 }));
-
-// Mock Supabase
-const mockSupabase = {
-  auth: {
-    getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
-    onAuthStateChange: vi.fn().mockReturnValue({
-      data: { subscription: { unsubscribe: vi.fn() } },
-    }),
-  },
-  from: vi.fn().mockReturnValue({
-    select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-  }),
-};
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: mockSupabase,
 }));
 
-// Mock toast
-const mockToast = vi.fn();
 vi.mock('@/hooks/use-toast', () => ({
   useToast: () => ({
     toast: mockToast,
