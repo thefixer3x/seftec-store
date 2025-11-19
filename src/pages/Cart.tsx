@@ -25,7 +25,8 @@ const Cart = () => {
 
   const getImageUrl = (path: string | null) => {
     if (!path) return null;
-    return `https://ptnrwrgzrsbocgxlpvhd.supabase.co/storage/v1/object/public/product_images/${path}`;
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mxtsdgkwzjzlttpotole.supabase.co';
+    return `${supabaseUrl}/storage/v1/object/public/product_images/${path}`;
   };
 
   return (
