@@ -32,8 +32,8 @@ serve(async (req) => {
       
       if (!OPENAI_API_KEY) {
         return new Response(
-          JSON.stringify({ error: "OpenAI API key not configured for premium business plan generation" }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          JSON.stringify({ error: "The AI service is currently unavailable for premium business plan generation. Please contact an administrator." }),
+          { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
