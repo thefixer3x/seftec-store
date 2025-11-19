@@ -25,6 +25,12 @@ const SaySwitchAdminContent = () => {
   const supabase = useSupabaseClient();
   const { toast } = useToast();
   useDocumentTitle('SaySwitch Admin');
+
+  // Dynamic webhook URL based on environment
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mxtsdgkwzjzlttpotole.supabase.co';
+  const webhookUrl = `${supabaseUrl}/functions/v1/sayswitch-webhook`;
+  const dashboardUrl = supabaseUrl.replace('https://', 'https://').replace('.supabase.co', '.supabase.co/dashboard/settings/general');
+
   const [isProduction, setIsProduction] = useState(false);
   const [currentTab, setCurrentTab] = useState("general");
   const [activeTab, setActiveTab] = useState('overview');
@@ -396,7 +402,7 @@ const SaySwitchAdminContent = () => {
                       <div className="flex mt-1">
                         <Input
                           id="webhookUrl"
-                          value="https://seftechub.supabase.co/functions/v1/sayswitch-webhook"
+                          value={webhookUrl}
                           readOnly
                           className="font-mono flex-1"
                         />
@@ -404,7 +410,7 @@ const SaySwitchAdminContent = () => {
                           variant="outline"
                           className="ml-2"
                           onClick={() => {
-                            navigator.clipboard.writeText("https://seftechub.supabase.co/functions/v1/sayswitch-webhook");
+                            navigator.clipboard.writeText(webhookUrl);
                             alert("Webhook URL copied to clipboard");
                           }}
                         >
@@ -527,7 +533,7 @@ const SaySwitchAdminContent = () => {
                 
                 <Button
                   variant="default"
-                  onClick={() => window.open('https://ptnrwrgzrsbocgxlpvhd.supabase.co/dashboard/settings/general', '_blank')}
+                  onClick={() => window.open(dashboardUrl, '_blank')}
                 >
                   Manage in Supabase Dashboard
                 </Button>
