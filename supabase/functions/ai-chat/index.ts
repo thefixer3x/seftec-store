@@ -44,30 +44,20 @@ serve(async (req) => {
     // Validate the API key is available
     if (!OPENAI_API_KEY) {
       console.error("OPENAI_API_KEY is not set");
-      throw new Error("OpenAI API key is not configured. Please set the OPENAI_API_KEY environment variable.");
-    }
-    
-    // For demonstration or development environments, you can use a fallback to prevent errors
-    // This is a temporary solution for testing
-    const useApiKey = OPENAI_API_KEY || "DEMO_MODE";
-    
-    if (useApiKey === "DEMO_MODE") {
-      console.warn("Using DEMO_MODE for AI responses - this will return mock data");
-      
-      // Return a mock response for testing
       return new Response(
-        JSON.stringify({ 
-          text: "This is a mock response from the AI service. The OpenAI API key is not configured correctly. Please set up your API key to get real responses." 
+        JSON.stringify({
+          error: "OpenAI API key is not configured. Please contact the administrator to set up the OPENAI_API_KEY environment variable."
         }),
         {
-          headers: { 
-            ...corsHeaders, 
-            "Content-Type": "application/json" 
+          status: 503,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json"
           },
         }
       );
     }
-    
+
     // Set up the client with the auth header
     try {
       await supabase.auth.setSession({
@@ -103,7 +93,7 @@ serve(async (req) => {
       const openaiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${useApiKey}`,
+          Authorization: `Bearer ${OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
