@@ -40,6 +40,7 @@ export class FeatureFlagManager {
   private cacheTimestamps: Map<string, number> = new Map();
   private subscribers: Set<(flags: Map<string, FeatureFlagConfig>) => void> = new Set();
   private realtimeSubscription: any = null;
+  private testMode: boolean = false;
 
   // Cache TTL: 5 minutes (300000 ms)
   private readonly CACHE_TTL = 5 * 60 * 1000;
@@ -53,7 +54,8 @@ export class FeatureFlagManager {
     'ai_recommendations': true,
   };
 
-  constructor() {
+  constructor(options?: { testMode?: boolean }) {
+    this.testMode = options?.testMode ?? false;
     this.initializeRealtimeSubscription();
   }
 
@@ -267,8 +269,8 @@ export class FeatureFlagManager {
     name: string,
     userId?: string
   ): Promise<FeatureFlagCheckResult> {
-    // In development mode, use dev defaults
-    if (import.meta.env.DEV) {
+    // In development mode, use dev defaults (unless in test mode)
+    if (import.meta.env.DEV && !this.testMode) {
       const devEnabled = this.devDefaults[name] ?? true;
       return {
         isEnabled: devEnabled,

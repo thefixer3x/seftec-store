@@ -14,19 +14,21 @@ vi.mock('@/integrations/supabase/client', () => ({
 describe('FeatureFlagManager', () => {
   let manager: FeatureFlagManager;
   let mockSubscription: any;
+  let realtimeChangeHandler: Function | undefined;
 
   beforeEach(() => {
-    // Reset manager instance
-    manager = new FeatureFlagManager();
-
-    // Setup mock subscription
+    // Setup mock subscription BEFORE creating manager
     mockSubscription = {
-      on: vi.fn().mockReturnThis(),
+      on: vi.fn((event: string, config: any, handler: Function) => {
+        // Capture the realtime change handler
+        realtimeChangeHandler = handler;
+        return mockSubscription;
+      }),
       subscribe: vi.fn().mockReturnThis(),
       unsubscribe: vi.fn(),
     };
 
-    // Setup default Supabase mocks
+    // Setup default Supabase mocks BEFORE creating manager
     (supabase.channel as any) = vi.fn(() => mockSubscription);
     (supabase.from as any) = vi.fn(() => ({
       select: vi.fn().mockReturnThis(),
@@ -36,6 +38,9 @@ describe('FeatureFlagManager', () => {
       update: vi.fn().mockReturnThis(),
       delete: vi.fn().mockReturnThis(),
     }));
+
+    // Now create manager instance with mocks in place and testMode enabled
+    manager = new FeatureFlagManager({ testMode: true });
   });
 
   afterEach(() => {
@@ -179,7 +184,7 @@ describe('FeatureFlagManager', () => {
       const result = await manager.isFeatureEnabled('nonexistent_flag');
 
       expect(result.isEnabled).toBe(false);
-      expect(result.reason).toBe('disabled');
+      expect(result.reason).toBe('not_found');
     });
 
     it('should return true when flag is enabled with 100% rollout', async () => {
@@ -412,10 +417,7 @@ describe('FeatureFlagManager', () => {
         insert: mockInsert,
       }));
 
-      const result = await manager.createFlag({
-        name: 'new_feature',
-        description: 'New feature',
-      });
+      const result = await manager.createFlag('new_feature', false, 0, 'New feature');
 
       expect(result.success).toBe(true);
       expect(mockInsert).toHaveBeenCalledWith({
@@ -433,12 +435,7 @@ describe('FeatureFlagManager', () => {
         insert: mockInsert,
       }));
 
-      const result = await manager.createFlag({
-        name: 'new_feature',
-        description: 'New feature',
-        enabled: true,
-        rollout_pct: 50,
-      });
+      const result = await manager.createFlag('new_feature', true, 50, 'New feature');
 
       expect(result.success).toBe(true);
       expect(mockInsert).toHaveBeenCalledWith({
@@ -454,10 +451,7 @@ describe('FeatureFlagManager', () => {
         insert: vi.fn().mockResolvedValue({ error: { message: 'Duplicate key' } }),
       }));
 
-      const result = await manager.createFlag({
-        name: 'new_feature',
-        description: 'New feature',
-      });
+      const result = await manager.createFlag('new_feature', false, 0, 'New feature');
 
       expect(result.success).toBe(false);
       expect(result.error).toBe('Duplicate key');
@@ -544,24 +538,22 @@ describe('FeatureFlagManager', () => {
 
     it('should call callback when flag changes', () => {
       const callback = vi.fn();
-      let changeHandler: Function;
-
-      mockSubscription.on = vi.fn((event, config, handler) => {
-        changeHandler = handler;
-        return mockSubscription;
-      });
 
       manager.subscribe(callback);
 
-      // Simulate change
+      // Simulate a database change using the captured handler
       const payload = {
+        eventType: 'INSERT',
         new: {
           name: 'test_feature',
           enabled: true,
           rollout_pct: 100,
+          description: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
       };
-      changeHandler!(payload);
+      realtimeChangeHandler!(payload);
 
       expect(callback).toHaveBeenCalled();
     });
@@ -572,12 +564,29 @@ describe('FeatureFlagManager', () => {
 
       expect(typeof unsubscribe).toBe('function');
 
+      // The unsubscribe function just removes the callback from subscribers
+      // It doesn't call mockSubscription.unsubscribe()
       unsubscribe();
-      expect(mockSubscription.unsubscribe).toHaveBeenCalled();
+
+      // Verify callback is no longer called after unsubscribe
+      const payload = {
+        eventType: 'INSERT',
+        new: {
+          name: 'test_feature',
+          enabled: true,
+          rollout_pct: 100,
+          description: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      };
+      callback.mockClear();
+      realtimeChangeHandler!(payload);
+      expect(callback).not.toHaveBeenCalled();
     });
   });
 
-  describe('getAllFlags', () => {
+  describe('fetchAllFlags', () => {
     it('should fetch all flags from database', async () => {
       const mockFlags = [
         {
@@ -602,20 +611,24 @@ describe('FeatureFlagManager', () => {
         select: vi.fn().mockResolvedValue({ data: mockFlags, error: null }),
       }));
 
-      const result = await manager.getAllFlags();
+      const result = await manager.fetchAllFlags();
 
       expect(supabase.from).toHaveBeenCalledWith('feature_flags');
-      expect(result).toEqual(mockFlags);
+      expect(result).toBeInstanceOf(Map);
+      expect(result.size).toBe(2);
+      expect(result.get('feature_1')?.enabled).toBe(true);
+      expect(result.get('feature_2')?.enabled).toBe(false);
     });
 
-    it('should return empty array when query fails', async () => {
+    it('should return empty map when query fails', async () => {
       (supabase.from as any) = vi.fn(() => ({
         select: vi.fn().mockResolvedValue({ data: null, error: { message: 'Error' } }),
       }));
 
-      const result = await manager.getAllFlags();
+      const result = await manager.fetchAllFlags();
 
-      expect(result).toEqual([]);
+      expect(result).toBeInstanceOf(Map);
+      expect(result.size).toBe(0);
     });
   });
 });
