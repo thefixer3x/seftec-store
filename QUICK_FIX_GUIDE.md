@@ -11,7 +11,7 @@
 
 ### Option 1: Supabase Dashboard (Easiest) ⭐
 
-1. **Open**: https://app.supabase.com/project/ptnrwrgzrsbocgxlpvhd
+1. **Open**: https://app.supabase.com/project/mxtsdgkwzjzlttpotole
 2. **Go to**: SQL Editor (left sidebar)
 3. **Copy** the entire SQL from: `supabase/migrations/20250101_create_wallet_tables.sql`
 4. **Paste** into SQL Editor
@@ -77,8 +77,8 @@ Should return: 3 rows.
 ## Your Project URLs
 
 - **Vanity Domain**: https://seftechub.supabase.co ✅
-- **Direct URL**: https://ptnrwrgzrsbocgxlpvhd.supabase.co ✅
-- **Project ID**: `ptnrwrgzrsbocgxlpvhd` ✅
+- **Direct URL**: https://mxtsdgkwzjzlttpotole.supabase.co ✅
+- **Project ID**: `mxtsdgkwzjzlttpotole` ✅
 
 Both URLs work! 🎉
 
