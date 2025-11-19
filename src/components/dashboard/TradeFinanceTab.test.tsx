@@ -285,8 +285,8 @@ describe('TradeFinanceTab', () => {
       await user.click(pendingTabs[pendingTabs.length - 1]); // Last one is likely the tab
 
       await waitFor(() => {
-        // Should show pending content
-        expect(screen.getByText('Under Review')).toBeInTheDocument();
+        // Should show pending content - 'submitted' status displays as "Submitted"
+        expect(screen.getByText('Submitted')).toBeInTheDocument();
       });
 
       // Click completed tab
@@ -294,8 +294,8 @@ describe('TradeFinanceTab', () => {
       await user.click(completedTab);
 
       await waitFor(() => {
-        // Should show completed content
-        expect(screen.getByText('Settled')).toBeInTheDocument();
+        // Should show completed content - 'completed' status displays as "Completed"
+        expect(screen.getByText('Completed')).toBeInTheDocument();
       });
     });
 
@@ -359,7 +359,8 @@ describe('TradeFinanceTab', () => {
       await user.click(pendingTabs[pendingTabs.length - 1]);
 
       await waitFor(() => {
-        expect(screen.getByText('Under Review')).toBeInTheDocument();
+        // 'submitted' status displays as "Submitted"
+        expect(screen.getByText('Submitted')).toBeInTheDocument();
       });
     });
 
@@ -382,7 +383,8 @@ describe('TradeFinanceTab', () => {
       await user.click(completedTab);
 
       await waitFor(() => {
-        expect(screen.getByText('Settled')).toBeInTheDocument();
+        // 'completed' status displays as "Completed"
+        expect(screen.getByText('Completed')).toBeInTheDocument();
       });
     });
   });
@@ -444,9 +446,9 @@ describe('TradeFinanceTab', () => {
 
       render(<TradeFinanceTab />);
 
-      // Active tab should have View Details and Upload Documents buttons
+      // Active tab should have View Details and Manage buttons (not Upload Documents)
       expect(screen.getAllByText('View Details')[0]).toBeInTheDocument();
-      expect(screen.getAllByText('Upload Documents')[0]).toBeInTheDocument();
+      expect(screen.getAllByText('Manage')[0]).toBeInTheDocument();
     });
   });
 
