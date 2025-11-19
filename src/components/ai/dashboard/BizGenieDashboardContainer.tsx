@@ -53,8 +53,8 @@ const BizGenieDashboardContainer: React.FC<BizGenieDashboardProps> = ({ userId }
       setIsLoading(true);
       setError(null);
       
-      // Call personalized OpenAI proxy
-      const response = await fetch('/api/openai-personal', {
+      // Call BizGenie AI service
+      const response = await fetch('/api/bizgenie-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

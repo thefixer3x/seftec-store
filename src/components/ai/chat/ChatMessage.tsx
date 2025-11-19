@@ -34,9 +34,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onFeedback }) => {
 
   const getModelBadgeColor = (model?: string) => {
     if (!model) return 'bg-gray-500';
-    if (model.includes('gpt-4o-mini')) return 'bg-blue-500';
-    if (model.includes('gpt-4o')) return 'bg-purple-600';
-    return 'bg-emerald-600';
+    // BizGenie branding - show tier/complexity, not vendor models
+    if (model.includes('perplexity')) return 'bg-emerald-600';
+    if (model.includes('mini') || model.includes('o1') || model.includes('o3')) return 'bg-blue-500';
+    if (model.includes('4') || model.includes('premium')) return 'bg-purple-600';
+    return 'bg-emerald-600'; // Default BizGenie color
+  };
+
+  const getModelDisplayName = (model?: string) => {
+    if (!model) return 'BizGenie';
+    // Hide vendor-specific names, show only tier
+    if (model.includes('perplexity')) return 'Pro+';
+    if (model.includes('mini') || model.includes('o1') || model.includes('o3')) return 'Pro';
+    if (model.includes('4') || model.includes('premium')) return 'Premium';
+    return 'BizGenie';
   };
 
   return (
@@ -56,8 +67,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, onFeedback }) => {
           <div className="flex items-center justify-between mt-2 pt-1 border-t border-gray-300 dark:border-gray-600">
             <div className="flex items-center gap-2">
               {message.model && (
-                <Badge variant="secondary" className={`text-xs ${getModelBadgeColor(message.model)}`}>
-                  {message.model.split('-').pop()}
+                <Badge variant="secondary" className={`text-xs ${getModelBadgeColor(message.model)} text-white`}>
+                  {getModelDisplayName(message.model)}
                 </Badge>
               )}
               {message.complexity && (
