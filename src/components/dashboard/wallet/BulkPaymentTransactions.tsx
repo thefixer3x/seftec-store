@@ -1,6 +1,9 @@
 
 import React, { useState } from 'react';
-import { 
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/context/AuthContext';
+import {
   Dialog,
   DialogContent
 } from '@/components/ui/dialog';
@@ -11,7 +14,50 @@ import { CheckCircle, XCircle, Clock, AlertCircle, Eye, CalendarClock } from 'lu
 import { format } from 'date-fns';
 import BulkPaymentDetails, { BulkPaymentDetailsProps, PaymentItem } from './BulkPaymentDetails';
 
-// Sample data for testing
+// Fetch bulk payments from database
+const fetchBulkPayments = async (userId: string) => {
+  const { data: bulkPayments, error } = await supabase
+    .from('bulk_payments')
+    .select(`
+      *,
+      payment_items (
+        id,
+        beneficiary:beneficiaries (
+          account_name,
+          account_number,
+          bank_name
+        ),
+        amount,
+        status
+      )
+    `)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  if (error) throw error;
+
+  // Transform database data to match component interface
+  return bulkPayments?.map((payment) => ({
+    id: payment.id,
+    title: payment.title,
+    createdAt: new Date(payment.created_at),
+    scheduledDate: payment.scheduled_date ? new Date(payment.scheduled_date) : undefined,
+    totalAmount: payment.total_amount,
+    recipientCount: payment.recipient_count,
+    status: payment.status as 'pending' | 'completed' | 'failed' | 'processing',
+    items: payment.payment_items?.map((item: any) => ({
+      id: item.id,
+      beneficiaryName: item.beneficiary?.account_name || 'Unknown',
+      accountNumber: item.beneficiary?.account_number || '',
+      bankName: item.beneficiary?.bank_name || '',
+      amount: item.amount,
+      status: item.status as 'pending' | 'completed' | 'failed' | 'processing',
+    })) || [],
+  })) || [];
+};
+
+// Sample data for testing (kept as fallback)
 const SAMPLE_BULK_PAYMENTS = [
   {
     id: 'pay_123456789012',
@@ -172,8 +218,20 @@ interface Payment {
 }
 
 const BulkPaymentTransactions = () => {
+  const { user } = useAuth();
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  // Fetch real bulk payments from database
+  const { data: bulkPayments, isLoading, error } = useQuery({
+    queryKey: ['bulk-payments', user?.id],
+    queryFn: () => fetchBulkPayments(user!.id),
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+
+  // Use real data if available, otherwise fallback to sample data
+  const payments = bulkPayments && bulkPayments.length > 0 ? bulkPayments : SAMPLE_BULK_PAYMENTS;
 
   const handleViewDetails = (payment: Payment) => {
     setSelectedPayment(payment);
@@ -215,25 +273,38 @@ const BulkPaymentTransactions = () => {
     }
   };
 
+  if (error) {
+    return (
+      <div className="bg-white dark:bg-seftec-darkNavy/80 rounded-lg shadow-sm p-4">
+        <p className="text-red-500">Error loading bulk payments: {error.message}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
       <div className="bg-white dark:bg-seftec-darkNavy/80 rounded-lg shadow-sm p-4">
         <h2 className="text-lg font-medium mb-4">Recent Bulk Payments</h2>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Reference</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Recipients</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {SAMPLE_BULK_PAYMENTS.map((payment) => (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-seftec-teal"></div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Reference</TableHead>
+                  <TableHead>Title</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Recipients</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {payments.map((payment) => (
                 <TableRow key={payment.id}>
                   <TableCell className="font-mono text-xs">{payment.id.substring(4, 12)}</TableCell>
                   <TableCell className="font-medium">{payment.title}</TableCell>
@@ -257,6 +328,7 @@ const BulkPaymentTransactions = () => {
             </TableBody>
           </Table>
         </div>
+        )}
       </div>
 
       {selectedPayment && (
