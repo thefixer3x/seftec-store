@@ -472,10 +472,75 @@ const fetchMarketplaceMetrics = async (userId: string): Promise<MarketplaceMetri
   const uniqueSellers = new Set(orders.map((o) => o.seller_id)).size;
   const uniqueBuyers = new Set(orders.map((o) => o.buyer_id)).size;
 
-  // Mock additional data
-  const totalListings = Math.floor(totalOrders * 1.5);
-  const activeListings = Math.floor(totalListings * 0.7);
-  const conversionRate = (totalOrders / totalListings) * 100;
+  // Fetch real marketplace listings (products)
+  const { count: totalListingsCount } = await supabase
+    .from('products')
+    .select('id', { count: 'exact', head: true })
+    .eq('vendor_id', userId);
+
+  const { count: activeListingsCount } = await supabase
+    .from('products')
+    .select('id', { count: 'exact', head: true })
+    .eq('vendor_id', userId)
+    .eq('active', true);
+
+  const totalListings = totalListingsCount || 0;
+  const activeListings = activeListingsCount || 0;
+
+  // Calculate conversion rate (orders / active listings)
+  const conversionRate = activeListings > 0 ? (totalOrders / activeListings) * 100 : 0;
+
+  // Fetch orders by category
+  const { data: ordersWithProducts } = await supabase
+    .from('marketplace_orders')
+    .select('amount, product:products(category)')
+    .eq('seller_id', userId);
+
+  const categoryData = ordersWithProducts?.reduce((acc: any, order: any) => {
+    const category = order.product?.category || 'Uncategorized';
+    if (!acc[category]) {
+      acc[category] = { count: 0, revenue: 0 };
+    }
+    acc[category].count += 1;
+    acc[category].revenue += order.amount || 0;
+    return acc;
+  }, {});
+
+  const ordersByCategory = categoryData
+    ? Object.entries(categoryData).map(([category, data]: [string, any]) => ({
+        category,
+        count: data.count,
+        revenue: data.revenue,
+      }))
+    : [];
+
+  // Fetch top sellers (if user is viewing marketplace-wide data)
+  const { data: sellerOrders } = await supabase
+    .from('marketplace_orders')
+    .select('seller_id, amount, seller:profiles(full_name)')
+    .order('amount', { ascending: false })
+    .limit(10);
+
+  const sellerStats = sellerOrders?.reduce((acc: any, order: any) => {
+    const sellerId = order.seller_id;
+    if (!acc[sellerId]) {
+      acc[sellerId] = {
+        seller_id: sellerId,
+        seller_name: order.seller?.full_name || 'Unknown Seller',
+        total_sales: 0,
+        order_count: 0,
+      };
+    }
+    acc[sellerId].total_sales += order.amount || 0;
+    acc[sellerId].order_count += 1;
+    return acc;
+  }, {});
+
+  const topSellers = sellerStats
+    ? Object.values(sellerStats)
+        .sort((a: any, b: any) => b.total_sales - a.total_sales)
+        .slice(0, 5)
+    : [];
 
   return {
     totalListings,
@@ -485,8 +550,8 @@ const fetchMarketplaceMetrics = async (userId: string): Promise<MarketplaceMetri
     sellerCount: uniqueSellers,
     buyerCount: uniqueBuyers,
     conversionRate,
-    ordersByCategory: [],
-    topSellers: [],
+    ordersByCategory,
+    topSellers: topSellers as any[],
   };
 };
 
@@ -510,9 +575,54 @@ const fetchDashboardMetrics = async (userId: string): Promise<DashboardMetrics> 
   const walletBalance = wallet?.balance || 0;
   const aiUsageCost = aiUsage?.reduce((sum, log) => sum + (log.estimated_cost || 0), 0) || 0;
 
-  // Mock active users and total revenue (would need proper queries)
-  const activeUsers = 152;
-  const totalRevenue = 125680;
+  // Calculate active users (users who logged in within last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const { count: activeUsersCount } = await supabase
+    .from('profiles')
+    .select('id', { count: 'exact', head: true })
+    .gte('last_sign_in_at', thirtyDaysAgo.toISOString());
+
+  const activeUsers = activeUsersCount || 0;
+
+  // Calculate total revenue from all sources
+  // 1. E-commerce orders
+  const { data: orders } = await supabase
+    .from('orders')
+    .select('total_amount')
+    .eq('customer_id', userId);
+
+  const ordersRevenue = orders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+
+  // 2. Marketplace orders (as seller)
+  const { data: marketplaceOrders } = await supabase
+    .from('marketplace_orders')
+    .select('amount')
+    .eq('seller_id', userId);
+
+  const marketplaceRevenue = marketplaceOrders?.reduce((sum, order) => sum + (order.amount || 0), 0) || 0;
+
+  // 3. SaySwitch payments (completed)
+  const { data: sayOrders } = await supabase
+    .from('say_orders')
+    .select('amount')
+    .eq('user_id', userId)
+    .eq('status', 'success');
+
+  const sayRevenue = sayOrders?.reduce((sum, order) => sum + (order.amount || 0), 0) || 0;
+
+  // 4. PayPal subscription payments
+  const { data: paypalPayments } = await supabase
+    .from('subscription_payments')
+    .select('amount')
+    .eq('user_id', userId)
+    .eq('status', 'completed');
+
+  const paypalRevenue = paypalPayments?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
+
+  // Total revenue across all channels
+  const totalRevenue = ordersRevenue + marketplaceRevenue + sayRevenue + paypalRevenue;
 
   return {
     activeUsers,
