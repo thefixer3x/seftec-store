@@ -24,6 +24,11 @@ import { AlertCircle, CreditCard, CheckCircle, RefreshCw, ArrowLeft } from 'luci
 const PayPalSetupContent = () => {
   const navigate = useNavigate();
   const supabase = useSupabaseClient() as SupabaseClient;
+
+  // Dynamic webhook URL based on environment
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mxtsdgkwzjzlttpotole.supabase.co';
+  const webhookUrl = `${supabaseUrl}/functions/v1/paypal-webhook`;
+
   const [activeTab, setActiveTab] = useState('setup');
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -615,7 +620,7 @@ const PayPalSetupContent = () => {
                   <div className="flex">
                     <Input
                       id="webhookUrl"
-                      value="https://seftechub.supabase.co/functions/v1/paypal-webhook"
+                      value={webhookUrl}
                       readOnly
                       className="font-mono flex-1"
                     />
@@ -623,7 +628,7 @@ const PayPalSetupContent = () => {
                       variant="outline"
                       className="ml-2"
                       onClick={() => {
-                        navigator.clipboard.writeText("https://seftechub.supabase.co/functions/v1/paypal-webhook");
+                        navigator.clipboard.writeText(webhookUrl);
                         alert("Webhook URL copied to clipboard");
                       }}
                     >
