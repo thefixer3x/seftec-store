@@ -18,7 +18,7 @@ const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ((
 ### **1. Environment Variables**
 Created `.env.local` with required Supabase configuration:
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://ptnrwrgzrsbocgxlpvhd.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://mxtsdgkwzjzlttpotole.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 NEXT_PUBLIC_APP_URL=http://localhost:9994
 NEXT_PUBLIC_API_URL=https://api.seftec.store
