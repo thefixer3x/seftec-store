@@ -45,15 +45,15 @@ const SaySwitchAdminContent = () => {
     const checkAdminStatus = async () => {
       try {
         const { data, error } = await supabase.rpc('is_admin');
-        
+
         if (error) {
           console.error('Error checking admin status:', error);
           setIsAdmin(false);
           return;
         }
-        
+
         setIsAdmin(!!data);
-        
+
         if (data) {
           loadRecentTransactions();
         }
@@ -62,7 +62,7 @@ const SaySwitchAdminContent = () => {
         setIsAdmin(false);
       }
     };
-    
+
     checkAdminStatus();
   }, [supabase]);
 
@@ -74,9 +74,9 @@ const SaySwitchAdminContent = () => {
         .select('*')
         .order('created_at', { ascending: false })
         .limit(10);
-        
+
       if (error) throw error;
-      
+
       setRecentTransactions(data || []);
     } catch (error) {
       console.error('Error loading transactions:', error);
@@ -87,14 +87,14 @@ const SaySwitchAdminContent = () => {
   const runTestPayment = async () => {
     setLoading(true);
     setTestResult(null);
-    
+
     try {
       const amount = parseFloat(testAmount);
-      
+
       if (isNaN(amount) || amount <= 0) {
         throw new Error("Please enter a valid amount");
       }
-      
+
       const { data, error } = await supabase.functions.invoke('sayswitch-payment', {
         body: {
           action: 'test_payment',
@@ -103,15 +103,15 @@ const SaySwitchAdminContent = () => {
           is_admin_test: true
         }
       });
-      
+
       if (error) throw error;
-      
+
       if (data.success) {
         setTestResult({
           success: true,
           message: `Test payment successful. Reference: ${data.reference}`
         });
-        
+
         // Refresh transactions list
         loadRecentTransactions();
       } else {
@@ -139,7 +139,7 @@ const SaySwitchAdminContent = () => {
             This area is restricted to administrative users only.
           </AlertDescription>
         </Alert>
-        
+
         <Button onClick={() => navigate('/devops')} variant="default">
           Return to DevOps Dashboard
         </Button>
@@ -167,12 +167,12 @@ const SaySwitchAdminContent = () => {
             Configuration and testing for SaySwitch payment gateway
           </p>
         </div>
-        
+
         <Button onClick={() => navigate('/devops')} variant="outline">
           Back to DevOps
         </Button>
       </div>
-      
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid grid-cols-3 gap-4 bg-transparent h-auto p-0">
           <TabsTrigger
@@ -194,7 +194,7 @@ const SaySwitchAdminContent = () => {
             Configuration
           </TabsTrigger>
         </TabsList>
-        
+
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-4">
           <Card>
@@ -215,7 +215,7 @@ const SaySwitchAdminContent = () => {
                   Operational
                 </Badge>
               </div>
-              
+
               <h3 className="font-medium mb-2">Recent Transactions</h3>
               <div className="border rounded-lg overflow-hidden">
                 <div className="grid grid-cols-5 gap-2 p-3 bg-muted text-xs font-medium">
@@ -225,7 +225,7 @@ const SaySwitchAdminContent = () => {
                   <div>Status</div>
                   <div>Date</div>
                 </div>
-                
+
                 {recentTransactions.length === 0 ? (
                   <div className="p-6 text-center text-muted-foreground">
                     No transactions found
@@ -238,8 +238,8 @@ const SaySwitchAdminContent = () => {
                       <div>₦{transaction.amount.toLocaleString()}</div>
                       <div>
                         <Badge variant={
-                          transaction.status === 'completed' || transaction.status === 'success' 
-                            ? 'success' 
+                          transaction.status === 'completed' || transaction.status === 'success'
+                            ? 'success'
                             : transaction.status === 'pending' || transaction.status === 'processing'
                               ? 'secondary'
                               : 'destructive'
@@ -255,7 +255,7 @@ const SaySwitchAdminContent = () => {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* Testing Tab */}
         <TabsContent value="testing" className="space-y-4">
           <Card>
@@ -278,9 +278,9 @@ const SaySwitchAdminContent = () => {
                         className="font-mono"
                       />
                     </div>
-                    
-                    <Button 
-                      onClick={runTestPayment} 
+
+                    <Button
+                      onClick={runTestPayment}
                       disabled={loading}
                       className="w-full"
                     >
@@ -296,7 +296,7 @@ const SaySwitchAdminContent = () => {
                         </>
                       )}
                     </Button>
-                    
+
                     {testResult && (
                       <Alert variant={testResult.success ? "default" : "destructive"} className="mt-4">
                         {testResult.success ? (
@@ -310,31 +310,31 @@ const SaySwitchAdminContent = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <h3 className="font-medium">Other Test Options</h3>
-                  
+
                   <div className="space-y-2">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="w-full justify-start"
                       onClick={() => navigate('/devops/sayswitch/test-bill-payment')}
                     >
                       <ArrowUpRight className="h-4 w-4 mr-2" />
                       Test Bill Payment
                     </Button>
-                    
-                    <Button 
-                      variant="outline" 
+
+                    <Button
+                      variant="outline"
                       className="w-full justify-start"
                       onClick={() => navigate('/devops/sayswitch/test-transfer')}
                     >
                       <ArrowUpRight className="h-4 w-4 mr-2" />
                       Test Money Transfer
                     </Button>
-                    
-                    <Button 
-                      variant="outline" 
+
+                    <Button
+                      variant="outline"
                       className="w-full justify-start"
                       onClick={() => navigate('/devops/sayswitch/test-virtual-account')}
                     >
@@ -347,7 +347,7 @@ const SaySwitchAdminContent = () => {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* Configuration Tab */}
         <TabsContent value="config" className="space-y-4">
           <Card>
@@ -360,26 +360,26 @@ const SaySwitchAdminContent = () => {
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Environment Variables</AlertTitle>
                 <AlertDescription>
-                  SaySwitch credentials are stored as environment variables for security. 
+                  SaySwitch credentials are stored as environment variables for security.
                   Use Supabase Dashboard to modify these values.
                 </AlertDescription>
               </Alert>
-              
+
               <div className="space-y-4">
                 <div className="p-4 border rounded-lg">
                   <h3 className="font-medium mb-2">Current Configuration</h3>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div className="font-medium">API Base URL:</div>
                     <div className="font-mono">************************************</div>
-                    
+
                     <div className="font-medium">Public Key:</div>
                     <div className="font-mono">pk_****************************</div>
-                    
+
                     <div className="font-medium">Secret Key:</div>
                     <div className="font-mono">sk_****************************</div>
                   </div>
                 </div>
-                
+
                 <div className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-900">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-medium">Webhook Configuration</h3>
@@ -387,7 +387,7 @@ const SaySwitchAdminContent = () => {
                       <CheckCircle className="h-3 w-3 mr-1" /> Active
                     </Badge>
                   </div>
-                  
+
                   <Alert className="mb-4">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Important</AlertTitle>
@@ -395,7 +395,7 @@ const SaySwitchAdminContent = () => {
                       Configure these webhook settings in your SaySwitch dashboard to receive real-time payment notifications.
                     </AlertDescription>
                   </Alert>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="webhookUrl">Webhook URL</Label>
@@ -418,7 +418,7 @@ const SaySwitchAdminContent = () => {
                         </Button>
                       </div>
                     </div>
-                    
+
                     <div>
                       <Label>Required Headers</Label>
                       <div className="mt-1 p-3 bg-secondary/20 rounded font-mono text-xs">
@@ -426,12 +426,12 @@ const SaySwitchAdminContent = () => {
                         <div>Content-Type: application/json</div>
                       </div>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        The webhook signature is automatically calculated using your public key and the payload, 
-                        following SaySwitch's signing requirements. Our function validates this signature to ensure 
-                        security.  
+                        The webhook signature is automatically calculated using your public key and the payload,
+                        following SaySwitch's signing requirements. Our function validates this signature to ensure
+                        security.
                       </p>
                     </div>
-                    
+
                     <div>
                       <Label>Callback URL (Browser Redirect)</Label>
                       <div className="mt-1">
@@ -469,7 +469,7 @@ const SaySwitchAdminContent = () => {
                         </p>
                       </div>
                     </div>
-                    
+
                     <div>
                       <Label>Supported Events</Label>
                       <div className="grid grid-cols-2 gap-2 mt-2">
@@ -499,11 +499,11 @@ const SaySwitchAdminContent = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div>
                       <Label>Test Webhook</Label>
                       <div className="mt-2 flex">
-                        <Button 
+                        <Button
                           onClick={() => {
                             toast({
                               title: "Test event sent",
@@ -514,8 +514,8 @@ const SaySwitchAdminContent = () => {
                         >
                           <Zap className="h-4 w-4 mr-2" /> Send Test Event
                         </Button>
-                        
-                        <Button 
+
+                        <Button
                           variant="outline"
                           onClick={() => {
                             setCurrentTab("logs");
@@ -530,7 +530,7 @@ const SaySwitchAdminContent = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <Button
                   variant="default"
                   onClick={() => window.open(dashboardUrl, '_blank')}
@@ -560,9 +560,9 @@ const SaySwitchAdmin = withErrorBoundary(SaySwitchAdminContent, {
           We encountered an issue loading the SaySwitch Admin panel. Please try refreshing the page.
         </AlertDescription>
       </Alert>
-      
-      <Button 
-        onClick={() => window.location.reload()} 
+
+      <Button
+        onClick={() => window.location.reload()}
         variant="default"
         className="mt-4"
       >

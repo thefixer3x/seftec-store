@@ -5,28 +5,28 @@ import { useToast } from '@/hooks/use-toast';
 import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Card, 
-  CardContent, 
-  CardFooter, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
 } from '@/components/ui/card';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select';
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationEllipsis, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
 } from '@/components/ui/pagination';
 import { ImageIcon, Search, ShoppingCart, Grid2X2, List } from 'lucide-react';
 
@@ -51,7 +51,7 @@ const Shop = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
-  
+
   const { toast } = useToast();
   const { addToCart } = useCart();
 
@@ -62,36 +62,36 @@ const Shop = () => {
   useEffect(() => {
     // Apply filtering and sorting
     let result = [...products];
-    
+
     // Filter by category
     if (selectedCategory !== 'all') {
       result = result.filter(product => product.category === selectedCategory);
     }
-    
+
     // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      result = result.filter(product => 
-        product.name.toLowerCase().includes(query) || 
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(query) ||
         (product.description && product.description.toLowerCase().includes(query))
       );
     }
-    
+
     // Apply sorting
     const [sortField, sortDirection] = sortOrder.split('-');
     result.sort((a, b) => {
       if (sortField === 'name') {
-        return sortDirection === 'asc' 
+        return sortDirection === 'asc'
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name);
       } else if (sortField === 'price') {
-        return sortDirection === 'asc' 
+        return sortDirection === 'asc'
           ? a.price - b.price
           : b.price - a.price;
       }
       return 0;
     });
-    
+
     setFilteredProducts(result);
     setCurrentPage(1); // Reset to first page when filters change
   }, [products, searchQuery, selectedCategory, sortOrder]);
@@ -99,22 +99,22 @@ const Shop = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('products')
         .select('*');
-      
+
       if (error) throw error;
-      
+
       setProducts(data || []);
       setFilteredProducts(data || []);
-      
+
       // Extract unique categories
       const uniqueCategories = Array.from(
         new Set(data?.map(product => product.category).filter(Boolean) as string[])
       );
       setCategories(uniqueCategories);
-      
+
     } catch (error: any) {
       console.error('Error fetching products:', error);
       toast({
@@ -141,48 +141,48 @@ const Shop = () => {
 
   const renderPagination = () => {
     const pageNumbers = [];
-    
+
     // Always show first page
     pageNumbers.push(1);
-    
+
     // Calculate range around current page
     let startPage = Math.max(2, currentPage - 1);
     let endPage = Math.min(totalPages - 1, currentPage + 1);
-    
+
     // Add ellipsis after first page if needed
     if (startPage > 2) {
       pageNumbers.push('ellipsis1');
     }
-    
+
     // Add pages around current page
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
     }
-    
+
     // Add ellipsis before last page if needed
     if (endPage < totalPages - 1) {
       pageNumbers.push('ellipsis2');
     }
-    
+
     // Add last page if more than one page
     if (totalPages > 1) {
       pageNumbers.push(totalPages);
     }
-    
+
     return (
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious 
+            <PaginationPrevious
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
             />
           </PaginationItem>
-          
+
           {pageNumbers.map((page, index) => (
             typeof page === 'number' ? (
               <PaginationItem key={index}>
-                <PaginationLink 
+                <PaginationLink
                   isActive={page === currentPage}
                   onClick={() => setCurrentPage(page)}
                   className="cursor-pointer"
@@ -196,9 +196,9 @@ const Shop = () => {
               </PaginationItem>
             )
           ))}
-          
+
           <PaginationItem>
-            <PaginationNext 
+            <PaginationNext
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
             />
@@ -212,25 +212,25 @@ const Shop = () => {
     <div className="container mx-auto px-4 py-10">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <h1 className="text-3xl font-bold mb-4 md:mb-0">Shop</h1>
-        
+
         <div className="flex items-center space-x-2">
-          <Button 
-            variant={viewMode === 'grid' ? 'default' : 'outline'} 
-            size="sm" 
+          <Button
+            variant={viewMode === 'grid' ? 'default' : 'outline'}
+            size="sm"
             onClick={() => setViewMode('grid')}
           >
             <Grid2X2 className="h-4 w-4" />
           </Button>
-          <Button 
-            variant={viewMode === 'list' ? 'default' : 'outline'} 
-            size="sm" 
+          <Button
+            variant={viewMode === 'list' ? 'default' : 'outline'}
+            size="sm"
             onClick={() => setViewMode('list')}
           >
             <List className="h-4 w-4" />
           </Button>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {/* Filters sidebar */}
         <div className="md:col-span-1 space-y-6">
@@ -246,7 +246,7 @@ const Shop = () => {
               />
             </div>
           </div>
-          
+
           <div className="rounded-lg border p-4">
             <h2 className="font-semibold text-lg mb-4">Categories</h2>
             <div className="space-y-2">
@@ -258,7 +258,7 @@ const Shop = () => {
                   All Categories
                 </button>
               </div>
-              
+
               {categories.map((category) => (
                 <div key={category} className="flex items-center">
                   <button
@@ -271,7 +271,7 @@ const Shop = () => {
               ))}
             </div>
           </div>
-          
+
           <div className="rounded-lg border p-4">
             <h2 className="font-semibold text-lg mb-4">Sort by</h2>
             <Select value={sortOrder} onValueChange={setSortOrder}>
@@ -287,7 +287,7 @@ const Shop = () => {
             </Select>
           </div>
         </div>
-        
+
         {/* Products grid */}
         <div className="md:col-span-3">
           {loading ? (
@@ -297,8 +297,8 @@ const Shop = () => {
           ) : filteredProducts.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-lg text-gray-500">No products found</p>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="mt-4"
                 onClick={() => {
                   setSearchQuery('');
@@ -315,15 +315,15 @@ const Shop = () => {
                   Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, filteredProducts.length)} of {filteredProducts.length} products
                 </p>
               </div>
-              
+
               {viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {currentProducts.map((product) => (
                     <Card key={product.id} className="overflow-hidden">
                       <div className="aspect-square bg-gray-100 dark:bg-gray-800 relative">
                         {product.image_url ? (
-                          <img 
-                            src={getImageUrl(product.image_url)} 
+                          <img
+                            src={getImageUrl(product.image_url)}
                             alt={product.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -345,8 +345,8 @@ const Shop = () => {
                         )}
                       </CardContent>
                       <CardFooter className="p-4 pt-0">
-                        <Button 
-                          className="w-full" 
+                        <Button
+                          className="w-full"
                           onClick={() => addToCart(product, 1)}
                           disabled={product.stock_quantity <= 0}
                         >
@@ -363,8 +363,8 @@ const Shop = () => {
                     <div key={product.id} className="flex border rounded-lg overflow-hidden">
                       <div className="w-32 h-32 bg-gray-100 dark:bg-gray-800 flex-shrink-0">
                         {product.image_url ? (
-                          <img 
-                            src={getImageUrl(product.image_url)} 
+                          <img
+                            src={getImageUrl(product.image_url)}
                             alt={product.name}
                             className="w-full h-full object-cover"
                             onError={(e) => {
@@ -389,7 +389,7 @@ const Shop = () => {
                           )}
                         </div>
                         <div className="mt-4">
-                          <Button 
+                          <Button
                             onClick={() => addToCart(product, 1)}
                             disabled={product.stock_quantity <= 0}
                           >
@@ -402,7 +402,7 @@ const Shop = () => {
                   ))}
                 </div>
               )}
-              
+
               <div className="mt-8 flex justify-center">
                 {totalPages > 1 && renderPagination()}
               </div>

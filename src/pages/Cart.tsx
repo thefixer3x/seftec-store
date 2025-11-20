@@ -15,7 +15,7 @@ const Cart = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart, checkout } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   const handleCheckout = async () => {
     const result = await checkout();
     if (result.success && result.orderId) {
@@ -32,7 +32,7 @@ const Cart = () => {
   return (
     <div className="container mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
-      
+
       {cart.length === 0 ? (
         <Card>
           <CardContent className="pt-6">
@@ -69,8 +69,8 @@ const Cart = () => {
                           <div className="flex items-center space-x-3">
                             <div className="h-12 w-12 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
                               {item.image_url ? (
-                                <img 
-                                  src={getImageUrl(item.image_url)} 
+                                <img
+                                  src={getImageUrl(item.image_url)}
                                   alt={item.name}
                                   className="h-full w-full object-cover"
                                   onError={(e) => {
@@ -89,9 +89,9 @@ const Cart = () => {
                         <TableCell>{formatCurrency(item.price)}</TableCell>
                         <TableCell>
                           <div className="flex items-center w-28">
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
+                            <Button
+                              variant="outline"
+                              size="sm"
                               className="h-8 w-8 rounded-r-none"
                               onClick={() => updateQuantity(item.product_id, item.quantity - 1)}
                             >
@@ -104,9 +104,9 @@ const Cart = () => {
                               onChange={(e) => updateQuantity(item.product_id, parseInt(e.target.value) || 1)}
                               className="h-8 rounded-none text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             />
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
+                            <Button
+                              variant="outline"
+                              size="sm"
                               className="h-8 w-8 rounded-l-none"
                               onClick={() => updateQuantity(item.product_id, item.quantity + 1)}
                             >
@@ -118,9 +118,9 @@ const Cart = () => {
                           {formatCurrency(item.price * item.quantity)}
                         </TableCell>
                         <TableCell>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => removeFromCart(item.product_id)}
                           >
                             <Trash2 className="h-4 w-4 text-red-500" />
@@ -137,7 +137,7 @@ const Cart = () => {
               </CardFooter>
             </Card>
           </div>
-          
+
           <div className="md:col-span-1">
             <Card>
               <CardHeader>
@@ -161,8 +161,8 @@ const Cart = () => {
               </CardContent>
               <CardFooter>
                 {user ? (
-                  <Button 
-                    className="w-full" 
+                  <Button
+                    className="w-full"
                     size="lg"
                     onClick={handleCheckout}
                   >
