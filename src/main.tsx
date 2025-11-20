@@ -11,6 +11,10 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { FeatureFlagProvider } from './components/ui/feature-flags/FeatureFlagProvider';
 import { I18nProvider } from './components/ui/language-toggle';
+import { SupabaseProvider } from './context/SupabaseContext';
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,16 +36,18 @@ if (rootElement) {
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider attribute="class" defaultTheme="light">
-            <I18nProvider>
-              <FeatureFlagProvider>
-                <AuthProvider>
-                  <CartProvider>
-                    <App />
-                    <Toaster />
-                  </CartProvider>
-                </AuthProvider>
-              </FeatureFlagProvider>
-            </I18nProvider>
+            <SupabaseProvider supabaseUrl={SUPABASE_URL} supabaseAnonKey={SUPABASE_ANON_KEY}>
+              <I18nProvider>
+                <FeatureFlagProvider>
+                  <AuthProvider>
+                    <CartProvider>
+                      <App />
+                      <Toaster />
+                    </CartProvider>
+                  </AuthProvider>
+                </FeatureFlagProvider>
+              </I18nProvider>
+            </SupabaseProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </BrowserRouter>

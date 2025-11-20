@@ -26,7 +26,7 @@ const Products = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -38,7 +38,7 @@ const Products = () => {
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
       setProducts(data || []);
     } catch (error: any) {
@@ -80,11 +80,11 @@ const Products = () => {
 
     try {
       setUploadLoading(true);
-      
+
       // Generate a unique filename with user ID as the folder path
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-      
+
       // Upload the file to the product_images bucket
       const { error: uploadError } = await supabase.storage
         .from('product_images')
@@ -92,12 +92,12 @@ const Products = () => {
           cacheControl: '3600',
           upsert: false
         });
-      
+
       if (uploadError) throw uploadError;
-      
+
       // Create a product entry with the image URL
       const imagePath = fileName;
-      
+
       // Basic product data (in a real app, you'd have a form for this)
       const productData = {
         name: `Product ${Date.now()}`,
@@ -107,24 +107,24 @@ const Products = () => {
         image_url: imagePath,
         vendor_id: user.id,
       };
-      
+
       const { error: productError } = await supabase
         .from('products')
         .insert([productData]);
-      
+
       if (productError) throw productError;
-      
+
       toast({
         title: "Success!",
         description: "Product image uploaded successfully.",
       });
-      
+
       // Refresh the products list
       fetchProducts();
-      
+
       // Reset file selection
       setSelectedFile(null);
-      
+
     } catch (error: any) {
       console.error('Error uploading image:', error.message);
       toast({
@@ -186,8 +186,8 @@ const Products = () => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button 
-            onClick={uploadImage} 
+          <Button
+            onClick={uploadImage}
             disabled={!user || !selectedFile || uploadLoading}
             className="w-full sm:w-auto"
           >
@@ -219,8 +219,8 @@ const Products = () => {
             <Card key={product.id} className="overflow-hidden">
               <div className="aspect-square bg-gray-100 dark:bg-gray-800 relative">
                 {product.image_url ? (
-                  <img 
-                    src={getImageUrl(product.image_url)} 
+                  <img
+                    src={getImageUrl(product.image_url)}
                     alt={product.name}
                     className="w-full h-full object-cover"
                     onError={(e) => {

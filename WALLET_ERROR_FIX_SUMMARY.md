@@ -3,18 +3,18 @@
 ## Errors Identified
 
 ### 1. Content Security Policy (CSP) Error
-**Error**: `Refused to connect to wss://ptnrwrgzrsbocgxlpvhd.supabase.co/realtime/v1/websocket`
+**Error**: `Refused to connect to wss://mxtsdgkwzjzlttpotole.supabase.co/realtime/v1/websocket`
 
 **Cause**: The CSP in `index.html` didn't allow WebSocket connections to Supabase.
 
 **Fix**: Added WebSocket domains to CSP:
 ```html
-connect-src 'self' https://ptnrwrgzrsbocgxlpvhd.supabase.co https://seftechub.supabase.co 
-wss://ptnrwrgzrsbocgxlpvhd.supabase.co wss://seftechub.supabase.co https://api.seftec.store;
+connect-src 'self' https://mxtsdgkwzjzlttpotole.supabase.co https://seftechub.supabase.co
+wss://mxtsdgkwzjzlttpotole.supabase.co wss://seftechub.supabase.co https://api.seftec.store;
 ```
 
 ### 2. Wrong Supabase URL
-**Error**: Using `ptnrwrgzrsbocgxlpvhd.supabase.co` instead of `seftechub.supabase.co`
+**Error**: Using `mxtsdgkwzjzlttpotole.supabase.co` instead of `seftechub.supabase.co`
 
 **Fix**: Updated `apps/seftec-store/src/integrations/supabase/client.ts`:
 ```typescript
