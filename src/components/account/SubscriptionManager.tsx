@@ -185,6 +185,11 @@ const SubscriptionManager = () => {
       </Card>
     );
   }
+
+  // Debug: Log subscription state
+  console.log('SubscriptionManager - subscription:', subscription);
+  console.log('SubscriptionManager - processingAction:', processingAction);
+  console.log('SubscriptionManager - user:', user);
   
   return (
     <Card className="shadow-sm bg-white dark:bg-seftec-darkNavy/30">
@@ -233,7 +238,10 @@ const SubscriptionManager = () => {
               'Standard support'
             ]}
             current={subscription?.plan_name === 'basic'}
-            onSelect={() => handleSubscribe('basic')}
+            onSelect={() => {
+              console.log('Basic plan button clicked');
+              handleSubscribe('basic');
+            }}
             callToAction={subscription?.plan_name === 'basic' ? 'Current Plan' : 'Subscribe'}
             disabled={processingAction || subscription?.plan_name === 'basic'}
           />
@@ -252,7 +260,10 @@ const SubscriptionManager = () => {
               'Priority support'
             ]}
             current={subscription?.plan_name === 'premium'}
-            onSelect={() => handleSubscribe('premium')}
+            onSelect={() => {
+              console.log('Premium plan button clicked');
+              handleSubscribe('premium');
+            }}
             callToAction={subscription?.plan_name === 'premium' ? 'Current Plan' : 'Subscribe'}
             disabled={processingAction || subscription?.plan_name === 'premium'}
             recommended={true}
@@ -321,15 +332,15 @@ const SubscriptionCard = ({
       current 
         ? 'border-seftec-teal dark:border-seftec-teal/70 border-2' 
         : 'border-gray-200 dark:border-gray-700'
-    } overflow-hidden transition-all relative`}>
+    } overflow-visible transition-all relative`}>
       {recommended && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-20">
           <Badge className="bg-gradient-to-r from-seftec-teal to-seftec-purple text-white px-4 py-1 text-xs font-semibold shadow-lg">
             RECOMMENDED
           </Badge>
         </div>
       )}
-      <div className="p-6 pt-8">
+      <div className="p-6 pt-8 relative z-0">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">{title}</h3>
         <div className="mb-4">
           <span className="text-2xl font-bold text-gray-900 dark:text-white">{price}</span>
@@ -353,14 +364,31 @@ const SubscriptionCard = ({
         )}
         
         <Button 
-          onClick={onSelect} 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Button clicked:', { disabled, current, callToAction, hasOnSelect: !!onSelect });
+            if (!disabled && onSelect) {
+              console.log('Calling onSelect handler');
+              onSelect();
+            } else {
+              console.warn('Button click ignored - disabled:', disabled, 'onSelect:', !!onSelect);
+            }
+          }}
           disabled={disabled}
-          className={`w-full ${
+          className={`w-full relative z-30 ${
             current 
               ? 'bg-seftec-teal hover:bg-seftec-teal/90 text-white'
-              : ''
+              : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700'
           }`}
           variant={current ? 'default' : 'outline'}
+          style={{ 
+            pointerEvents: disabled ? 'none' : 'auto', 
+            cursor: disabled ? 'not-allowed' : 'pointer',
+            position: 'relative',
+            zIndex: 30,
+            minHeight: '40px'
+          }}
         >
           {disabled && !current ? (
             <>
