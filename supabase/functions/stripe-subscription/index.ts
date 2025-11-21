@@ -109,14 +109,39 @@ serve(async (req) => {
         });
         
         // Store subscription information
-        await supabaseAdmin
+        // First check if subscription exists for this user
+        const { data: existingSub } = await supabaseAdmin
           .from('subscriptions')
-          .upsert({
-            user_id: user.id,
-            stripe_customer_id: customerId,
-            plan_name: planType,
-            status: "incomplete"
-          }, { onConflict: 'user_id' });
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('provider', 'stripe')
+          .maybeSingle();
+        
+        if (existingSub) {
+          // Update existing subscription
+          await supabaseAdmin
+            .from('subscriptions')
+            .update({
+              stripe_customer_id: customerId,
+              plan_name: planType,
+              status: "incomplete",
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', existingSub.id);
+        } else {
+          // Insert new subscription
+          await supabaseAdmin
+            .from('subscriptions')
+            .insert({
+              user_id: user.id,
+              provider: 'stripe',
+              stripe_customer_id: customerId,
+              plan_name: planType,
+              status: "incomplete",
+              subscription_id: customerId, // Temporary, will be updated by webhook
+              plan_id: planType // For compatibility
+            });
+        }
         
         return new Response(JSON.stringify({ url: session.url }), {
           status: 200,
@@ -152,11 +177,12 @@ serve(async (req) => {
       }
       
       case "get_subscription": {
-        // Get subscription details
+        // Get subscription details - check for Stripe subscriptions first
         const { data: subscription } = await supabaseAdmin
           .from('subscriptions')
           .select('*')
           .eq('user_id', user.id)
+          .eq('provider', 'stripe')
           .maybeSingle();
           
         if (!subscription) {
@@ -166,16 +192,30 @@ serve(async (req) => {
           
           const newSubscription = {
             user_id: user.id,
+            provider: 'stripe',
+            subscription_id: `trial_${user.id}`, // Required field
+            plan_id: 'free', // Required field
             plan_name: 'free',
             status: 'active',
             trial_end: trialEnd.toISOString()
           };
           
-          await supabaseAdmin
+          const { data: inserted, error: insertError } = await supabaseAdmin
             .from('subscriptions')
-            .insert(newSubscription);
+            .insert(newSubscription)
+            .select()
+            .single();
           
-          return new Response(JSON.stringify(newSubscription), {
+          if (insertError) {
+            console.error('Error creating trial subscription:', insertError);
+            // If insert fails, return free trial data anyway
+            return new Response(JSON.stringify(newSubscription), {
+              status: 200,
+              headers: { ...corsHeaders, "Content-Type": "application/json" }
+            });
+          }
+          
+          return new Response(JSON.stringify(inserted || newSubscription), {
             status: 200,
             headers: { ...corsHeaders, "Content-Type": "application/json" }
           });
