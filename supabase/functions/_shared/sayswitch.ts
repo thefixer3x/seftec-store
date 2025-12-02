@@ -89,12 +89,13 @@ export async function saySwitchRequest(
       return data;
     } catch (error) {
       lastError = error as Error;
-      
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
       // Don't retry on client errors (4xx except 429 and 401)
-      if (error.message?.includes("4") && !error.message?.includes("429") && !error.message?.includes("401")) {
+      if (errorMessage.includes("4") && !errorMessage.includes("429") && !errorMessage.includes("401")) {
         throw error;
       }
-      
+
       // Exponential backoff
       if (attempt < maxRetries) {
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));

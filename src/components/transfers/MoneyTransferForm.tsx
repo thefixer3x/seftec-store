@@ -218,10 +218,11 @@ export const MoneyTransferForm = () => {
         throw new Error(data?.error || "Couldn't verify account");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to verify account';
       toast({
         variant: "destructive",
         title: "Verification Failed",
-        description: error.message,
+        description: errorMessage,
       });
       setVerified(null);
     } finally {
@@ -256,10 +257,11 @@ export const MoneyTransferForm = () => {
         throw new Error(data?.error || "Couldn't delete beneficiary");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete beneficiary';
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: errorMessage,
       });
     }
   };
@@ -348,10 +350,11 @@ export const MoneyTransferForm = () => {
         throw new Error(data?.error || "Transfer failed");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Transfer failed';
       toast({
         variant: "destructive",
         title: "Transfer Failed",
-        description: error.message,
+        description: errorMessage,
       });
     } finally {
       setLoading(false);

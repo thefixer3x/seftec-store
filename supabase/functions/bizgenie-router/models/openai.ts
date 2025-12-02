@@ -4,6 +4,15 @@ export const MODEL_O1_MINI = 'gpt-4o-mini';  // Lightweight model
 export const MODEL_O3_MINI_HIGH = 'gpt-4o';   // Balanced model
 export const MODEL_GPT4 = 'gpt-4o';         // Advanced model
 
+interface CallOpenAIParams {
+  model: string;
+  systemPrompt: string;
+  userMessage: string;
+  apiKey: string;
+  temperature?: number;
+  maxTokens?: number;
+}
+
 export async function callOpenAI({
   model,
   systemPrompt,
@@ -11,7 +20,7 @@ export async function callOpenAI({
   apiKey,
   temperature = 0.7,
   maxTokens = 2048
-}) {
+}: CallOpenAIParams) {
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
