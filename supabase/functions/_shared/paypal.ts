@@ -55,7 +55,8 @@ export async function getAccessToken(): Promise<string> {
     return data.access_token;
   } catch (error) {
     console.error("PayPal access token exception:", error);
-    throw new Error(`Failed to get PayPal access token: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to get PayPal access token: ${errorMessage}`);
   }
 }
 
@@ -147,13 +148,14 @@ export async function paypalRequest(
     };
   } catch (error) {
     console.error("PayPal request exception:", error);
-    
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+
     return {
       success: false,
       status: 500,
       error: {
         code: "REQUEST_FAILED",
-        message: `PayPal request failed: ${error.message}`,
+        message: `PayPal request failed: ${errorMessage}`,
       },
     };
   }

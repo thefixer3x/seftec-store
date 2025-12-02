@@ -74,35 +74,165 @@ try {
     }
   );
 } catch (error) {
-  console.warn('Supabase client initialization failed:', error);
-  // Create a mock client for development
+  console.error('❌ Supabase client initialization failed:', error);
+  console.error('Environment check:', {
+    SUPABASE_URL,
+    hasAnonKey: !!SUPABASE_PUBLISHABLE_KEY
+  });
+
+  // Create a complete mock client for development to prevent "not a function" errors
+  const mockQueryBuilder = {
+    select: function(query?: string) { return this; },
+    insert: function(data: any) { return this; },
+    update: function(data: any) { return this; },
+    upsert: function(data: any) { return this; },
+    delete: function() { return this; },
+    eq: function(column: string, value: any) { return this; },
+    neq: function(column: string, value: any) { return this; },
+    gt: function(column: string, value: any) { return this; },
+    gte: function(column: string, value: any) { return this; },
+    lt: function(column: string, value: any) { return this; },
+    lte: function(column: string, value: any) { return this; },
+    like: function(column: string, pattern: string) { return this; },
+    ilike: function(column: string, pattern: string) { return this; },
+    is: function(column: string, value: any) { return this; },
+    in: function(column: string, values: any[]) { return this; },
+    contains: function(column: string, value: any) { return this; },
+    containedBy: function(column: string, value: any) { return this; },
+    range: function(from: number, to: number) { return this; },
+    limit: function(count: number) { return this; },
+    order: function(column: string, options?: any) { return this; },
+    single: () => Promise.resolve({
+      data: null,
+      error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
+    }),
+    maybeSingle: () => Promise.resolve({
+      data: null,
+      error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
+    }),
+    then: function(resolve: any) {
+      return Promise.resolve({
+        data: null,
+        error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
+      }).then(resolve);
+    }
+  };
+
   supabaseClient = {
     auth: {
       getSession: () => Promise.resolve({ data: { session: null }, error: null }),
       getUser: () => Promise.resolve({ data: { user: null }, error: null }),
       signOut: () => Promise.resolve({ error: null }),
-      signInWithOAuth: () => Promise.resolve({
-        data: { provider: null, url: null },
-        error: new Error('Supabase client not initialized. Please check environment variables.')
-      }),
-      onAuthStateChange: () => ({
-        data: { subscription: { unsubscribe: () => {} } },
-        unsubscribe: () => {}
-      })
+      signInWithOAuth: (credentials: any) => {
+        console.error('🚫 signInWithOAuth called but Supabase is not initialized');
+        return Promise.resolve({
+          data: { provider: null, url: null },
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      },
+      signInWithOtp: (credentials: any) => {
+        console.error('🚫 signInWithOtp called but Supabase is not initialized');
+        return Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      },
+      signInWithPassword: (credentials: any) => {
+        console.error('🚫 signInWithPassword called but Supabase is not initialized');
+        return Promise.resolve({
+          data: { user: null, session: null },
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      },
+      signUp: (credentials: any) => {
+        console.error('🚫 signUp called but Supabase is not initialized');
+        return Promise.resolve({
+          data: { user: null, session: null },
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      },
+      resetPasswordForEmail: (email: string) => {
+        console.error('🚫 resetPasswordForEmail called but Supabase is not initialized');
+        return Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      },
+      updateUser: (attributes: any) => {
+        console.error('🚫 updateUser called but Supabase is not initialized');
+        return Promise.resolve({
+          data: { user: null },
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      },
+      onAuthStateChange: (callback: any) => {
+        console.warn('⚠️ onAuthStateChange called but Supabase is not initialized');
+        return {
+          data: { subscription: { unsubscribe: () => {} } },
+          unsubscribe: () => {}
+        };
+      },
+      mfa: {
+        enroll: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        challenge: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        verify: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        unenroll: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        listFactors: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        getAuthenticatorAssuranceLevel: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        })
+      }
     },
-    from: () => ({
-      select: () => ({
-        single: () => Promise.resolve({ data: null, error: null }),
-        eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) })
-      }),
-      insert: () => Promise.resolve({ data: null, error: null }),
-      update: () => Promise.resolve({ data: null, error: null }),
-      delete: () => Promise.resolve({ data: null, error: null })
-    }),
+    from: (table: string) => {
+      console.warn(`⚠️ Database query to '${table}' but Supabase is not initialized`);
+      return mockQueryBuilder;
+    },
     functions: {
-      invoke: () => Promise.resolve({
-        data: null,
-        error: new Error('Supabase client not initialized. Please check environment variables.')
+      invoke: (functionName: string, options?: any) => {
+        console.error(`🚫 Edge function '${functionName}' called but Supabase is not initialized`);
+        return Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        });
+      }
+    },
+    storage: {
+      from: (bucket: string) => ({
+        upload: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        download: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        remove: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        list: () => Promise.resolve({
+          data: null,
+          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
+        }),
+        getPublicUrl: (path: string) => ({
+          data: { publicUrl: '' }
+        })
       })
     }
   };
