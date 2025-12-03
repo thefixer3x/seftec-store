@@ -93,7 +93,7 @@ serve(async (req) => {
         };
 
         // Prepare subscription request
-        const subscriptionRequest = {
+        const subscriptionRequest: Record<string, unknown> = {
           plan_id,
           quantity: String(quantity),
           subscriber: {
@@ -119,17 +119,17 @@ serve(async (req) => {
 
         // Add custom ID if provided (for your own reference)
         if (custom_id) {
-          subscriptionRequest["custom_id"] = custom_id;
+          subscriptionRequest.custom_id = custom_id;
         }
 
         // Add start time if provided
         if (start_time) {
-          subscriptionRequest["start_time"] = start_time;
+          subscriptionRequest.start_time = start_time;
         }
 
         // Add shipping amount if provided
         if (shipping_amount) {
-          subscriptionRequest["shipping_amount"] = {
+          subscriptionRequest.shipping_amount = {
             currency_code: "USD",
             value: String(shipping_amount)
           };
@@ -578,11 +578,12 @@ serve(async (req) => {
     }
   } catch (error) {
     console.error("PayPal payment error:", error);
-    
+    const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+
     return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message || "An unexpected error occurred" 
+      JSON.stringify({
+        success: false,
+        error: errorMessage
       }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

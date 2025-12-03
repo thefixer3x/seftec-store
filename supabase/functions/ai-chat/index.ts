@@ -67,7 +67,8 @@ serve(async (req) => {
       console.log("Session set successfully");
     } catch (sessionError) {
       console.error("Error setting session:", sessionError);
-      throw new Error(`Session error: ${sessionError.message}`);
+      const errorMessage = sessionError instanceof Error ? sessionError.message : 'Unknown session error';
+      throw new Error(`Session error: ${errorMessage}`);
     }
     
     // Get the request body
@@ -153,14 +154,15 @@ serve(async (req) => {
     }
   } catch (error) {
     console.error("Error in ai-chat function:", error);
-    
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: errorMessage }),
       {
         status: 500,
-        headers: { 
-          ...corsHeaders, 
-          "Content-Type": "application/json" 
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
         },
       }
     );

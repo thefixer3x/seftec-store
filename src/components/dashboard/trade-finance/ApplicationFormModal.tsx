@@ -156,7 +156,7 @@ export const ApplicationFormModal: React.FC<ApplicationFormModalProps> = ({
       };
 
       if (isEditing && application) {
-        await updateApplication({ id: application.id, ...payload });
+        await updateApplication({ application_id: application.id, ...payload });
       } else {
         await createApplication(payload);
       }

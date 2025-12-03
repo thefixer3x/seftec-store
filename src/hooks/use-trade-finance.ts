@@ -381,6 +381,80 @@ export function useTradeFinance() {
     },
   });
 
+  // Upload document mutation
+  const uploadDocumentMutation = useMutation({
+    mutationFn: async ({
+      applicationId,
+      file,
+      documentType,
+    }: {
+      applicationId: string;
+      file: File;
+      documentType: string;
+    }) => {
+      if (!user) throw new Error("User not authenticated");
+
+      const token = await getAuthToken();
+
+      // Upload file to storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${applicationId}/${documentType}_${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('trade-finance-documents')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        throw new Error(`Failed to upload file: ${uploadError.message}`);
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('trade-finance-documents')
+        .getPublicUrl(fileName);
+
+      // Save document metadata
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trade-finance-applications?action=upload_document`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            application_id: applicationId,
+            document_type: documentType,
+            file_name: file.name,
+            file_url: publicUrl,
+            file_size: file.size,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to save document metadata");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["trade-finance-applications"] });
+      toast({
+        title: "Document uploaded",
+        description: "Your document has been uploaded successfully",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Failed to upload document",
+        description: error.message,
+      });
+    },
+  });
+
   return {
     // Data
     applications: applications || [],
@@ -405,5 +479,8 @@ export function useTradeFinance() {
 
     withdrawApplication: withdrawApplicationMutation.mutate,
     isWithdrawingApplication: withdrawApplicationMutation.isPending,
+
+    uploadDocument: uploadDocumentMutation.mutate,
+    isUploadingDocument: uploadDocumentMutation.isPending,
   };
 }

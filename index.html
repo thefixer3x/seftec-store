@@ -178,8 +178,9 @@
   <!-- Security Headers -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <!-- CSP relaxed to allow Vite build output and runtime dependencies -->
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com https://r2cdn.perplexity.ai; img-src 'self' data: https://images.unsplash.com; connect-src 'self' https://mxtsdgkwzjzlttpotole.supabase.co wss://mxtsdgkwzjzlttpotole.supabase.co https://api.seftec.store;" />
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com https://r2cdn.perplexity.ai data:; img-src 'self' data: https: blob:; connect-src 'self' https://mxtsdgkwzjzlttpotole.supabase.co wss://mxtsdgkwzjzlttpotole.supabase.co https://api.seftec.store; worker-src 'self' blob:;" />
 
   <!-- Start Single Page Apps for GitHub Pages -->
   <script type="text/javascript">

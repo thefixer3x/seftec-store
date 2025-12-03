@@ -38,14 +38,32 @@ serve(async (req) => {
   const { paymentType, amount, currency, successUrl, cancelUrl } = body;
   
   try {
-    let sessionConfig;
-    
+    interface SessionConfig {
+      mode: 'payment' | 'subscription';
+      payment_method_types: string[];
+      line_items: Array<{
+        price?: string;
+        quantity?: number;
+        price_data?: {
+          currency: string;
+          product_data: {
+            name: string;
+          };
+          unit_amount: number;
+        };
+      }>;
+      success_url?: string;
+      cancel_url?: string;
+    }
+
+    let sessionConfig: SessionConfig;
+
     if (paymentType === "subscription") {
       // For subscription payments
       if (!body.priceId) {
         return new Response("Missing priceId for subscription", { status: 400, headers: corsHeaders });
       }
-      
+
       sessionConfig = {
         mode: "subscription",
         payment_method_types: ["card"],
@@ -61,7 +79,7 @@ serve(async (req) => {
       if (!amount || !currency) {
         return new Response("Missing amount or currency for one-time payment", { status: 400, headers: corsHeaders });
       }
-      
+
       sessionConfig = {
         mode: "payment",
         payment_method_types: ["card"],
@@ -79,13 +97,19 @@ serve(async (req) => {
         ],
       };
     }
+
+    // Add success and cancel URLs with proper origin validation
+    const origin = req.headers.get("origin") ?? Deno.env.get("PUBLIC_SITE_URL") ?? "https://seftechub.com";
+    if (!origin || origin === "null") {
+      return new Response("Missing origin for redirect URLs", { status: 400, headers: corsHeaders });
+    }
     
-    // Add success and cancel URLs
-    sessionConfig.success_url = successUrl || `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
-    sessionConfig.cancel_url = cancelUrl || `${req.headers.get("origin")}/payment-canceled`;
-    
+    sessionConfig.success_url = successUrl ?? `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+    sessionConfig.cancel_url = cancelUrl ?? `${origin}/payment-canceled`;
+
     // Create the Stripe checkout session
-    const session = await stripe.checkout.sessions.create(sessionConfig);
+    // SessionConfig interface matches Stripe's expected structure
+    const session = await stripe.checkout.sessions.create(sessionConfig as Stripe.Checkout.SessionCreateParams);
     
     // Return the session URL to the caller
     return new Response(JSON.stringify({ 
