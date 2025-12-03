@@ -54,7 +54,7 @@ supabase/config.toml
 **Key change:**
 ```typescript
 // Before
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://seftechub.supabase.co";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://mxtsdgkwzjzlttpotole.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
 // After
