@@ -27,12 +27,12 @@ This document outlines common causes and solutions for sign-up errors.
 
 **Solution**:
 1. Verify the project URL is correct:
-   - Current: `https://seftechub.supabase.co`
+   - Current: `https://mxtsdgkwzjzlttpotole.supabase.co`
    - Check: https://app.supabase.com/project/seftechub/settings/api
 
 2. Test the connection:
    ```bash
-   curl https://seftechub.supabase.co
+   curl https://mxtsdgkwzjzlttpotole.supabase.co
    # Should return HTML, not 404
    ```
 
@@ -162,7 +162,7 @@ cp .env .env.backup
 
 # Create new .env with correct values
 cat > .env << 'EOF'
-VITE_SUPABASE_URL=https://seftechub.supabase.co
+VITE_SUPABASE_URL=https://mxtsdgkwzjzlttpotole.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR_ANON_KEY_HERE
 EOF
 ```
