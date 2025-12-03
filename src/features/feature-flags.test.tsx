@@ -261,9 +261,9 @@ describe('Feature Flags', () => {
       });
 
       const { result, rerender } = renderHook(
-        ({ flag }) => useFeatureFlag(flag),
+        ({ flag }: { flag: typeof FEATURE_FLAGS[keyof typeof FEATURE_FLAGS] }) => useFeatureFlag(flag),
         {
-          initialProps: { flag: FEATURE_FLAGS.SAYSWITCH_PAYMENTS },
+          initialProps: { flag: FEATURE_FLAGS.SAYSWITCH_PAYMENTS as typeof FEATURE_FLAGS[keyof typeof FEATURE_FLAGS] },
         }
       );
 
@@ -277,11 +277,11 @@ describe('Feature Flags', () => {
       );
 
       // Change flag
-      rerender({ flag: FEATURE_FLAGS.PAYPAL_PAYMENTS });
+      rerender({ flag: FEATURE_FLAGS.SAYSWITCH_TRANSFERS });
 
       await waitFor(() => {
         expect(mockManager.isFeatureEnabled).toHaveBeenCalledWith(
-          FEATURE_FLAGS.PAYPAL_PAYMENTS,
+          FEATURE_FLAGS.SAYSWITCH_TRANSFERS,
           undefined
         );
       });
