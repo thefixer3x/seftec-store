@@ -189,11 +189,11 @@ const DashboardSidebar = () => {
   /* ─── Desktop sidebar ────────────────────────── */
   return (
     <div className="dashboard-sidebar h-full md:w-64 flex-shrink-0 border-r border-seftec-navy/10 dark:border-white/10 bg-white dark:bg-seftec-darkNavy flex flex-col">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-seftec-navy/10 dark:border-white/10">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-seftec-navy/10 dark:border-white/10 flex-shrink-0">
         <div className="font-semibold text-seftec-navy dark:text-white">Dashboard</div>
         <ThemeToggle />
       </div>
-      <ScrollArea className="flex-grow h-[calc(100vh-56px)]">
+      <ScrollArea className="flex-1 min-h-0">
         <SidebarContent />
       </ScrollArea>
     </div>

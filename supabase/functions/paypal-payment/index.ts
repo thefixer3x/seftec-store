@@ -93,7 +93,7 @@ serve(async (req) => {
         };
 
         // Prepare subscription request
-        const subscriptionRequest: Record<string, any> = {
+        const subscriptionRequest: Record<string, unknown> = {
           plan_id,
           quantity: String(quantity),
           subscriber: {

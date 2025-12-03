@@ -38,11 +38,12 @@ ON CONFLICT (name) DO UPDATE SET
   updated_at = NOW();
 
 -- Insert advanced_analytics feature flag
+-- Note: Set to enabled=true with 25% rollout for staged feature release
 INSERT INTO feature_flags (name, description, enabled, rollout_pct)
 VALUES (
   'advanced_analytics',
   'Enable advanced analytics dashboard with detailed insights',
-  false,
+  true,
   25
 )
 ON CONFLICT (name) DO UPDATE SET

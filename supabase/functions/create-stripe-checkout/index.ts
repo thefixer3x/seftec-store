@@ -98,12 +98,18 @@ serve(async (req) => {
       };
     }
 
-    // Add success and cancel URLs
-    sessionConfig.success_url = successUrl || `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
-    sessionConfig.cancel_url = cancelUrl || `${req.headers.get("origin")}/payment-canceled`;
+    // Add success and cancel URLs with proper origin validation
+    const origin = req.headers.get("origin") ?? Deno.env.get("PUBLIC_SITE_URL") ?? "https://seftechub.com";
+    if (!origin || origin === "null") {
+      return new Response("Missing origin for redirect URLs", { status: 400, headers: corsHeaders });
+    }
+    
+    sessionConfig.success_url = successUrl ?? `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`;
+    sessionConfig.cancel_url = cancelUrl ?? `${origin}/payment-canceled`;
 
     // Create the Stripe checkout session
-    const session = await stripe.checkout.sessions.create(sessionConfig as any);
+    // SessionConfig interface matches Stripe's expected structure
+    const session = await stripe.checkout.sessions.create(sessionConfig as Stripe.Checkout.SessionCreateParams);
     
     // Return the session URL to the caller
     return new Response(JSON.stringify({ 
