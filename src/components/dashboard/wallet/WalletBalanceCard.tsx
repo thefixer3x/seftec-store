@@ -22,17 +22,9 @@ const WalletBalanceCard = () => {
       }
 
       try {
-        // Fetch user wallet balance - use .maybeSingle() to handle no wallet gracefully
-        const { data: walletData, error } = await supabase
-          .from('wallets')
-          .select('balance, updated_at')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        // Only log errors if it's not a "not found" error
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching wallet:', error);
-        }
+        // Note: wallets table doesn't exist yet - using mock data for now
+        // TODO: Create wallets table in database
+        const walletData = null as { balance: number; updated_at: string } | null;
 
         if (walletData) {
           setBalance(walletData.balance?.toFixed(2) || '0.00');

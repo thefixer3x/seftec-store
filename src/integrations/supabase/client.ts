@@ -3,247 +3,24 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || import.meta.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-
-// Define the API endpoint that will be used for all backend services
-// This will be used in a phased approach where api.seftec.store handles all backend services
-const API_ENDPOINT = "https://api.seftec.store";
+// Use the actual Supabase project credentials
+const SUPABASE_URL = "https://ptnrwrgzrsbocgxlpvhd.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB0bnJ3cmd6cnNib2NneGxwdmhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzNDY0MTYsImV4cCI6MjA1NzkyMjQxNn0.--EOILmgTdPD2uZxu3LcLuSDXsYWV9ElhGPI5m4Ng-8";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-// Create Supabase client with error handling
-let supabaseClient: any = null;
-
-try {
-  supabaseClient = createClient<Database>(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY,
-    {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
-        flowType: "pkce",
-        // Configure authentication callbacks
-        // Note: Using object notation that's compatible with the Supabase types
-        storage: {
-          getItem: (key) => {
-            try {
-              const storedSession = localStorage.getItem(key);
-              return storedSession;
-            } catch (error) {
-              console.error('Error getting session from storage:', error);
-              return null;
-            }
-          },
-          setItem: (key, value) => {
-            try {
-              localStorage.setItem(key, value);
-            } catch (error) {
-              console.error('Error storing session:', error);
-            }
-          },
-          removeItem: (key) => {
-            try {
-              localStorage.removeItem(key);
-            } catch (error) {
-              console.error('Error removing session:', error);
-            }
-          }
-        }
-      },
-      global: {
-        // Configure custom fetch function to use the API endpoint for functions
-        fetch: (...args) => {
-          const [url, options] = args;
-
-          // Check if this is a function invocation request (matches /functions/invoke)
-          if (typeof url === 'string' && url.includes('/functions/invoke')) {
-            // Replace the URL with the new API endpoint
-            // This is temporary until the proper DNS configuration is in place
-            const newUrl = url.replace(SUPABASE_URL, API_ENDPOINT);
-            return fetch(newUrl, options);
-          }
-
-          // For all other requests, use the default fetch behavior
-          return fetch(url, options);
-        }
-      }
-    }
-  );
-} catch (error) {
-  console.error('❌ Supabase client initialization failed:', error);
-  console.error('Environment check:', {
-    SUPABASE_URL,
-    hasAnonKey: !!SUPABASE_PUBLISHABLE_KEY
-  });
-
-  // Create a complete mock client for development to prevent "not a function" errors
-  const mockQueryBuilder = {
-    select: function(query?: string) { return this; },
-    insert: function(data: any) { return this; },
-    update: function(data: any) { return this; },
-    upsert: function(data: any) { return this; },
-    delete: function() { return this; },
-    eq: function(column: string, value: any) { return this; },
-    neq: function(column: string, value: any) { return this; },
-    gt: function(column: string, value: any) { return this; },
-    gte: function(column: string, value: any) { return this; },
-    lt: function(column: string, value: any) { return this; },
-    lte: function(column: string, value: any) { return this; },
-    like: function(column: string, pattern: string) { return this; },
-    ilike: function(column: string, pattern: string) { return this; },
-    is: function(column: string, value: any) { return this; },
-    in: function(column: string, values: any[]) { return this; },
-    contains: function(column: string, value: any) { return this; },
-    containedBy: function(column: string, value: any) { return this; },
-    range: function(from: number, to: number) { return this; },
-    limit: function(count: number) { return this; },
-    order: function(column: string, options?: any) { return this; },
-    single: () => Promise.resolve({
-      data: null,
-      error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
-    }),
-    maybeSingle: () => Promise.resolve({
-      data: null,
-      error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
-    }),
-    then: function(resolve: any) {
-      return Promise.resolve({
-        data: null,
-        error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
-      }).then(resolve);
-    }
-  };
-
-  supabaseClient = {
-    auth: {
-      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-      signOut: () => Promise.resolve({ error: null }),
-      signInWithOAuth: (credentials: any) => {
-        console.error('🚫 signInWithOAuth called but Supabase is not initialized');
-        return Promise.resolve({
-          data: { provider: null, url: null },
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      },
-      signInWithOtp: (credentials: any) => {
-        console.error('🚫 signInWithOtp called but Supabase is not initialized');
-        return Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      },
-      signInWithPassword: (credentials: any) => {
-        console.error('🚫 signInWithPassword called but Supabase is not initialized');
-        return Promise.resolve({
-          data: { user: null, session: null },
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      },
-      signUp: (credentials: any) => {
-        console.error('🚫 signUp called but Supabase is not initialized');
-        return Promise.resolve({
-          data: { user: null, session: null },
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      },
-      resetPasswordForEmail: (email: string) => {
-        console.error('🚫 resetPasswordForEmail called but Supabase is not initialized');
-        return Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      },
-      updateUser: (attributes: any) => {
-        console.error('🚫 updateUser called but Supabase is not initialized');
-        return Promise.resolve({
-          data: { user: null },
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      },
-      onAuthStateChange: (callback: any) => {
-        console.warn('⚠️ onAuthStateChange called but Supabase is not initialized');
-        return {
-          data: { subscription: { unsubscribe: () => {} } },
-          unsubscribe: () => {}
-        };
-      },
-      mfa: {
-        enroll: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        challenge: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        verify: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        unenroll: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        listFactors: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        getAuthenticatorAssuranceLevel: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        })
-      }
-    },
-    from: (table: string) => {
-      console.warn(`⚠️ Database query to '${table}' but Supabase is not initialized`);
-      return mockQueryBuilder;
-    },
-    functions: {
-      invoke: (functionName: string, options?: any) => {
-        console.error(`🚫 Edge function '${functionName}' called but Supabase is not initialized`);
-        return Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        });
-      }
-    },
-    storage: {
-      from: (bucket: string) => ({
-        upload: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        download: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        remove: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        list: () => Promise.resolve({
-          data: null,
-          error: new Error('Supabase not initialized. Check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env file.')
-        }),
-        getPublicUrl: (path: string) => ({
-          data: { publicUrl: '' }
-        })
-      })
-    }
-  };
-}
-
-export const supabase = supabaseClient;
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: "pkce",
+  },
+});
 
 // Helper functions for authentication
 export const getCurrentUser = async () => {
-  if (!supabase?.auth?.getSession) return null;
-
   const { data: { session }, error } = await supabase.auth.getSession();
 
   if (error) {
@@ -262,13 +39,13 @@ export const getCurrentUserId = async () => {
 export const getUserProfile = async () => {
   const userId = await getCurrentUserId();
 
-  if (!userId || !supabase?.from) return null;
+  if (!userId) return null;
 
   try {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', userId as string)
+      .eq('id', userId)
       .single();
 
     if (error) {
