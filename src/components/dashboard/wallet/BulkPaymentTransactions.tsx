@@ -44,7 +44,7 @@ const fetchBulkPayments = async (userId: string) => {
     createdAt: new Date(payment.created_at),
     scheduledDate: payment.scheduled_date ? new Date(payment.scheduled_date) : undefined,
     totalAmount: payment.total_amount,
-    recipientCount: payment.recipient_count,
+    recipientCount: payment.payment_items?.length || 0, // Use payment_items length instead of recipient_count
     status: payment.status as 'pending' | 'completed' | 'failed' | 'processing',
     items: payment.payment_items?.map((item: any) => ({
       id: item.id,

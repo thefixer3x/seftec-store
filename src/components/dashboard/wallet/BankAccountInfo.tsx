@@ -29,18 +29,9 @@ const BankAccountInfo = () => {
       }
 
       try {
-        // Use .maybeSingle() instead of .single() to handle no bank account gracefully
-        const { data: bankData, error } = await supabase
-          .from('bank_accounts')
-          .select('account_number, bank_name, account_name')
-          .eq('user_id', user.id)
-          .eq('is_primary', true)
-          .maybeSingle();
-
-        // Only log errors if it's not a "not found" error
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error fetching bank account:', error);
-        }
+        // Note: bank_accounts table doesn't exist yet - using mock data for now
+        // TODO: Create bank_accounts table in database
+        const bankData = null as BankAccount | null;
 
         if (bankData) {
           setBankAccount(bankData);
