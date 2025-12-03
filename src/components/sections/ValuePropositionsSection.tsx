@@ -3,6 +3,7 @@ import React from 'react';
 import SectionHeading from '@/components/ui/section-heading';
 import { Brain, Globe, CreditCard, UserPlus, Store, Bot, FileText, TrendingUp, Shield, Building, Banknote, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { GlareCard } from '@/components/ui/glare-card';
 
 const valuePropositions = [
   {
@@ -80,18 +81,16 @@ const ValuePropositionsSection = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {valuePropositions.map((prop, index) => (
-            <div 
+            <GlareCard 
               key={index}
-              className={cn(
-                "bg-white dark:bg-seftec-darkNavy/80 rounded-xl p-8 shadow-apple hover:shadow-apple-hover",
-                "transition-all duration-300 transform hover:-translate-y-1",
-                "border border-seftec-slate dark:border-white/10"
-              )}
+              className="p-4 sm:p-6 lg:p-8 shadow-lg transition-all duration-300 touch-manipulation min-h-[280px] flex flex-col"
             >
-              <div className="mb-6">{prop.icon}</div>
-              <h3 className="text-xl font-bold mb-3 text-seftec-navy dark:text-white">{prop.title}</h3>
-              <p className="text-seftec-navy/70 dark:text-white/70">{prop.description}</p>
-            </div>
+              <div className="flex flex-col h-full">
+                <div className="mb-6">{prop.icon}</div>
+                <h3 className="text-xl font-bold mb-3 text-seftec-navy dark:text-white">{prop.title}</h3>
+                <p className="text-seftec-navy/70 dark:text-white/70 flex-1">{prop.description}</p>
+              </div>
+            </GlareCard>
           ))}
         </div>
         
