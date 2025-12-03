@@ -149,7 +149,7 @@ describe('AuthContext', () => {
 
       const { result } = renderHook(() => useAuth(), { wrapper: createWrapper() });
 
-      const userData = { full_name: 'John Doe', phone: '+1234567890' };
+      const userData = { first_name: 'John', last_name: 'Doe', email: 'newuser@example.com' };
 
       await act(async () => {
         await result.current.signUp('newuser@example.com', 'securepass123', userData);
