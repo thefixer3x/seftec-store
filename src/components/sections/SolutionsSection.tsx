@@ -4,6 +4,7 @@ import SectionHeading from "@/components/ui/section-heading";
 import { ShieldCheck, CreditCard, FileSignature, Calculator, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18nContext } from "@/components/ui/language-toggle";
+import { GlareCard } from "@/components/ui/glare-card";
 
 const SolutionsSection: React.FC = () => {
   const { t } = useI18nContext();
@@ -75,24 +76,26 @@ const SolutionsSection: React.FC = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16 max-w-5xl mx-auto reveal">
           {translatedSolutionsData.map((solution, index) => (
-            <div 
+            <GlareCard 
               key={index} 
-              className="relative bg-white dark:bg-seftec-darkNavy/80 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 transition-all duration-300 hover:shadow-md" 
+              className="p-4 sm:p-6 lg:p-8 shadow-lg transition-all duration-300 touch-manipulation min-h-[280px] flex flex-col"
             >
-              <div className="absolute -top-6 left-8 bg-seftec-navy dark:bg-gradient-to-br dark:from-seftec-teal dark:to-seftec-purple text-white p-3 rounded-lg shadow-lg">
-                {solution.icon}
+              <div className="relative flex flex-col h-full">
+                <div className="absolute -top-6 left-8 bg-seftec-navy dark:bg-gradient-to-br dark:from-seftec-teal dark:to-seftec-purple text-white p-3 rounded-lg shadow-lg z-10">
+                  {solution.icon}
+                </div>
+                <div className="mt-8 flex-1">
+                  <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">{solution.title}</h3>
+                  <p className="text-seftec-navy/70 dark:text-white/70 mb-6">{solution.description}</p>
+                  <Button 
+                    variant="outline" 
+                    className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300"
+                  >
+                    {t('cta.learn_more', 'Learn More')}
+                  </Button>
+                </div>
               </div>
-              <div className="mt-8">
-                <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">{solution.title}</h3>
-                <p className="text-seftec-navy/70 dark:text-white/70 mb-6">{solution.description}</p>
-                <Button 
-                  variant="outline" 
-                  className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300"
-                >
-                  {t('cta.learn_more', 'Learn More')}
-                </Button>
-              </div>
-            </div>
+            </GlareCard>
           ))}
         </div>
       </div>

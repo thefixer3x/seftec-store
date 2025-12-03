@@ -32,13 +32,13 @@ const ProfileContent: React.FC<ProfileProps> = ({ defaultPath = '/profile/dashbo
 
   return (
     <ProtectedLayout loadingComponent={loadingComponent} redirectTo="/login">
-      <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
+      <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-seftec-slate dark:bg-seftec-darkNavy">
         <DashboardSidebar />
-        <div className="flex flex-col flex-1 overflow-y-auto bg-white dark:bg-seftec-darkNavy">
-          <div className="border-b border-gray-100 dark:border-gray-800 p-3 md:p-4">
+        <div className="flex flex-col flex-1 min-h-0 overflow-hidden bg-white dark:bg-seftec-darkNavy">
+          <div className="flex-shrink-0 border-b border-gray-100 dark:border-gray-800 p-3 md:p-4">
             <SeftecHub />
           </div>
-          <div className="p-3 md:p-4 lg:p-6 flex-1">
+          <div className="flex-1 min-h-0 overflow-y-auto p-3 md:p-4 lg:p-6">
             <ErrorBoundary>
               <Outlet />
             </ErrorBoundary>

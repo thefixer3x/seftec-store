@@ -15,7 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
-import { isFeatureEnabled } from '@/features';
+import { useFeatureFlag } from '@/features';
 
 type Bank = {
   id: string;
@@ -67,8 +67,19 @@ export const MoneyTransferForm = () => {
   const supabase = useSupabaseClient();
   const { toast } = useToast();
   
-  // Check if SaySwitch transfers feature is enabled
-  const isTransfersEnabled = isFeatureEnabled('sayswitch_transfers');
+  // Check if SaySwitch transfers feature is enabled using the hook
+  const { isEnabled: isTransfersEnabled, isLoading: featureLoading } = useFeatureFlag('sayswitch_transfers' as any);
+  
+  if (featureLoading) {
+    return (
+      <Card className="w-full">
+        <CardContent className="p-6">
+          <Skeleton className="h-8 w-48 mb-4" />
+          <Skeleton className="h-4 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
   
   if (!isTransfersEnabled) {
     return (
@@ -218,10 +229,11 @@ export const MoneyTransferForm = () => {
         throw new Error(data?.error || "Couldn't verify account");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to verify account';
       toast({
         variant: "destructive",
         title: "Verification Failed",
-        description: error.message,
+        description: errorMessage,
       });
       setVerified(null);
     } finally {
@@ -256,10 +268,11 @@ export const MoneyTransferForm = () => {
         throw new Error(data?.error || "Couldn't delete beneficiary");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete beneficiary';
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: errorMessage,
       });
     }
   };
@@ -348,10 +361,11 @@ export const MoneyTransferForm = () => {
         throw new Error(data?.error || "Transfer failed");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Transfer failed';
       toast({
         variant: "destructive",
         title: "Transfer Failed",
-        description: error.message,
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
