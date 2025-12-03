@@ -41,12 +41,12 @@ export const Reports: React.FC = () => {
     endDate: new Date().toISOString().split('T')[0],
   });
 
-  // Fetch marketplace orders
+  // Fetch marketplace transactions
   const { data: marketplaceOrders, isLoading: isLoadingMarketplace } = useQuery({
-    queryKey: ['marketplace-orders-report', user?.id, dateRange],
+    queryKey: ['marketplace-transactions-report', user?.id, dateRange],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('marketplace_orders')
+        .from('marketplace_transactions')
         .select('*')
         .or(`seller_id.eq.${user!.id},buyer_id.eq.${user!.id}`)
         .gte('created_at', dateRange.startDate)
@@ -77,14 +77,24 @@ export const Reports: React.FC = () => {
     enabled: !!user?.id,
   });
 
-  // Fetch wallet transactions
+  // Fetch edoc transactions as wallet transactions
   const { data: transactions, isLoading: isLoadingTransactions } = useQuery({
     queryKey: ['transactions-report', user?.id, dateRange],
     queryFn: async () => {
+      // First get user's consent IDs
+      const { data: consents } = await supabase
+        .from('edoc_consents')
+        .select('id')
+        .eq('user_id', user!.id);
+      
+      if (!consents || consents.length === 0) return [];
+      
+      const consentIds = consents.map(c => c.id);
+      
       const { data, error } = await supabase
-        .from('say_wallet_snapshots')
+        .from('edoc_transactions')
         .select('*')
-        .eq('user_id', user!.id)
+        .in('consent_id', consentIds)
         .gte('created_at', dateRange.startDate)
         .lte('created_at', dateRange.endDate)
         .order('created_at', { ascending: false });
@@ -432,7 +442,7 @@ export const Reports: React.FC = () => {
                             <tr key={order.id} className="border-t">
                               <td className="p-2">{order.id.substring(0, 8)}...</td>
                               <td className="text-right p-2">
-                                {order.currency} {order.amount?.toLocaleString()}
+                                ${order.amount?.toLocaleString()}
                               </td>
                               <td className="p-2">{order.status}</td>
                               <td className="p-2">
@@ -560,19 +570,21 @@ export const Reports: React.FC = () => {
                         <thead className="bg-gray-50 dark:bg-gray-900">
                           <tr>
                             <th className="text-left p-2">ID</th>
-                            <th className="text-right p-2">Balance</th>
-                            <th className="text-left p-2">Currency</th>
+                            <th className="text-right p-2">Amount</th>
+                            <th className="text-left p-2">Type</th>
                             <th className="text-left p-2">Date</th>
                           </tr>
                         </thead>
                         <tbody>
                           {transactions.slice(0, 10).map((txn) => (
                             <tr key={txn.id} className="border-t">
-                              <td className="p-2">{txn.id}</td>
-                              <td className="text-right p-2">{txn.balance?.toLocaleString()}</td>
-                              <td className="p-2">{txn.currency}</td>
+                              <td className="p-2">{txn.id.substring(0, 8)}...</td>
+                              <td className="text-right p-2">
+                                {txn.is_credit ? '+' : '-'}${txn.amount?.toLocaleString()}
+                              </td>
+                              <td className="p-2">{txn.category || 'N/A'}</td>
                               <td className="p-2">
-                                {new Date(txn.created_at).toLocaleDateString()}
+                                {txn.created_at ? new Date(txn.created_at).toLocaleDateString() : 'N/A'}
                               </td>
                             </tr>
                           ))}

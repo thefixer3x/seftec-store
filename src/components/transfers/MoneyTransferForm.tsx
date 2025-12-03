@@ -15,7 +15,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
-import { isFeatureEnabled } from '@/features';
+import { useFeatureFlag } from '@/features';
 
 type Bank = {
   id: string;
@@ -67,8 +67,19 @@ export const MoneyTransferForm = () => {
   const supabase = useSupabaseClient();
   const { toast } = useToast();
   
-  // Check if SaySwitch transfers feature is enabled
-  const isTransfersEnabled = isFeatureEnabled('sayswitch_transfers');
+  // Check if SaySwitch transfers feature is enabled using the hook
+  const { isEnabled: isTransfersEnabled, isLoading: featureLoading } = useFeatureFlag('sayswitch_transfers' as any);
+  
+  if (featureLoading) {
+    return (
+      <Card className="w-full">
+        <CardContent className="p-6">
+          <Skeleton className="h-8 w-48 mb-4" />
+          <Skeleton className="h-4 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
   
   if (!isTransfersEnabled) {
     return (
