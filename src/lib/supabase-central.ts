@@ -1,8 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Vite uses import.meta.env for environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://mxtsdgkwzjzlttpotole.supabase.co'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+
+if (!supabaseUrl) {
+  throw new Error(
+    'Missing required environment variable: VITE_SUPABASE_URL\n' +
+    'Please create a .env file with VITE_SUPABASE_URL set.'
+  )
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   global: {

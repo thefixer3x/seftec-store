@@ -400,7 +400,7 @@ export function useTradeFinance() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${applicationId}/${documentType}_${Date.now()}.${fileExt}`;
 
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('trade-finance-documents')
         .upload(fileName, file);
 

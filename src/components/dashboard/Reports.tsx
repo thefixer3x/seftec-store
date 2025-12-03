@@ -82,10 +82,15 @@ export const Reports: React.FC = () => {
     queryKey: ['transactions-report', user?.id, dateRange],
     queryFn: async () => {
       // First get user's consent IDs
-      const { data: consents } = await supabase
+      const { data: consents, error: consentError } = await supabase
         .from('edoc_consents')
         .select('id')
         .eq('user_id', user!.id);
+      
+      if (consentError) {
+        console.error('Error fetching edoc consents:', consentError);
+        throw consentError;
+      }
       
       if (!consents || consents.length === 0) return [];
       
@@ -442,7 +447,7 @@ export const Reports: React.FC = () => {
                             <tr key={order.id} className="border-t">
                               <td className="p-2">{order.id.substring(0, 8)}...</td>
                               <td className="text-right p-2">
-                                ${order.amount?.toLocaleString()}
+                                NGN {order.amount?.toLocaleString()}
                               </td>
                               <td className="p-2">{order.status}</td>
                               <td className="p-2">
@@ -511,7 +516,7 @@ export const Reports: React.FC = () => {
                             <tr key={order.id} className="border-t">
                               <td className="p-2">{order.id}</td>
                               <td className="text-right p-2">
-                                ${order.total_amount?.toLocaleString()}
+                                NGN {order.total_amount?.toLocaleString()}
                               </td>
                               <td className="p-2">{order.status}</td>
                               <td className="p-2">
@@ -580,7 +585,7 @@ export const Reports: React.FC = () => {
                             <tr key={txn.id} className="border-t">
                               <td className="p-2">{txn.id.substring(0, 8)}...</td>
                               <td className="text-right p-2">
-                                {txn.is_credit ? '+' : '-'}${txn.amount?.toLocaleString()}
+                                {txn.is_credit ? '+' : '-'}NGN {txn.amount?.toLocaleString()}
                               </td>
                               <td className="p-2">{txn.category || 'N/A'}</td>
                               <td className="p-2">
