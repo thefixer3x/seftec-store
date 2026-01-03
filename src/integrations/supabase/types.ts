@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
@@ -159,6 +159,108 @@ export type Database = {
           response_time_ms?: number | null
           tokens_used?: number | null
           user_feedback?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      api_key_projects: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          owner_id: string
+          settings: Json | null
+          team_members: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          owner_id: string
+          settings?: Json | null
+          team_members?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          owner_id?: string
+          settings?: Json | null
+          team_members?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      api_keys: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          is_revoked: boolean | null
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string | null
+          permissions: Json | null
+          project_scope: string
+          rate_limit_per_hour: number | null
+          rate_limit_per_minute: number | null
+          revoked_at: string | null
+          revoked_reason: string | null
+          updated_at: string | null
+          usage_count: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_revoked?: boolean | null
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name?: string | null
+          permissions?: Json | null
+          project_scope?: string
+          rate_limit_per_hour?: number | null
+          rate_limit_per_minute?: number | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          updated_at?: string | null
+          usage_count?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_revoked?: boolean | null
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string | null
+          permissions?: Json | null
+          project_scope?: string
+          rate_limit_per_hour?: number | null
+          rate_limit_per_minute?: number | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          updated_at?: string | null
+          usage_count?: number | null
           user_id?: string
         }
         Relationships: []
@@ -614,6 +716,132 @@ export type Database = {
         }
         Relationships: []
       }
+      key_rotation_policies: {
+        Row: {
+          auto_rotate: boolean | null
+          created_at: string | null
+          frequency_days: number
+          id: string
+          key_id: string
+          last_rotation: string | null
+          next_rotation: string | null
+          rotation_history: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          auto_rotate?: boolean | null
+          created_at?: string | null
+          frequency_days?: number
+          id?: string
+          key_id: string
+          last_rotation?: string | null
+          next_rotation?: string | null
+          rotation_history?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          auto_rotate?: boolean | null
+          created_at?: string | null
+          frequency_days?: number
+          id?: string
+          key_id?: string
+          last_rotation?: string | null
+          next_rotation?: string | null
+          rotation_history?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "key_rotation_policies_key_id_fkey"
+            columns: ["key_id"]
+            isOneToOne: true
+            referencedRelation: "stored_api_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      key_security_events: {
+        Row: {
+          description: string
+          event_type: string
+          id: string
+          key_id: string | null
+          metadata: Json | null
+          organization_id: string | null
+          severity: string
+          timestamp: string | null
+        }
+        Insert: {
+          description: string
+          event_type: string
+          id?: string
+          key_id?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          severity: string
+          timestamp?: string | null
+        }
+        Update: {
+          description?: string
+          event_type?: string
+          id?: string
+          key_id?: string | null
+          metadata?: Json | null
+          organization_id?: string | null
+          severity?: string
+          timestamp?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "key_security_events_key_id_fkey"
+            columns: ["key_id"]
+            isOneToOne: false
+            referencedRelation: "stored_api_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      key_usage_analytics: {
+        Row: {
+          id: string
+          key_id: string
+          metadata: Json | null
+          operation: string
+          organization_id: string
+          success: boolean | null
+          timestamp: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          key_id: string
+          metadata?: Json | null
+          operation: string
+          organization_id: string
+          success?: boolean | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          key_id?: string
+          metadata?: Json | null
+          operation?: string
+          organization_id?: string
+          success?: boolean | null
+          timestamp?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "key_usage_analytics_key_id_fkey"
+            columns: ["key_id"]
+            isOneToOne: false
+            referencedRelation: "stored_api_keys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_transactions: {
         Row: {
           amount: number
@@ -663,6 +891,212 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mcp_key_access_requests: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          context: Json | null
+          created_at: string | null
+          environment: string
+          estimated_duration: number
+          id: string
+          justification: string
+          key_names: string[]
+          organization_id: string
+          requires_approval: boolean | null
+          status: string
+          tool_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          context?: Json | null
+          created_at?: string | null
+          environment: string
+          estimated_duration: number
+          id: string
+          justification: string
+          key_names: string[]
+          organization_id: string
+          requires_approval?: boolean | null
+          status?: string
+          tool_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          context?: Json | null
+          created_at?: string | null
+          environment?: string
+          estimated_duration?: number
+          id?: string
+          justification?: string
+          key_names?: string[]
+          organization_id?: string
+          requires_approval?: boolean | null
+          status?: string
+          tool_id?: string
+        }
+        Relationships: []
+      }
+      mcp_key_audit_log: {
+        Row: {
+          event_type: string
+          id: string
+          metadata: Json | null
+          organization_id: string
+          session_id: string | null
+          timestamp: string | null
+          tool_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          organization_id: string
+          session_id?: string | null
+          timestamp?: string | null
+          tool_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          organization_id?: string
+          session_id?: string | null
+          timestamp?: string | null
+          tool_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      mcp_key_sessions: {
+        Row: {
+          created_at: string | null
+          ended_at: string | null
+          environment: string
+          expires_at: string
+          id: string
+          key_names: string[]
+          organization_id: string
+          request_id: string
+          session_id: string
+          tool_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          ended_at?: string | null
+          environment: string
+          expires_at: string
+          id?: string
+          key_names: string[]
+          organization_id: string
+          request_id: string
+          session_id: string
+          tool_id: string
+        }
+        Update: {
+          created_at?: string | null
+          ended_at?: string | null
+          environment?: string
+          expires_at?: string
+          id?: string
+          key_names?: string[]
+          organization_id?: string
+          request_id?: string
+          session_id?: string
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mcp_key_sessions_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "mcp_key_access_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mcp_key_tools: {
+        Row: {
+          auto_approve: boolean | null
+          created_at: string | null
+          created_by: string
+          id: string
+          organization_id: string
+          permissions: Json
+          risk_level: string
+          status: string
+          tool_id: string
+          tool_name: string
+          updated_at: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          auto_approve?: boolean | null
+          created_at?: string | null
+          created_by: string
+          id?: string
+          organization_id: string
+          permissions?: Json
+          risk_level?: string
+          status?: string
+          tool_id: string
+          tool_name: string
+          updated_at?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          auto_approve?: boolean | null
+          created_at?: string | null
+          created_by?: string
+          id?: string
+          organization_id?: string
+          permissions?: Json
+          risk_level?: string
+          status?: string
+          tool_id?: string
+          tool_name?: string
+          updated_at?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
+      mcp_proxy_tokens: {
+        Row: {
+          created_at: string | null
+          encrypted_mapping: string
+          expires_at: string
+          id: string
+          key_name: string
+          proxy_value: string
+          revoked_at: string | null
+          session_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          encrypted_mapping: string
+          expires_at: string
+          id?: string
+          key_name: string
+          proxy_value: string
+          revoked_at?: string | null
+          session_id: string
+        }
+        Update: {
+          created_at?: string | null
+          encrypted_mapping?: string
+          expires_at?: string
+          id?: string
+          key_name?: string
+          proxy_value?: string
+          revoked_at?: string | null
+          session_id?: string
+        }
+        Relationships: []
       }
       notification_settings: {
         Row: {
@@ -735,6 +1169,239 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      oauth_audit_log: {
+        Row: {
+          client_id: string | null
+          created_at: string | null
+          error_code: string | null
+          error_description: string | null
+          event_type: string
+          grant_type: string | null
+          id: string
+          ip_address: unknown
+          metadata: Json | null
+          redirect_uri: string | null
+          scope: string[] | null
+          success: boolean
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          client_id?: string | null
+          created_at?: string | null
+          error_code?: string | null
+          error_description?: string | null
+          event_type: string
+          grant_type?: string | null
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          redirect_uri?: string | null
+          scope?: string[] | null
+          success: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string | null
+          error_code?: string | null
+          error_description?: string | null
+          event_type?: string
+          grant_type?: string | null
+          id?: string
+          ip_address?: unknown
+          metadata?: Json | null
+          redirect_uri?: string | null
+          scope?: string[] | null
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      oauth_authorization_codes: {
+        Row: {
+          client_id: string
+          code_challenge: string
+          code_challenge_method: string
+          code_hash: string
+          consumed: boolean | null
+          consumed_at: string | null
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown
+          redirect_uri: string
+          scope: string[] | null
+          state: string | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          code_challenge: string
+          code_challenge_method?: string
+          code_hash: string
+          consumed?: boolean | null
+          consumed_at?: string | null
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown
+          redirect_uri: string
+          scope?: string[] | null
+          state?: string | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          code_challenge?: string
+          code_challenge_method?: string
+          code_hash?: string
+          consumed?: boolean | null
+          consumed_at?: string | null
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown
+          redirect_uri?: string
+          scope?: string[] | null
+          state?: string | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oauth_authorization_codes_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "oauth_clients"
+            referencedColumns: ["client_id"]
+          },
+        ]
+      }
+      oauth_clients: {
+        Row: {
+          allowed_code_challenge_methods: string[] | null
+          allowed_redirect_uris: Json
+          allowed_scopes: string[] | null
+          client_id: string
+          client_name: string
+          client_type: string
+          created_at: string | null
+          created_by: string | null
+          default_scopes: string[] | null
+          description: string | null
+          id: string
+          require_pkce: boolean
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          allowed_code_challenge_methods?: string[] | null
+          allowed_redirect_uris?: Json
+          allowed_scopes?: string[] | null
+          client_id: string
+          client_name: string
+          client_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          default_scopes?: string[] | null
+          description?: string | null
+          id?: string
+          require_pkce?: boolean
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          allowed_code_challenge_methods?: string[] | null
+          allowed_redirect_uris?: Json
+          allowed_scopes?: string[] | null
+          client_id?: string
+          client_name?: string
+          client_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          default_scopes?: string[] | null
+          description?: string | null
+          id?: string
+          require_pkce?: boolean
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      oauth_tokens: {
+        Row: {
+          client_id: string
+          created_at: string | null
+          expires_at: string
+          id: string
+          ip_address: unknown
+          last_used_at: string | null
+          parent_token_id: string | null
+          revoked: boolean | null
+          revoked_at: string | null
+          revoked_reason: string | null
+          scope: string[] | null
+          token_hash: string
+          token_type: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          ip_address?: unknown
+          last_used_at?: string | null
+          parent_token_id?: string | null
+          revoked?: boolean | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          scope?: string[] | null
+          token_hash: string
+          token_type: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          ip_address?: unknown
+          last_used_at?: string | null
+          parent_token_id?: string | null
+          revoked?: boolean | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
+          scope?: string[] | null
+          token_hash?: string
+          token_type?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oauth_tokens_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "oauth_clients"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "oauth_tokens_parent_token_id_fkey"
+            columns: ["parent_token_id"]
+            isOneToOne: false
+            referencedRelation: "oauth_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -1268,6 +1935,77 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stored_api_keys: {
+        Row: {
+          access_level: string
+          created_at: string | null
+          created_by: string
+          encrypted_value: string
+          environment: string
+          expires_at: string | null
+          id: string
+          key_type: string
+          last_rotated: string | null
+          metadata: Json | null
+          name: string
+          organization_id: string
+          project_id: string
+          rotation_frequency: number | null
+          status: string
+          tags: string[] | null
+          updated_at: string | null
+          usage_count: number | null
+        }
+        Insert: {
+          access_level?: string
+          created_at?: string | null
+          created_by: string
+          encrypted_value: string
+          environment?: string
+          expires_at?: string | null
+          id?: string
+          key_type?: string
+          last_rotated?: string | null
+          metadata?: Json | null
+          name: string
+          organization_id: string
+          project_id: string
+          rotation_frequency?: number | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Update: {
+          access_level?: string
+          created_at?: string | null
+          created_by?: string
+          encrypted_value?: string
+          environment?: string
+          expires_at?: string | null
+          id?: string
+          key_type?: string
+          last_rotated?: string | null
+          metadata?: Json | null
+          name?: string
+          organization_id?: string
+          project_id?: string
+          rotation_frequency?: number | null
+          status?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stored_api_keys_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "api_key_projects"
             referencedColumns: ["id"]
           },
         ]
@@ -2060,6 +2798,9 @@ export type Database = {
           subcategory: string
         }[]
       }
+      cleanup_expired_mcp_resources: { Args: never; Returns: undefined }
+      cleanup_expired_oauth_codes: { Args: never; Returns: number }
+      cleanup_expired_oauth_tokens: { Args: never; Returns: number }
       cleanup_expired_recommendations: { Args: never; Returns: undefined }
       generate_vendor_api_key: {
         Args: {
@@ -2086,7 +2827,16 @@ export type Database = {
           transaction_count: number
         }[]
       }
+      get_key_for_mcp_session: {
+        Args: { key_name_param: string; session_id_param: string }
+        Returns: {
+          expires_at: string
+          proxy_token: string
+        }[]
+      }
       get_product_image_url: { Args: { image_path: string }; Returns: string }
+      get_user_org_ids: { Args: never; Returns: string[] }
+      get_user_primary_org_id: { Args: never; Returns: string }
       get_vendor_usage_summary: {
         Args: {
           p_end_date?: string
@@ -2141,6 +2891,16 @@ export type Database = {
         }[]
       }
       is_admin: { Args: never; Returns: boolean }
+      is_api_key_valid: {
+        Args: { p_key_hash: string }
+        Returns: {
+          permissions: Json
+          project_scope: string
+          reason: string
+          user_id: string
+          valid: boolean
+        }[]
+      }
       is_owner: { Args: { bulk_id: string }; Returns: boolean }
       keyword_search_memories: {
         Args: {
