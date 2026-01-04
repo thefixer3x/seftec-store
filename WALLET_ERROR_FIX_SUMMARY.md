@@ -9,16 +9,16 @@
 
 **Fix**: Added WebSocket domains to CSP:
 ```html
-connect-src 'self' https://mxtsdgkwzjzlttpotole.supabase.co https://seftechub.supabase.co
-wss://mxtsdgkwzjzlttpotole.supabase.co wss://seftechub.supabase.co https://api.seftec.store;
+connect-src 'self' https://mxtsdgkwzjzlttpotole.supabase.co https://mxtsdgkwzjzlttpotole.supabase.co
+wss://mxtsdgkwzjzlttpotole.supabase.co wss://mxtsdgkwzjzlttpotole.supabase.co https://api.seftec.store;
 ```
 
 ### 2. Wrong Supabase URL
-**Error**: Using `mxtsdgkwzjzlttpotole.supabase.co` instead of `seftechub.supabase.co`
+**Error**: Using `mxtsdgkwzjzlttpotole.supabase.co` instead of `mxtsdgkwzjzlttpotole.supabase.co`
 
 **Fix**: Updated `apps/seftec-store/src/integrations/supabase/client.ts`:
 ```typescript
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://seftechub.supabase.co";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://mxtsdgkwzjzlttpotole.supabase.co";
 ```
 
 ### 3. Missing Database Tables
@@ -88,7 +88,7 @@ return () => {
 ### 3. Update Environment Variables
 Make sure `.env` has the correct Supabase URL:
 ```bash
-VITE_SUPABASE_URL=https://seftechub.supabase.co
+VITE_SUPABASE_URL=https://mxtsdgkwzjzlttpotole.supabase.co
 VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 

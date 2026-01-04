@@ -4,7 +4,7 @@
 
 1. **CSP Error**: Added WebSocket support to allow Supabase real-time connections
 2. **config.toml Error**: Removed invalid `timeout_seconds` key  
-3. **Supabase URL**: Fixed to use correct project (`seftechub.supabase.co`)
+3. **Supabase URL**: Fixed to use correct project (`mxtsdgkwzjzlttpotole.supabase.co`)
 4. **Real-time Subscriptions**: Temporarily disabled until tables exist
 
 ## 🚀 Quick Migration Application
@@ -76,7 +76,7 @@ Should return: 3 rows.
 
 ## Your Project URLs
 
-- **Vanity Domain**: https://seftechub.supabase.co ✅
+- **Vanity Domain**: https://mxtsdgkwzjzlttpotole.supabase.co ✅
 - **Direct URL**: https://mxtsdgkwzjzlttpotole.supabase.co ✅
 - **Project ID**: `mxtsdgkwzjzlttpotole` ✅
 
