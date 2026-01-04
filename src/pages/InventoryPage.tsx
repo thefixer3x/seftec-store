@@ -184,11 +184,12 @@ const InventoryPageContent = () => {
     setIsAdjustDialogOpen(true);
   };
 
+  const searchLower = searchQuery.toLowerCase();
   const filteredItems = items.filter(item =>
-    item.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.products?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.supplier_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    item.sku.toLowerCase().includes(searchLower) ||
+    (item.products?.name ?? '').toLowerCase().includes(searchLower) ||
+    (item.location ?? '').toLowerCase().includes(searchLower) ||
+    (item.supplier_name ?? '').toLowerCase().includes(searchLower)
   );
 
   const getStockStatus = (item: InventoryItem) => {

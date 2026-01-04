@@ -144,10 +144,11 @@ const CustomersPageContent = () => {
     setIsViewDialogOpen(true);
   };
 
+  const searchLower = searchQuery.toLowerCase();
   const filteredCustomers = customers.filter(customer =>
-    customer.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    customer.company_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    customer.customer_name.toLowerCase().includes(searchLower) ||
+    (customer.email ?? '').toLowerCase().includes(searchLower) ||
+    (customer.company_name ?? '').toLowerCase().includes(searchLower)
   );
 
   const getStatusColor = (status: Customer['status']) => {

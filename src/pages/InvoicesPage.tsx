@@ -171,11 +171,12 @@ const InvoicesPageContent = () => {
     setIsViewDialogOpen(true);
   };
 
+  const searchLower = searchQuery.toLowerCase();
   const filteredInvoices = invoices.filter(invoice => {
     const matchesSearch =
-      invoice.invoice_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.customers?.customer_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.customers?.company_name?.toLowerCase().includes(searchQuery.toLowerCase());
+      invoice.invoice_number.toLowerCase().includes(searchLower) ||
+      (invoice.customers?.customer_name ?? '').toLowerCase().includes(searchLower) ||
+      (invoice.customers?.company_name ?? '').toLowerCase().includes(searchLower);
 
     const matchesStatus = statusFilter === 'all' || invoice.status === statusFilter;
 

@@ -161,74 +161,43 @@ export function useInvoices() {
     };
   };
 
-  // Create invoice mutation
+  // Create invoice mutation - uses atomic RPC function
   const createInvoiceMutation = useMutation({
     mutationFn: async (input: CreateInvoiceInput) => {
       if (!user) throw new Error("User not authenticated");
 
-      // Calculate totals
-      const subtotal = input.items.reduce((sum, item) => {
-        const itemTotal = item.quantity * item.unit_price;
-        const discount = itemTotal * ((item.discount_percentage || 0) / 100);
-        return sum + (itemTotal - discount);
-      }, 0);
-
-      const taxRate = input.tax_rate || 0;
-      const taxAmount = subtotal * (taxRate / 100);
-      const discountAmount = input.discount_amount || 0;
-      const shippingCost = input.shipping_cost || 0;
-      const totalAmount = subtotal + taxAmount + shippingCost - discountAmount;
-
-      // Create invoice
-      const { data: invoice, error: invoiceError } = await supabase
-        .from("invoices")
-        .insert({
-          user_id: user.id,
-          customer_id: input.customer_id || null,
-          invoice_date: input.invoice_date || new Date().toISOString().split('T')[0],
-          due_date: input.due_date,
-          currency_code: input.currency_code || 'USD',
-          subtotal,
-          tax_rate: taxRate,
-          tax_amount: taxAmount,
-          discount_amount: discountAmount,
-          shipping_cost: shippingCost,
-          total_amount: totalAmount,
-          balance_due: totalAmount,
-          payment_terms: input.payment_terms || null,
-          notes: input.notes || null,
-          terms_and_conditions: input.terms_and_conditions || null,
-          footer_text: input.footer_text || null,
-        })
-        .select()
-        .single();
-
-      if (invoiceError) throw invoiceError;
-
-      // Create invoice items
-      const itemsToInsert = input.items.map((item, index) => {
-        const itemTotal = item.quantity * item.unit_price;
-        const discount = itemTotal * ((item.discount_percentage || 0) / 100);
-        return {
-          invoice_id: invoice.id,
+      // Use atomic RPC function to create invoice with items
+      const { data, error } = await supabase.rpc('create_invoice_with_items', {
+        p_user_id: user.id,
+        p_customer_id: input.customer_id || null,
+        p_invoice_date: input.invoice_date || new Date().toISOString().split('T')[0],
+        p_due_date: input.due_date,
+        p_currency_code: input.currency_code || 'USD',
+        p_tax_rate: input.tax_rate || 0,
+        p_discount_amount: input.discount_amount || 0,
+        p_shipping_cost: input.shipping_cost || 0,
+        p_payment_terms: input.payment_terms || null,
+        p_notes: input.notes || null,
+        p_terms_and_conditions: input.terms_and_conditions || null,
+        p_footer_text: input.footer_text || null,
+        p_items: JSON.stringify(input.items.map(item => ({
           product_id: item.product_id || null,
           description: item.description,
           quantity: item.quantity,
           unit_price: item.unit_price,
           tax_rate: item.tax_rate || 0,
           discount_percentage: item.discount_percentage || 0,
-          line_total: itemTotal - discount,
-          sort_order: index,
-        };
+        }))),
       });
 
-      const { error: itemsError } = await supabase
-        .from("invoice_items")
-        .insert(itemsToInsert);
+      if (error) throw error;
 
-      if (itemsError) throw itemsError;
+      // Check for application-level errors in the response
+      if (data && !data.success) {
+        throw new Error(data.error || 'Invoice creation failed');
+      }
 
-      return invoice;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["invoices", user?.id] });
@@ -342,53 +311,27 @@ export function useInvoices() {
     },
   });
 
-  // Mark as paid mutation
+  // Mark as paid mutation - uses atomic RPC function
   const markAsPaidMutation = useMutation({
     mutationFn: async ({ invoiceId, amount }: { invoiceId: string; amount?: number }) => {
       if (!user) throw new Error("User not authenticated");
 
-      // Get current invoice
-      const { data: invoice } = await supabase
-        .from("invoices")
-        .select("total_amount, amount_paid")
-        .eq("id", invoiceId)
-        .single();
-
-      if (!invoice) throw new Error("Invoice not found");
-
-      const paymentAmount = amount || (invoice.total_amount - invoice.amount_paid);
-      const newAmountPaid = invoice.amount_paid + paymentAmount;
-      const newBalanceDue = invoice.total_amount - newAmountPaid;
-      const newStatus = newBalanceDue <= 0 ? 'paid' : 'sent';
-
-      // Record payment
-      const { error: paymentError } = await supabase
-        .from("invoice_payments")
-        .insert({
-          invoice_id: invoiceId,
-          user_id: user.id,
-          amount: paymentAmount,
-          payment_method: 'other',
-          payment_date: new Date().toISOString().split('T')[0],
-        });
-
-      if (paymentError) throw paymentError;
-
-      // Update invoice
-      const { data, error } = await supabase
-        .from("invoices")
-        .update({
-          status: newStatus,
-          amount_paid: newAmountPaid,
-          balance_due: newBalanceDue,
-          paid_at: newBalanceDue <= 0 ? new Date().toISOString() : null,
-        })
-        .eq("id", invoiceId)
-        .eq("user_id", user.id)
-        .select()
-        .single();
+      // Use atomic RPC function to record payment
+      const { data, error } = await supabase.rpc('record_invoice_payment', {
+        p_invoice_id: invoiceId,
+        p_user_id: user.id,
+        p_amount: amount || null,
+        p_payment_method: 'other',
+        p_payment_date: new Date().toISOString().split('T')[0],
+      });
 
       if (error) throw error;
+
+      // Check for application-level errors in the response
+      if (data && !data.success) {
+        throw new Error(data.error || 'Payment recording failed');
+      }
+
       return data;
     },
     onSuccess: () => {

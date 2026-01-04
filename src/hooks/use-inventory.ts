@@ -252,57 +252,29 @@ export function useInventory() {
     },
   });
 
-  // Adjust stock mutation
+  // Adjust stock mutation - uses atomic RPC function
   const adjustStockMutation = useMutation({
     mutationFn: async (input: CreateAdjustmentInput) => {
       if (!user) throw new Error("User not authenticated");
 
-      // Get current item to calculate new quantity
-      const { data: item } = await supabase
-        .from("inventory_items")
-        .select("stock_quantity, unit_cost")
-        .eq("id", input.inventory_item_id)
-        .single();
+      // Use atomic RPC function to prevent race conditions
+      const { data, error } = await supabase.rpc('adjust_inventory_stock', {
+        p_inventory_item_id: input.inventory_item_id,
+        p_user_id: user.id,
+        p_adjustment_type: input.adjustment_type,
+        p_quantity_change: input.quantity_change,
+        p_reason: input.reason || null,
+        p_notes: input.notes || null,
+      });
 
-      if (!item) throw new Error("Item not found");
+      if (error) throw error;
 
-      const newQuantity = item.stock_quantity + input.quantity_change;
-      if (newQuantity < 0) throw new Error("Stock cannot be negative");
-
-      // Create adjustment record
-      const { error: adjustmentError } = await supabase
-        .from("inventory_adjustments")
-        .insert({
-          inventory_item_id: input.inventory_item_id,
-          user_id: user.id,
-          created_by: user.id,
-          adjustment_type: input.adjustment_type,
-          quantity_change: input.quantity_change,
-          previous_quantity: item.stock_quantity,
-          new_quantity: newQuantity,
-          unit_cost: item.unit_cost,
-          total_value: Math.abs(input.quantity_change) * (item.unit_cost || 0),
-          reason: input.reason || null,
-          notes: input.notes || null,
-        });
-
-      if (adjustmentError) throw adjustmentError;
-
-      // Update stock quantity
-      const updateData: { stock_quantity: number; last_restocked_at?: string } = {
-        stock_quantity: newQuantity,
-      };
-
-      if (input.adjustment_type === 'restock') {
-        updateData.last_restocked_at = new Date().toISOString();
+      // Check for application-level errors in the response
+      if (data && !data.success) {
+        throw new Error(data.error || 'Stock adjustment failed');
       }
 
-      const { error: updateError } = await supabase
-        .from("inventory_items")
-        .update(updateData)
-        .eq("id", input.inventory_item_id);
-
-      if (updateError) throw updateError;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inventory", user?.id] });
