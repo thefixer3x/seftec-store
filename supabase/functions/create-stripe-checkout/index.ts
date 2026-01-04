@@ -119,9 +119,10 @@ serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error("Stripe session creation error:", err);
-    return new Response(JSON.stringify({ error: err.message }), {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    return new Response(JSON.stringify({ error: errorMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

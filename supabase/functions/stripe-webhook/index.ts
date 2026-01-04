@@ -58,8 +58,9 @@ serve(async (req) => {
     try {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
-      console.error(`Webhook signature verification failed: ${err.message}`);
-      return new Response(`Webhook Error: ${err.message}`, { status: 400, headers: corsHeaders });
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error(`Webhook signature verification failed: ${errorMessage}`);
+      return new Response(`Webhook Error: ${errorMessage}`, { status: 400, headers: corsHeaders });
     }
     
     console.log(`Received Stripe event: ${event.type}`);
@@ -167,8 +168,9 @@ serve(async (req) => {
     });
     
   } catch (err) {
-    console.error(`Stripe webhook error: ${err.message}`);
-    return new Response(`Webhook Error: ${err.message}`, { 
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    console.error(`Stripe webhook error: ${errorMessage}`);
+    return new Response(`Webhook Error: ${errorMessage}`, {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
