@@ -5,6 +5,13 @@
 [build.environment]
   NODE_VERSION = "18"
 
+# Serve .well-known files directly (Apple Pay, etc.)
+[[redirects]]
+  from = "/.well-known/*"
+  to = "/.well-known/:splat"
+  status = 200
+
+# SPA fallback - must come after .well-known rule
 [[redirects]]
   from = "/*"
   to = "/index.html"
