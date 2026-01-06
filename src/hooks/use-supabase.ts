@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { SupabaseContext } from '@/context/SupabaseContext';
+import { supabase } from '@/integrations/supabase/client';
 
 /**
  * Hook to access the Supabase client instance
@@ -10,11 +9,5 @@ import { SupabaseContext } from '@/context/SupabaseContext';
  * @returns The authenticated Supabase client instance
  */
 export function useSupabaseClient() {
-  const context = useContext(SupabaseContext);
-  
-  if (context === undefined) {
-    throw new Error('useSupabaseClient must be used within a SupabaseProvider');
-  }
-  
-  return context;
+  return supabase;
 }
