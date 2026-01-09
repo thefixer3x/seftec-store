@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,10 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, CreditCard as CardIcon, Banknote, Globe, Loader2 } from "lucide-react";
+import { CreditCard, DollarSign, Lock, AlertCircle, Check, Apple, Wallet, CreditCard as CardIcon, Banknote, Globe, Loader2, Phone, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useForm } from "react-hook-form";
+import { useSupabaseClient } from "@/hooks/use-supabase";
+import { PaymentProviderRegistry } from "@/lib/payments/registry";
+import type { PaymentProvider } from "@/lib/payments/provider";
 
 interface PaymentFormValues {
   paymentMethod: string;
@@ -40,7 +43,45 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("method");
+  const [registeredProviders, setRegisteredProviders] = useState<PaymentProvider[]>([]);
+  const [loadingProviders, setLoadingProviders] = useState(false);
   const { toast } = useToast();
+  const supabase = useSupabaseClient();
+
+  // Load registered providers from PaymentProviderRegistry
+  useEffect(() => {
+    const loadRegisteredProviders = async () => {
+      if (!isOpen) return;
+      
+      setLoadingProviders(true);
+      try {
+        const registry = PaymentProviderRegistry.getInstance(supabase);
+        await registry.initialize();
+        const providers = registry.getEnabledProviders();
+        setRegisteredProviders(providers);
+      } catch (error) {
+        console.error('Error loading registered providers:', error);
+      } finally {
+        setLoadingProviders(false);
+      }
+    };
+    
+    loadRegisteredProviders();
+  }, [isOpen, supabase]);
+
+  // Helper functions for provider display
+  const getProviderDescription = (provider: PaymentProvider): string => {
+    if (provider.supports('bill_payments')) return 'Bill Payments';
+    if (provider.supports('subscriptions')) return 'Subscriptions';
+    return 'Payments';
+  };
+
+  const getProviderIcon = (provider: PaymentProvider): React.ReactNode => {
+    if (provider.supports('bill_payments')) {
+      return <Phone className="h-8 w-8 text-green-600" />;
+    }
+    return <CreditCard className="h-8 w-8 text-blue-600" />;
+  };
   
   const form = useForm<PaymentFormValues>({
     defaultValues: {
@@ -473,6 +514,40 @@ const PaymentSelection: React.FC<PaymentSelectionProps> = ({
                 </TabsContent>
 
                 <TabsContent value="gateway" className="space-y-4">
+                  {/* Registered Providers from PaymentProviderRegistry */}
+                  {registeredProviders.length > 0 && (
+                    <div className="mb-4">
+                      <h3 className="text-sm font-medium mb-2 flex items-center">
+                        <Badge variant="outline" className="mr-2 bg-green-50 text-green-700 border-green-200">Active</Badge>
+                        Integrated Payment Providers
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {registeredProviders.map((provider) => (
+                          <PaymentProviderCard 
+                            key={provider.getName()}
+                            id={provider.getName().toLowerCase()}
+                            name={provider.getName()}
+                            description={getProviderDescription(provider)}
+                            icon={getProviderIcon(provider)}
+                            selected={paymentProvider === provider.getName().toLowerCase()}
+                            onClick={() => setPaymentProvider(provider.getName().toLowerCase())}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {loadingProviders && (
+                    <div className="flex items-center justify-center py-4">
+                      <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
+                      <span className="text-sm text-muted-foreground">Loading providers...</span>
+                    </div>
+                  )}
+
+                  {/* Standard Payment Gateways */}
+                  <div className="mb-2">
+                    <h3 className="text-sm font-medium mb-2">Standard Payment Gateways</h3>
+                  </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                     <PaymentProviderCard 
                       id="stripe" 
