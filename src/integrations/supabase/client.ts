@@ -1,5 +1,5 @@
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
 // Load Supabase credentials from environment variables
@@ -7,30 +7,44 @@ import type { Database } from './types';
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Validate that required environment variables are set
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+// Flag to track if Supabase is properly configured
+export const isSupabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+// Log warning instead of throwing if env vars are missing
+// This allows the app to render gracefully with limited functionality
+if (!isSupabaseConfigured) {
   const missing = [];
   if (!SUPABASE_URL) missing.push('VITE_SUPABASE_URL');
   if (!SUPABASE_ANON_KEY) missing.push('VITE_SUPABASE_ANON_KEY');
   
-  throw new Error(
+  console.warn(
     `Missing required Supabase environment variables: ${missing.join(', ')}\n` +
     `Please create a .env file in the project root with these variables.\n` +
-    `See .env.example for a template.`
+    `See .env.example for a template.\n` +
+    `The app will run with limited functionality.`
   );
 }
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-    flowType: "pkce",
-  },
-});
+// Create a placeholder client that returns empty results when not configured
+// This prevents runtime errors when Supabase is not set up
+export const supabase: SupabaseClient<Database> = isSupabaseConfigured
+  ? createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        flowType: "pkce",
+      },
+    })
+  : createClient<Database>('https://placeholder.supabase.co', 'placeholder-key', {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
 
 // Helper functions for authentication
 export const getCurrentUser = async () => {

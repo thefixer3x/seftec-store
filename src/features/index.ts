@@ -8,6 +8,7 @@ export {
   FEATURE_FLAGS,
   isFeatureEnabled,
   useFeatureFlag,
+  useFeatureFlags,
   type FeatureFlag
 } from './feature-flags';
 
