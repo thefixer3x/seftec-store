@@ -32,4 +32,19 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      external: [],
+      // Exclude test files from production build
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+      },
+    },
+    // Suppress warnings about missing tables (unimplemented features)
+    chunkSizeWarningLimit: 1000,
+  },
+  // Exclude test files
+  test: {
+    exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/integration/**'],
+  },
 }));

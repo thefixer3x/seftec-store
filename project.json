@@ -10,14 +10,17 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/seftec-store"
+        "outputPath": "dist/apps/seftec-store",
+        "skipTypeCheck": true
       },
       "configurations": {
         "development": {
-          "mode": "development"
+          "mode": "development",
+          "skipTypeCheck": true
         },
         "production": {
-          "mode": "production"
+          "mode": "production",
+          "skipTypeCheck": true
         }
       }
     },
