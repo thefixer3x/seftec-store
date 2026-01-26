@@ -10,6 +10,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    passWithNoTests: true,
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/build/**'],
     // Dummy values for testing only. These are not real credentials.
     env: {
       VITE_SUPABASE_URL: 'https://example.com',
@@ -40,6 +43,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      react: path.resolve(__dirname, '../../node_modules/react'),
+      'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
     },
+    dedupe: ['react', 'react-dom'],
   },
 });

@@ -6,6 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  root: __dirname,
   server: {
     host: "127.0.0.1",
     port: 8080,
@@ -30,7 +31,10 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      react: path.resolve(__dirname, "../../node_modules/react"),
+      "react-dom": path.resolve(__dirname, "../../node_modules/react-dom"),
     },
+    dedupe: ["react", "react-dom"],
   },
   build: {
     rollupOptions: {
@@ -45,6 +49,10 @@ export default defineConfig(({ mode }) => ({
   },
   // Exclude test files
   test: {
-    exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/integration/**'],
+    globals: true,
+    environment: 'jsdom',
+    passWithNoTests: true,
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/build/**'],
   },
 }));
