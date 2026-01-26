@@ -17,12 +17,12 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "predeploy": "bun run build",
-    "deploy": "node deploy.js",
-    "deploy-multi": "node deploy-multi.js",
-    "deploy:github": "node deploy-multi.js github",
-    "deploy:vercel": "node deploy-multi.js vercel",
-    "deploy:netlify": "node deploy-multi.js netlify",
-    "deploy:all": "node deploy-multi.js all"
+    "deploy": "node scripts/deploy.js",
+    "deploy-multi": "node scripts/deploy-multi.js",
+    "deploy:github": "node scripts/deploy-multi.js github",
+    "deploy:vercel": "node scripts/deploy-multi.js vercel",
+    "deploy:netlify": "node scripts/deploy-multi.js netlify",
+    "deploy:all": "node scripts/deploy-multi.js all"
   },
   "dependencies": {
     "@genkit-ai/mcp": "^1.27.0",
