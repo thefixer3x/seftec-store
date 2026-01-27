@@ -1,10 +1,10 @@
 
-import React, { lazy } from 'react';
+import React from 'react';
 import { Route, Navigate, Outlet } from 'react-router-dom';
 import { ProtectedLayout } from '@/components/layout/ProtectedLayout';
 import AccountProfile from '@/pages/AccountPreferences';
-const Profile = lazy(() => import('@/pages/Profile'));
-const Dashboard = lazy(() => import('@/pages/Dashboard'));
+import Profile from '@/pages/Profile';
+import Dashboard from '@/pages/Dashboard';
 import WalletPage from '@/pages/WalletPage';
 import SettingsPage from '@/pages/SettingsPage';
 import AccountPage from '@/pages/AccountPage';

@@ -15,6 +15,7 @@
     "allowJs": true,
     "noUnusedLocals": false,
     "strictNullChecks": false,
+    "suppressImplicitAnyIndexErrors": true,
     "noImplicitThis": false
   },
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "**/*.test.tsx", "**/integration/**"]
