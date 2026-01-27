@@ -42,7 +42,7 @@ export function SignUpForm({ onSuccess, isLoading, setIsLoading }: SignUpFormPro
 
     try {
       await signUp(values.email, values.password, {
-        first_name: values.name,
+        full_name: values.name,
       });
       toast({
         title: "Successfully created your account",
