@@ -25,15 +25,13 @@ export const fetchUserProfile = async (userId: string): Promise<Profile | null> 
 
 export const handleSignIn = async (email: string, password: string) => {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  
+
   if (error) {
     throw error;
   }
-  
-  // Store the email for future biometric login
+
+  // Store the email for future biometric login reference
   localStorage.setItem('last_email', email);
-  // This is just for our simulation - in real biometric auth, we wouldn't store the password
-  localStorage.setItem('temp_auth_key', password);
 };
 
 export const handleSignInWithMagicLink = async (email: string) => {
@@ -69,40 +67,23 @@ export const handleSignInWithBiometric = async () => {
       throw new Error('WebAuthn is not supported in this browser');
     }
 
-    // This is a simplified example of biometric authentication
-    // In a real-world scenario, you would:
-    // 1. Get a challenge from your server
-    // 2. Create credential options based on the challenge
-    // 3. Get credential from browser WebAuthn API
-    // 4. Send the credential to your server for verification
-    // 5. Receive a session token from your server
-
-    // For this example, we'll simply check if the platform authenticator is available
+    // Check if platform authenticator is available
     const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
     if (!available) {
       throw new Error('Biometric authentication is not available on this device');
     }
-    
-    // Here we would normally call the WebAuthn API to get credentials
-    // Since we can't implement the full flow without a backend, we'll use localStorage
-    // to check if the user has previously logged in
-    const storedEmail = localStorage.getItem('last_email');
-    
-    if (!storedEmail) {
-      throw new Error('Please log in with email and password first before using biometric authentication');
-    }
-    
-    // In a real implementation, this would be the result of a WebAuthn verification
-    // For now, we'll simply use the stored email to sign in (simulate a successful biometric auth)
-    const { error } = await supabase.auth.signInWithPassword({ 
-      email: storedEmail,
-      // This would not be used in actual biometric auth, but we need it for this simulation
-      password: localStorage.getItem('temp_auth_key') || ''
-    });
-    
-    if (error) {
-      throw error;
-    }
+
+    // TODO: Implement proper WebAuthn flow:
+    // 1. Request authentication challenge from server
+    // 2. Get credential from browser WebAuthn API with the challenge
+    // 3. Send credential to server for verification
+    // 4. Receive authenticated session from server
+    //
+    // For security reasons, biometric authentication requires a proper
+    // server-side implementation with WebAuthn. This stub is here for
+    // UI compatibility but should not be used in production.
+
+    throw new Error('Biometric authentication requires proper WebAuthn implementation. Please use email/password login.');
   } catch (error) {
     console.error('Biometric authentication error:', error);
     throw error;
@@ -110,13 +91,12 @@ export const handleSignInWithBiometric = async () => {
 };
 
 export const handleSignUp = async (email: string, password: string, userData: Partial<Profile>) => {
-  const { error } = await supabase.auth.signUp({ 
-    email, 
+  const { error } = await supabase.auth.signUp({
+    email,
     password,
-    options: { 
+    options: {
       data: {
-        first_name: userData.first_name,
-        last_name: userData.last_name,
+        full_name: userData.full_name,
       },
       emailRedirectTo: `${window.location.origin}/auth-callback`
     }
@@ -125,11 +105,9 @@ export const handleSignUp = async (email: string, password: string, userData: Pa
   if (error) {
     throw error;
   }
-  
-  // Store the email for future biometric login
+
+  // Store the email for future biometric login reference
   localStorage.setItem('last_email', email);
-  // This is just for our simulation - in real biometric auth, we wouldn't store the password
-  localStorage.setItem('temp_auth_key', password);
 };
 
 export const handleSignOut = async () => {

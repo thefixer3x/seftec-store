@@ -2,11 +2,15 @@ import { Session, User } from '@supabase/supabase-js';
 
 export type Profile = {
   id: string;
+  email: string | null;
   first_name: string | null;
   last_name: string | null;
+  full_name: string | null;
   company_name: string | null;
   business_type: string | null;
   is_vendor: boolean | null;
+  stripe_customer_id: string | null;
+  subscription_tier: string | null;
   created_at: string | null;
   updated_at: string | null;
 };
