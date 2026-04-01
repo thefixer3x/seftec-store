@@ -66,7 +66,7 @@ export const SaySwitchDashboard = () => {
   } = useQuery({
     queryKey: ['walletBalance'],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from('say_wallet_snapshots')
         .select('*')
         .order('created_at', { ascending: false })
