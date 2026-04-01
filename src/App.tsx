@@ -13,7 +13,6 @@ import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
-import TestPage from '@/TestPage';
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
