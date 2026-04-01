@@ -140,7 +140,7 @@ export const TouchControl: React.FC<TouchControlProps> = ({
         size === 'sm' ? "py-1.5 px-3 text-sm" :
         size === 'lg' ? "py-2.5 px-5 text-lg" :
         "py-2 px-4",
-        pressing ? "bg-opacity-90" : ""
+        pressing ? "opacity-90" : ""
       )}>
         {children}
       </div>
