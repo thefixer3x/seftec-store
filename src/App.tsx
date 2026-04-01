@@ -28,7 +28,7 @@ const Cart = lazy(() => import('@/pages/Cart'));
 const Products = lazy(() => import('@/pages/Products'));
 const Orders = lazy(() => import('@/pages/Orders'));
 const BizGenie = lazy(() => import('@/pages/BizGenie'));
-const EdgeFunctionTest = lazy(() => import('@/pages/EdgeFunctionTest'));
+
 const Terms = lazy(() => import('@/pages/Terms'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
 const Cookies = lazy(() => import('@/pages/Cookies'));
