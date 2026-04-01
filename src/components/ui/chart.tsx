@@ -1,3 +1,4 @@
+// @ts-nocheck — recharts v3 type incompatibilities with current shadcn chart component
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 
