@@ -33,7 +33,7 @@ export const TouchControl: React.FC<TouchControlProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [pressing, setPressing] = React.useState(false);
-  const pressTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const pressTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartPos = React.useRef({ x: 0, y: 0 });
   
   // Use standard button controls on desktop
