@@ -13,7 +13,6 @@ import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
-import TestPage from '@/TestPage';
 
 /* ─── Lazy-loaded pages ────────────────────────────────────────────── */
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
@@ -29,7 +28,7 @@ const Cart = lazy(() => import('@/pages/Cart'));
 const Products = lazy(() => import('@/pages/Products'));
 const Orders = lazy(() => import('@/pages/Orders'));
 const BizGenie = lazy(() => import('@/pages/BizGenie'));
-const EdgeFunctionTest = lazy(() => import('@/pages/EdgeFunctionTest'));
+
 const Terms = lazy(() => import('@/pages/Terms'));
 const Privacy = lazy(() => import('@/pages/Privacy'));
 const Cookies = lazy(() => import('@/pages/Cookies'));
@@ -53,7 +52,7 @@ function App() {
         '/', '/about', '/contact', '/login', '/register', '/reset-password',
         '/solutions', '/value-propositions', '/faq', '/shop', '/products',
         '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
-        '/coming-soon', '/edge-function-test', '/auth', '/auth-callback'
+        '/coming-soon', '/auth', '/auth-callback'
       ];
 
       const isPublic = publicRoutes.some(r => location.pathname === r || location.pathname.startsWith(`${r}/`));
@@ -76,8 +75,6 @@ function App() {
         </div>
       }>
         <Routes>
-          {/* Debug test route */}
-          <Route path="/test" element={<TestPage />} />
 
           {/* Public marketing */}
           <Route path="/" element={<Index />} />
@@ -109,8 +106,6 @@ function App() {
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/security" element={<Security />} />
 
-          {/* Dev / test */}
-          <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
 
           {/* Protected (wrap or sub-route) */}
           <Route path="/orders" element={<ProtectedLayout><Orders /></ProtectedLayout>} />
