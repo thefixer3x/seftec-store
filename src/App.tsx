@@ -75,8 +75,6 @@ function App() {
         </div>
       }>
         <Routes>
-          {/* Debug test route */}
-          <Route path="/test" element={<TestPage />} />
 
           {/* Public marketing */}
           <Route path="/" element={<Index />} />
