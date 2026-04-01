@@ -271,7 +271,8 @@
   }
 
   .security-badge {
-    @apply flex items-center gap-2 bg-gradient-teal-purple/10 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300;
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300;
+    background: linear-gradient(90deg, rgba(79, 209, 197, 0.1) 0%, rgba(159, 122, 234, 0.1) 100%);
   }
   
   /* Mobile helpers */
