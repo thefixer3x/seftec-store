@@ -85,7 +85,7 @@ export const SaySwitchDashboard = () => {
   } = useQuery({
     queryKey: ['recentTransactions'],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from('say_orders')
         .select('*')
         .order('created_at', { ascending: false })

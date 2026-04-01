@@ -101,7 +101,7 @@ const globeVariants = {
     scale: 1, 
     rotateY: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 80,
       damping: 20,
       duration: 1.2
