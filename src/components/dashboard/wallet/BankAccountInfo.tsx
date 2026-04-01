@@ -118,7 +118,8 @@ const BankAccountInfo = () => {
             <Button 
               variant="outline" 
               size="sm" 
-              className="w-full text-seftec-navy border-seftec-navy/20 hover:bg-seftec-navy/10 dark:text-seftec-teal dark:border-seftec-teal/20 dark:hover:bg-seftec-teal/10"
+              disabled
+              className="w-full text-seftec-navy border-seftec-navy/20 dark:text-seftec-teal dark:border-seftec-teal/20 opacity-50 cursor-not-allowed"
             >
               <Building className="h-3.5 w-3.5 mr-2" />
               Manage Bank Accounts
