@@ -52,7 +52,7 @@ function App() {
         '/', '/about', '/contact', '/login', '/register', '/reset-password',
         '/solutions', '/value-propositions', '/faq', '/shop', '/products',
         '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
-        '/coming-soon', '/edge-function-test', '/auth', '/auth-callback'
+        '/coming-soon', '/auth', '/auth-callback'
       ];
 
       const isPublic = publicRoutes.some(r => location.pathname === r || location.pathname.startsWith(`${r}/`));
