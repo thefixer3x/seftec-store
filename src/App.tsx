@@ -106,8 +106,6 @@ function App() {
           <Route path="/cookies" element={<Cookies />} />
           <Route path="/security" element={<Security />} />
 
-          {/* Dev / test */}
-          <Route path="/edge-function-test" element={<EdgeFunctionTest />} />
 
           {/* Protected (wrap or sub-route) */}
           <Route path="/orders" element={<ProtectedLayout><Orders /></ProtectedLayout>} />
