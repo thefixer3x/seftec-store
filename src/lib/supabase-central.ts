@@ -16,7 +16,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     headers: {
       'X-Project-Source': 'seftec-store',
       'X-Client-Version': '1.0.0',
-      'X-Environment': process.env.NODE_ENV || 'development'
+      'X-Environment': (typeof import.meta !== 'undefined' && import.meta.env?.MODE) || 'development'
     }
   },
   auth: {

@@ -92,7 +92,7 @@ export const ProductRecommendations = () => {
         .order('score', { ascending: false })
         .limit(4);
 
-      setRecommendations(data || []);
+      setRecommendations((data as any) || []);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
     }

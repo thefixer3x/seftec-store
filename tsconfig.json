@@ -12,7 +12,7 @@
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
-    "suppressImplicitAnyIndexErrors": true
+    
   },
   "exclude": [
     "node_modules",

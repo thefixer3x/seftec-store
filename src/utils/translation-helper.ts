@@ -96,7 +96,7 @@ export const commonTranslations = {
  * Only works in development mode
  */
 export const logMissingTranslation = (key: string, fallback: string) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env?.DEV) {
         console.warn(`🌐 Missing translation for key: ${key}, fallback: "${fallback}"`);
     }
 };
