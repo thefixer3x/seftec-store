@@ -77,7 +77,7 @@ const ChatInputForm: React.FC<ChatInputFormProps> = ({
       
       <Button 
         className={cn(
-          "w-full text-white hover:bg-opacity-90 dark:hover:opacity-90",
+          "w-full text-white hover:opacity-90 dark:hover:opacity-90",
           isPremium 
             ? "bg-gradient-to-r from-amber-400 to-amber-500 dark:from-amber-400 dark:to-amber-500" 
             : "bg-seftec-navy dark:bg-gradient-teal-purple",
