@@ -188,14 +188,41 @@ These tables are queried by code but **do not appear in the Supabase generated t
 
 ---
 
-## 9. Recommended Execution Order
+## 9. Phase 1 Completion Report
+
+**Objective:** Remove or gate customer-visible fake data, dev/test exposure, and dead-end features.
+
+**Files changed (6):**
+
+| File | Change |
+|---|---|
+| `src/App.tsx` | Removed `/test` and `/edge-function-test` routes and lazy imports |
+| `src/components/dashboard/MyStores.tsx` | Replaced hardcoded mock stores with polished empty state |
+| `src/components/dashboard/MyStaff.tsx` | Replaced hardcoded mock staff with polished empty state |
+| `src/components/edoc/FinancialInsights.tsx` | Replaced hardcoded ₦ insights with empty state prompting E-Doc connection |
+| `src/components/dashboard/wallet/WalletBalanceCard.tsx` | Disabled action buttons, added "Coming Soon" badge |
+| `src/components/dashboard/wallet/BankAccountInfo.tsx` | Disabled "Manage Bank Accounts" button |
+
+**Customer-facing surfaces now safe for real testers:**
+- Homepage, BizGenie, auth, shop, cart, product pages
+- Dashboard (empty states instead of fake data)
+- Wallet (honest disabled state)
+
+**Deferred cleanup backlog (legacy, not blocking):**
+- `src/components/ai/AIDemoPromptBox.tsx` — orphaned legacy AI demo component, not used in live flow
+- `src/components/sections/PersonalizedAIAdvisorSection.tsx` — orphaned wrapper for AIDemoPromptBox, not used in live flow
+- Both can be safely deleted in a future cleanup pass; neither affects the current homepage BizGenie experience
+
+---
+
+## 10. Recommended Execution Order
 
 | Phase | Action | Items |
 |---|---|---|
-| **Phase 1: Remove/Gate Fakes** | Hide mock data, gate debug pages, wire or remove dead features | #2, #3, #4, #5 |
-| **Phase 2: Create Missing Tables** | Migrate `user_roles`, `invoices`, `invoice_items`, `inventory_items` + regenerate types | #1, #6 |
+| ~~**Phase 1: Remove/Gate Fakes**~~ | ✅ Complete | #2, #3, #4, #5 |
+| **Phase 2: Create Missing Tables** | Migrate `user_roles`, `customers`, `invoices`, `invoice_items`, `inventory_items` + RPCs + regenerate types | #1, #6 |
 | **Phase 3: Remove @ts-nocheck** | After tables exist, remove `@ts-nocheck` and fix type errors properly | #7 |
-| **Phase 4: Wire Real Data** | Replace mock stores/staff/insights with real DB queries or empty states | #2, #13, #14 |
+| **Phase 4: Wire Real Data** | Replace remaining mock data with real DB queries or empty states | #13, #14 |
 | **Phase 5: Auth Hardening** | Configure OAuth providers, fix MFA simulation, enforce role-based access | #8, #9, #11 |
 | **Phase 6: Payment E2E** | Test Stripe/PayPal/SaySwitch checkout flows end-to-end | #12 |
 | **Phase 7: Polish** | SEO, error boundaries, a11y, bundle optimization | #16, #17, #18, #19, #20 |
