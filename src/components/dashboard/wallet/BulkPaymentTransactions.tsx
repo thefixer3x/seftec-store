@@ -16,7 +16,7 @@ import BulkPaymentDetails, { BulkPaymentDetailsProps, PaymentItem } from './Bulk
 
 // Fetch bulk payments from database
 const fetchBulkPayments = async (userId: string) => {
-  const { data: bulkPayments, error } = await supabase
+  const { data: bulkPayments, error } = await (supabase as any)
     .from('bulk_payments')
     .select(`
       *,

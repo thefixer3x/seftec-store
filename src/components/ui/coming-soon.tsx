@@ -51,7 +51,7 @@ const ComingSoon: React.FC<ComingSoonProps> = ({
       setEmail('');
     } catch (error) {
       if (error instanceof z.ZodError) {
-        setEmailError(error.errors[0].message);
+        setEmailError((error as any).errors?.[0]?.message || "Invalid email");
       } else {
         setEmailError("Something went wrong. Please try again.");
       }
