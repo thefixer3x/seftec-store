@@ -15,6 +15,7 @@ import AIAdvisorSection from '@/components/sections/AIAdvisorSection';
 import HeroSlider from '@/components/sections/HeroSlider';
 import { ProductRecommendations } from '@/components/recommendations/ProductRecommendations';
 import MainLayout from '@/components/layout/MainLayout';
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/seo/JsonLd';
 
 const Home = () => {
   const homeSections = [
@@ -35,15 +36,19 @@ const Home = () => {
   ];
 
   return (
-    <MainLayout>
-      <div className="min-h-screen">
-        <main className="flex-1">
-          {homeSections.map(({ id, Component }) => (
-            <Component key={id} />
-          ))}
-        </main>
-      </div>
-    </MainLayout>
+    <>
+      <OrganizationJsonLd />
+      <WebSiteJsonLd />
+      <MainLayout>
+        <div className="min-h-screen">
+          <main className="flex-1">
+            {homeSections.map(({ id, Component }) => (
+              <Component key={id} />
+            ))}
+          </main>
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

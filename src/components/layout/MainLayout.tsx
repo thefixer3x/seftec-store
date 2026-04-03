@@ -5,6 +5,7 @@ import Footer from '@/components/ui/footer';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { siteConfig } from '@/config/site';
 import { SeftecHub } from '@/components/ui/seftec-hub';
+import { SEOHead } from '@/components/seo/SEOHead';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children, hideSeftecHub = false }) => {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead />
       <MainNav items={siteConfig.mainNav} />
       
       {!hideSeftecHub && (
