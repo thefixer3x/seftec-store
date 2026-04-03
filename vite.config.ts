@@ -6,7 +6,11 @@ import { componentTagger } from "lovable-tagger";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }) => {
+  const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
+  const enableSentryBuild = mode !== 'development' && Boolean(sentryAuthToken);
+
+  return ({
   server: {
     host: "127.0.0.1",
     port: 8080,
@@ -27,14 +31,20 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' &&
     componentTagger(),
-    sentryVitePlugin({
-      org: 'lan-onasis',
-      project: 'seftecub',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      sourcemaps: {
-        filesToDeleteAfterUpload: ['dist/**/*.map'],
-      },
-    }),
+    enableSentryBuild &&
+      sentryVitePlugin({
+        org: 'lan-onasis',
+        project: 'seftecub',
+        authToken: sentryAuthToken,
+        telemetry: false,
+        debug: Boolean(process.env.SENTRY_DEBUG),
+        errorHandler: (err) => {
+          console.warn('[sentry-vite-plugin]', err.message);
+        },
+        sourcemaps: {
+          filesToDeleteAfterUpload: ['dist/**/*.map'],
+        },
+      }),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -42,6 +52,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    sourcemap: enableSentryBuild,
     rollupOptions: {
       external: [],
       // Exclude test files from production build
@@ -56,4 +67,5 @@ export default defineConfig(({ mode }) => ({
   test: {
     exclude: ['**/*.test.ts', '**/*.test.tsx', '**/*.spec.ts', '**/integration/**'],
   },
-}));
+  });
+});

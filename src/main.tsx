@@ -14,40 +14,30 @@ import { FeatureFlagProvider } from './components/ui/feature-flags/FeatureFlagPr
 import { I18nProvider } from './components/ui/language-toggle';
 import { SentryErrorBoundary } from './components/sentry';
 
-Sentry.init({
-  dsn: import.meta.env.VITE_SENTRY_DSN,
-  environment: import.meta.env.MODE,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration({
-      maskAllText: false,
-      blockAllMedia: false,
-    }),
-  ],
-  tracesSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
-  replaysSessionSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
-  replaysOnErrorSampleRate: 1.0,
-  ignoreErrors: [
-    'ResizeObserver loop',
-    'Non-Error promise rejection captured',
-    'The user aborted a request',
-  ],
-  beforeSend(event) {
-    if (event.exception) {
-      console.error('🚨 Sentry captured error:', event.exception);
-    }
-    return event;
-  },
-});
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 
-console.log('🚀 SeftechHub: main.tsx executing');
-console.log('📍 Root element:', document.getElementById('root'));
-console.log('🔧 Environment check:', {
-  viteSupabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-  hasViteEnv: !!import.meta.env.VITE_SUPABASE_URL,
-  mode: import.meta.env.MODE,
-  sentryDsn: import.meta.env.VITE_SENTRY_DSN ? 'configured' : 'missing',
-});
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    enabled: true,
+    environment: import.meta.env.MODE,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+      }),
+    ],
+    tracesSampleRate: import.meta.env.PROD ? 0.1 : 0.2,
+    replaysSessionSampleRate: import.meta.env.PROD ? 0.1 : 0,
+    replaysOnErrorSampleRate: import.meta.env.PROD ? 1.0 : 0,
+    ignoreErrors: [
+      'ResizeObserver loop',
+      'Non-Error promise rejection captured',
+      'The user aborted a request',
+    ],
+  });
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,7 +50,6 @@ const queryClient = new QueryClient({
 
 const rootElement = document.getElementById('root');
 if (rootElement) {
-  console.log('✅ Root element found, mounting React...');
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <SentryErrorBoundary>
@@ -83,7 +72,6 @@ if (rootElement) {
       </SentryErrorBoundary>
     </React.StrictMode>,
   );
-  console.log('🎉 React app mounted successfully');
 } else {
-  console.error('❌ Root element not found!');
+  console.error('Root element not found.');
 }

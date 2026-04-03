@@ -24,6 +24,7 @@ import type {
   Transaction,
   PaymentStatus,
 } from '../types';
+import { FEATURE_FLAGS as BACKEND_SURFACES } from '@/lib/feature-flags';
 
 export class SaySwitchProvider extends PaymentProvider implements IBillPaymentProvider {
   private edgeFunctionName = 'sayswitch-bills';
@@ -457,6 +458,17 @@ export class SaySwitchProvider extends PaymentProvider implements IBillPaymentPr
   // ============================================================================
 
   async getUserTransactions(userId: string, category?: BillCategory): Promise<ListResult<Transaction>> {
+    if (!BACKEND_SURFACES.SAY_ORDERS) {
+      return {
+        success: false,
+        items: [],
+        error: this.createError(
+          'TRANSACTION_LEDGER_UNAVAILABLE',
+          'SaySwitch transaction history is temporarily unavailable while the ledger surface is being reconnected.'
+        ),
+      };
+    }
+
     try {
       let query = this.supabase
         .from('say_orders')
@@ -509,6 +521,15 @@ export class SaySwitchProvider extends PaymentProvider implements IBillPaymentPr
   }
 
   async getTransaction(reference: string): Promise<ProviderResult<Transaction>> {
+    if (!BACKEND_SURFACES.SAY_ORDERS) {
+      return this.createFailure(
+        this.createError(
+          'TRANSACTION_LEDGER_UNAVAILABLE',
+          'SaySwitch transaction lookup is temporarily unavailable while the ledger surface is being reconnected.'
+        )
+      );
+    }
+
     try {
       const { data, error } = await this.supabase
         .from('say_orders')

@@ -50,10 +50,12 @@ import {
   Eye,
   X,
   Calendar,
-  CreditCard
+  CreditCard,
+  AlertCircle
 } from 'lucide-react';
 import { useInvoices, type Invoice, type CreateInvoiceInput, type CreateInvoiceItemInput } from '@/hooks/use-invoices';
 import { useCustomers } from '@/hooks/use-customers';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { format, formatDistanceToNow, isPast } from 'date-fns';
 
 const InvoicesPageContent = () => {
@@ -61,6 +63,9 @@ const InvoicesPageContent = () => {
     invoices,
     stats,
     isLoading,
+    error,
+    refetch,
+    getInvoiceWithItems,
     createInvoice,
     updateInvoice,
     deleteInvoice,
@@ -79,6 +84,7 @@ const InvoicesPageContent = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [isLoadingSelectedInvoice, setIsLoadingSelectedInvoice] = useState(false);
 
   // Form state
   const [formData, setFormData] = useState<Omit<CreateInvoiceInput, 'items'>>({
@@ -166,12 +172,21 @@ const InvoicesPageContent = () => {
     markAsPaid({ invoiceId: invoice.id });
   };
 
-  const openViewDialog = (invoice: Invoice) => {
+  const openViewDialog = async (invoice: Invoice) => {
     setSelectedInvoice(invoice);
     setIsViewDialogOpen(true);
+    setIsLoadingSelectedInvoice(true);
+
+    const detailedInvoice = await getInvoiceWithItems(invoice.id);
+    if (detailedInvoice) {
+      setSelectedInvoice(detailedInvoice);
+    }
+
+    setIsLoadingSelectedInvoice(false);
   };
 
   const searchLower = searchQuery.toLowerCase();
+  const hasActiveFilters = searchQuery.trim().length > 0 || statusFilter !== 'all';
   const filteredInvoices = invoices.filter(invoice => {
     const matchesSearch =
       invoice.invoice_number.toLowerCase().includes(searchLower) ||
@@ -444,6 +459,19 @@ const InvoicesPageContent = () => {
         </Dialog>
       </div>
 
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Invoices could not be loaded</AlertTitle>
+          <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <span>{error instanceof Error ? error.message : 'Please try again.'}</span>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
@@ -542,12 +570,30 @@ const InvoicesPageContent = () => {
           {filteredInvoices.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No invoices yet</h3>
-              <p className="text-muted-foreground mb-4">Create your first invoice to get started.</p>
-              <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
-                <Plus className="w-4 h-4 mr-2" />
-                New Invoice
-              </Button>
+              <h3 className="text-lg font-semibold mb-2">
+                {hasActiveFilters ? 'No invoices match your filters' : 'No invoices yet'}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {hasActiveFilters
+                  ? 'Try a different search term or invoice status.'
+                  : 'Create your first invoice to get started.'}
+              </p>
+              {hasActiveFilters ? (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setStatusFilter('all');
+                  }}
+                >
+                  Clear Filters
+                </Button>
+              ) : (
+                <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  New Invoice
+                </Button>
+              )}
             </div>
           ) : (
             <Table>
@@ -612,7 +658,7 @@ const InvoicesPageContent = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => openViewDialog(invoice)}>
+                          <DropdownMenuItem onClick={() => { void openViewDialog(invoice); }}>
                             <Eye className="w-4 h-4 mr-2" />
                             View
                           </DropdownMenuItem>
@@ -648,7 +694,15 @@ const InvoicesPageContent = () => {
       </Card>
 
       {/* View Invoice Dialog */}
-      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+      <Dialog
+        open={isViewDialogOpen}
+        onOpenChange={(open) => {
+          setIsViewDialogOpen(open);
+          if (!open) {
+            setIsLoadingSelectedInvoice(false);
+          }
+        }}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Invoice {selectedInvoice?.invoice_number}</DialogTitle>
@@ -717,6 +771,43 @@ const InvoicesPageContent = () => {
                     <span>${selectedInvoice.balance_due.toFixed(2)}</span>
                   </div>
                 )}
+              </div>
+
+              <div>
+                <Label className="text-muted-foreground">Line Items</Label>
+                <div className="mt-2 rounded-lg border overflow-hidden">
+                  {isLoadingSelectedInvoice ? (
+                    <div className="flex items-center gap-2 p-4 text-sm text-muted-foreground">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Loading invoice items...
+                    </div>
+                  ) : selectedInvoice.invoice_items && selectedInvoice.invoice_items.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Description</TableHead>
+                          <TableHead>Qty</TableHead>
+                          <TableHead>Unit Price</TableHead>
+                          <TableHead className="text-right">Line Total</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {selectedInvoice.invoice_items.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell>{item.description}</TableCell>
+                            <TableCell>{item.quantity}</TableCell>
+                            <TableCell>${item.unit_price.toFixed(2)}</TableCell>
+                            <TableCell className="text-right">${item.line_total.toFixed(2)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <p className="p-4 text-sm text-muted-foreground">
+                      No invoice items were found for this record.
+                    </p>
+                  )}
+                </div>
               </div>
 
               {selectedInvoice.notes && (

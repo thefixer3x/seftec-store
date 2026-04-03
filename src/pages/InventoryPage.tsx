@@ -49,9 +49,11 @@ import {
   Loader2,
   RefreshCw,
   MapPin,
-  Truck
+  Truck,
+  AlertCircle
 } from 'lucide-react';
 import { useInventory, type InventoryItem, type CreateInventoryItemInput, type CreateAdjustmentInput } from '@/hooks/use-inventory';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { formatDistanceToNow } from 'date-fns';
 
 const InventoryPageContent = () => {
@@ -59,6 +61,8 @@ const InventoryPageContent = () => {
     items,
     alerts,
     isLoading,
+    error,
+    refetch,
     createItem,
     updateItem,
     deleteItem,
@@ -185,6 +189,7 @@ const InventoryPageContent = () => {
   };
 
   const searchLower = searchQuery.toLowerCase();
+  const hasSearchQuery = searchQuery.trim().length > 0;
   const filteredItems = items.filter(item =>
     item.sku.toLowerCase().includes(searchLower) ||
     (item.products?.name ?? '').toLowerCase().includes(searchLower) ||
@@ -205,6 +210,8 @@ const InventoryPageContent = () => {
   const totalValue = items.reduce((sum, item) => sum + (item.stock_quantity * item.unit_cost), 0);
   const lowStockCount = items.filter(item => item.stock_quantity <= item.reorder_point && item.stock_quantity > 0).length;
   const outOfStockCount = items.filter(item => item.stock_quantity === 0).length;
+  const projectedQuantity = selectedItem ? selectedItem.stock_quantity + adjustmentData.quantity_change : 0;
+  const adjustmentWouldGoNegative = projectedQuantity < 0;
 
   const InventoryForm = () => (
     <div className="grid gap-4 py-4">
@@ -352,6 +359,19 @@ const InventoryPageContent = () => {
         </Dialog>
       </div>
 
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Inventory data could not be loaded</AlertTitle>
+          <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <span>{error instanceof Error ? error.message : 'Please try again.'}</span>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Alerts Banner */}
       {alerts.length > 0 && (
         <Card className="mb-6 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
@@ -365,9 +385,14 @@ const InventoryPageContent = () => {
                 </p>
                 <div className="mt-2 flex gap-2 flex-wrap">
                   {alerts.slice(0, 3).map((alert) => (
-                    <Badge key={alert.id} variant="outline" className="border-yellow-500">
-                      {alert.alert_type.replace('_', ' ')} - Qty: {alert.current_quantity}
-                    </Badge>
+                    <div key={alert.id} className="flex items-center gap-2">
+                      <Badge variant="outline" className="border-yellow-500">
+                        {alert.alert_type.replace('_', ' ')} - Qty: {alert.current_quantity}
+                      </Badge>
+                      <Button variant="outline" size="sm" onClick={() => resolveAlert(alert.id)}>
+                        Resolve
+                      </Button>
+                    </div>
                   ))}
                   {alerts.length > 3 && (
                     <Badge variant="outline" className="border-yellow-500">
@@ -464,12 +489,24 @@ const InventoryPageContent = () => {
           {filteredItems.length === 0 ? (
             <div className="text-center py-12">
               <Package className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No inventory items yet</h3>
-              <p className="text-muted-foreground mb-4">Add your first inventory item to get started.</p>
-              <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Item
-              </Button>
+              <h3 className="text-lg font-semibold mb-2">
+                {hasSearchQuery ? 'No inventory items match your search' : 'No inventory items yet'}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {hasSearchQuery
+                  ? 'Try a different SKU, product name, location, or supplier.'
+                  : 'Add your first inventory item to get started.'}
+              </p>
+              {hasSearchQuery ? (
+                <Button variant="outline" onClick={() => setSearchQuery('')}>
+                  Clear Search
+                </Button>
+              ) : (
+                <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Item
+                </Button>
+              )}
             </div>
           ) : (
             <Table>
@@ -654,8 +691,13 @@ const InventoryPageContent = () => {
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                New quantity will be: {selectedItem ? selectedItem.stock_quantity + adjustmentData.quantity_change : 0}
+                New quantity will be: {projectedQuantity}
               </p>
+              {adjustmentWouldGoNegative && (
+                <p className="text-sm text-destructive">
+                  This adjustment would take stock below zero. Reduce the quantity change before continuing.
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -682,7 +724,10 @@ const InventoryPageContent = () => {
             <Button variant="outline" onClick={() => setIsAdjustDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAdjustStock} disabled={isAdjusting || adjustmentData.quantity_change === 0}>
+            <Button
+              onClick={handleAdjustStock}
+              disabled={isAdjusting || adjustmentData.quantity_change === 0 || adjustmentWouldGoNegative}
+            >
               {isAdjusting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Apply Adjustment
             </Button>

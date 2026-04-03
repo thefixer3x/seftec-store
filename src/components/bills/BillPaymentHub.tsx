@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { useFeatureFlag, FEATURE_FLAGS } from '@/features/feature-flags';
+import { FEATURE_FLAGS as BACKEND_SURFACES } from '@/lib/feature-flags';
 
 type Provider = {
   id: string;
@@ -114,6 +115,26 @@ export const BillPaymentHub = () => {
             <AlertTitle>Feature not available</AlertTitle>
             <AlertDescription>
               Bill payments are coming soon to your account. Stay tuned for updates!
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!BACKEND_SURFACES.SAY_ORDERS) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Bill Payments</CardTitle>
+          <CardDescription>Temporarily unavailable</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertTitle>Ledger reconnection in progress</AlertTitle>
+            <AlertDescription>
+              SaySwitch bill payments are currently hidden while the transaction ledger surface is being aligned.
+              Provider discovery is still wired, but checkout is paused so users do not hit a broken write path.
             </AlertDescription>
           </Alert>
         </CardContent>
