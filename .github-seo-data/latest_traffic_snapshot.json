@@ -1,0 +1,248 @@
+{
+  "timestamp_utc": "2026-04-03T16:27:24+00:00",
+  "repo": "thefixer3x/seftec-store",
+  "auth_context": {
+    "token_present": false,
+    "gh_available": true,
+    "gh_authenticated": true,
+    "mode": "gh"
+  },
+  "token_present": false,
+  "endpoints": {
+    "views": {
+      "count": 12,
+      "uniques": 1,
+      "views": [
+        {
+          "timestamp": "2026-03-20T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-21T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-22T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-23T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-24T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-25T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-26T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-27T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-28T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-29T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-30T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-31T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-04-01T00:00:00Z",
+          "count": 12,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-04-02T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        }
+      ]
+    },
+    "clones": {
+      "count": 272,
+      "uniques": 134,
+      "clones": [
+        {
+          "timestamp": "2026-03-20T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-21T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-22T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-23T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-24T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-25T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-26T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-27T00:00:00Z",
+          "count": 2,
+          "uniques": 2
+        },
+        {
+          "timestamp": "2026-03-28T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-29T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-03-30T00:00:00Z",
+          "count": 0,
+          "uniques": 0
+        },
+        {
+          "timestamp": "2026-03-31T00:00:00Z",
+          "count": 1,
+          "uniques": 1
+        },
+        {
+          "timestamp": "2026-04-01T00:00:00Z",
+          "count": 259,
+          "uniques": 123
+        },
+        {
+          "timestamp": "2026-04-02T00:00:00Z",
+          "count": 2,
+          "uniques": 2
+        }
+      ]
+    },
+    "referrers": [
+      {
+        "referrer": "vercel.com",
+        "count": 3,
+        "uniques": 1
+      },
+      {
+        "referrer": "github.com",
+        "count": 1,
+        "uniques": 1
+      }
+    ],
+    "paths": [
+      {
+        "path": "/thefixer3x/seftec-store",
+        "title": "Overview",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/branches",
+        "title": "/branches",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/branches/all",
+        "title": "/branches/all",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/branches/yours",
+        "title": "/branches/yours",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/compare/claude/audit-seftec-platform-4uIMu",
+        "title": "/compare/claude/audit-seftec-platform-4uIMu",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/compare/lovable...lovable",
+        "title": "/compare/lovable...lovable",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/compare/lovable...main",
+        "title": "/compare/lovable...main",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/compare/main...lovable",
+        "title": "/compare/main...lovable",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/pull/100",
+        "title": "/pull/100",
+        "count": 1,
+        "uniques": 1
+      },
+      {
+        "path": "/thefixer3x/seftec-store/pulls",
+        "title": "/pulls",
+        "count": 1,
+        "uniques": 1
+      }
+    ]
+  },
+  "limitations": [
+    "No GitHub token found. Using authenticated gh CLI fallback for traffic endpoints."
+  ],
+  "totals": {
+    "views_count": 12,
+    "views_uniques": 1,
+    "clones_count": 272,
+    "clones_uniques": 134
+  }
+}
