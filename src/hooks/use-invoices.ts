@@ -1,4 +1,3 @@
-// @ts-nocheck — tables not yet in generated types.ts, will be typed after migration
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
@@ -181,14 +180,14 @@ export function useInvoices() {
         p_notes: input.notes || null,
         p_terms_and_conditions: input.terms_and_conditions || null,
         p_footer_text: input.footer_text || null,
-        p_items: JSON.stringify(input.items.map(item => ({
+        p_items: input.items.map(item => ({
           product_id: item.product_id || null,
           description: item.description,
           quantity: item.quantity,
           unit_price: item.unit_price,
           tax_rate: item.tax_rate || 0,
           discount_percentage: item.discount_percentage || 0,
-        }))),
+        })),
       });
 
       if (error) throw error;

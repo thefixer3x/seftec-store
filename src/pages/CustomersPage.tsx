@@ -48,15 +48,19 @@ import {
   Trash2,
   Eye,
   Loader2,
-  UserPlus
+  UserPlus,
+  AlertCircle
 } from 'lucide-react';
-import { useCustomers, type Customer, type CreateCustomerInput } from '@/hooks/use-customers';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useCustomers, useCustomerInteractions, type Customer, type CreateCustomerInput } from '@/hooks/use-customers';
 import { formatDistanceToNow } from 'date-fns';
 
 const CustomersPageContent = () => {
   const {
     customers,
     isLoading,
+    error,
+    refetch,
     createCustomer,
     updateCustomer,
     deleteCustomer,
@@ -69,6 +73,12 @@ const CustomersPageContent = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const {
+    interactions,
+    isLoading: isLoadingInteractions,
+    error: interactionsError,
+  } = useCustomerInteractions(isViewDialogOpen ? selectedCustomer?.id ?? null : null);
 
   // Form state
   const [formData, setFormData] = useState<CreateCustomerInput>({
@@ -145,6 +155,7 @@ const CustomersPageContent = () => {
   };
 
   const searchLower = searchQuery.toLowerCase();
+  const hasSearchQuery = searchQuery.trim().length > 0;
   const filteredCustomers = customers.filter(customer =>
     customer.customer_name.toLowerCase().includes(searchLower) ||
     (customer.email ?? '').toLowerCase().includes(searchLower) ||
@@ -312,6 +323,19 @@ const CustomersPageContent = () => {
         </Dialog>
       </div>
 
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Customer data could not be loaded</AlertTitle>
+          <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <span>{error instanceof Error ? error.message : 'Please try again.'}</span>
+            <Button variant="outline" size="sm" onClick={() => refetch()}>
+              Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
@@ -395,12 +419,24 @@ const CustomersPageContent = () => {
           {filteredCustomers.length === 0 ? (
             <div className="text-center py-12">
               <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No customers yet</h3>
-              <p className="text-muted-foreground mb-4">Add your first customer to get started.</p>
-              <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Customer
-              </Button>
+              <h3 className="text-lg font-semibold mb-2">
+                {hasSearchQuery ? 'No customers match your search' : 'No customers yet'}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {hasSearchQuery
+                  ? 'Try a different name, email, or company.'
+                  : 'Add your first customer to get started.'}
+              </p>
+              {hasSearchQuery ? (
+                <Button variant="outline" onClick={() => setSearchQuery('')}>
+                  Clear Search
+                </Button>
+              ) : (
+                <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Customer
+                </Button>
+              )}
             </div>
           ) : (
             <Table>
@@ -518,7 +554,9 @@ const CustomersPageContent = () => {
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Type</Label>
-                  <p className="font-medium">{getTypeLabel(selectedCustomer.customer_type)}</p>
+                  <p className="font-medium">
+                    {selectedCustomer.customer_type ? getTypeLabel(selectedCustomer.customer_type) : '-'}
+                  </p>
                 </div>
                 <div>
                   <Label className="text-muted-foreground">Status</Label>
@@ -552,6 +590,42 @@ const CustomersPageContent = () => {
                 <p className="font-medium">
                   {formatDistanceToNow(new Date(selectedCustomer.created_at), { addSuffix: true })}
                 </p>
+              </div>
+              <div>
+                <Label className="text-muted-foreground">Recent Interactions</Label>
+                <div className="mt-2 rounded-lg border p-3 space-y-3">
+                  {isLoadingInteractions ? (
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Loading recent activity...
+                    </div>
+                  ) : interactionsError ? (
+                    <p className="text-sm text-destructive">
+                      {interactionsError instanceof Error
+                        ? interactionsError.message
+                        : 'Recent interactions could not be loaded.'}
+                    </p>
+                  ) : interactions.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No interactions have been recorded for this customer yet.
+                    </p>
+                  ) : (
+                    interactions.slice(0, 5).map((interaction) => (
+                      <div key={interaction.id} className="border-b last:border-b-0 pb-3 last:pb-0">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="font-medium capitalize">{interaction.interaction_type}</p>
+                          <span className="text-xs text-muted-foreground">
+                            {formatDistanceToNow(new Date(interaction.created_at), { addSuffix: true })}
+                          </span>
+                        </div>
+                        {interaction.subject && (
+                          <p className="text-sm mt-1">{interaction.subject}</p>
+                        )}
+                        <p className="text-sm text-muted-foreground mt-1">{interaction.description}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           )}

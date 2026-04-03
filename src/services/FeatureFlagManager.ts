@@ -1,4 +1,3 @@
-// @ts-nocheck — feature_flags table not in generated types.ts, will be typed after migration
 /**
  * Feature Flag Management Service
  *
@@ -6,10 +5,12 @@
  * real-time updates, caching, and rollout percentage support.
  */
 
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { Database } from '@/integrations/supabase/types';
 
-type FeatureFlagRow = { name: string; enabled: boolean; rollout_pct: number; description: string; created_at: string; updated_at: string };
+type FeatureFlagRow = Database["public"]["Views"]["feature_flags"]["Row"];
+type FeatureFlagUpdate = Database["public"]["Views"]["feature_flags"]["Update"];
 
 interface FeatureFlagConfig {
   name: string;
@@ -40,20 +41,11 @@ export class FeatureFlagManager {
   private cache: Map<string, FeatureFlagConfig> = new Map();
   private cacheTimestamps: Map<string, number> = new Map();
   private subscribers: Set<(flags: Map<string, FeatureFlagConfig>) => void> = new Set();
-  private realtimeSubscription: any = null;
+  private realtimeSubscription: RealtimeChannel | null = null;
   private testMode: boolean = false;
 
   // Cache TTL: 5 minutes (300000 ms)
   private readonly CACHE_TTL = 5 * 60 * 1000;
-
-  // Development mode defaults
-  private readonly devDefaults: Record<string, boolean> = {
-    'sayswitch_payments': true,
-    'sayswitch_bills': true,
-    'sayswitch_transfers': true,
-    'paypal_payments': true,
-    'ai_recommendations': true,
-  };
 
   constructor(options?: { testMode?: boolean }) {
     this.testMode = options?.testMode ?? false;
@@ -79,18 +71,22 @@ export class FeatureFlagManager {
           // Update cache with new data
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
             const flag = payload.new as FeatureFlagRow;
-            this.updateCacheEntry(flag.name, {
-              name: flag.name,
-              enabled: flag.enabled ?? false,
-              rollout_pct: flag.rollout_pct ?? 0,
-              description: flag.description,
-              created_at: flag.created_at,
-              updated_at: flag.updated_at,
-            });
+            if (flag.name) {
+              this.updateCacheEntry(flag.name, {
+                name: flag.name,
+                enabled: flag.enabled ?? false,
+                rollout_pct: flag.rollout_pct ?? 0,
+                description: flag.description,
+                created_at: flag.created_at,
+                updated_at: flag.updated_at,
+              });
+            }
           } else if (payload.eventType === 'DELETE') {
             const flag = payload.old as FeatureFlagRow;
-            this.cache.delete(flag.name);
-            this.cacheTimestamps.delete(flag.name);
+            if (flag.name) {
+              this.cache.delete(flag.name);
+              this.cacheTimestamps.delete(flag.name);
+            }
           }
 
           // Notify subscribers
@@ -154,8 +150,9 @@ export class FeatureFlagManager {
       }
 
       if (data) {
+        const flagName = data.name ?? name;
         const config: FeatureFlagConfig = {
-          name: data.name,
+          name: flagName,
           enabled: data.enabled ?? false,
           rollout_pct: data.rollout_pct ?? 0,
           description: data.description,
@@ -164,7 +161,7 @@ export class FeatureFlagManager {
         };
 
         // Update cache
-        this.updateCacheEntry(name, config);
+        this.updateCacheEntry(flagName, config);
 
         return config;
       }
@@ -193,6 +190,10 @@ export class FeatureFlagManager {
       if (data) {
         // Update cache with all flags
         data.forEach((flag) => {
+          if (!flag.name) {
+            return;
+          }
+
           const config: FeatureFlagConfig = {
             name: flag.name,
             enabled: flag.enabled ?? false,
@@ -270,15 +271,6 @@ export class FeatureFlagManager {
     name: string,
     userId?: string
   ): Promise<FeatureFlagCheckResult> {
-    // In development mode, use dev defaults (unless in test mode)
-    if (import.meta.env.DEV && !this.testMode) {
-      const devEnabled = this.devDefaults[name] ?? true;
-      return {
-        isEnabled: devEnabled,
-        reason: devEnabled ? 'enabled' : 'disabled'
-      };
-    }
-
     try {
       const config = await this.getFlag(name);
 
@@ -329,7 +321,7 @@ export class FeatureFlagManager {
     rolloutPct?: number
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      const updates: any = {
+      const updates: FeatureFlagUpdate = {
         enabled,
         updated_at: new Date().toISOString()
       };

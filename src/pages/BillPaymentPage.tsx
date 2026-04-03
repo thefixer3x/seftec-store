@@ -12,6 +12,7 @@ import { Phone, Wifi, Tv, Zap, CreditCard, AlertCircle, History, Loader2, Chevro
 import { FEATURE_FLAGS, useFeatureFlags } from '@/features';
 import { PaymentProviderRegistry } from '@/lib/payments/registry';
 import type { Transaction, SubscriptionPlan } from '@/lib/payments/types';
+import { FEATURE_FLAGS as BACKEND_SURFACES } from '@/lib/feature-flags';
 
 const BillPaymentPageContent = () => {
   const supabase = useSupabaseClient();
@@ -27,11 +28,16 @@ const BillPaymentPageContent = () => {
   
   const saySwitchEnabled = flags[FEATURE_FLAGS.SAYSWITCH_BILLS] || false;
   const paypalEnabled = flags[FEATURE_FLAGS.PAYPAL_PAYMENTS] || false;
+  const saySwitchRuntimeReady = saySwitchEnabled && BACKEND_SURFACES.SAY_ORDERS;
+  const tabCount = 1 + Number(saySwitchRuntimeReady) + Number(paypalEnabled) + Number(saySwitchRuntimeReady);
 
   // Load transaction history when providers are enabled
   useEffect(() => {
     const loadTransactions = async () => {
-      if (!saySwitchEnabled) return;
+      if (!saySwitchRuntimeReady) {
+        setTransactions([]);
+        return;
+      }
       
       setLoadingTransactions(true);
       try {
@@ -56,11 +62,11 @@ const BillPaymentPageContent = () => {
     };
     
     loadTransactions();
-  }, [supabase, saySwitchEnabled]);
+  }, [supabase, saySwitchRuntimeReady]);
 
   // Navigate to specific service in SaySwitch tab
   const handleServiceClick = (service: string) => {
-    if (saySwitchEnabled) {
+    if (saySwitchRuntimeReady) {
       setActiveTab('sayswitch');
     }
   };
@@ -85,9 +91,9 @@ const BillPaymentPageContent = () => {
       <h1 className="text-3xl font-bold mb-8">Bill Payment</h1>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-        <TabsList className={`grid w-full ${saySwitchEnabled && paypalEnabled ? 'grid-cols-4' : saySwitchEnabled || paypalEnabled ? 'grid-cols-3' : 'grid-cols-2'}`}>
+        <TabsList className={`grid w-full ${tabCount === 4 ? 'grid-cols-4' : tabCount === 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
           <TabsTrigger value="main">Overview</TabsTrigger>
-          {saySwitchEnabled && (
+          {saySwitchRuntimeReady && (
             <TabsTrigger value="sayswitch">
               <Badge variant="outline" className="mr-2">NG</Badge>
               SaySwitch
@@ -99,7 +105,7 @@ const BillPaymentPageContent = () => {
               PayPal
             </TabsTrigger>
           )}
-          {(saySwitchEnabled || paypalEnabled) && (
+          {saySwitchRuntimeReady && (
             <TabsTrigger value="history">
               <History className="h-4 w-4 mr-2" />
               History
@@ -135,9 +141,15 @@ const BillPaymentPageContent = () => {
                       Purchase airtime for any mobile network
                     </p>
                     {saySwitchEnabled ? (
+                      saySwitchRuntimeReady ? (
                       <Button variant="outline" size="sm" className="w-full bg-green-50 text-green-700 border-green-200 hover:bg-green-100">
                         Buy Now <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
+                      ) : (
+                        <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                          Temporarily Unavailable
+                        </Badge>
+                      )
                     ) : (
                       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
                         Coming Soon
@@ -162,9 +174,15 @@ const BillPaymentPageContent = () => {
                       Buy data bundles for any network
                     </p>
                     {saySwitchEnabled ? (
+                      saySwitchRuntimeReady ? (
                       <Button variant="outline" size="sm" className="w-full bg-green-50 text-green-700 border-green-200 hover:bg-green-100">
                         Buy Now <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
+                      ) : (
+                        <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                          Temporarily Unavailable
+                        </Badge>
+                      )
                     ) : (
                       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
                         Coming Soon
@@ -189,9 +207,15 @@ const BillPaymentPageContent = () => {
                       Pay for DStv, GOtv, and more
                     </p>
                     {saySwitchEnabled ? (
+                      saySwitchRuntimeReady ? (
                       <Button variant="outline" size="sm" className="w-full bg-green-50 text-green-700 border-green-200 hover:bg-green-100">
                         Pay Now <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
+                      ) : (
+                        <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                          Temporarily Unavailable
+                        </Badge>
+                      )
                     ) : (
                       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
                         Coming Soon
@@ -216,9 +240,15 @@ const BillPaymentPageContent = () => {
                       Pay electricity bills and buy tokens
                     </p>
                     {saySwitchEnabled ? (
+                      saySwitchRuntimeReady ? (
                       <Button variant="outline" size="sm" className="w-full bg-green-50 text-green-700 border-green-200 hover:bg-green-100">
                         Pay Now <ChevronRight className="h-4 w-4 ml-1" />
                       </Button>
+                      ) : (
+                        <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                          Temporarily Unavailable
+                        </Badge>
+                      )
                     ) : (
                       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
                         Coming Soon
@@ -239,10 +269,21 @@ const BillPaymentPageContent = () => {
                 </Alert>
               )}
 
+              {saySwitchEnabled && !saySwitchRuntimeReady && (
+                <Alert className="mt-6">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>SaySwitch checkout is paused</AlertTitle>
+                  <AlertDescription>
+                    The provider feature flag is on, but transaction persistence still depends on a deferred ledger surface.
+                    Bills are hidden for now so users do not land in a broken payment flow.
+                  </AlertDescription>
+                </Alert>
+              )}
+
               {/* Quick access when providers are enabled */}
               {(saySwitchEnabled || paypalEnabled) && (
                 <div className="mt-6 flex flex-wrap gap-2">
-                  {saySwitchEnabled && (
+                  {saySwitchRuntimeReady && (
                     <Button variant="outline" onClick={() => setActiveTab('sayswitch')}>
                       <CreditCard className="h-4 w-4 mr-2" />
                       Go to SaySwitch Bills
@@ -260,7 +301,7 @@ const BillPaymentPageContent = () => {
           </Card>
         </TabsContent>
 
-        {saySwitchEnabled && (
+        {saySwitchRuntimeReady && (
           <TabsContent value="sayswitch" className="mt-6">
             <BillPaymentHub />
           </TabsContent>
@@ -273,7 +314,7 @@ const BillPaymentPageContent = () => {
         )}
 
         {/* Transaction History Tab */}
-        {(saySwitchEnabled || paypalEnabled) && (
+        {saySwitchRuntimeReady && (
           <TabsContent value="history" className="mt-6">
             <Card>
               <CardHeader>

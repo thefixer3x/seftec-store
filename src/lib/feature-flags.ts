@@ -1,13 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
 /**
- * Feature flags for unimplemented database tables
- * Set to false to disable queries to tables that don't exist yet
+ * Feature flags for partially implemented database surfaces.
+ * Keep disabled only for flows that still do not have a live backend path.
  */
 export const FEATURE_FLAGS = {
-  STOCK_ALERTS: false,
-  INVOICES: false,
-  INVOICE_ITEMS: false,
+  STOCK_ALERTS: true,
+  INVOICES: true,
+  INVOICE_ITEMS: true,
   SAY_ORDERS: false,
   TRADE_FINANCE: false,
   MARKETPLACE_ORDERS: false,
@@ -44,10 +44,10 @@ export function createSafeSupabaseClient(supabase: ReturnType<typeof createClien
   return {
     ...supabase,
     from: (table: string) => {
-      // Log a warning if accessing a potentially missing table
-      const missingTables = ['stock_alerts', 'invoices', 'invoice_items', 'say_orders'];
-      if (missingTables.includes(table)) {
-        console.warn(`Accessing potentially unimplemented table: ${table}`);
+      // Log a warning only for surfaces that are still intentionally deferred.
+      const deferredTables = ['say_orders', 'say_wallet_snapshots', 'subscription_payments'];
+      if (deferredTables.includes(table)) {
+        console.warn(`Accessing deferred table surface: ${table}`);
       }
       return supabase.from(table as any);
     },

@@ -6,7 +6,6 @@ import { Copy, Building, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuthState } from '@/hooks/use-auth-state';
-import { supabase } from '@/integrations/supabase/client';
 
 interface BankAccount {
   account_number: string;

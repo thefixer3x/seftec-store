@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSupabaseClient } from '@/hooks/use-supabase';
+import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  CreditCard, 
-  Receipt, 
-  ArrowUpRight, 
-  Clock, 
-  ChevronRight, 
-  Zap, 
-  RefreshCw, 
+import {
+  CreditCard,
+  Receipt,
+  ArrowUpRight,
+  Clock,
+  ChevronRight,
+  Zap,
+  RefreshCw,
   AlertCircle,
   ArrowRight
 } from 'lucide-react';
@@ -22,159 +23,161 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { MoneyTransferForm } from '@/components/transfers/MoneyTransferForm';
 import { BillPaymentHub } from '@/components/bills/BillPaymentHub';
 import { useFeatureFlag, FEATURE_FLAGS } from '@/features';
+import { FEATURE_FLAGS as BACKEND_SURFACES } from '@/lib/feature-flags';
+import { PaymentProviderRegistry } from '@/lib/payments/registry';
+import type { Transaction } from '@/lib/payments/types';
 import { format } from 'date-fns';
 
-type Order = {
-  id: string;
-  user_id: string;
-  type: 'payment' | 'bill' | 'transfer';
-  currency: string;
-  amount: number;
-  status: string;
-  reference: string;
-  say_reference: string;
-  recipient_details?: Record<string, any>;
-  created_at: string;
-  completed_at?: string;
-};
-
-type WalletSnapshot = {
-  id: string;
-  user_id: string;
-  balance: number;
-  currency: string;
-  created_at: string;
+type WalletBalance = {
+  balance: number | null;
+  created_at: string | null;
+  currency: string | null;
+  id: string | null;
+  is_active: boolean | null;
+  updated_at: string | null;
+  user_id: string | null;
 };
 
 export const SaySwitchDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const supabase = useSupabaseClient();
+  const { user } = useAuth();
   const { toast } = useToast();
-  
-  // Feature flags
+
   const { isEnabled: isPaymentsEnabled } = useFeatureFlag(FEATURE_FLAGS.SAYSWITCH_PAYMENTS);
   const { isEnabled: isBillsEnabled } = useFeatureFlag(FEATURE_FLAGS.SAYSWITCH_BILLS);
   const { isEnabled: isTransfersEnabled } = useFeatureFlag(FEATURE_FLAGS.SAYSWITCH_TRANSFERS);
-  
-  // Fetch wallet balance
-  const { 
-    data: wallet, 
+
+  const isAnyFeatureEnabled = isPaymentsEnabled || isBillsEnabled || isTransfersEnabled;
+  const isLedgerReady = BACKEND_SURFACES.SAY_ORDERS;
+
+  const {
+    data: wallet,
     isLoading: loadingWallet,
-    refetch: refetchWallet
+    refetch: refetchWallet,
   } = useQuery({
-    queryKey: ['walletBalance'],
-    queryFn: async () => {
-      const { data } = await (supabase as any)
-        .from('say_wallet_snapshots')
+    queryKey: ['walletBalance', user?.id],
+    enabled: !!user,
+    queryFn: async (): Promise<WalletBalance | null> => {
+      if (!user) {
+        return null;
+      }
+
+      const { data, error } = await supabase
+        .from('vortex_wallets')
         .select('*')
-        .order('created_at', { ascending: false })
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .order('updated_at', { ascending: false })
         .limit(1)
-        .single();
-      
-      return data as WalletSnapshot;
+        .maybeSingle();
+
+      if (error) {
+        throw error;
+      }
+
+      return data as WalletBalance | null;
     },
   });
-  
-  // Fetch recent transactions
-  const { 
-    data: recentTransactions, 
+
+  const {
+    data: recentTransactions = [],
     isLoading: loadingTransactions,
-    refetch: refetchTransactions
+    refetch: refetchTransactions,
   } = useQuery({
-    queryKey: ['recentTransactions'],
-    queryFn: async () => {
-      const { data } = await (supabase as any)
-        .from('say_orders')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(5);
-      
-      return data as Order[];
+    queryKey: ['recentTransactions', user?.id],
+    enabled: !!user && isLedgerReady,
+    queryFn: async (): Promise<Transaction[]> => {
+      if (!user || !isLedgerReady) {
+        return [];
+      }
+
+      const registry = PaymentProviderRegistry.getInstance(supabase);
+      await registry.initialize();
+
+      const provider = registry.getBillPaymentProvider('sayswitch');
+      if (!provider) {
+        return [];
+      }
+
+      const result = await provider.getUserTransactions(user.id);
+      if (!result.success || !result.items) {
+        return [];
+      }
+
+      return result.items.slice(0, 5);
     },
   });
-  
-  // Refresh all data
+
   const refreshData = async () => {
     setRefreshing(true);
     try {
       await Promise.all([
         refetchWallet(),
-        refetchTransactions()
+        isLedgerReady ? refetchTransactions() : Promise.resolve(null),
       ]);
-      
+
       toast({
-        title: "Data Refreshed",
-        description: "Latest transactions and balance loaded",
+        title: 'Data Refreshed',
+        description: isLedgerReady
+          ? 'Latest wallet and transaction data loaded'
+          : 'Latest wallet data loaded',
       });
     } catch (error) {
-      console.error("Error refreshing data:", error);
+      console.error('Error refreshing data:', error);
     } finally {
       setRefreshing(false);
     }
   };
-  
-  // Get status badge variant
-  const getStatusBadge = (status: string) => {
+
+  const getStatusClasses = (status: string) => {
     switch (status.toLowerCase()) {
       case 'completed':
       case 'success':
-        return 'success';
+        return 'border-green-200 bg-green-50 text-green-700';
       case 'pending':
       case 'processing':
-        return 'secondary';
+        return 'border-blue-200 bg-blue-50 text-blue-700';
       case 'failed':
       case 'cancelled':
-        return 'destructive';
+        return 'border-red-200 bg-red-50 text-red-700';
       default:
-        return 'outline';
+        return 'border-slate-200 bg-slate-50 text-slate-700';
     }
   };
-  
-  // Get transaction icon
-  const getTransactionIcon = (type: string) => {
+
+  const getTransactionIcon = (type: Transaction['type']) => {
     switch (type) {
       case 'payment':
         return <CreditCard className="h-4 w-4 text-primary" />;
       case 'bill':
         return <Receipt className="h-4 w-4 text-indigo-500" />;
-      case 'transfer':
+      default:
         return <ArrowUpRight className="h-4 w-4 text-green-500" />;
-      default:
-        return <Clock className="h-4 w-4" />;
     }
   };
-  
-  // Format transaction description
-  const getTransactionDescription = (transaction: Order) => {
-    switch (transaction.type) {
-      case 'payment':
-        return 'Card Payment';
-      case 'bill':
-        if (transaction.recipient_details?.type === 'airtime') {
-          return `Airtime - ${transaction.recipient_details?.phone || ''}`;
-        } else if (transaction.recipient_details?.type === 'data') {
-          return `Data - ${transaction.recipient_details?.phone || ''}`;
-        } else if (transaction.recipient_details?.type === 'tv') {
-          return `TV - ${transaction.recipient_details?.provider || ''}`;
-        } else if (transaction.recipient_details?.type === 'electricity') {
-          return `Electricity - ${transaction.recipient_details?.meter_number || ''}`;
-        }
-        return 'Bill Payment';
-      case 'transfer':
-        if (transaction.recipient_details?.bulk) {
-          return `Bulk Transfer (${transaction.recipient_details?.count || ''} recipients)`;
-        }
-        return `Transfer to ${transaction.recipient_details?.account_name || ''} - ${transaction.recipient_details?.bank_name || ''}`;
-      default:
-        return 'Transaction';
+
+  const getTransactionDescription = (transaction: Transaction) => {
+    if (transaction.type === 'bill') {
+      switch (transaction.category) {
+        case 'airtime':
+          return `Airtime - ${transaction.recipientDetails?.phone || ''}`;
+        case 'data':
+          return `Data - ${transaction.recipientDetails?.phone || ''}`;
+        case 'tv':
+          return `TV - ${transaction.recipientDetails?.provider || ''}`;
+        case 'electricity':
+          return `Electricity - ${transaction.recipientDetails?.meter_number || ''}`;
+        default:
+          return 'Bill Payment';
+      }
     }
+
+    return 'Transaction';
   };
-  
-  // Check if at least one feature is enabled
-  const isAnyFeatureEnabled = isPaymentsEnabled || isBillsEnabled || isTransfersEnabled;
-  
+
   if (!isAnyFeatureEnabled) {
     return (
       <Card className="w-full">
@@ -204,9 +207,9 @@ export const SaySwitchDashboard = () => {
               <CardTitle>SaySwitch Dashboard</CardTitle>
               <CardDescription>Manage payments, bills, and transfers</CardDescription>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={refreshData}
               disabled={refreshing}
             >
@@ -222,9 +225,8 @@ export const SaySwitchDashboard = () => {
               {isBillsEnabled && <TabsTrigger value="bills">Bill Payments</TabsTrigger>}
               {isTransfersEnabled && <TabsTrigger value="transfers">Money Transfer</TabsTrigger>}
             </TabsList>
-            
+
             <TabsContent value="overview" className="space-y-4">
-              {/* Balance Card */}
               <Card>
                 <CardContent className="p-6">
                   <div className="flex justify-between items-center mb-4">
@@ -233,7 +235,7 @@ export const SaySwitchDashboard = () => {
                       {wallet?.currency || 'NGN'}
                     </Badge>
                   </div>
-                  
+
                   {loadingWallet ? (
                     <Skeleton className="h-10 w-36" />
                   ) : (
@@ -242,16 +244,18 @@ export const SaySwitchDashboard = () => {
                         ₦{(wallet?.balance || 0).toLocaleString()}
                       </span>
                       <span className="text-xs text-muted-foreground ml-2">
-                        Last updated: {wallet?.created_at ? format(new Date(wallet.created_at), 'MMM d, h:mm a') : 'Never'}
+                        Last updated: {wallet?.updated_at || wallet?.created_at
+                          ? format(new Date(wallet?.updated_at || wallet?.created_at || ''), 'MMM d, h:mm a')
+                          : 'Never'}
                       </span>
                     </div>
                   )}
-                  
+
                   <div className="grid grid-cols-2 gap-4 mt-6">
                     {isPaymentsEnabled && (
-                      <Button variant="outline" className="h-20 flex flex-col items-center justify-center" onClick={() => {}}>
+                      <Button variant="outline" className="h-20 flex flex-col items-center justify-center" disabled>
                         <CreditCard className="h-6 w-6 mb-1" />
-                        <span>Make Payment</span>
+                        <span>Card Payments</span>
                       </Button>
                     )}
                     {isBillsEnabled && (
@@ -269,23 +273,40 @@ export const SaySwitchDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-              
-              {/* Recent Transactions */}
+
+              {!isLedgerReady && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Transaction ledger reconnecting</AlertTitle>
+                  <AlertDescription>
+                    Wallet balances are now reading from the real `vortex_wallets` surface. SaySwitch history and checkout remain paused until the deferred transaction ledger is aligned.
+                  </AlertDescription>
+                </Alert>
+              )}
+
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg">Recent Transactions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {loadingTransactions ? (
+                  {!isLedgerReady ? (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>History temporarily unavailable</AlertTitle>
+                      <AlertDescription>
+                        Transaction history depends on the deferred SaySwitch ledger surface, so this panel is intentionally hidden until the write path is reconnected.
+                      </AlertDescription>
+                    </Alert>
+                  ) : loadingTransactions ? (
                     <div className="space-y-2">
                       <Skeleton className="h-12 w-full" />
                       <Skeleton className="h-12 w-full" />
                       <Skeleton className="h-12 w-full" />
                     </div>
-                  ) : recentTransactions && recentTransactions.length > 0 ? (
+                  ) : recentTransactions.length > 0 ? (
                     <div className="space-y-2">
                       {recentTransactions.map((transaction) => (
-                        <div 
+                        <div
                           key={transaction.id}
                           className="flex items-center justify-between p-3 border rounded-md hover:bg-muted"
                         >
@@ -296,15 +317,15 @@ export const SaySwitchDashboard = () => {
                             <div>
                               <p className="font-medium">{getTransactionDescription(transaction)}</p>
                               <p className="text-xs text-muted-foreground">
-                                {format(new Date(transaction.created_at), 'MMM d, h:mm a')}
+                                {format(new Date(transaction.createdAt), 'MMM d, h:mm a')}
                               </p>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="font-medium">
-                              ₦{transaction.amount.toLocaleString()}
+                              {transaction.currency} {transaction.amount.toLocaleString()}
                             </p>
-                            <Badge variant={getStatusBadge(transaction.status)}>
+                            <Badge variant="outline" className={getStatusClasses(transaction.status)}>
                               {transaction.status}
                             </Badge>
                           </div>
@@ -322,14 +343,13 @@ export const SaySwitchDashboard = () => {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-center border-t pt-4">
-                  <Button variant="ghost" size="sm" className="gap-1">
+                  <Button variant="ghost" size="sm" className="gap-1" disabled={!isLedgerReady}>
                     View All Transactions
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </CardFooter>
               </Card>
-              
-              {/* Quick Actions */}
+
               {(isBillsEnabled || isTransfersEnabled) && (
                 <Card>
                   <CardHeader className="pb-2">
@@ -346,7 +366,7 @@ export const SaySwitchDashboard = () => {
                           <ArrowRight className="h-4 w-4" />
                         </Button>
                       )}
-                      
+
                       {isTransfersEnabled && (
                         <Button variant="outline" className="justify-between" onClick={() => setActiveTab('transfers')}>
                           <div className="flex items-center">
@@ -361,13 +381,13 @@ export const SaySwitchDashboard = () => {
                 </Card>
               )}
             </TabsContent>
-            
+
             {isBillsEnabled && (
               <TabsContent value="bills">
                 <BillPaymentHub />
               </TabsContent>
             )}
-            
+
             {isTransfersEnabled && (
               <TabsContent value="transfers">
                 <MoneyTransferForm />

@@ -97,8 +97,8 @@ export interface DashboardMetrics {
  * Fetch payment analytics from database
  */
 const fetchPaymentMetrics = async (userId: string): Promise<PaymentMetrics> => {
-  // Note: Many tables referenced here don't exist yet (say_wallet_snapshots, subscription_payments, user_payments)
-  // Return default empty metrics until tables are created
+  // SaySwitch/subscription payment ledgers are still intentionally deferred in the shared backend.
+  // Keep these metrics empty until those write paths are aligned to a live owner.
   return {
     totalTransactions: 0,
     totalVolume: 0,
@@ -254,10 +254,7 @@ const fetchMarketplaceMetrics = async (userId: string): Promise<MarketplaceMetri
  * Fetch dashboard overview metrics
  */
 const fetchDashboardMetrics = async (userId: string): Promise<DashboardMetrics> => {
-  // Note: Many tables referenced don't exist (wallets, marketplace_orders, say_orders, subscription_payments)
-  // Return default metrics until tables are created
-  
-  // Only fetch from tables that exist
+  // Read only from live surfaces that are already aligned; deferred ledgers still return neutral values.
   const { data: aiUsage } = await supabase
     .from('ai_usage_logs')
     .select('estimated_cost')
@@ -273,10 +270,19 @@ const fetchDashboardMetrics = async (userId: string): Promise<DashboardMetrics> 
 
   const totalRevenue = orders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
 
+  const { data: wallet } = await supabase
+    .from('vortex_wallets')
+    .select('balance')
+    .eq('user_id', userId)
+    .eq('is_active', true)
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
   return {
     activeUsers: 0,
     totalRevenue,
-    walletBalance: 0,
+    walletBalance: wallet?.balance || 0,
     aiUsageCost,
   };
 };

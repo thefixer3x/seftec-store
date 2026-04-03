@@ -1,4 +1,3 @@
-// @ts-nocheck — tables not yet in generated types.ts, will be typed after migration
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";

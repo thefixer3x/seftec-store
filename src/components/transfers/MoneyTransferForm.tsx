@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { useFeatureFlag } from '@/features';
+import { FEATURE_FLAGS as BACKEND_SURFACES } from '@/lib/feature-flags';
 
 type Bank = {
   id: string;
@@ -93,6 +94,26 @@ export const MoneyTransferForm = () => {
             <AlertTitle>Feature not available</AlertTitle>
             <AlertDescription>
               Money transfers are coming soon to your account. Stay tuned for updates!
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!BACKEND_SURFACES.SAY_ORDERS) {
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Money Transfer</CardTitle>
+          <CardDescription>Temporarily unavailable</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertTitle>Transfer checkout is paused</AlertTitle>
+            <AlertDescription>
+              SaySwitch transfers are temporarily disabled while the shared transaction ledger is being reconnected.
+              This keeps the UI honest until the backend write path is safe again.
             </AlertDescription>
           </Alert>
         </CardContent>
