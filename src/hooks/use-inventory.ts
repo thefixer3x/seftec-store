@@ -261,8 +261,8 @@ export function useInventory() {
       if (error) throw error;
 
       // Check for application-level errors in the response
-      if (data && !data.success) {
-        throw new Error(data.error || 'Stock adjustment failed');
+      if (data && !(data as Record<string, unknown>).success) {
+        throw new Error(((data as Record<string, unknown>).error as string) || 'Stock adjustment failed');
       }
 
       return data;
