@@ -312,8 +312,8 @@ export function useInvoices() {
       if (error) throw error;
 
       // Check for application-level errors in the response
-      if (data && !data.success) {
-        throw new Error(data.error || 'Payment recording failed');
+      if (data && !(data as Record<string, unknown>).success) {
+        throw new Error(((data as Record<string, unknown>).error as string) || 'Payment recording failed');
       }
 
       return data;
