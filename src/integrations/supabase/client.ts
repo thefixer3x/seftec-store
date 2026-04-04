@@ -5,7 +5,7 @@ import type { Database } from './types';
 // Load Supabase credentials from environment variables
 // These must be set in your .env file (see .env.example for template)
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // Flag to track if Supabase is properly configured
 export const isSupabaseConfigured = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
