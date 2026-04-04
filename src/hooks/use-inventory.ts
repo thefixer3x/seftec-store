@@ -98,16 +98,7 @@ export function useInventory() {
 
       const { data, error } = await supabase
         .from("inventory_items")
-        .select(`
-          *,
-          products (
-            id,
-            name,
-            description,
-            price,
-            image_url
-          )
-        `)
+        .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -116,7 +107,7 @@ export function useInventory() {
         throw error;
       }
 
-      return (data as InventoryItem[]) || [];
+      return (data as unknown as InventoryItem[]) || [];
     },
     enabled: !!user,
   });
@@ -270,8 +261,8 @@ export function useInventory() {
       if (error) throw error;
 
       // Check for application-level errors in the response
-      if (data && !data.success) {
-        throw new Error(data.error || 'Stock adjustment failed');
+      if (data && !(data as Record<string, unknown>).success) {
+        throw new Error(((data as Record<string, unknown>).error as string) || 'Stock adjustment failed');
       }
 
       return data;

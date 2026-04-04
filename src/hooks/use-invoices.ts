@@ -99,15 +99,7 @@ export function useInvoices() {
 
       const { data, error } = await supabase
         .from("invoices")
-        .select(`
-          *,
-          customers (
-            id,
-            customer_name,
-            email,
-            company_name
-          )
-        `)
+        .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -116,7 +108,7 @@ export function useInvoices() {
         throw error;
       }
 
-      return (data as Invoice[]) || [];
+      return (data as unknown as Invoice[]) || [];
     },
     enabled: !!user,
   });
@@ -127,15 +119,7 @@ export function useInvoices() {
 
     const { data: invoice, error: invoiceError } = await supabase
       .from("invoices")
-      .select(`
-        *,
-        customers (
-          id,
-          customer_name,
-          email,
-          company_name
-        )
-      `)
+      .select("*")
       .eq("id", invoiceId)
       .eq("user_id", user.id)
       .single();
@@ -156,7 +140,7 @@ export function useInvoices() {
     }
 
     return {
-      ...(invoice as Invoice),
+      ...(invoice as unknown as Invoice),
       invoice_items: (items as InvoiceItem[]) || [],
     };
   };
@@ -193,8 +177,8 @@ export function useInvoices() {
       if (error) throw error;
 
       // Check for application-level errors in the response
-      if (data && !data.success) {
-        throw new Error(data.error || 'Invoice creation failed');
+      if (data && !(data as Record<string, unknown>).success) {
+        throw new Error(((data as Record<string, unknown>).error as string) || 'Invoice creation failed');
       }
 
       return data;
@@ -328,8 +312,8 @@ export function useInvoices() {
       if (error) throw error;
 
       // Check for application-level errors in the response
-      if (data && !data.success) {
-        throw new Error(data.error || 'Payment recording failed');
+      if (data && !(data as Record<string, unknown>).success) {
+        throw new Error(((data as Record<string, unknown>).error as string) || 'Payment recording failed');
       }
 
       return data;
