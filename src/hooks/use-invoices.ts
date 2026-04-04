@@ -119,15 +119,7 @@ export function useInvoices() {
 
     const { data: invoice, error: invoiceError } = await supabase
       .from("invoices")
-      .select(`
-        *,
-        customers (
-          id,
-          customer_name,
-          email,
-          company_name
-        )
-      `)
+      .select("*")
       .eq("id", invoiceId)
       .eq("user_id", user.id)
       .single();
@@ -148,7 +140,7 @@ export function useInvoices() {
     }
 
     return {
-      ...(invoice as Invoice),
+      ...(invoice as unknown as Invoice),
       invoice_items: (items as InvoiceItem[]) || [],
     };
   };
