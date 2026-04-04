@@ -99,15 +99,7 @@ export function useInvoices() {
 
       const { data, error } = await supabase
         .from("invoices")
-        .select(`
-          *,
-          customers (
-            id,
-            customer_name,
-            email,
-            company_name
-          )
-        `)
+        .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -116,7 +108,7 @@ export function useInvoices() {
         throw error;
       }
 
-      return (data as Invoice[]) || [];
+      return (data as unknown as Invoice[]) || [];
     },
     enabled: !!user,
   });
