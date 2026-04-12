@@ -94,12 +94,14 @@ const SolutionsSection: React.FC = () => {
                 <div className="mt-8 flex-1">
                   <h3 className="text-xl font-semibold text-seftec-navy dark:text-white mb-3">{solution.title}</h3>
                   <p className="text-seftec-navy/70 dark:text-white/70 mb-6">{solution.description}</p>
-                  <Button 
-                    variant="outline" 
-                    className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300"
-                  >
-                    {t('cta.learn_more', 'Learn More')}
-                  </Button>
+                  <Link to={`/solutions#${solution.anchor}`}>
+                    <Button 
+                      variant="outline" 
+                      className="border-seftec-navy text-seftec-navy hover:bg-seftec-navy hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white/10 transition-all duration-300"
+                    >
+                      {t('cta.learn_more', 'Learn More')}
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </GlareCard>
