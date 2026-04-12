@@ -164,3 +164,46 @@ This phase is considered complete only when all are true:
 - The old placeholder-enablement requirements remain useful for roadmap intent.
 - They are no longer the correct release gate for this stage.
 - Release decisions should now follow this file plus `.kiro/specs/production-launch-readiness/tasks.md`.
+
+---
+
+## 8. UAT and Select-User Preview Gates
+
+This section defines minimum release controls before opening UAT and then a limited real-user preview.
+
+### 8.1 Auth-Gated Dashboard Validation Matrix (Must Pass)
+
+1. `/profile/dashboard` loads without runtime exceptions for a newly onboarded user and a returning user.
+2. `/profile/wallet` renders live wallet read surfaces without red error panels when deferred payment tables are unavailable.
+3. `/profile/finance` and wallet sub-components render honest empty states (not fake numbers) when no transactional data exists.
+4. `/profile/invoices`, `/profile/customers`, `/profile/inventory`:
+   - load cleanly against live backend views/tables
+   - show clear empty states when no records exist
+   - surface action errors with user-readable toasts (no silent failures)
+5. `/orders` loads with typed item mapping and no relation-expansion runtime errors.
+
+### 8.2 UAT Environment Controls (Must Pass)
+
+1. Production-like env vars configured in preview environment:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_SENTRY_DSN`
+2. Supabase auth redirect URLs verified for deployed domain callback paths.
+3. Sentry release + sourcemaps visible for current deployed commit.
+4. Feature flags for deferred services (SaySwitch/PayPal/wallet transfer surfaces) explicitly set and verified.
+
+### 8.3 Operational Readiness for Select Users (Must Pass)
+
+1. Rollback path confirmed:
+   - previous stable commit SHA documented
+   - revert procedure tested (`git revert` or redeploy prior commit)
+2. Monitoring baseline set:
+   - Sentry error alert thresholds
+   - critical page load checks for auth-gated routes
+3. Incident triage ownership defined for UAT window.
+
+### 8.4 Current Known Dashboard Risk Areas (Track During UAT)
+
+1. Payment analytics remains intentionally neutral until deferred ledgers are fully aligned.
+2. Bulk payment surfaces depend on shared-schema readiness and must fall back gracefully (no crash paths).
+3. Library-level type suppressions in `chart.tsx` and `resizable.tsx` remain technical debt (not launch-blocking, but monitor UI regressions).
