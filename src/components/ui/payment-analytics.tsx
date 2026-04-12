@@ -33,6 +33,7 @@ const PaymentAnalytics: React.FC = () => {
 
   // Calculate total transactions
   const totalTransactions = analytics.totalVolume;
+  const hasTransactions = totalTransactions > 0 || analytics.totalTransactions > 0;
 
   // Get month-over-month growth from analytics
   const growth = analytics.monthlyGrowth;
@@ -50,27 +51,30 @@ const PaymentAnalytics: React.FC = () => {
     value: item.percentage,
   }));
 
+  const hasChartData = transactionData.length > 0 && transactionData.some(d => d.amount > 0);
+  const hasMethodData = paymentMethodData.length > 0;
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Total Transaction Volume"
-          value={`$${(totalTransactions / 1000).toFixed(1)}k`}
+          value={hasTransactions ? `$${(totalTransactions / 1000).toFixed(1)}k` : "$0"}
           icon={<DollarSign className="h-4 w-4" />}
-          description={`${analytics.totalTransactions} transactions across all gateways`}
+          description={hasTransactions ? `${analytics.totalTransactions} transactions across all gateways` : "No transactions recorded yet"}
         />
         <StatCard
           title="Monthly Growth"
-          value={`${Math.abs(growth).toFixed(1)}%`}
+          value={hasTransactions ? `${Math.abs(growth).toFixed(1)}%` : "—"}
           icon={isPositiveGrowth ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
-          description={`${isPositiveGrowth ? "Increase" : "Decrease"} from last month`}
-          trend={isPositiveGrowth ? "positive" : "negative"}
+          description={hasTransactions ? `${isPositiveGrowth ? "Increase" : "Decrease"} from last month` : "Not enough data yet"}
+          trend={hasTransactions ? (isPositiveGrowth ? "positive" : "negative") : undefined}
         />
         <StatCard
           title="Active Payment Methods"
-          value={analytics.transactionsByProvider.length.toString()}
+          value={hasMethodData ? analytics.transactionsByProvider.length.toString() : "0"}
           icon={<CreditCard className="h-4 w-4" />}
-          description={analytics.transactionsByProvider.map(p => p.provider).join(", ")}
+          description={hasMethodData ? analytics.transactionsByProvider.map(p => p.provider).join(", ") : "No payment methods configured"}
         />
       </div>
       
@@ -80,30 +84,33 @@ const PaymentAnalytics: React.FC = () => {
             <CardTitle className="text-lg">Transaction Volume</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  width={500}
-                  height={300}
-                  data={transactionData}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip 
-                    formatter={(value) => [`$${value}`, "Amount"]}
-                    labelFormatter={(label) => `Month: ${label}`}
-                  />
-                  <Bar dataKey="amount" fill="#4F46E5" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            {hasChartData ? (
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={transactionData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value) => [`$${value}`, "Amount"]}
+                      labelFormatter={(label) => `Month: ${label}`}
+                    />
+                    <Bar dataKey="amount" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-80 flex flex-col items-center justify-center text-muted-foreground">
+                <DollarSign className="h-12 w-12 mb-3 opacity-30" />
+                <p className="text-sm font-medium">No transaction data yet</p>
+                <p className="text-xs mt-1">Transaction volume will appear here once payments are processed.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
         
@@ -112,27 +119,35 @@ const PaymentAnalytics: React.FC = () => {
             <CardTitle className="text-lg">Payment Methods</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={paymentMethodData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {paymentMethodData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, "Percentage"]} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            {hasMethodData ? (
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={paymentMethodData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {paymentMethodData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => [`${value}%`, "Percentage"]} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-80 flex flex-col items-center justify-center text-muted-foreground">
+                <CreditCard className="h-12 w-12 mb-3 opacity-30" />
+                <p className="text-sm font-medium">No payment methods active</p>
+                <p className="text-xs mt-1">Configure payment gateways to see distribution data.</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
