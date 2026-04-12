@@ -1,0 +1,129 @@
+# SEFTEC B2B Trade Hub — AI Crawler Documentation
+
+## Overview
+SEFTEC B2B Trade Hub is an open-source B2B ecommerce platform built with React, TypeScript, Supabase, and Vite. It provides a comprehensive marketplace, multi-currency payment processing, trade finance, AI-powered business tools, and real-time notifications.
+
+**Website:** https://www.seftechub.com
+**Repository:** https://github.com/thefixer3x/seftec-store
+
+## Core Features
+
+### Marketplace
+- Product catalog with search and filtering
+- Shopping cart and checkout
+- Order management and tracking
+- Multi-vendor support
+- B2B-specific pricing tiers
+
+### Payment Processing
+- **Stripe** — Credit/debit cards, subscriptions, Connect for marketplaces
+- **PayPal** — Express checkout, webhook handling
+- **SaySwitch** — Bank transfers, bill payments, multi-currency support
+
+### Trade Finance
+- Trade finance applications
+- Document upload and verification
+- Bank statement analysis
+- Financial insights dashboard
+
+### Business Tools
+- **Inventory Management** — Track stock, suppliers, pricing
+- **Customer Management** — CRM with deal tracking
+- **Financial Reporting** — Revenue, profit margins, cash flow
+
+### AI Integration (BizGenie)
+- AI-powered chatbot for business insights
+- Market analysis and trends
+- Personalized recommendations
+- Business plan generation
+- Transaction categorization
+
+### Notifications
+- Real-time in-app notifications
+- Email integration via Supabase Edge Functions
+- Notification preferences and filters
+
+## Technology Stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | React 18, TypeScript, Vite |
+| Routing | React Router v6 |
+| State | React Context + Hooks |
+| Backend | Supabase (PostgreSQL, Edge Functions, Auth, Realtime) |
+| Payments | Stripe, PayPal, SaySwitch |
+| AI | OpenAI GPT-4 |
+| Styling | Tailwind CSS |
+| Testing | Vitest |
+| i18n | Lingo.dev (8 languages) |
+
+## API Architecture
+
+### Supabase Edge Functions
+- `ai-chat` — OpenAI-powered chat
+- `bizgenie-router` — Routes to AI modules
+- `stripe-webhook` / `stripe-subscription` / `stripe-connect`
+- `paypal-payment` / `paypal-webhook`
+- `sayswitch-payment` / `sayswitch-transfer` / `sayswitch-bills`
+- `create-notification` — Real-time notifications
+- `marketplace-products` / `marketplace-cart` / `marketplace-orders`
+- `trade-finance-applications` / `trade-finance-documents`
+
+### Authentication
+- Supabase Auth with email/password
+- OAuth providers (Google, GitHub)
+- Protected routes for dashboard, orders, profile
+- Role-based access control (RBAC)
+
+## Security
+
+- PCI-DSS compliant payment handling
+- Encrypted database connections
+- Multi-factor authentication support
+- GDPR-compliant data handling
+- Feature flag system with audit logging
+
+## Browser Support
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+## Accessibility
+- WCAG 2.1 AA compliant
+- Keyboard navigation
+- Screen reader support
+- High contrast mode support
+
+## Languages Supported
+English, Arabic, Spanish, French, German, Portuguese, Japanese, Chinese
+
+## Getting Started
+
+```bash
+# Clone repository
+git clone https://github.com/thefixer3x/seftec-store.git
+cd seftec-store
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+
+# Start development server
+npm run dev
+```
+
+## Deployment
+- **Frontend:** GitHub Pages (SPA mode)
+- **Backend:** Supabase Cloud
+- **Domain:** www.seftechub.com
+
+## License
+MIT License
+
+## Support
+- Documentation: https://www.seftechub.com/docs
+- Issues: https://github.com/thefixer3x/seftec-store/issues
+- Contact: https://www.seftechub.com/contact
