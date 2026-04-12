@@ -1,6 +1,6 @@
-// @ts-nocheck — order_items relation not in generated types.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "./use-toast";
 
@@ -28,6 +28,9 @@ export type OrderItem = {
     category: string | null;
   };
 };
+
+type OrderItemRow = Tables<"order_items">;
+type ProductRow = Tables<"products">;
 
 export type CreateOrderInput = {
   shipping_address: string;
@@ -89,7 +92,7 @@ export function useMarketplaceOrders() {
   const fetchOrderDetails = async (orderId: string): Promise<MarketplaceOrder | null> => {
     if (!user) return null;
 
-    const { data, error } = await supabase
+    const { data: order, error: orderError } = await supabase
       .from("orders")
       .select(
         `
@@ -99,31 +102,76 @@ export function useMarketplaceOrders() {
         shipping_address,
         order_date,
         created_at,
-        updated_at,
-        order_items (
-          id,
-          quantity,
-          unit_price,
-          products:product_id (
-            id,
-            name,
-            description,
-            image_url,
-            category
-          )
-        )
+        updated_at
       `
       )
       .eq("id", orderId)
       .eq("customer_id", user.id)
       .single();
 
-    if (error) {
-      console.error("Error fetching order details:", error);
-      throw error;
+    if (orderError) {
+      console.error("Error fetching order details:", orderError);
+      throw orderError;
     }
 
-    return data;
+    if (!order) return null;
+
+    const { data: orderItems, error: orderItemsError } = await supabase
+      .from("order_items")
+      .select("id, product_id, quantity, unit_price")
+      .eq("order_id", orderId);
+
+    if (orderItemsError) {
+      console.error("Error fetching order items:", orderItemsError);
+      throw orderItemsError;
+    }
+
+    const productIds = Array.from(
+      new Set((orderItems ?? []).map((item) => item.product_id).filter((id): id is string => !!id))
+    );
+    let productMap = new Map<string, ProductRow>();
+
+    if (productIds.length > 0) {
+      const { data: products, error: productsError } = await supabase
+        .from("products")
+        .select("id, name, description, image_url, category")
+        .in("id", productIds);
+
+      if (productsError) {
+        console.error("Error fetching order products:", productsError);
+        throw productsError;
+      }
+
+      productMap = new Map((products ?? []).map((product) => [product.id ?? "", product]));
+    }
+
+    return {
+      id: order.id ?? orderId,
+      total_amount: order.total_amount ?? 0,
+      status: order.status ?? "pending",
+      shipping_address: order.shipping_address,
+      order_date: order.order_date,
+      created_at: order.created_at,
+      updated_at: order.updated_at,
+      order_items: (orderItems ?? []).map((item: OrderItemRow, index: number) => {
+        const product = item.product_id ? productMap.get(item.product_id) : undefined;
+        return {
+          id: item.id ?? `${orderId}-${item.product_id ?? "item"}-${index}`,
+          quantity: item.quantity ?? 0,
+          unit_price: item.unit_price ?? 0,
+          subtotal: (item.quantity ?? 0) * (item.unit_price ?? 0),
+          products: product
+            ? {
+                id: product.id ?? "",
+                name: product.name ?? "Unknown Product",
+                description: product.description,
+                image_url: product.image_url,
+                category: product.category,
+              }
+            : undefined,
+        };
+      }),
+    };
   };
 
   // Create order mutation
