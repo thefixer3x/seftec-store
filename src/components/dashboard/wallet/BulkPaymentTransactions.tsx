@@ -23,9 +23,9 @@ const fetchBulkPayments = async (userId: string) => {
       payment_items (
         id,
         beneficiary:beneficiaries (
-          account_name,
+          name,
           account_number,
-          bank_name
+          bank_code
         ),
         amount,
         status
