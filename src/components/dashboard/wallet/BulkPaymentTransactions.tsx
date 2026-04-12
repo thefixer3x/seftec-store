@@ -47,9 +47,9 @@ const fetchBulkPayments = async (userId: string) => {
     status: payment.status as 'pending' | 'completed' | 'failed' | 'processing',
     items: payment.payment_items?.map((item: any) => ({
       id: item.id,
-      beneficiaryName: item.beneficiary?.account_name || 'Unknown',
+      beneficiaryName: item.beneficiary?.name || 'Unknown',
       accountNumber: item.beneficiary?.account_number || '',
-      bankName: item.beneficiary?.bank_name || '',
+      bankName: item.beneficiary?.bank_code || '',
       amount: item.amount,
       status: item.status as 'pending' | 'completed' | 'failed' | 'processing',
     })) || [],
