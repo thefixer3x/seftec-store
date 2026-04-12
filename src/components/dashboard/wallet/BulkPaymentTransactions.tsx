@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { useAuth } from '@/context/AuthContext';
 import {
   Dialog,
@@ -14,46 +16,121 @@ import { CheckCircle, XCircle, Clock, AlertCircle, Eye, CalendarClock, Package }
 import { format } from 'date-fns';
 import BulkPaymentDetails, { BulkPaymentDetailsProps, PaymentItem } from './BulkPaymentDetails';
 
+type BulkPaymentRow = Tables<'bulk_payments'>;
+type PaymentItemRow = Tables<'payment_items'>;
+type BeneficiaryRow = Tables<'beneficiaries'>;
+
+const isDeferredPaymentsSchemaError = (error: PostgrestError | null) => {
+  if (!error) return false;
+  const message = `${error.message} ${error.details ?? ''}`.toLowerCase();
+  return (
+    error.code === '42P01' ||
+    error.code === 'PGRST204' ||
+    error.code === 'PGRST301' ||
+    message.includes('does not exist') ||
+    message.includes('relationship') ||
+    message.includes('schema cache')
+  );
+};
+
 // Fetch bulk payments from database
 const fetchBulkPayments = async (userId: string) => {
-  const { data: bulkPayments, error } = await (supabase as any)
+  const { data: bulkPayments, error: bulkPaymentsError } = await supabase
     .from('bulk_payments')
-    .select(`
-      *,
-      payment_items (
-        id,
-        beneficiary:beneficiaries (
-          name,
-          account_number,
-          bank_code
-        ),
-        amount,
-        status
-      )
-    `)
+    .select('id, title, created_at, scheduled_date, total_amount, status')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .limit(10);
 
-  if (error) throw error;
+  if (bulkPaymentsError) {
+    if (isDeferredPaymentsSchemaError(bulkPaymentsError)) {
+      console.warn('Bulk payments surface is deferred or not fully aligned yet:', bulkPaymentsError.message);
+      return [];
+    }
+    throw bulkPaymentsError;
+  }
 
-  return bulkPayments?.map((payment: any) => ({
-    id: payment.id,
-    title: payment.title,
-    createdAt: new Date(payment.created_at),
+  if (!bulkPayments || bulkPayments.length === 0) {
+    return [];
+  }
+
+  const paymentIds = bulkPayments
+    .map((payment: BulkPaymentRow) => payment.id)
+    .filter((id): id is string => !!id);
+
+  const { data: paymentItems, error: paymentItemsError } = await supabase
+    .from('payment_items')
+    .select('id, bulk_payment_id, beneficiary_id, amount, status')
+    .in('bulk_payment_id', paymentIds);
+
+  if (paymentItemsError) {
+    if (isDeferredPaymentsSchemaError(paymentItemsError)) {
+      console.warn('Payment items relation is deferred or unavailable:', paymentItemsError.message);
+      return [];
+    }
+    throw paymentItemsError;
+  }
+
+  const beneficiaryIds = Array.from(
+    new Set((paymentItems ?? []).map((item) => item.beneficiary_id).filter((id): id is string => !!id))
+  );
+
+  const { data: beneficiaries, error: beneficiariesError } =
+    beneficiaryIds.length > 0
+      ? await supabase
+          .from('beneficiaries')
+          .select('id, name, account_number, bank_code')
+          .in('id', beneficiaryIds)
+      : { data: [] as BeneficiaryRow[], error: null };
+
+  if (beneficiariesError) {
+    if (isDeferredPaymentsSchemaError(beneficiariesError)) {
+      console.warn('Beneficiaries relation is deferred or unavailable:', beneficiariesError.message);
+      return [];
+    }
+    throw beneficiariesError;
+  }
+
+  const beneficiaryMap = new Map<string, BeneficiaryRow>(
+    (beneficiaries ?? [])
+      .filter((beneficiary): beneficiary is BeneficiaryRow & { id: string } => !!beneficiary.id)
+      .map((beneficiary) => [beneficiary.id, beneficiary])
+  );
+
+  const itemsByPaymentId = (paymentItems ?? []).reduce<Record<string, PaymentItem[]>>(
+    (acc, item: PaymentItemRow) => {
+      const paymentId = item.bulk_payment_id;
+      if (!paymentId) return acc;
+
+      if (!acc[paymentId]) {
+        acc[paymentId] = [];
+      }
+
+      const beneficiary = item.beneficiary_id ? beneficiaryMap.get(item.beneficiary_id) : undefined;
+      acc[paymentId].push({
+        id: item.id ?? `${paymentId}-${item.beneficiary_id ?? 'beneficiary'}`,
+        beneficiaryName: beneficiary?.name || 'Unknown',
+        accountNumber: beneficiary?.account_number || '',
+        bankName: beneficiary?.bank_code || '',
+        amount: item.amount ?? 0,
+        status: (item.status as 'pending' | 'completed' | 'failed' | 'processing' | null) ?? 'pending',
+      });
+
+      return acc;
+    },
+    {}
+  );
+
+  return bulkPayments.map((payment: BulkPaymentRow) => ({
+    id: payment.id ?? '',
+    title: payment.title ?? 'Bulk Payment',
+    createdAt: payment.created_at ? new Date(payment.created_at) : new Date(),
     scheduledDate: payment.scheduled_date ? new Date(payment.scheduled_date) : undefined,
-    totalAmount: payment.total_amount,
-    recipientCount: payment.payment_items?.length || 0,
-    status: payment.status as 'pending' | 'completed' | 'failed' | 'processing',
-    items: payment.payment_items?.map((item: any) => ({
-      id: item.id,
-      beneficiaryName: item.beneficiary?.name || 'Unknown',
-      accountNumber: item.beneficiary?.account_number || '',
-      bankName: item.beneficiary?.bank_code || '',
-      amount: item.amount,
-      status: item.status as 'pending' | 'completed' | 'failed' | 'processing',
-    })) || [],
-  })) || [];
+    totalAmount: payment.total_amount ?? 0,
+    recipientCount: payment.id ? itemsByPaymentId[payment.id]?.length || 0 : 0,
+    status: (payment.status as 'pending' | 'completed' | 'failed' | 'processing' | null) ?? 'pending',
+    items: payment.id ? itemsByPaymentId[payment.id] || [] : [],
+  }));
 };
 
 interface Payment {
