@@ -1,8 +1,6 @@
-// @ts-nocheck — recommendations relation not in generated types.ts
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState, useEffect } from "react";
+import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/context/AuthContext";
 
 export type Recommendation = {
@@ -21,6 +19,49 @@ export type Recommendation = {
 
 export type RecommendationType = 'similar_products' | 'frequently_bought_together' | 'trending' | 'based_on_history' | 'price_drop';
 
+type RecommendationRow = Tables<'recommendations'>;
+type ProductRow = Tables<'products'>;
+
+const hydrateRecommendationsWithProducts = async (
+  rows: RecommendationRow[]
+): Promise<Recommendation[]> => {
+  const productIds = Array.from(
+    new Set(rows.map((row) => row.product_id).filter((id): id is string => !!id))
+  );
+
+  let productMap = new Map<string, ProductRow>();
+  if (productIds.length > 0) {
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('id, name, price, category')
+      .in('id', productIds);
+
+    if (productsError) {
+      console.error('Error fetching recommendation products:', productsError);
+      throw productsError;
+    }
+
+    productMap = new Map((products ?? []).map((product) => [product.id ?? '', product]));
+  }
+
+  return rows.map((rec) => {
+    const product = rec.product_id ? productMap.get(rec.product_id) : undefined;
+    return {
+      id: rec.id ?? '',
+      product_id: rec.product_id ?? '',
+      supplier_id: rec.supplier_id ?? '',
+      relevance_score: rec.relevance_score ?? 0,
+      recommendation_type: rec.recommendation_type ?? 'based_on_history',
+      reason: rec.reason,
+      viewed: rec.viewed ?? false,
+      clicked: rec.clicked ?? false,
+      product_name: product?.name ?? undefined,
+      product_price: product?.price ?? undefined,
+      product_category: product?.category ?? undefined,
+    };
+  });
+};
+
 export function useRecommendations() {
   const { user } = useAuth();
   const userId = user?.id || null;
@@ -31,24 +72,9 @@ export function useRecommendations() {
     queryFn: async (): Promise<Recommendation[]> => {
       if (!userId) return [];
       
-      // Get recommendations with product info
       const { data, error } = await supabase
         .from('recommendations')
-        .select(`
-          id,
-          product_id,
-          supplier_id,
-          relevance_score,
-          recommendation_type,
-          reason,
-          viewed,
-          clicked,
-          products:product_id (
-            name,
-            price,
-            category
-          )
-        `)
+        .select('id, product_id, supplier_id, relevance_score, recommendation_type, reason, viewed, clicked')
         .eq('user_id', userId as string)
         .order('relevance_score', { ascending: false })
         .limit(5);
@@ -59,21 +85,8 @@ export function useRecommendations() {
       }
       
       if (!data) return [];
-      
-      // Format the data to flatten the structure
-      return data.map(rec => ({
-        id: rec.id,
-        product_id: rec.product_id,
-        supplier_id: rec.supplier_id,
-        relevance_score: rec.relevance_score,
-        recommendation_type: rec.recommendation_type,
-        reason: rec.reason,
-        viewed: rec.viewed,
-        clicked: rec.clicked,
-        product_name: rec.products?.name,
-        product_price: rec.products?.price,
-        product_category: rec.products?.category
-      }));
+
+      return hydrateRecommendationsWithProducts(data);
     },
     enabled: !!userId, // Only run query when we have a userId
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -85,21 +98,7 @@ export function useRecommendations() {
     
     const { data, error } = await supabase
       .from('recommendations')
-      .select(`
-        id,
-        product_id,
-        supplier_id,
-        relevance_score,
-        recommendation_type,
-        reason,
-        viewed,
-        clicked,
-        products:product_id (
-          name,
-          price,
-          category
-        )
-      `)
+      .select('id, product_id, supplier_id, relevance_score, recommendation_type, reason, viewed, clicked')
       .eq('user_id', userId as string)
       .eq('recommendation_type', type as string)
       .order('relevance_score', { ascending: false })
@@ -111,20 +110,8 @@ export function useRecommendations() {
     }
     
     if (!data) return [];
-    
-    return data.map(rec => ({
-      id: rec.id,
-      product_id: rec.product_id,
-      supplier_id: rec.supplier_id,
-      relevance_score: rec.relevance_score,
-      recommendation_type: rec.recommendation_type,
-      reason: rec.reason,
-      viewed: rec.viewed,
-      clicked: rec.clicked,
-      product_name: rec.products?.name,
-      product_price: rec.products?.price,
-      product_category: rec.products?.category
-    }));
+
+    return hydrateRecommendationsWithProducts(data);
   };
 
   // Mark recommendation as viewed
@@ -137,7 +124,7 @@ export function useRecommendations() {
     
     const { error } = await supabase
       .from('recommendations')
-      .update({ viewed: true } as any)
+      .update({ viewed: true })
       .eq('id', recommendationId as string)
       .eq('user_id', userId as string);
       
@@ -155,7 +142,7 @@ export function useRecommendations() {
     
     const { error } = await supabase
       .from('recommendations')
-      .update({ clicked: true } as any)
+      .update({ clicked: true })
       .eq('id', recommendationId as string)
       .eq('user_id', userId as string);
       

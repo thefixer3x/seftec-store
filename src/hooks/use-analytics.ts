@@ -1,6 +1,6 @@
-// @ts-nocheck — uses order_items relation not in generated types.ts
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
 import { useAuth } from '@/context/AuthContext';
 
 // Analytics data types
@@ -93,6 +93,9 @@ export interface DashboardMetrics {
   aiUsageCost: number;
 }
 
+type OrderItemRow = Tables<'order_items'>;
+type ProductRow = Tables<'products'>;
+
 /**
  * Fetch payment analytics from database
  */
@@ -116,15 +119,7 @@ const fetchOrderMetrics = async (userId: string): Promise<OrderMetrics> => {
   // Fetch orders for the user
   const { data: orders, error } = await supabase
     .from('orders')
-    .select(`
-      *,
-      order_items (
-        product_id,
-        quantity,
-        unit_price,
-        subtotal
-      )
-    `)
+    .select('id, status, total_amount, created_at')
     .eq('customer_id', userId)
     .order('created_at', { ascending: false });
 
@@ -145,8 +140,21 @@ const fetchOrderMetrics = async (userId: string): Promise<OrderMetrics> => {
   const totalRevenue = orders.reduce((sum, order) => sum + (order.total_amount || 0), 0);
   const averageOrderValue = totalRevenue / totalOrders;
 
+  const orderIds = orders.map((order) => order.id).filter((id): id is string => !!id);
+  let orderItems: OrderItemRow[] = [];
+
+  if (orderIds.length > 0) {
+    const { data: fetchedOrderItems, error: orderItemsError } = await supabase
+      .from('order_items')
+      .select('id, order_id, product_id, quantity, unit_price')
+      .in('order_id', orderIds);
+
+    if (orderItemsError) throw orderItemsError;
+    orderItems = fetchedOrderItems ?? [];
+  }
+
   // Group by status
-  const statusData = orders.reduce((acc: any, order) => {
+  const statusData = orders.reduce<Record<string, number>>((acc, order) => {
     const status = order.status || 'unknown';
     acc[status] = (acc[status] || 0) + 1;
     return acc;
@@ -158,8 +166,9 @@ const fetchOrderMetrics = async (userId: string): Promise<OrderMetrics> => {
   }));
 
   // Group by month
-  const monthlyData = orders.reduce((acc: any, order) => {
-    const month = new Date(order.created_at).toLocaleDateString('en-US', {
+  const monthlyData = orders.reduce<Record<string, { count: number; revenue: number }>>((acc, order) => {
+    const createdAt = order.created_at ? new Date(order.created_at) : new Date();
+    const month = createdAt.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
     });
@@ -174,34 +183,58 @@ const fetchOrderMetrics = async (userId: string): Promise<OrderMetrics> => {
     return acc;
   }, {});
 
-  const ordersByMonth = Object.entries(monthlyData).map(([month, data]: [string, any]) => ({
+  const ordersByMonth = Object.entries(monthlyData).map(([month, data]) => ({
     month,
     count: data.count,
     revenue: data.revenue,
   }));
 
   // Calculate top products
-  const productData = orders.reduce((acc: any, order) => {
-    if (order.order_items) {
-      order.order_items.forEach((item: any) => {
-        const productId = item.product_id;
-        if (!acc[productId]) {
-          acc[productId] = {
-            product_id: productId,
-            product_name: `Product ${productId}`,
-            quantity_sold: 0,
-            revenue: 0,
-          };
-        }
-        acc[productId].quantity_sold += item.quantity || 0;
-        acc[productId].revenue += item.subtotal || 0;
-      });
+  const productData = orderItems.reduce<Record<string, OrderMetrics['topProducts'][number]>>((acc, item) => {
+    const productId = item.product_id;
+    if (!productId) {
+      return acc;
     }
+
+    if (!acc[productId]) {
+      acc[productId] = {
+        product_id: productId,
+        product_name: `Product ${productId}`,
+        quantity_sold: 0,
+        revenue: 0,
+      };
+    }
+
+    const quantity = item.quantity || 0;
+    const unitPrice = item.unit_price || 0;
+    acc[productId].quantity_sold += quantity;
+    acc[productId].revenue += quantity * unitPrice;
+
     return acc;
   }, {});
 
+  const productIds = Object.keys(productData);
+  if (productIds.length > 0) {
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('id, name')
+      .in('id', productIds);
+
+    if (productsError) throw productsError;
+
+    const productNameMap = new Map<string, string>(
+      (products ?? [])
+        .filter((product: ProductRow): product is ProductRow & { id: string } => !!product.id)
+        .map((product) => [product.id, product.name || `Product ${product.id}`])
+    );
+
+    productIds.forEach((productId) => {
+      productData[productId].product_name = productNameMap.get(productId) || `Product ${productId}`;
+    });
+  }
+
   const topProducts = Object.values(productData)
-    .sort((a: any, b: any) => b.revenue - a.revenue)
+    .sort((a, b) => b.revenue - a.revenue)
     .slice(0, 10);
 
   return {
@@ -210,7 +243,7 @@ const fetchOrderMetrics = async (userId: string): Promise<OrderMetrics> => {
     averageOrderValue,
     ordersByStatus,
     ordersByMonth,
-    topProducts: topProducts as any[],
+    topProducts,
   };
 };
 

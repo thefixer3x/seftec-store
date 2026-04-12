@@ -1,7 +1,7 @@
-// @ts-nocheck — order_items/products relation not in generated types.ts
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -24,11 +24,15 @@ interface OrderItem {
 
 interface OrderWithItems {
   id: string;
-  order_date: string;
+  order_date: string | null;
   status: string;
   total_amount: number;
   items: OrderItem[];
 }
+
+type OrderRow = Tables<'orders'>;
+type OrderItemRow = Tables<'order_items'>;
+type ProductRow = Tables<'products'>;
 
 const Orders = () => {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
@@ -52,7 +56,7 @@ const Orders = () => {
       // Fetch orders
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
-        .select('*')
+        .select('id, order_date, status, total_amount')
         .eq('customer_id', user?.id as string)
         .order('order_date', { ascending: false });
         
@@ -64,54 +68,78 @@ const Orders = () => {
         return;
       }
       
-      // For each order, fetch its items
-      const ordersWithItems = await Promise.all(
-        ordersData.map(async (order) => {
-          const { data: orderItems, error: itemsError } = await supabase
-            .from('order_items')
-            .select(`
-              id,
-              quantity,
-              unit_price,
-              products (
-                name
-              )
-            `)
-            .eq('order_id', order.id);
-            
-          if (itemsError) throw itemsError;
-          
-          if (!orderItems) return {
-            ...order,
-            items: []
-          };
-          
-          return {
-            ...order,
-            items: orderItems.map(item => ({
-              id: item.id,
-              product_name: item.products?.name || 'Unknown Product',
-              quantity: item.quantity,
-              unit_price: item.unit_price,
-            }))
-          };
-        })
+      const orderIds = ordersData
+        .map((order: OrderRow) => order.id)
+        .filter((id): id is string => !!id);
+
+      const { data: orderItems, error: itemsError } = await supabase
+        .from('order_items')
+        .select('id, order_id, product_id, quantity, unit_price')
+        .in('order_id', orderIds);
+
+      if (itemsError) throw itemsError;
+
+      const productIds = Array.from(
+        new Set((orderItems ?? []).map((item) => item.product_id).filter((id): id is string => !!id))
       );
+
+      const { data: products, error: productsError } =
+        productIds.length > 0
+          ? await supabase.from('products').select('id, name').in('id', productIds)
+          : { data: [] as ProductRow[], error: null };
+
+      if (productsError) throw productsError;
+
+      const productNameMap = new Map<string, string>(
+        (products ?? [])
+          .filter((product): product is ProductRow & { id: string } => !!product.id)
+          .map((product) => [product.id, product.name ?? 'Unknown Product'])
+      );
+
+      const itemsByOrderId = (orderItems ?? []).reduce<Record<string, OrderItem[]>>(
+        (acc, item: OrderItemRow) => {
+          const orderId = item.order_id;
+          if (!orderId) return acc;
+
+          if (!acc[orderId]) {
+            acc[orderId] = [];
+          }
+
+          acc[orderId].push({
+            id: item.id ?? `${orderId}-${item.product_id ?? 'product'}`,
+            product_name: item.product_id ? productNameMap.get(item.product_id) ?? 'Unknown Product' : 'Unknown Product',
+            quantity: item.quantity ?? 0,
+            unit_price: item.unit_price ?? 0,
+          });
+          return acc;
+        },
+        {}
+      );
+
+      const ordersWithItems: OrderWithItems[] = ordersData.map((order: OrderRow) => ({
+        id: order.id ?? '',
+        order_date: order.order_date,
+        status: order.status ?? 'pending',
+        total_amount: order.total_amount ?? 0,
+        items: order.id ? itemsByOrderId[order.id] ?? [] : [],
+      }));
       
       setOrders(ordersWithItems);
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
       console.error('Error fetching orders:', error);
       toast({
         variant: "destructive",
         title: "Failed to load orders",
-        description: error.message,
+        description: message,
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Date unavailable';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -123,7 +151,7 @@ const Orders = () => {
   };
 
   const getStatusBadgeClass = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch ((status || 'pending').toLowerCase()) {
       case 'completed':
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
       case 'shipped':
