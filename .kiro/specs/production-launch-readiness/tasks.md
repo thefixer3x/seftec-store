@@ -5,6 +5,10 @@
 **Date:** 2026-04-12  
 **Based on:** PROD_READINESS.md, SCHEMA_RECONCILIATION.md, FULL-AUDIT-REPORT.md, current codebase audit  
 
+> **Supersession notice:** This task list supersedes the old `enable-placeholder-features` execution model for the current release.
+
+> **Validation rule:** Code inspection alone is not sufficient for completion. Release-critical tasks (Section B) require deployed-domain runtime verification on https://www.seftechub.com or the active Vercel deployment URL.
+
 ---
 
 ## A. Already Completed
@@ -16,9 +20,9 @@
 | A3 | Disable non-functional wallet action buttons with "Coming Soon" badge | WalletBalanceCard buttons disabled |
 | A4 | Disable "Manage Bank Accounts" button | BankAccountInfo disabled state |
 | A5 | Remove `@ts-nocheck` from use-invoices, use-customers, use-inventory, FeatureFlagManager, use-recommendations | Confirmed removed — hooks now use proper types |
-| A6 | SME views exist in DB (customers, invoices, invoice_items, inventory_items, etc.) | Confirmed via DB query — all exist as VIEWS |
+| A6 | SME views exist in DB (customers, invoices, invoice_items, inventory_items, etc.) | Confirmed via DB query — all exist as VIEWS. Note: this is backend schema evidence only; runtime validation of reads/writes through these views is still required (see B4) |
 | A7 | Feature flag system wired to DB (FeatureFlagManager + useFeatureFlag hook) | Service + hook implemented |
-| A8 | Auth (email/password, signup, logout, session persistence) working | Verified in production |
+| A8 | Auth (email/password, signup, logout, session persistence) wired and partly validated | Email/password auth flow works in preview; magic link and OAuth callbacks still require deployed-domain confirmation (see B2) |
 | A9 | BizGenie AI chat wired to real edge function (bizgenie-router) | Uses real Supabase edge function |
 | A10 | Solutions page "Learn More" buttons now link to /solutions with anchor sections | Functional navigation |
 | A11 | Bulk payments column name fix (account_name → name, bank_name → bank_code) | Fixed in BulkPaymentTransactions.tsx |
@@ -36,9 +40,9 @@
 - **Acceptance:** Files deleted, no imports reference them, build succeeds
 
 ### B2. Auth callback / magic link validation on deployed domain
-- **Purpose:** Confirm magic link and OAuth callbacks work on seftec-store.lovable.app (not just preview)
+- **Purpose:** Confirm magic link and OAuth callbacks work on https://www.seftechub.com (primary) and optional Vercel deployment URL — not just preview
 - **Priority:** P0 | **Owner:** Frontend + Infra | **Release-blocking:** Yes
-- **Dependency:** Supabase redirect URL config must include production domain
+- **Dependency:** Supabase redirect URL config must include https://www.seftechub.com (and Vercel URL if applicable)
 - **Acceptance:** Magic link email → click → lands on authenticated dashboard on production URL
 
 ### B3. Dashboard runtime truth — empty states audit
