@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, XCircle, Clock, AlertCircle, Eye, CalendarClock } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, AlertCircle, Eye, CalendarClock, Package } from 'lucide-react';
 import { format } from 'date-fns';
 import BulkPaymentDetails, { BulkPaymentDetailsProps, PaymentItem } from './BulkPaymentDetails';
 
@@ -37,14 +37,13 @@ const fetchBulkPayments = async (userId: string) => {
 
   if (error) throw error;
 
-  // Transform database data to match component interface
-  return bulkPayments?.map((payment) => ({
+  return bulkPayments?.map((payment: any) => ({
     id: payment.id,
     title: payment.title,
     createdAt: new Date(payment.created_at),
     scheduledDate: payment.scheduled_date ? new Date(payment.scheduled_date) : undefined,
     totalAmount: payment.total_amount,
-    recipientCount: payment.payment_items?.length || 0, // Use payment_items length instead of recipient_count
+    recipientCount: payment.payment_items?.length || 0,
     status: payment.status as 'pending' | 'completed' | 'failed' | 'processing',
     items: payment.payment_items?.map((item: any) => ({
       id: item.id,
@@ -57,6 +56,29 @@ const fetchBulkPayments = async (userId: string) => {
   })) || [];
 };
 
+interface Payment {
+  id: string;
+  title: string;
+  createdAt: Date;
+  scheduledDate?: Date;
+  totalAmount: number;
+  recipientCount: number;
+  status: 'pending' | 'completed' | 'failed' | 'processing';
+  items: PaymentItem[];
+}
+
+const BulkPaymentTransactions = () => {
+  const { user } = useAuth();
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const { data: bulkPayments, isLoading, error } = useQuery({
+    queryKey: ['bulk-payments', user?.id],
+    queryFn: () => fetchBulkPayments(user!.id),
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
+  });
+
   const payments = bulkPayments || [];
 
   const handleViewDetails = (payment: Payment) => {
@@ -68,31 +90,31 @@ const fetchBulkPayments = async (userId: string) => {
     switch (status) {
       case 'completed':
         return (
-          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+          <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-green-200 dark:border-green-800">
             <CheckCircle className="h-3 w-3 mr-1" /> Completed
           </Badge>
         );
       case 'pending':
         return (
-          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800">
             <Clock className="h-3 w-3 mr-1" /> Pending
           </Badge>
         );
       case 'processing':
         return (
-          <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+          <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800">
             <CalendarClock className="h-3 w-3 mr-1" /> Processing
           </Badge>
         );
       case 'failed':
         return (
-          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200">
+          <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-red-200 dark:border-red-800">
             <XCircle className="h-3 w-3 mr-1" /> Failed
           </Badge>
         );
       default:
         return (
-          <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">
+          <Badge variant="outline" className="bg-muted text-muted-foreground">
             <AlertCircle className="h-3 w-3 mr-1" /> Unknown
           </Badge>
         );
@@ -101,19 +123,31 @@ const fetchBulkPayments = async (userId: string) => {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-seftec-darkNavy/80 rounded-lg shadow-sm p-4">
-        <p className="text-red-500">Error loading bulk payments: {error.message}</p>
+      <div className="bg-background rounded-lg shadow-sm p-4">
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <AlertCircle className="h-10 w-10 mb-3 text-destructive/50" />
+          <p className="font-medium text-destructive">Failed to load bulk payments</p>
+          <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="bg-white dark:bg-seftec-darkNavy/80 rounded-lg shadow-sm p-4">
+      <div className="bg-background rounded-lg shadow-sm p-4">
         <h2 className="text-lg font-medium mb-4">Recent Bulk Payments</h2>
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-seftec-teal"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : payments.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Package className="h-12 w-12 mb-3 text-muted-foreground/30" />
+            <p className="font-medium text-muted-foreground">No bulk payments yet</p>
+            <p className="text-sm text-muted-foreground/70 mt-1">
+              Bulk payment batches will appear here once created.
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -131,29 +165,29 @@ const fetchBulkPayments = async (userId: string) => {
               </TableHeader>
               <TableBody>
                 {payments.map((payment) => (
-                <TableRow key={payment.id}>
-                  <TableCell className="font-mono text-xs">{payment.id.substring(4, 12)}</TableCell>
-                  <TableCell className="font-medium">{payment.title}</TableCell>
-                  <TableCell>{format(payment.createdAt, 'MMM dd, yyyy')}</TableCell>
-                  <TableCell>{payment.recipientCount}</TableCell>
-                  <TableCell className="text-right">₦{payment.totalAmount.toLocaleString('en-NG')}</TableCell>
-                  <TableCell>{getStatusBadge(payment.status)}</TableCell>
-                  <TableCell className="text-right">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => handleViewDetails(payment)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <span className="sr-only">View details</span>
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                  <TableRow key={payment.id}>
+                    <TableCell className="font-mono text-xs">{payment.id.substring(4, 12)}</TableCell>
+                    <TableCell className="font-medium">{payment.title}</TableCell>
+                    <TableCell>{format(payment.createdAt, 'MMM dd, yyyy')}</TableCell>
+                    <TableCell>{payment.recipientCount}</TableCell>
+                    <TableCell className="text-right">₦{payment.totalAmount.toLocaleString('en-NG')}</TableCell>
+                    <TableCell>{getStatusBadge(payment.status)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => handleViewDetails(payment)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <span className="sr-only">View details</span>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 
