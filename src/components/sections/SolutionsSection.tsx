@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import SectionHeading from "@/components/ui/section-heading";
 import { ShieldCheck, CreditCard, FileSignature, Calculator, Globe, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,32 +37,38 @@ const SolutionsSection: React.FC = () => {
     {
       title: t('solutions.verified_marketplace.title', 'Verified B2B Marketplace'),
       description: t('solutions.verified_marketplace.description', 'Connect with pre-verified businesses, access company profiles, and build trust through transparent ratings and reviews.'),
-      icon: <ShieldCheck size={24} />
+      icon: <ShieldCheck size={24} />,
+      anchor: "verified-marketplace"
     },
     {
       title: t('solutions.secure_payments.title', 'Secure Payment Solutions'),
       description: t('solutions.secure_payments.description', 'Multi-currency transactions with escrow protection, instant settlements, and fraud prevention.'),
-      icon: <CreditCard size={24} />
+      icon: <CreditCard size={24} />,
+      anchor: "secure-payments"
     },
     {
       title: t('solutions.smart_contracts.title', 'Smart Contract Automation'),
       description: t('solutions.smart_contracts.description', 'Automated workflows for orders, invoices, and agreements with blockchain-backed security.'),
-      icon: <FileSignature size={24} />
+      icon: <FileSignature size={24} />,
+      anchor: "smart-contracts"
     },
     {
       title: t('solutions.trade_finance.title', 'Integrated Trade Finance'),
       description: t('solutions.trade_finance.description', 'Access working capital, invoice factoring, and supply chain financing tailored for SMEs.'),
-      icon: <Calculator size={24} />
+      icon: <Calculator size={24} />,
+      anchor: "trade-finance"
     },
     {
       title: t('solutions.global_reach.title', 'Global Payment Network'),
       description: t('solutions.global_reach.description', 'Low-cost international transfers with real-time FX rates and multi-currency wallets.'),
-      icon: <Globe size={24} />
+      icon: <Globe size={24} />,
+      anchor: "global-payments"
     },
     {
       title: t('solutions.ai_matching.title', 'AI-Powered Matching'),
       description: t('solutions.ai_matching.description', 'Find ideal trading partners with intelligent recommendations based on your business needs.'),
-      icon: <Users size={24} />
+      icon: <Users size={24} />,
+      anchor: "ai-matching"
     }
   ];
 
