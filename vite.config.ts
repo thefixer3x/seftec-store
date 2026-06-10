@@ -48,6 +48,9 @@ export default defineConfig(({ mode }) => {
       }),
   ].filter(Boolean),
   resolve: {
+    // Collapse duplicate React copies (root 19.2.0 vs nested 19.2.3) into one
+    // instance to avoid "Cannot read properties of null (reading 'useRef')".
+    dedupe: ['react', 'react-dom'],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
