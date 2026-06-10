@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
   const enableSentryBuild = mode !== 'development' && Boolean(sentryAuthToken);
 
   return ({
+  root: __dirname,
   server: {
     host: "127.0.0.1",
     port: 8080,
