@@ -47,3 +47,7 @@ string
 # Supabase temporary files and credentials
 supabase/.temp/
 supabase/config.toml
+
+testsprite_tests/tmp/config.json
+testsprite_tests/
+test-results/
