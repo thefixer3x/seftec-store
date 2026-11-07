@@ -12,6 +12,10 @@
  *   - never send both credential schemes
  *   - system/developer messages are rejected with HTTP 400 by the router
  *
+ * Credential scheme is fixed per deployment by AI_ROUTER_AUTH_MODE
+ * (`user_jwt` default, `api_key` opt-in). The proxy rejects anonymous callers:
+ * `verify_jwt` accepts the public anon key, which is not an identity.
+ *
  * Client compatibility: returns the answer as BOTH `text` and `response`
  * because the three chat surfaces this replaces disagree on the field name
  * (ai-chat returned `text`, use-ai-chat read `response`).
@@ -28,11 +32,22 @@ const ROUTER_URL = Deno.env.get('AI_ROUTER_URL') ?? 'https://ai.vortexcore.app';
 // Server-side only. Never expose to the client bundle.
 const LANO_KEY = Deno.env.get('LANONASIS_API_KEY') ?? '';
 
-// UAI may not accept this project's Supabase JWTs as an issuer yet. When that is
-// confirmed, flip this on to fall back to the shared key. Off by default because
-// a shared key collapses every user into one memory identity (see guide §3).
-const ALLOW_KEY_FALLBACK =
-  (Deno.env.get('AI_ROUTER_ALLOW_KEY_FALLBACK') ?? 'false').toLowerCase() === 'true';
+// Which credential this deployment presents to the router. Exactly ONE scheme,
+// fixed for the whole deployment — never per request.
+//
+// The router treats a credential as an identity, so switching schemes partway
+// through a request silently changes WHO is asking (guide §3). Guide §7.4 also
+// forbids retrying a 401: it is a config error, and retrying hides it.
+//
+//   user_jwt (default) — forward the caller's Supabase JWT. Per-user memory.
+//   api_key            — present the shared LANONASIS_API_KEY. Every caller then
+//                        shares one memory identity; only correct when UAI does
+//                        not yet trust this project's Supabase issuer.
+type AuthMode = 'user_jwt' | 'api_key';
+
+const AUTH_MODE_RAW = (Deno.env.get('AI_ROUTER_AUTH_MODE') ?? 'user_jwt').trim().toLowerCase();
+const AUTH_MODE: AuthMode | null =
+  AUTH_MODE_RAW === 'user_jwt' || AUTH_MODE_RAW === 'api_key' ? AUTH_MODE_RAW : null;
 
 // Stay under nginx's 60s proxy cap so we fail with clean JSON, not HTML 504.
 const TIMEOUT_MS = 45_000;
@@ -40,12 +55,16 @@ const TIMEOUT_MS = 45_000;
 /** Fixed list — guide §4. Reject unknown values instead of letting the router
  *  silently fall back to `ask-ai`, which hides typos.
  *  NOTE: `memory-analysis-json` is live in GET /api/v1/catalog but missing from
- *  the guide's §4 table — the catalog is authoritative. */
+ *  the guide's §4 table — the catalog is authoritative.
+ *  NOTE: `tool-proxy` is deliberately absent. That lane answers with
+ *  `response: ""` plus `tool_calls`, and requires the credential's `auth_id` to
+ *  be allowlisted server-side. We send no `tools` and never read `tool_calls`,
+ *  so offering the lane would turn every call into an empty-answer 502. Add it
+ *  back only alongside real tool plumbing. */
 const USE_CASES = new Set([
   'ask-ai',
   'landing-guide',
   'dashboard-assistant',
-  'tool-proxy',
   'support-chat',
   'memory-analysis',
   'memory-analysis-json',
@@ -94,6 +113,38 @@ function toTurns(raw: unknown): RouterTurn[] {
 
 function isValidSessionId(value: unknown): value is string {
   return typeof value === 'string' && /^[A-Za-z0-9._:-]{8,128}$/.test(value);
+}
+
+/**
+ * Read claims out of the caller's bearer token WITHOUT verifying it.
+ *
+ * Safe here only because Supabase's gateway already verified the signature
+ * (`verify_jwt = true` in config.toml) before this function runs. We need the
+ * claims for one reason: `verify_jwt` also accepts the project's ANON key, which
+ * ships in every browser bundle, so "an Authorization header exists" does not
+ * mean "a user is signed in". The anon key carries `role: "anon"` and no `sub`;
+ * new-style `sb_publishable_...` keys are not JWTs at all.
+ */
+function readClaims(authorization: string): Record<string, unknown> | null {
+  const token = authorization.replace(/^Bearer\s+/i, '').trim();
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  try {
+    const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+    const claims: unknown = JSON.parse(atob(padded));
+    return claims && typeof claims === 'object' ? (claims as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Guide §2.2: the router echoes continuity on `onasis_metadata.session_id`. */
+function readSessionEcho(body: Record<string, unknown> | null): string | null {
+  const meta = body?.onasis_metadata;
+  if (!meta || typeof meta !== 'object') return null;
+  const id = (meta as Record<string, unknown>).session_id;
+  return typeof id === 'string' ? id : null;
 }
 
 interface RouterResult {
@@ -178,36 +229,48 @@ Deno.serve(async (req) => {
     payload.session_id = payloadIn.session_id;
   }
 
-  // --- credential: exactly one scheme ---------------------------------------
-  // The browser's Supabase JWT, so the router resolves THIS user's identity.
-  const userAuth = req.headers.get('authorization');
-  const useUserJwt = !!userAuth;
-
-  if (!useUserJwt && !(ALLOW_KEY_FALLBACK && LANO_KEY)) {
-    return fail(
-      401,
-      'AUTH_REQUIRED',
-      'Sign in to use the AI assistant.',
+  // --- credential: exactly one scheme, fixed by AI_ROUTER_AUTH_MODE ---------
+  if (!AUTH_MODE) {
+    console.error(
+      `[ai-router-proxy] invalid AI_ROUTER_AUTH_MODE "${AUTH_MODE_RAW}" — expected "user_jwt" or "api_key"`,
     );
+    return fail(500, 'MISCONFIGURED', 'The AI service is misconfigured.');
+  }
+  if (AUTH_MODE === 'api_key' && !LANO_KEY) {
+    console.error('[ai-router-proxy] AI_ROUTER_AUTH_MODE=api_key but LANONASIS_API_KEY is empty');
+    return fail(500, 'MISCONFIGURED', 'The AI service is misconfigured.');
   }
 
-  const attemptWith = (withKey: boolean): Record<string, string> =>
-    withKey ? { 'X-API-Key': LANO_KEY } : { Authorization: userAuth as string };
+  // A signed-in caller is required in BOTH modes. The anon key is not an
+  // identity, and in api_key mode anonymous traffic would spend the shared
+  // key's quota and land in the shared memory bank.
+  const userAuth = req.headers.get('authorization');
+  const claims = userAuth ? readClaims(userAuth) : null;
+  const signedIn =
+    !!claims && claims.role !== 'anon' && typeof claims.sub === 'string' && claims.sub.length > 0;
 
-  // --- first attempt ---------------------------------------------------------
-  let result = await callRouter(payload, attemptWith(!useUserJwt));
-
-  // Auth-scheme fallback, only if explicitly enabled and only on 401. This is an
-  // intentional scheme switch, not a blind retry of a failed request.
-  if (!result.ok && result.status === 401 && useUserJwt && ALLOW_KEY_FALLBACK && LANO_KEY) {
-    console.warn('[ai-router-proxy] router rejected the user JWT; retrying with the shared key');
-    result = await callRouter(payload, attemptWith(true));
+  if (!signedIn) {
+    return fail(401, 'AUTH_REQUIRED', 'Sign in to use the AI assistant.');
   }
 
-  // Retry at most once, and only for transient upstream failures.
+  const auth: Record<string, string> =
+    AUTH_MODE === 'user_jwt'
+      ? { Authorization: userAuth as string }
+      : { 'X-API-Key': LANO_KEY };
+
+  if (AUTH_MODE === 'api_key') {
+    console.warn('[ai-router-proxy] serving chat with the shared key — every caller shares one memory identity');
+  }
+
+  // --- call the router -------------------------------------------------------
+  let result = await callRouter(payload, auth);
+
+  // Retry at most once, transient failures only — never on 401 (config error)
+  // or 429 (backoff belongs to the caller) — guide §7.4. The same credential is
+  // reused, so a retry can never change which identity is asking.
   if (!result.ok && [500, 502, 503, 504].includes(result.status)) {
     await new Promise((resolve) => setTimeout(resolve, 400));
-    result = await callRouter(payload, attemptWith(!useUserJwt));
+    result = await callRouter(payload, auth);
   }
 
   // --- map the result --------------------------------------------------------
@@ -220,7 +283,7 @@ Deno.serve(async (req) => {
       text: answer,
       response: answer,
       use_case: useCase,
-      session_id: result.body?.session_id ?? payload.session_id ?? null,
+      session_id: readSessionEcho(result.body) ?? payload.session_id ?? null,
       usage: result.body?.usage ?? null,
       onasis_metadata: result.body?.onasis_metadata ?? null,
     });
@@ -234,7 +297,9 @@ Deno.serve(async (req) => {
   }
 
   if (result.status === 401) {
-    console.error('[ai-router-proxy] router rejected our credential (401) — check AI_ROUTER_ALLOW_KEY_FALLBACK');
+    console.error(
+      '[ai-router-proxy] router rejected our credential (401) — check AI_ROUTER_AUTH_MODE and, for user_jwt, whether UAI trusts this issuer',
+    );
     return fail(401, 'AUTH_REQUIRED', 'The AI service rejected the request. Please sign in again.');
   }
 

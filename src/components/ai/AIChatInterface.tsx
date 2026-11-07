@@ -66,7 +66,13 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       }
       
       if (data.error) {
-        throw new Error(data.error);
+        // The proxy returns { error: { code, message } }; reading it directly
+        // stringified the object into "[object Object]".
+        const message =
+          typeof data.error === 'string'
+            ? data.error
+            : data.error?.message || 'AI service error';
+        throw new Error(message);
       }
       
       // Handle both chat and business plan responses

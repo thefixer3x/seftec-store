@@ -195,10 +195,12 @@ The AI surface is now split in two. Only one path still needs a direct provider 
 | Env var | Required | Notes |
 |---|---|---|
 | `AI_ROUTER_URL` | no | Defaults to `https://ai.vortexcore.app`. Set it so a future alias is a config change. |
-| `LANONASIS_API_KEY` | only for fallback | A `lano_*` key. Server-side only — never a `VITE_*` var. |
-| `AI_ROUTER_ALLOW_KEY_FALLBACK` | no | `true` enables the shared-key path. Leave **off** until §6.3 is resolved. |
+| `AI_ROUTER_AUTH_MODE` | no | `user_jwt` (default) or `api_key`. Selects the **single** credential scheme for the deployment. Any other value fails closed with `500 MISCONFIGURED`. |
+| `LANONASIS_API_KEY` | only for `api_key` | A `lano_*` key. Server-side only — never a `VITE_*` var. Required when `AI_ROUTER_AUTH_MODE=api_key`; unused otherwise. |
 
-Credential rule: the function forwards the **caller's Supabase JWT** as `Authorization: Bearer`, so the router resolves each user's own memory identity. It never sends `Authorization` and `X-API-Key` together.
+Credential rule: with `user_jwt` the function forwards the **caller's Supabase JWT** as `Authorization: Bearer`, so the router resolves each user's own memory identity. With `api_key` it sends `X-API-Key` instead. It never sends both, and it never switches scheme mid-request — the scheme is fixed at deploy time, so a retry cannot change who is asking.
+
+**Anonymous callers are rejected.** `verify_jwt = true` also accepts the project's anon key, which ships in every browser bundle, so a present `Authorization` header does not mean a signed-in user. The function decodes the (already gateway-verified) claims and requires `role !== "anon"` plus a `sub`. Both auth modes require a signed-in user: the anon key is not an identity, and under `api_key` anonymous traffic would spend the shared quota and inherit the shared memory bank.
 
 Health check before blaming the proxy:
 
@@ -243,8 +245,15 @@ curl -sS -X POST "https://<ref>.supabase.co/functions/v1/bizgenie-router" \
 
 The router resolves identity through UAI (its auth gateway), and the guide states a forwarded JWT is "passed unchanged to UAI." It does **not** state that UAI trusts this project's Supabase issuer. That has not been verified.
 
-- **If UAI accepts this project's JWTs:** chat works with per-user memory identity and **no** `LANONASIS_API_KEY` is needed.
-- **If it does not:** the only path is a shared `lano_*` key with `AI_ROUTER_ALLOW_KEY_FALLBACK=true`. Per guide §3 that collapses every user into one memory bank — a cross-tenant leak, not a limitation. Do not enable it for authenticated users until that trade-off is accepted in writing.
+- **If UAI accepts this project's JWTs:** chat works with per-user memory identity and **no** `LANONASIS_API_KEY` is needed. This is the default (`AI_ROUTER_AUTH_MODE=user_jwt`).
+- **If it does not:** the only path is a shared `lano_*` key with `AI_ROUTER_AUTH_MODE=api_key`. Per guide §3 that collapses every user into one memory bank — a cross-tenant leak, not a limitation. Do not enable it for authenticated users until that trade-off is accepted in writing.
+
+Deciding this is a deploy-time choice, not a runtime fallback: there is no automatic 401 → key retry. The two failures stay distinct and both are visible:
+
+- an unset/invalid `AI_ROUTER_AUTH_MODE`, or `api_key` with no `LANONASIS_API_KEY` → `500 MISCONFIGURED` before any request leaves the function;
+- the router rejecting the presented credential → logged with a diagnostic, then returned to the client as `401`.
+
+Neither is papered over by a silent scheme switch, because such a switch would change who is asking (guide §3) and violates guide §7.4 ("never retry a 401").
 
 Confirm this before flipping the client call sites on in production.
 
