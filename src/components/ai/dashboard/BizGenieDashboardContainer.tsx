@@ -53,15 +53,18 @@ const BizGenieDashboardContainer: React.FC<BizGenieDashboardProps> = ({ userId }
       setIsLoading(true);
       setError(null);
 
-      // Call BizGenie AI service via Supabase Edge Function
-      const { data, error: invokeError } = await supabase.functions.invoke('bizgenie-router', {
-        body: {
-          prompt,
-          userId: actualUserId,
-          allowLearning,
-          generateReport
+      // Chat goes through the shared AI router proxy (server-side, user JWT
+      // forwarded so memory identity stays per-user). Business reports still
+      // use bizgenie-router: they need a custom system prompt + HTML output,
+      // which the router does not accept.
+      const { data, error: invokeError } = await supabase.functions.invoke(
+        generateReport ? 'bizgenie-router' : 'ai-router-proxy',
+        {
+          body: generateReport
+            ? { prompt, userId: actualUserId, allowLearning, generateReport }
+            : { prompt, use_case: 'dashboard-assistant' }
         }
-      });
+      );
 
       if (invokeError) {
         throw new Error(invokeError.message || 'Failed to get AI response. Please try again.');

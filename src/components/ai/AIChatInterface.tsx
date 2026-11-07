@@ -40,23 +40,21 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     try {
       console.log(`Sending ${generateReport ? 'premium business plan' : 'query'} to BizGenie service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
       
-      // Prepare request data based on mode
-      const requestData = generateReport ? {
-        mode: 'business-plan',
-        userId: null, // Will be handled by the edge function
-        planData: query, // Send the query as the business idea
-        generateReport: true
-      } : {
-        prompt: query,
-        userId: null,
-        isPremium,
-        mode: 'chat'
-      };
-      
-      // Use the BizGenie router
-      const { data, error: edgeError } = await supabase.functions.invoke('bizgenie-router', {
-        body: requestData
-      });
+      // Business plans keep using bizgenie-router: they need a custom system
+      // prompt and HTML output, neither of which the shared router accepts.
+      // Chat goes through the server-side AI router proxy.
+      const { data, error: edgeError } = generateReport
+        ? await supabase.functions.invoke('bizgenie-router', {
+            body: {
+              mode: 'business-plan',
+              userId: null, // Will be handled by the edge function
+              planData: query, // Send the query as the business idea
+              generateReport: true
+            }
+          })
+        : await supabase.functions.invoke('ai-router-proxy', {
+            body: { prompt: query, use_case: 'dashboard-assistant' }
+          });
       
       if (edgeError) {
         console.error("Edge function error:", edgeError);
