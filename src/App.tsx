@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { useAuth } from './context/AuthContext';
 import { profileRoutes } from './routes/profileRoutes';
 import { ProtectedLayout } from './components/layout/ProtectedLayout';
+import { isPublicRoute } from './utils/publicRoutes';
 
 /* ─── Core (eager-loaded) ─────────────────────────────────────────── */
 import Index from '@/pages/Index';
@@ -48,20 +49,11 @@ function App() {
 
   useEffect(() => {
     if (!loading) {
-      const publicRoutes = [
-        '/', '/about', '/contact', '/login', '/register', '/reset-password',
-        '/solutions', '/value-propositions', '/faq', '/shop', '/products',
-        '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
-        '/coming-soon', '/auth', '/auth-callback'
-      ];
-
-      const isPublic = publicRoutes.some(r => location.pathname === r || location.pathname.startsWith(`${r}/`));
-
       if (user) {
         if (location.pathname === '/login' || location.pathname === '/register') {
           navigate('/profile/dashboard', { replace: true });
         }
-      } else if (!isPublic) {
+      } else if (!isPublicRoute(location.pathname)) {
         navigate('/auth', { state: { from: location.pathname }, replace: true });
       }
     }
