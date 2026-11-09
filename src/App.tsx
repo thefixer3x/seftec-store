@@ -50,7 +50,7 @@ function App() {
     if (!loading) {
       const publicRoutes = [
         '/', '/about', '/contact', '/login', '/register', '/reset-password',
-        '/solutions', '/value-propositions', '/faq', '/shop', '/products',
+        '/solutions', '/value-propositions', '/biztools', '/bizgenie', '/faq', '/shop', '/products',
         '/terms', '/privacy', '/cookies', '/security', '/defi-leadership',
         '/coming-soon', '/auth', '/auth-callback'
       ];
