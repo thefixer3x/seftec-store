@@ -71,13 +71,13 @@ export function useBizGenieChat({
       // Get user ID for tracking
       const userId = await getCurrentUserId();
       
-      // Call the BizGenie router edge function
-      const { data, error } = await supabase.functions.invoke('bizgenie-router', {
-        body: { 
+      // Call the AI router via the server-side proxy. The router owns vendor
+      // choice, model selection and the system prompt, so no systemPrompt /
+      // model / temperature is sent — see docs/P0_VALIDATION_RUNBOOK.md.
+      const { data, error } = await supabase.functions.invoke('ai-router-proxy', {
+        body: {
           prompt: message,
-          userId,
-          systemPrompt,
-          isPremium
+          use_case: 'dashboard-assistant'
         }
       });
       

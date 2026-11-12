@@ -5,15 +5,72 @@ Purpose: close the runtime items (B2–B5) that cannot be proven from the filesy
 
 ---
 
-## 1. Status snapshot — 2026-11-06
+## 0. Pre-flight — domain, DNS and mail
+
+Verified 2026-11-07 against authoritative DNS and live HTTP. **This gate must pass before B2 can be attempted at all.** An earlier pass found `seftechub.com` still delegated to Hostinger/Namecheap parking DNS and serving a domain-marketplace lander, which made "validate auth on the deployed domain" impossible — there was no deployment at that address.
+
+| Check | Expected | Verified |
+|---|---|---|
+| Registry delegation | `ns1`/`ns2.vercel-dns.com` | ✅ |
+| Public propagation | 8.8.8.8 and 9.9.9.9 agree | ✅ |
+| Apex `A` | Vercel anycast `64.29.17.x` | ✅ |
+| `www` `A` | Vercel anycast `216.198.79.x` | ✅ |
+| Apex → `www` | `307` | ✅ |
+| `http` → `https` | `308` | ✅ |
+| `www` response | HTTP 200, `server: Vercel`, HSTS | ✅ |
+| App renders | SEFTEC title present | ✅ |
+| `MX` | `1 smtp.google.com` | ✅ |
+| `SPF` | `v=spf1 include:_spf.google.com ~all` | ✅ |
+| `DKIM` | `google._domainkey` → `v=DKIM1; k=rsa; p=…` | ✅ |
+| `DMARC` | `_dmarc` TXT present | ❌ missing |
+| Google verification | `google-site-verification=…` TXT | ⚠️ absent — check Admin console |
+| Mailbox delivery | real send/receive on `support@` | ⚠️ unverified |
+
+Re-verify at any time:
+
+```bash
+dig +short NS seftechub.com
+dig +short MX seftechub.com
+dig +short TXT seftechub.com
+dig +short TXT _dmarc.seftechub.com
+dig +short TXT google._domainkey.seftechub.com
+curl -sS -I https://www.seftechub.com | head -5
+```
+
+### 0.1 Remaining mail gates
+
+1. **DMARC missing.** Add a `_dmarc` TXT:
+
+   ```
+   v=DMARC1; p=none; rua=mailto:dmarc@seftechub.com
+   ```
+
+   Start at `p=none`. Gmail/Yahoo bulk-sender rules effectively expect it now, and without it you get no reporting on spoofing of your domain.
+
+2. **Google verification token.** The apex has exactly one TXT (SPF) — no `google-site-verification=`. If Admin console → Domains shows the domain unverified, add the token it issues. Verification also decays if the record disappears again.
+
+3. **DKIM activation is not the record.** The TXT existing does not mean Gmail signs. Click **Admin console → Apps → Google Workspace → Gmail → Authenticate email → Start authentication**, then send to a Gmail address and confirm `dkim=pass` in *Show original*.
+
+4. **Mailbox reality.** MX routes but does not prove a mailbox exists. The app publishes `support@seftechub.com` in `src/components/ui/footer.tsx:93`, `src/pages/Contact.tsx:74` and `db.json:129` — send and receive a real test message before launch.
+
+5. **Propagation tail.** Registry delegation TTL is `172800` s (2 days). Major resolvers already agree, but stragglers can serve the old parking answers for up to 48 h. Do not schedule a mail-dependent go-live inside that window.
+
+### 0.2 Known-good notes
+
+- A wildcard `*` `A` record exists, so arbitrary subdomains resolve to Vercel and return `404`. Harmless, and it does not affect `MX` or `TXT` lookups. Remove it if you want tighter hygiene.
+- The apex `307`s to `www`, so `window.location.origin` is always `https://www.seftechub.com` — allowlist `www` only (§3.1).
+
+---
+
+## 1. Status snapshot — 2026-11-07
 
 | ID | Item | Status | Evidence |
 |---|---|---|---|
 | B1 | Delete orphaned legacy files | **Closed** | 5 files removed — see §2 |
-| B2 | Auth callback on deployed domain | **Open** | Needs Supabase URL allowlist + live click-through — see §3 |
+| B2 | Auth callback on deployed domain | **Open** | Domain now live and verified (§0); needs Supabase allowlist + click-through — see §3 |
 | B3 | Dashboard runtime truth | **Open** | Needs authenticated session — see §4 |
 | B4 | Invoices / Customers / Inventory views | **Open** | Needs authenticated session — see §5 |
-| B5 | BizGenie secrets | **Open** | Blocked on provider credits/keys — see §6 |
+| B5 | AI provider secrets | **Open** | Chat rerouted through `ai-router-proxy`; business-plan path still needs `OPENAI_API_KEY` — see §6 |
 | B6 | Bill payment maintenance state | **Closed** | `BillPaymentPage.tsx` — 4× "Coming Soon" badges + `<Alert>` at L265 |
 | B7 | Remove runtime `@ts-nocheck` | **Closed** | 0 runtime files remain; only `ui/chart.tsx`, `ui/resizable.tsx` (non-blocking per tasks.md) |
 | B8 | Duplicate Supabase clients | **Closed** | Canonical client is `src/integrations/supabase/client.ts` (60 importers) — see §2 |
@@ -80,9 +137,10 @@ Site URL:      https://www.seftechub.com
 Redirect URLs:
   https://www.seftechub.com/auth-callback
   https://www.seftechub.com/reset-password
-  https://seftechub.com/**            (apex, if apex is served)
   https://*-<vercel-team>.vercel.app/auth-callback   (preview, optional)
 ```
+
+Use `www` only. The apex `307`s to `www` (§0.2), so `window.location.origin` is never the apex — an apex entry is dead weight and hides a misconfiguration if the redirect ever breaks.
 
 ### 3.2 Email/password + magic link
 
@@ -126,44 +184,83 @@ Views are shared across schemas, so a passing local query does not guarantee a p
 
 ---
 
-## 6. B5 — BizGenie secrets and quota
+## 6. B5 — AI provider secrets
 
-`supabase/functions/bizgenie-router/index.ts:8-12` reads:
+The AI surface is now split in two. Only one path still needs a direct provider key.
 
-```
-OPENAI_API_KEY            (hard requirement for business-plan mode; 503 without it)
-PERPLEXITY_API_KEY        (or PERPLEXITY_API_SK)
-BizGenie_API_key
-SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY   (auto-injected)
-```
+### 6.1 Chat — `ai-router-proxy` → Onasis AI Router
 
-### 6.1 Set secrets
+`supabase/functions/ai-router-proxy/index.ts` replaces the direct OpenAI calls for all chat surfaces. It holds no vendor keys; the router owns vendor choice, model selection, failover and the system prompt.
+
+| Env var | Required | Notes |
+|---|---|---|
+| `AI_ROUTER_URL` | no | Defaults to `https://ai.vortexcore.app`. Set it so a future alias is a config change. |
+| `AI_ROUTER_AUTH_MODE` | no | `user_jwt` (default) or `api_key`. Selects the **single** credential scheme for the deployment. Any other value fails closed with `500 MISCONFIGURED`. |
+| `LANONASIS_API_KEY` | only for `api_key` | A `lano_*` key. Server-side only — never a `VITE_*` var. Required when `AI_ROUTER_AUTH_MODE=api_key`; unused otherwise. |
+
+Credential rule: with `user_jwt` the function forwards the **caller's Supabase JWT** as `Authorization: Bearer`, so the router resolves each user's own memory identity. With `api_key` it sends `X-API-Key` instead. It never sends both, and it never switches scheme mid-request — the scheme is fixed at deploy time, so a retry cannot change who is asking.
+
+**Anonymous callers are rejected.** `verify_jwt = true` also accepts the project's anon key, which ships in every browser bundle, so a present `Authorization` header does not mean a signed-in user. The function decodes the (already gateway-verified) claims and requires `role !== "anon"` plus a `sub`. Both auth modes require a signed-in user: the anon key is not an identity, and under `api_key` anonymous traffic would spend the shared quota and inherit the shared memory bank.
+
+Health check before blaming the proxy:
 
 ```bash
-supabase secrets set OPENAI_API_KEY=sk-... PERPLEXITY_API_KEY=pplx-... \
-  --project-ref <ref>
+curl -sS https://ai.vortexcore.app/health
+```
+
+`degraded` (HTTP 200) is normal and does **not** mean broken — the router is routing around a failed vendor. Only HTTP 503 / `unavailable` is an outage.
+
+**Known state 2026-11-06:** the router reported `degraded`, `2/6` vendors healthy, every lane `degraded` with `servingCapacity 2 of 5`. It serves via fallbacks; expect variable latency.
+
+### 6.2 Business plans — `bizgenie-router` (unchanged)
+
+Business-plan generation still calls OpenAI directly, because it needs a custom ~40-line system prompt, HTML output, and `max_tokens: 4096` — none of which the router accepts (`system` role is a hard HTTP 400). This path needs exactly one secret:
+
+```
+OPENAI_API_KEY     # hard requirement; bizgenie-router returns 503 without it
+```
+
+```bash
+supabase secrets set OPENAI_API_KEY=sk-... --project-ref <ref>
 supabase secrets list --project-ref <ref>   # confirm presence (values are hashed)
 ```
 
-### 6.2 Verify, unauthenticated
+`BizGenie_API_key` and `PERPLEXITY_API_KEY` are no longer read by the chat path. They can be retired once nothing calls the legacy `ai-chat` / `personalized-ai-chat` functions — but note `BizGenie_API_key` was also the key used by the old classifier, so do not delete it before confirming no deployed function still reads it.
 
-`OPENAI_API_KEY` is logged as a boolean on every request, so the function log is the fastest signal:
+Verify the plan path (the function logs `hasApiKey` as a boolean per request):
 
 ```bash
 curl -sS -X POST "https://<ref>.supabase.co/functions/v1/bizgenie-router" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-  -d '{"mode":"chat","prompt":"hello","userId":"00000000-0000-0000-0000-000000000000"}' \
+  -d '{"mode":"business-plan","planData":"a coffee roastery in Lagos","userId":"00000000-0000-0000-0000-000000000000"}' \
   | head -c 600
 ```
 
-- **Healthy:** a model-generated reply within ~10s.
-- **`503` with "currently unavailable for premium business plan generation":** `OPENAI_API_KEY` unset.
-- **Quota/auth error from the provider:** credits exhausted or key invalid — this is a billing fix, not a code fix.
+- **Healthy:** HTML in `planHtml` within ~10s.
+- **`503` "currently unavailable for premium business plan generation":** `OPENAI_API_KEY` unset.
+- **Provider quota/auth error:** billing or key — not a code fix.
 
-### 6.3 Then re-test in the UI
+### 6.3 Open question that gates cutover — JWT acceptance
 
-`/bizgenie` → send a message → real response, not a canned fallback.
+The router resolves identity through UAI (its auth gateway), and the guide states a forwarded JWT is "passed unchanged to UAI." It does **not** state that UAI trusts this project's Supabase issuer. That has not been verified.
+
+- **If UAI accepts this project's JWTs:** chat works with per-user memory identity and **no** `LANONASIS_API_KEY` is needed. This is the default (`AI_ROUTER_AUTH_MODE=user_jwt`).
+- **If it does not:** the only path is a shared `lano_*` key with `AI_ROUTER_AUTH_MODE=api_key`. Per guide §3 that collapses every user into one memory bank — a cross-tenant leak, not a limitation. Do not enable it for authenticated users until that trade-off is accepted in writing.
+
+Deciding this is a deploy-time choice, not a runtime fallback: there is no automatic 401 → key retry. The two failures stay distinct and both are visible:
+
+- an unset/invalid `AI_ROUTER_AUTH_MODE`, or `api_key` with no `LANONASIS_API_KEY` → `500 MISCONFIGURED` before any request leaves the function;
+- the router rejecting the presented credential → logged with a diagnostic, then returned to the client as `401`.
+
+Neither is papered over by a silent scheme switch, because such a switch would change who is asking (guide §3) and violates guide §7.4 ("never retry a 401").
+
+Confirm this before flipping the client call sites on in production.
+
+### 6.4 Re-test in the UI
+
+`/bizgenie` and the dashboard assistant → send a message → real answer from `data.response`, not a canned fallback. Then generate a business plan to confirm the direct-OpenAI path still works.
+
 
 ---
 

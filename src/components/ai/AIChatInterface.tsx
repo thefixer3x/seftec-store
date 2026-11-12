@@ -40,23 +40,21 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
     try {
       console.log(`Sending ${generateReport ? 'premium business plan' : 'query'} to BizGenie service:`, query.substring(0, 50) + (query.length > 50 ? "..." : ""));
       
-      // Prepare request data based on mode
-      const requestData = generateReport ? {
-        mode: 'business-plan',
-        userId: null, // Will be handled by the edge function
-        planData: query, // Send the query as the business idea
-        generateReport: true
-      } : {
-        prompt: query,
-        userId: null,
-        isPremium,
-        mode: 'chat'
-      };
-      
-      // Use the BizGenie router
-      const { data, error: edgeError } = await supabase.functions.invoke('bizgenie-router', {
-        body: requestData
-      });
+      // Business plans keep using bizgenie-router: they need a custom system
+      // prompt and HTML output, neither of which the shared router accepts.
+      // Chat goes through the server-side AI router proxy.
+      const { data, error: edgeError } = generateReport
+        ? await supabase.functions.invoke('bizgenie-router', {
+            body: {
+              mode: 'business-plan',
+              userId: null, // Will be handled by the edge function
+              planData: query, // Send the query as the business idea
+              generateReport: true
+            }
+          })
+        : await supabase.functions.invoke('ai-router-proxy', {
+            body: { prompt: query, use_case: 'dashboard-assistant' }
+          });
       
       if (edgeError) {
         console.error("Edge function error:", edgeError);
@@ -68,7 +66,13 @@ const AIChatInterface: React.FC<AIChatInterfaceProps> = ({
       }
       
       if (data.error) {
-        throw new Error(data.error);
+        // The proxy returns { error: { code, message } }; reading it directly
+        // stringified the object into "[object Object]".
+        const message =
+          typeof data.error === 'string'
+            ? data.error
+            : data.error?.message || 'AI service error';
+        throw new Error(message);
       }
       
       // Handle both chat and business plan responses
